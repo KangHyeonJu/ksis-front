@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import "./index.css"; // 테일윈드 CSS 파일 import
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
