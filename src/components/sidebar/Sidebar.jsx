@@ -44,8 +44,8 @@ const Sidebar = () => {
                     </div>
                     {openMenu === 'account' && (
                         <div className="submenu ml-8 mt-2">
-                            <a href="#" className="block py-1">Dashboard</a>
-                            <a href="#" className="block py-1">Updates</a>
+                            <a href="#" className="block py-1">계정조회</a>
+                            <a href="#" className="block py-1">로그기록</a>
                         </div>
                     )}
                 </div>
