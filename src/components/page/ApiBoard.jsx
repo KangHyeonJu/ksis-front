@@ -8,7 +8,7 @@ const ApiBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('apiName');
     const [currentPage, setCurrentPage] = useState(0);
-    const [selectedPostIds, setSelectedPostIds] = useState(new Set());
+    const [selectedPosts, setSelectedPosts] = useState(new Set());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -23,6 +23,7 @@ const ApiBoard = () => {
                     throw new Error('네트워크 응답이 올바르지 않습니다.');
                 }
                 const data = await response.json();
+                console.log('Fetched data:', data); // 데이터 확인
                 setPosts(data);
             } catch (err) {
                 setError(err.message);
@@ -35,32 +36,41 @@ const ApiBoard = () => {
     }, []);
 
     const handleCheckboxChange = (postId) => {
-        setSelectedPostIds(prevSelectedPostIds => {
-            const newSelectedPostIds = new Set(prevSelectedPostIds);
-            if (newSelectedPostIds.has(postId)) {
-                newSelectedPostIds.delete(postId);
+        setSelectedPosts(prevSelectedPosts => {
+            const newSelectedPosts = new Set(prevSelectedPosts);
+            if (newSelectedPosts.has(postId)) {
+                newSelectedPosts.delete(postId);
             } else {
-                newSelectedPostIds.add(postId);
+                newSelectedPosts.add(postId);
             }
-            return newSelectedPostIds;
+            return newSelectedPosts;
         });
     };
 
     const handleSelectAllChange = (e) => {
         const isChecked = e.target.checked;
-        setSelectedPostIds(isChecked ? new Set(paginatedPosts.map(post => post.id)) : new Set());
+        setSelectedPosts(isChecked ? new Set(paginatedPosts.map(post => post.id)) : new Set());
     };
 
     const handleDeletePosts = async () => {
+        if (selectedPosts.size === 0) {
+            alert('삭제할 게시글을 선택해주세요.');
+            return;
+        }
         try {
-            const deletePromises = [...selectedPostIds].map(id =>
+            console.log('Selected posts before delete:', [...selectedPosts]);
+            const deletePromises = [...selectedPosts].map(id =>
                 fetch(`http://localhost:8080/api/posts/${id}`, {
                     method: 'DELETE'
                 })
             );
             await Promise.all(deletePromises);
-            setPosts(prevPosts => prevPosts.filter(post => !selectedPostIds.has(post.id)));
-            setSelectedPostIds(new Set()); // Clear the selection
+            setPosts(prevPosts => {
+                const updatedPosts = prevPosts.filter(post => !selectedPosts.has(post.id));
+                console.log('Posts after delete:', updatedPosts);
+                return updatedPosts;
+            });
+            setSelectedPosts(new Set());
         } catch (err) {
             console.error('Error deleting posts:', err);
             setError('게시글 삭제 중 오류가 발생했습니다.');
@@ -89,7 +99,8 @@ const ApiBoard = () => {
         setCurrentPage(selectedPage.selected);
     };
 
-    const isAllSelected = paginatedPosts.length > 0 && paginatedPosts.every(post => selectedPostIds.has(post.id));
+    // Determine if all posts in the current page are selected
+    const isAllSelected = paginatedPosts.length > 0 && paginatedPosts.every(post => selectedPosts.has(post.id));
 
     if (loading) {
         return <p>로딩 중...</p>;
@@ -105,6 +116,7 @@ const ApiBoard = () => {
                 <h1 className="text-2xl font-bold">게시판</h1>
             </header>
             <div className="mb-6 flex items-center">
+                {/* 검색바 셀렉트 박스 */}
                 <select
                     value={searchCategory}
                     onChange={(e) => setSearchCategory(e.target.value)}
@@ -114,6 +126,7 @@ const ApiBoard = () => {
                     <option value="expiryDate">만료일</option>
                     <option value="provider">제공업체</option>
                 </select>
+                {/* 검색바 입력창 */}
                 <div className="relative flex-grow">
                     <input
                         type="text"
@@ -126,12 +139,14 @@ const ApiBoard = () => {
                 </div>
             </div>
             <div className="mb-6">
+                {/* 등록 버튼 */}
                 <button 
                     onClick={() => navigate('/apiDetail')} // API 등록 페이지로 이동
                     className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 >
                     API 등록
                 </button>
+                {/* 삭제 버튼 */}
                 <button 
                     onClick={handleDeletePosts} // 선택된 API 삭제
                     className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
@@ -140,6 +155,7 @@ const ApiBoard = () => {
                 </button>
             </div>
 
+            {/* 조회 테이블 */}
             <div>
                 {filteredPosts.length === 0 ? (
                     <p>게시글이 없습니다.</p>
@@ -150,8 +166,12 @@ const ApiBoard = () => {
                                 <th className="border border-gray-300 p-2">
                                     <input
                                         type="checkbox"
-                                        checked={isAllSelected}
-                                        onChange={handleSelectAllChange}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            setSelectedPosts(isChecked 
+                                                ? new Set(filteredPosts.map(post => post.apiId)) 
+                                                : new Set());
+                                        }}
                                     />
                                 </th>
                                 <th className="border border-gray-300 p-2">API 이름</th>
@@ -161,12 +181,12 @@ const ApiBoard = () => {
                         </thead>
                         <tbody>
                             {paginatedPosts.map((post) => (
-                                <tr key={post.id}>
+                                <tr key={post.apiId}>
                                     <td className="border border-gray-300 p-2 text-center">
                                         <input
                                             type="checkbox"
-                                            checked={selectedPostIds.has(post.id)}
-                                            onChange={() => handleCheckboxChange(post.id)}
+                                            checked={selectedPosts.has(post.apiId)}
+                                            onChange={() => handleCheckboxChange(post.apiId)}
                                         />
                                     </td>
                                     <td className="border border-gray-300 p-2">{post.apiName}</td>
@@ -179,6 +199,7 @@ const ApiBoard = () => {
                 )}
             </div>
 
+            {/* 페이지네이션 */}
             {filteredPosts.length > postsPerPage && (
                 <ReactPaginate
                     previousLabel={"이전"}
