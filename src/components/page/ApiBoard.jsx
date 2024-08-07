@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ReactPaginate from 'react-paginate';
-import { FaSearch } from 'react-icons/fa'; // Font Awesome 아이콘 라이브러리
+import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchCategory, setSearchCategory] = useState('apiName'); // 검색 필터 상태
+    const [searchCategory, setSearchCategory] = useState('apiName');
     const [currentPage, setCurrentPage] = useState(0);
-    const [selectedPosts, setSelectedPosts] = useState(new Set()); // 체크박스 선택 상태
-    const [loading, setLoading] = useState(true); // 데이터 로딩 상태
-    const [error, setError] = useState(null); // 에러 상태
+    const [selectedPosts, setSelectedPosts] = useState(new Set());
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const postsPerPage = 5;
     const navigate = useNavigate();
@@ -18,11 +18,12 @@ const ApiBoard = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/all'); // 포트 번호 8080으로 변경
+                const response = await fetch('http://localhost:8080/api/all');
                 if (!response.ok) {
                     throw new Error('네트워크 응답이 올바르지 않습니다.');
                 }
                 const data = await response.json();
+                console.log('Fetched data:', data); // 데이터 확인
                 setPosts(data);
             } catch (err) {
                 setError(err.message);
@@ -46,18 +47,35 @@ const ApiBoard = () => {
         });
     };
 
+    const handleSelectAllChange = (e) => {
+        const isChecked = e.target.checked;
+        setSelectedPosts(isChecked ? new Set(paginatedPosts.map(post => post.id)) : new Set());
+    };
+
     const handleDeletePosts = async () => {
         try {
-            await Promise.all([...selectedPosts].map(id =>
+            console.log('Selected posts before delete:', [...selectedPosts]);
+            const deletePromises = [...selectedPosts].map(id =>
                 fetch(`http://localhost:8080/api/posts/${id}`, {
                     method: 'DELETE'
                 })
-            ));
-            setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.id)));
-            setSelectedPosts(new Set()); // 삭제 후 선택된 상태 초기화
+            );
+            await Promise.all(deletePromises);
+            setPosts(prevPosts => {
+                const updatedPosts = prevPosts.filter(post => !selectedPosts.has(post.id));
+                console.log('Posts after delete:', updatedPosts);
+                return updatedPosts;
+            });
+            setSelectedPosts(new Set());
         } catch (err) {
             console.error('Error deleting posts:', err);
+            setError('게시글 삭제 중 오류가 발생했습니다.');
         }
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        return dateString.substring(0, 10); // '2024-08-07' 형식으로 반환
     };
 
     const filteredPosts = useMemo(() => 
@@ -77,6 +95,9 @@ const ApiBoard = () => {
         setCurrentPage(selectedPage.selected);
     };
 
+    // Determine if all posts in the current page are selected
+    const isAllSelected = paginatedPosts.length > 0 && paginatedPosts.every(post => selectedPosts.has(post.id));
+
     if (loading) {
         return <p>로딩 중...</p>;
     }
@@ -91,15 +112,17 @@ const ApiBoard = () => {
                 <h1 className="text-2xl font-bold">게시판</h1>
             </header>
             <div className="mb-6 flex items-center">
+                {/* 검색바 셀렉트 박스 */}
                 <select
                     value={searchCategory}
                     onChange={(e) => setSearchCategory(e.target.value)}
                     className="mr-4 p-2 border border-gray-300 rounded-md"
                 >
                     <option value="apiName">API 이름</option>
-                    <option value="expirationDate">만료일</option>
+                    <option value="expiryDate">만료일</option>
                     <option value="provider">제공업체</option>
                 </select>
+                {/* 검색바 입력창 */}
                 <div className="relative flex-grow">
                     <input
                         type="text"
@@ -112,13 +135,14 @@ const ApiBoard = () => {
                 </div>
             </div>
             <div className="mb-6">
+                {/* 등록 버튼 */}
                 <button 
                     onClick={() => navigate('/apiDetail')} // API 등록 페이지로 이동
                     className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 >
                     API 등록
                 </button>
-                
+                {/* 삭제 버튼 */}
                 <button 
                     onClick={handleDeletePosts} // 선택된 API 삭제
                     className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
@@ -126,6 +150,8 @@ const ApiBoard = () => {
                     삭제
                 </button>
             </div>
+
+            {/* 조회 테이블 */}
             <div>
                 {filteredPosts.length === 0 ? (
                     <p>게시글이 없습니다.</p>
@@ -136,12 +162,8 @@ const ApiBoard = () => {
                                 <th className="border border-gray-300 p-2">
                                     <input
                                         type="checkbox"
-                                        onChange={(e) => {
-                                            const isChecked = e.target.checked;
-                                            setSelectedPosts(isChecked 
-                                                ? new Set(filteredPosts.map(post => post.id)) 
-                                                : new Set());
-                                        }}
+                                        checked={isAllSelected}
+                                        onChange={handleSelectAllChange}
                                     />
                                 </th>
                                 <th className="border border-gray-300 p-2">API 이름</th>
@@ -160,7 +182,7 @@ const ApiBoard = () => {
                                         />
                                     </td>
                                     <td className="border border-gray-300 p-2">{post.apiName}</td>
-                                    <td className="border border-gray-300 p-2">{post.expirationDate}</td>
+                                    <td className="border border-gray-300 p-2">{formatDate(post.expiryDate)}</td>
                                     <td className="border border-gray-300 p-2">{post.provider}</td>
                                 </tr>
                             ))}
@@ -168,6 +190,8 @@ const ApiBoard = () => {
                     </table>
                 )}
             </div>
+
+            {/* 페이지네이션 */}
             {filteredPosts.length > postsPerPage && (
                 <ReactPaginate
                     previousLabel={"이전"}
