@@ -1,154 +1,186 @@
-export default function PcList() {
-  return (
-    <>
-      <div>
-        <Pcs />
-      </div>
-    </>
+import React, { useEffect, useState, useMemo } from "react";
+import ReactPaginate from "react-paginate";
+import { FaSearch } from "react-icons/fa";
+import fetcher from "../../../fetcher";
+import { PC_LIST } from "../../../constants/api_constant";
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import { PC_FORM } from "../../../constants/page_constant";
+
+const PcList = () => {
+  const [posts, setPosts] = useState([]);
+
+  const loadPage = async () => {
+    try {
+      const response = await fetcher.get(PC_LIST);
+      console.log(response); // 응답 객체 확인을 위해 콘솔 출력
+      if (response.data) {
+        setPosts(response.data);
+      } else {
+        console.error("No data property in response");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error); // 전체 오류 객체를 콘솔에 출력
+      alert(error.response?.data || "Unknown error occurred");
+    }
+  };
+
+  useEffect(() => {
+    loadPage();
+  }, []);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState("deviceName"); // 검색 필터 상태
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedPosts, setSelectedPosts] = useState(new Set()); // 체크박스 선택 상태
+
+  const postsPerPage = 5;
+
+  const handleCheckboxChange = (postId) => {
+    setSelectedPosts((prevSelectedPosts) => {
+      const newSelectedPosts = new Set(prevSelectedPosts);
+      if (newSelectedPosts.has(postId)) {
+        newSelectedPosts.delete(postId);
+      } else {
+        newSelectedPosts.add(postId);
+      }
+      return newSelectedPosts;
+    });
+  };
+
+  const filteredPosts = useMemo(
+    () =>
+      posts.filter((post) => {
+        const value = post[searchCategory]?.toLowerCase() || "";
+        return value.includes(searchTerm.toLowerCase());
+      }),
+    [posts, searchTerm, searchCategory]
   );
-}
 
-function Pcs() {
+  const paginatedPosts = useMemo(() => {
+    const startIndex = currentPage * postsPerPage;
+    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
+  }, [filteredPosts, currentPage]);
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected);
+  };
+
   return (
-    <>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-          일반 PC 관리
-        </h1>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        일반 PC 관리
+      </h1>
 
-        <div className="relative mt-2 rounded-md shadow-sm">
-          <div className="absolute inset-y-0 left-0 flex items-center">
-            <select className="h-full rounded-md border-0 bg-transparent py-0 pl-3 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
-              <option>전체</option>
-              <option>PC명</option>
-              <option>담당자</option>
-              <option>등록일</option>
-            </select>
-          </div>
-
+      <div className="mb-4 flex items-center">
+        <select
+          value={searchCategory}
+          onChange={(e) => setSearchCategory(e.target.value)}
+          className="mr-1 p-2 border border-gray-300 rounded-md"
+        >
+          <option value="deviceName">PC명</option>
+          <option value="account">담당자</option>
+          <option value="regTime">등록일</option>
+        </select>
+        <div className="relative flex-grow">
           <input
             type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="검색어를 입력하세요"
-            className="block w-full rounded-md border-0 py-1.5 pl-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
+          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+      </div>
 
+      <div className="flex justify-end space-x-2 mb-4">
         <button
           type="button"
-          className="relative inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          일반 PC 등록
+          <Link to={PC_FORM}>일반 PC 등록</Link>
         </button>
         <button
           type="button"
-          className="relative inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
         >
           삭제
         </button>
+      </div>
 
-        <table className="min-w-full divide-y divide-gray-300">
-          <thead>
-            <tr>
-              <td></td>
-              <td>PC명</td>
-              <td>담당자(아이디)</td>
-              <td>등록일</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
+      <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
+        <thead>
+          <tr>
+            <th className="border border-gray-300">
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  const isChecked = e.target.checked;
+                  setSelectedPosts(
+                    isChecked
+                      ? new Set(filteredPosts.map((post) => post.deviceId))
+                      : new Set()
+                  );
+                }}
+              />
+            </th>
+            <th className="border border-gray-300">PC명</th>
+            <th className="border border-gray-300">담당자(아이디)</th>
+            <th className="border border-gray-300">등록일</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedPosts.map((post) => (
+            <tr key={post.deviceId}>
+              <td className="border border-gray-300 p-2 text-center">
                 <input
-                  id="comments"
-                  name="comments"
                   type="checkbox"
-                  aria-describedby="comments-description"
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  checked={selectedPosts.has(post.deviceId)}
+                  onChange={() => handleCheckboxChange(post.deviceId)}
                 />
               </td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
+              <td className="border border-gray-300 p-2">{post.deviceName}</td>
+              <td className="border border-gray-300 p-2">{post.account}</td>
+              <td className="border border-gray-300 p-2">
+                {format(post.regTime, "yyyy-MM-dd")}
+              </td>
             </tr>
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
 
-      <div>
-        <nav
-          aria-label="Pagination"
-          className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-        >
-          <a
-            href="#"
-            className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-          >
-            <span className="sr-only">Previous</span>
-          </a>
-          {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-          <a
-            href="#"
-            aria-current="page"
-            className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            1
-          </a>
-          <a
-            href="#"
-            className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-          >
-            2
-          </a>
-          <a
-            href="#"
-            className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-          >
-            3
-          </a>
-          <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-            ...
-          </span>
-          <a
-            href="#"
-            className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-          >
-            8
-          </a>
-          <a
-            href="#"
-            className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-          >
-            9
-          </a>
-          <a
-            href="#"
-            className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-          >
-            10
-          </a>
-          <a
-            href="#"
-            className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-          >
-            <span className="sr-only">Next</span>
-          </a>
-        </nav>
-      </div>
-    </>
+      {filteredPosts.length > postsPerPage && (
+        <ReactPaginate
+          previousLabel={"이전"}
+          nextLabel={"다음"}
+          breakLabel={"..."}
+          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageChange}
+          containerClassName={"flex justify-center mt-4"}
+          pageClassName={"mx-1"}
+          pageLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+          }
+          previousClassName={"mx-1"}
+          previousLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+          }
+          nextClassName={"mx-1"}
+          nextLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+          }
+          breakClassName={"mx-1"}
+          breakLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+          }
+          activeClassName={"bg-blue-500 text-white"}
+        />
+      )}
+    </div>
   );
-}
+};
+
+export default PcList;
