@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa'; // Font Awesome 아이콘 라이브러리
+import { useNavigate } from 'react-router-dom'; // 추가
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([
@@ -21,6 +22,7 @@ const ApiBoard = () => {
     const [selectedPosts, setSelectedPosts] = useState(new Set()); // 체크박스 선택 상태
 
     const postsPerPage = 5;
+    const navigate = useNavigate(); // 추가
 
     const handleAddPost = () => {
         if (newPost.trim() === '') return;
@@ -45,6 +47,11 @@ const ApiBoard = () => {
             }
             return newSelectedPosts;
         });
+    };
+
+    const handleDeletePosts = () => {
+        setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.id)));
+        setSelectedPosts(new Set()); // 삭제 후 선택된 상태 초기화
     };
 
     const filteredPosts = useMemo(() => 
@@ -92,13 +99,14 @@ const ApiBoard = () => {
             </div>
             <div className="mb-6">
                 <button 
-                    onClick={handleAddPost} 
+                    onClick={() => navigate('/apiRegistration')} // 수정된 부분
                     className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 >
                     API 등록
                 </button>
+                
                 <button 
-                    onClick={() => console.log(Array.from(selectedPosts))}
+                    onClick={handleDeletePosts} // 수정된 부분
                     className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                 >
                     삭제
