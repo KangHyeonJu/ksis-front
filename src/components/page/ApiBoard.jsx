@@ -1,41 +1,38 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa'; // Font Awesome 아이콘 라이브러리
-import { useNavigate } from 'react-router-dom'; // 추가
+import { useNavigate } from 'react-router-dom';
 
 const ApiBoard = () => {
-    const [posts, setPosts] = useState([
-        { id: 1, apiName: "weather-forecast-api", expirationDate: "2024-12-31", provider: "현주컴퍼니" },
-        { id: 2, apiName: "geo-location-service", expirationDate: "2025-07-15", provider: "재혁컴퍼니" },
-        { id: 3, apiName: "translation-engine-api", expirationDate: "2025-08-09", provider: "민규컴퍼니" },
-        { id: 4, apiName: "stock-market-data", expirationDate: "2025-09-05", provider: "지원컴퍼니" },
-        { id: 5, apiName: "weather-forecast-api", expirationDate: "2024-12-31", provider: "현주컴퍼니" },
-        { id: 6, apiName: "geo-location-service", expirationDate: "2025-07-15", provider: "재혁컴퍼니" },
-        { id: 7, apiName: "translation-engine-api", expirationDate: "2025-08-09", provider: "민규컴퍼니" },
-        { id: 8, apiName: "stock-market-data", expirationDate: "2025-09-05", provider: "지원컴퍼니" },
-        // 예제 데이터 추가
-    ]);
-    const [newPost, setNewPost] = useState('');
+    const [posts, setPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('apiName'); // 검색 필터 상태
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedPosts, setSelectedPosts] = useState(new Set()); // 체크박스 선택 상태
+    const [loading, setLoading] = useState(true); // 데이터 로딩 상태
+    const [error, setError] = useState(null); // 에러 상태
 
     const postsPerPage = 5;
-    const navigate = useNavigate(); // 추가
+    const navigate = useNavigate();
 
-    const handleAddPost = () => {
-        if (newPost.trim() === '') return;
-        // 데이터 추가 로직
-        const newPostObj = {
-            id: posts.length + 1,
-            apiName: newPost,
-            expirationDate: "2024-12-31", // 예제 날짜
-            provider: "업체 C" // 예제 제공업체
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/all'); // 포트 번호 8080으로 변경
+                if (!response.ok) {
+                    throw new Error('네트워크 응답이 올바르지 않습니다.');
+                }
+                const data = await response.json();
+                setPosts(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
         };
-        setPosts([...posts, newPostObj]);
-        setNewPost('');
-    };
+
+        fetchPosts();
+    }, []);
 
     const handleCheckboxChange = (postId) => {
         setSelectedPosts(prevSelectedPosts => {
@@ -49,9 +46,18 @@ const ApiBoard = () => {
         });
     };
 
-    const handleDeletePosts = () => {
-        setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.id)));
-        setSelectedPosts(new Set()); // 삭제 후 선택된 상태 초기화
+    const handleDeletePosts = async () => {
+        try {
+            await Promise.all([...selectedPosts].map(id =>
+                fetch(`http://localhost:8080/api/posts/${id}`, {
+                    method: 'DELETE'
+                })
+            ));
+            setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.id)));
+            setSelectedPosts(new Set()); // 삭제 후 선택된 상태 초기화
+        } catch (err) {
+            console.error('Error deleting posts:', err);
+        }
     };
 
     const filteredPosts = useMemo(() => 
@@ -70,6 +76,14 @@ const ApiBoard = () => {
     const handlePageChange = (selectedPage) => {
         setCurrentPage(selectedPage.selected);
     };
+
+    if (loading) {
+        return <p>로딩 중...</p>;
+    }
+
+    if (error) {
+        return <p>오류 발생: {error}</p>;
+    }
 
     return (
         <div className="p-6">
@@ -99,14 +113,14 @@ const ApiBoard = () => {
             </div>
             <div className="mb-6">
                 <button 
-                    onClick={() => navigate('/apiDetail')} // 수정된 부분
+                    onClick={() => navigate('/apiDetail')} // API 등록 페이지로 이동
                     className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 >
                     API 등록
                 </button>
                 
                 <button 
-                    onClick={handleDeletePosts} // 수정된 부분
+                    onClick={handleDeletePosts} // 선택된 API 삭제
                     className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                 >
                     삭제
