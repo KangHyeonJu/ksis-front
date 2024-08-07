@@ -122,7 +122,7 @@ const ApiBoard = () => {
                                         }}
                                     />
                                 </th>
-                                <th className="border border-gray-300 p-2">API이름</th>
+                                <th className="border border-gray-300 p-2">API 이름</th>
                                 <th className="border border-gray-300 p-2">만료일</th>
                                 <th className="border border-gray-300 p-2">제공업체</th>
                             </tr>
@@ -138,7 +138,7 @@ const ApiBoard = () => {
                                         />
                                     </td>
                                     <td className="border border-gray-300 p-2">{post.apiName}</td>
-                                    <td className="border border-gray-300 p-2">{post.expIrationDate}</td>
+                                    <td className="border border-gray-300 p-2">{post.expirationDate}</td>
                                     <td className="border border-gray-300 p-2">{post.provider}</td>
                                 </tr>
                             ))}
