@@ -4,19 +4,19 @@ import { FaSearch } from 'react-icons/fa'; // Font Awesome 아이콘 라이브�
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([
-        { id: 1, name: "weather-forecast-api", expiration: "2024-12-31", provider: "현주컴퍼니" },
-        { id: 2, name: "geo-location-service", expiration: "2025-07-15", provider: "재혁컴퍼니" },
-        { id: 3, name: "translation-engine-api", expiration: "2025-08-09", provider: "민규컴퍼니" },
-        { id: 4, name: "stock-market-data", expiration: "2025-09-05", provider: "지원컴퍼니" },
-        { id: 5, name: "weather-forecast-api", expiration: "2024-12-31", provider: "현주컴퍼니" },
-        { id: 6, name: "geo-location-service", expiration: "2025-07-15", provider: "재혁컴퍼니" },
-        { id: 7, name: "translation-engine-api", expiration: "2025-08-09", provider: "민규컴퍼니" },
-        { id: 8, name: "stock-market-data", expiration: "2025-09-05", provider: "지원컴퍼니" },
+        { id: 1, apiName: "weather-forecast-api", expirationDate: "2024-12-31", provider: "현주컴퍼니" },
+        { id: 2, apiName: "geo-location-service", expirationDate: "2025-07-15", provider: "재혁컴퍼니" },
+        { id: 3, apiName: "translation-engine-api", expirationDate: "2025-08-09", provider: "민규컴퍼니" },
+        { id: 4, apiName: "stock-market-data", expirationDate: "2025-09-05", provider: "지원컴퍼니" },
+        { id: 5, apiName: "weather-forecast-api", expirationDate: "2024-12-31", provider: "현주컴퍼니" },
+        { id: 6, apiName: "geo-location-service", expirationDate: "2025-07-15", provider: "재혁컴퍼니" },
+        { id: 7, apiName: "translation-engine-api", expirationDate: "2025-08-09", provider: "민규컴퍼니" },
+        { id: 8, apiName: "stock-market-data", expirationDate: "2025-09-05", provider: "지원컴퍼니" },
         // 예제 데이터 추가
     ]);
     const [newPost, setNewPost] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchCategory, setSearchCategory] = useState('name'); // 검색 필터 상태
+    const [searchCategory, setSearchCategory] = useState('apiName'); // 검색 필터 상태
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedPosts, setSelectedPosts] = useState(new Set()); // 체크박스 선택 상태
 
@@ -27,8 +27,8 @@ const ApiBoard = () => {
         // 데이터 추가 로직
         const newPostObj = {
             id: posts.length + 1,
-            name: newPost,
-            expiration: "2024-12-31", // 예제 날짜
+            apiName: newPost,
+            expirationDate: "2024-12-31", // 예제 날짜
             provider: "업체 C" // 예제 제공업체
         };
         setPosts([...posts, newPostObj]);
@@ -49,7 +49,7 @@ const ApiBoard = () => {
 
     const filteredPosts = useMemo(() => 
         posts.filter(post => {
-            const value = post[searchCategory].toLowerCase();
+            const value = post[searchCategory]?.toLowerCase() || '';
             return value.includes(searchTerm.toLowerCase());
         }),
         [posts, searchTerm, searchCategory]
@@ -75,8 +75,8 @@ const ApiBoard = () => {
                     onChange={(e) => setSearchCategory(e.target.value)}
                     className="mr-4 p-2 border border-gray-300 rounded-md"
                 >
-                    <option value="name">API 이름</option>
-                    <option value="expiration">만료일</option>
+                    <option value="apiName">API 이름</option>
+                    <option value="expirationDate">만료일</option>
                     <option value="provider">제공업체</option>
                 </select>
                 <div className="relative flex-grow">
@@ -87,7 +87,7 @@ const ApiBoard = () => {
                         placeholder="검색..."
                         className="w-full p-2 pl-10 border border-gray-300 rounded-md"
                     />
-                   <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
+                    <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
                 </div>
             </div>
             <div className="mb-6">
@@ -137,8 +137,8 @@ const ApiBoard = () => {
                                             onChange={() => handleCheckboxChange(post.id)}
                                         />
                                     </td>
-                                    <td className="border border-gray-300 p-2">{post.name}</td>
-                                    <td className="border border-gray-300 p-2">{post.expiration}</td>
+                                    <td className="border border-gray-300 p-2">{post.apiName}</td>
+                                    <td className="border border-gray-300 p-2">{post.expIrationDate}</td>
                                     <td className="border border-gray-300 p-2">{post.provider}</td>
                                 </tr>
                             ))}
