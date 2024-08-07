@@ -93,8 +93,8 @@ const Sidebar = () => {
                     </div>
                     {openMenu === 'settings' && (
                         <div className="submenu ml-8 mt-2">
-                            <Link to="/api-board" className="block py-1">API 조회</Link> {/* Link 컴포넌트 사용 */}
-                            <a href="#" className="block py-1">용량 관리</a>
+                            <Link to="/apiBoard" className="block py-1">API 조회</Link> {/* Link 컴포넌트 사용 */}
+                            <a href="fileSizeBoard" className="block py-1">용량 관리</a>
                         </div>
                     )}
                 </div>
