@@ -99,7 +99,7 @@ const ApiBoard = () => {
             </div>
             <div className="mb-6">
                 <button 
-                    onClick={() => navigate('/apiRegistration')} // 수정된 부분
+                    onClick={() => navigate('/apiDetail')} // 수정된 부분
                     className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 >
                     API 등록
