@@ -35,7 +35,8 @@ const ApiBoard = () => {
         fetchPosts();
     }, []);
 
-    const handleCheckboxChange = (postId) => {
+    const handleCheckboxChange = (postId, event) => {
+        event.stopPropagation(); // 체크박스 클릭 시 테이블 행 클릭 이벤트 전파 차단
         setSelectedPosts(prevSelectedPosts => {
             const newSelectedPosts = new Set(prevSelectedPosts);
             if (newSelectedPosts.has(postId)) {
@@ -70,6 +71,7 @@ const ApiBoard = () => {
             setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.apiId)));
             setSelectedPosts(new Set());
             alert('선택된 게시글이 삭제되었습니다.'); // 삭제 완료 알림
+            navigate('/apiboard'); // 게시글 삭제 후 보드로 이동
         } catch (err) {
             console.error('Error deleting posts:', err);
             setError('게시글 삭제 중 오류가 발생했습니다.');
@@ -99,9 +101,10 @@ const ApiBoard = () => {
         setCurrentPage(selectedPage.selected);
     };
 
-    const handleRowClick = (apiId) => {
+    // Handle navigation to the API form when API name is clicked
+    const handleApiNameClick = (apiId) => {
         navigate(`/apiform/${apiId}`);
-      };
+    };
 
     // Determine if all posts in the current page are selected
     const isAllSelected = paginatedPosts.length > 0 && paginatedPosts.every(post => selectedPosts.has(post.apiId));
@@ -117,7 +120,7 @@ const ApiBoard = () => {
     return (
         <div className="p-6">
             <header className="mb-6">
-            <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">API목록</h1>
+                <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">API 목록</h1>
             </header>
             <div className="mb-6 flex items-center">
                 {/* 검색바 셀렉트 박스 */}
@@ -180,17 +183,21 @@ const ApiBoard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            
                             {paginatedPosts.map((post) => (
-                                 <tr key={post.apiId} onClick={() => handleRowClick(post.apiId)}>
+                                <tr key={post.apiId}>
                                     <td className="border border-gray-300 p-2 text-center">
                                         <input
                                             type="checkbox"
                                             checked={selectedPosts.has(post.apiId)}
-                                            onChange={() => handleCheckboxChange(post.apiId)}
+                                            onChange={(e) => handleCheckboxChange(post.apiId, e)}
                                         />
                                     </td>
-                                    <td className="border border-gray-300 p-2">{post.apiName}</td>
+                                    <td
+                                        className="border border-gray-300 p-2 text-black cursor-pointer"
+                                        onClick={() => handleApiNameClick(post.apiId)}
+                                    >
+                                        {post.apiName}
+                                    </td>
                                     <td className="border border-gray-300 p-2">{formatDate(post.expiryDate)}</td>
                                     <td className="border border-gray-300 p-2">{post.provider}</td>
                                 </tr>
