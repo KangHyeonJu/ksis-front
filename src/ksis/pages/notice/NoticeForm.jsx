@@ -23,12 +23,12 @@ const NoticeForm = () => {
             createdAt
         });
         // 폼 제출 후 페이지 이동 (예: 공지글 목록 페이지로)
-        navigate('/notice-board');
+        navigate('/noticeboard');
     };
 
     const handleCancel = () => {
         // 취소 버튼 클릭 시 공지글 목록 페이지로 이동
-        navigate('/notice-board');
+        navigate('/noticeboard');
     };
 
     return (
