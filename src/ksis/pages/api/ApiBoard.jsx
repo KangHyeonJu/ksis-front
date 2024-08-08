@@ -49,7 +49,7 @@ const ApiBoard = () => {
 
     const handleSelectAllChange = (e) => {
         const isChecked = e.target.checked;
-        setSelectedPosts(isChecked ? new Set(paginatedPosts.map(post => post.id)) : new Set());
+        setSelectedPosts(isChecked ? new Set(paginatedPosts.map(post => post.apiId)) : new Set());
     };
 
     const handleDeletePosts = async () => {
@@ -65,15 +65,15 @@ const ApiBoard = () => {
                 })
             );
             await Promise.all(deletePromises);
-            setPosts(prevPosts => {
-                const updatedPosts = prevPosts.filter(post => !selectedPosts.has(post.id));
-                console.log('Posts after delete:', updatedPosts);
-                return updatedPosts;
-            });
+
+            // 성공적으로 삭제된 후 UI 업데이트
+            setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.apiId)));
             setSelectedPosts(new Set());
+            alert('선택된 게시글이 삭제되었습니다.'); // 삭제 완료 알림
         } catch (err) {
             console.error('Error deleting posts:', err);
             setError('게시글 삭제 중 오류가 발생했습니다.');
+            alert('게시글 삭제 중 오류가 발생했습니다.'); // 오류 알림
         }
     };
 
@@ -100,7 +100,7 @@ const ApiBoard = () => {
     };
 
     // Determine if all posts in the current page are selected
-    const isAllSelected = paginatedPosts.length > 0 && paginatedPosts.every(post => selectedPosts.has(post.id));
+    const isAllSelected = paginatedPosts.length > 0 && paginatedPosts.every(post => selectedPosts.has(post.apiId));
 
     if (loading) {
         return <p>로딩 중...</p>;
@@ -166,12 +166,8 @@ const ApiBoard = () => {
                                 <th className="border border-gray-300 p-2">
                                     <input
                                         type="checkbox"
-                                        onChange={(e) => {
-                                            const isChecked = e.target.checked;
-                                            setSelectedPosts(isChecked 
-                                                ? new Set(filteredPosts.map(post => post.apiId)) 
-                                                : new Set());
-                                        }}
+                                        checked={isAllSelected}
+                                        onChange={handleSelectAllChange}
                                     />
                                 </th>
                                 <th className="border border-gray-300 p-2">API 이름</th>
