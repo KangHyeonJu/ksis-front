@@ -83,67 +83,67 @@ const ApiForm = () => {
                 <h1 className="text-2xl font-bold">{apiId ? 'API 수정' : 'API 등록'}</h1>
             </header>
             <form onSubmit={handleSubmit} className="border p-4 rounded">
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">API 이름</label>
-                    <input
-                        type="text"
-                        value={apiName}
-                        onChange={(e) => setApiName(e.target.value)}
-                        className="w-full p-2 border rounded"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">제공업체</label>
-                    <input
-                        type="text"
-                        value={provider}
-                        onChange={(e) => setProvider(e.target.value)}
-                        className="w-full p-2 border rounded"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">API Key</label>
-                    <input
-                        type="text"
-                        value={keyValue}
-                        onChange={(e) => setKeyValue(e.target.value)}
-                        className="w-full p-2 border rounded"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">만료일</label>
-                    <input
-                        type="date"
-                        value={expiryDate}
-                        onChange={(e) => setExpiryDate(e.target.value)}
-                        className="w-full p-2 border rounded"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">사용 목적</label>
-                    <input
-                        type="text"
-                        value={purpose}
-                        onChange={(e) => setPurpose(e.target.value)}
-                        className="w-full p-2 border rounded"
-                        required
-                    />
-                </div>
-                <div className="flex justify-between">
+            <div className="mb-4">
+            <label className="block text-lg font-semibold leading-6 text-gray-900">API 이름</label>
+            <input
+                type="text"
+                value={apiName}
+                onChange={(e) => setApiName(e.target.value)}
+                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                required
+            />
+        </div>
+        <div className="mb-4">
+            <label className="block text-lg font-semibold leading-6 text-gray-900">제공업체</label>
+            <input
+                type="text"
+                value={provider}
+                onChange={(e) => setProvider(e.target.value)}
+                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                required
+            />
+        </div>
+        <div className="mb-4">
+            <label className="block text-lg font-semibold leading-6 text-gray-900">API Key</label>
+            <input
+                type="text"
+                value={keyValue}
+                onChange={(e) => setKeyValue(e.target.value)}
+                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                required
+            />
+        </div>
+        <div className="mb-4">
+            <label className="block text-lg font-semibold leading-6 text-gray-900">만료일</label>
+            <input
+                type="date"
+                value={expiryDate}
+                onChange={(e) => setExpiryDate(e.target.value)}
+                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                required
+            />
+        </div>
+        <div className="mb-4">
+            <label className="block text-lg font-semibold leading-6 text-gray-900">사용 목적</label>
+            <input
+                type="text"
+                value={purpose}
+                onChange={(e) => setPurpose(e.target.value)}
+                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                required
+            />
+        </div>
+                <div className="flex justify-end space-x-2 mb-4">
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     >
                         {apiId ? '수정하기' : '등록하기'}
                     </button>
                     <button
                         type="button"
                         onClick={() => navigate(-1)}
-                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                        className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                     >
                         뒤로가기
                     </button>
