@@ -47,11 +47,12 @@ const FileSizeBoard = () => {
             <header className="mb-6">
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">최대 용량 설정</h1>
             </header>
-            <table className="w-full border-collapse border border-gray-200">
+            <table className="w-full border-collapse border border-gray-900">
                 <tbody>
                     <tr>
-                        <th className="border border-gray-300 p-2 text-left">이미지 제한 크기</th>
-                        <td className="border border-gray-300 p-2 flex items-center">
+                        <th className="border border-gray-300 p-2 text-gray-500 text-left bg-[#ffc97e]">이미지 제한 크기</th>
+                        <td className="border border-gray-300 p-2 items-center">
+                        <div>
                             <input
                                 type="number"
                                 className="border border-gray-300 p-1 rounded-md w-20 text-right"
@@ -60,11 +61,14 @@ const FileSizeBoard = () => {
                                 min="0"
                             />
                             <span className="ml-2">MB</span>
+                            
+                            </div>
+                            <p className="text-gray-500">하나의 이미지에 대해 최대 용량을 지정할 수 있습니다.</p>
                         </td>
                     </tr>
                     <tr>
-                        <th className="border border-gray-300 p-2 text-left">영상 제한 크기</th>
-                        <td className="border border-gray-300 p-2 flex items-center">
+                        <th className="border border-gray-300 p-2 text-gray-500 text-left background bg-[#ffc97e]">영상 제한 크기</th>
+                        <td className="border border-gray-300 p-2 items-center bg-[#ffe8cc]">
                             <input
                                 type="number"
                                 className="border border-gray-300 p-1 rounded-md w-20 text-right"
@@ -73,16 +77,20 @@ const FileSizeBoard = () => {
                                 min="0"
                             />
                             <span className="ml-2">MB</span>
+                            <p className="text-gray-500">하나의 영상에 대해 최대 용량을 지정할 수 있습니다.</p>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <button
-                onClick={handleSave}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-                저장
-            </button>
+            <div className="flex justify-end">
+    <button
+        onClick={handleSave}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    >
+        저장
+    </button>
+</div>
+
         </div>
     );
 };

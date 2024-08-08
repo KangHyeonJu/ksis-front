@@ -36,8 +36,18 @@ const ApiForm = () => {
         }
     }, [apiId]);
 
+    const validateDate = (date) => {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        return regex.test(date);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateDate(expiryDate)) {
+            alert('날짜 형식이 올바르지 않습니다. yyyy-mm-dd 형식으로 입력해주세요.');
+            return;
+        }
 
         const apiData = {
             apiName,
@@ -83,56 +93,56 @@ const ApiForm = () => {
                 <h1 className="text-2xl font-bold">{apiId ? 'API 수정' : 'API 등록'}</h1>
             </header>
             <form onSubmit={handleSubmit} className="border p-4 rounded">
-            <div className="mb-4">
-            <label className="block text-lg font-semibold leading-6 text-gray-900">API 이름</label>
-            <input
-                type="text"
-                value={apiName}
-                onChange={(e) => setApiName(e.target.value)}
-                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-                required
-            />
-        </div>
-        <div className="mb-4">
-            <label className="block text-lg font-semibold leading-6 text-gray-900">제공업체</label>
-            <input
-                type="text"
-                value={provider}
-                onChange={(e) => setProvider(e.target.value)}
-                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-                required
-            />
-        </div>
-        <div className="mb-4">
-            <label className="block text-lg font-semibold leading-6 text-gray-900">API Key</label>
-            <input
-                type="text"
-                value={keyValue}
-                onChange={(e) => setKeyValue(e.target.value)}
-                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-                required
-            />
-        </div>
-        <div className="mb-4">
-            <label className="block text-lg font-semibold leading-6 text-gray-900">만료일</label>
-            <input
-                type="date"
-                value={expiryDate}
-                onChange={(e) => setExpiryDate(e.target.value)}
-                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-                required
-            />
-        </div>
-        <div className="mb-4">
-            <label className="block text-lg font-semibold leading-6 text-gray-900">사용 목적</label>
-            <input
-                type="text"
-                value={purpose}
-                onChange={(e) => setPurpose(e.target.value)}
-                className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-                required
-            />
-        </div>
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold leading-6 text-gray-900">API 이름</label>
+                    <input
+                        type="text"
+                        value={apiName}
+                        onChange={(e) => setApiName(e.target.value)}
+                        className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold leading-6 text-gray-900">제공업체</label>
+                    <input
+                        type="text"
+                        value={provider}
+                        onChange={(e) => setProvider(e.target.value)}
+                        className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold leading-6 text-gray-900">API Key</label>
+                    <input
+                        type="text"
+                        value={keyValue}
+                        onChange={(e) => setKeyValue(e.target.value)}
+                        className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold leading-6 text-gray-900">만료일</label>
+                    <input
+                        type="date"
+                        value={expiryDate}
+                        onChange={(e) => setExpiryDate(e.target.value)}
+                        className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-lg font-semibold leading-6 text-gray-900">사용 목적</label>
+                    <input
+                        type="text"
+                        value={purpose}
+                        onChange={(e) => setPurpose(e.target.value)}
+                        className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
+                        required
+                    />
+                </div>
                 <div className="flex justify-end space-x-2 mb-4">
                     <button
                         type="submit"
