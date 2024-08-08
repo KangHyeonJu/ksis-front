@@ -152,12 +152,18 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link to="/api-board" className="block py-1">
+                <Link  to="/apiBoard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
                   API 조회
-                </Link>
-                <a href="#" className="block py-1">
+                  </span>
+                </Link >
+                <Link  to="/fileSizeBoard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
                   용량 관리
-                </a>
+                  </span>
+                </Link>
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import { BrowserRouter as Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PcList from "./ksis/pages/pc/PcList";
 import "./index.css";
 import Sidebar from "./ksis/components/SideBar";
@@ -18,7 +18,7 @@ function App() {
             <Route path={PC_INVENTORY} element={<PcList />} />
             <Route path={PC_FORM} element={<PcForm />} />
             <Route path="/apiBoard" element={<ApiBoard />} />
-            <Route path="/apiDetail" element={<ApiDetail />} />{" "}
+            <Route path="/apiDetail" element={<ApiDetail />} />
             <Route path="/fileSizeBoard" element={<FileSizeBoard />} />
             {/* 다른 라우트들을 추가할 수 있습니다 */}
           </Routes>
