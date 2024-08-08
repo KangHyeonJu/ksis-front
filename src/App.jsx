@@ -10,7 +10,7 @@ import FileSizeBoard from "./ksis/pages/fileSize/FileSizeBoard"; // 추가
 
 function App() {
   return (
-    <>
+   
       <div className="dashboard flex">
         <Sidebar />
         <div className="content flex-1 p-4">
@@ -18,13 +18,14 @@ function App() {
             <Route path={PC_INVENTORY} element={<PcList />} />
             <Route path={PC_FORM} element={<PcForm />} />
             <Route path="/apiboard" element={<ApiBoard />} />
-            <Route path="/apiform" element={<ApiForm />} />
+            <Route path="/apiform" element={<ApiForm />} /> {/* API 등록 */}
+            <Route path="/apiform/:apiId" element={<ApiForm />} /> {/* API 수정 */}
             <Route path="/filesizeboard" element={<FileSizeBoard />} />
             {/* 다른 라우트들을 추가할 수 있습니다 */}
           </Routes>
         </div>
       </div>
-    </>
+    
   );
 }
 

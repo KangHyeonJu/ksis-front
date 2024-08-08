@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ApiForm = () => {
     const [apiName, setApiName] = useState('');
@@ -7,7 +7,34 @@ const ApiForm = () => {
     const [keyValue, setKeyValue] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
     const [purpose, setPurpose] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { apiId } = useParams(); // apiId를 URL에서 가져오기
+
+    useEffect(() => {
+        if (apiId) {
+            const fetchApiData = async () => {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/posts/${apiId}`);
+                    if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+                    const data = await response.json();
+                    setApiName(data.apiName);
+                    setProvider(data.provider);
+                    setKeyValue(data.keyValue);
+                    setExpiryDate(data.expiryDate.substring(0, 10)); // 날짜 형식 조정
+                    setPurpose(data.purpose);
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchApiData();
+        } else {
+            setLoading(false); // 새로운 API 등록의 경우 로딩 완료
+        }
+    }, [apiId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,8 +48,8 @@ const ApiForm = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/api/register', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8080/api/${apiId ? 'update/' + apiId : 'register'}`, {
+                method: apiId ? 'PUT' : 'POST', // PUT 요청 시 수정, POST 요청 시 등록
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -30,22 +57,30 @@ const ApiForm = () => {
             });
 
             if (response.ok) {
-                alert('API 등록 성공');
+                alert('API 정보가 성공적으로 저장되었습니다.');
                 navigate('/apiBoard'); // 성공 시 ApiBoard로 이동
             } else {
-                const errorData = await response.json(); // 서버에서 반환한 에러 메시지 확인
-                alert(`API 등록 실패: ${errorData.error}`);
+                const errorData = await response.json();
+                alert(`저장 실패: ${errorData.error}`);
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('API 등록 중 오류 발생');
+            alert('정보 저장 중 오류 발생');
         }
     };
+
+    if (loading) {
+        return <p>로딩 중...</p>;
+    }
+
+    if (error) {
+        return <p>오류 발생: {error}</p>;
+    }
 
     return (
         <div className="p-6">
             <header className="mb-6">
-                <h1 className="text-2xl font-bold">API 정보 등록</h1>
+                <h1 className="text-2xl font-bold">{apiId ? 'API 수정' : 'API 등록'}</h1>
             </header>
             <form onSubmit={handleSubmit} className="border p-4 rounded">
                 <div className="mb-4">
@@ -103,7 +138,7 @@ const ApiForm = () => {
                         type="submit"
                         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                     >
-                        등록하기
+                        {apiId ? '수정하기' : '등록하기'}
                     </button>
                     <button
                         type="button"
