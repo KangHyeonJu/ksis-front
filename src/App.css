@@ -39,3 +39,26 @@ h3 {
     #ff9e01
   ); /* 선형 그라데이션 적용 */
 }
+
+.open-app-button {
+  padding: 25px 35px;
+  font-size: large;
+  color: rgb(0, 0, 0);
+  background: linear-gradient(
+    60deg,
+    #00eaff,
+    #5197ff
+  ); /* 선형 그라데이션 적용 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.open-app-button:hover {
+  color: rgb(255, 255, 255);
+  background: linear-gradient(
+    60deg,
+    #00eaff,
+    #5197ff
+  ); /* 선형 그라데이션 적용 */
+}
