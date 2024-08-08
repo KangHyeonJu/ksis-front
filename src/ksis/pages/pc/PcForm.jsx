@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import { PC_ADD } from "../../../constants/api_constant";
+import { PC_FORM, PC_INVENTORY } from "../../../constants/page_constant";
 
 const PcForm = () => {
   //mac 주소 검증
@@ -24,9 +25,9 @@ const PcForm = () => {
 
     if (value.length > 0 && macRegex.test(value)) {
       setMacAddress(value);
-      setError(""); // 유효한 형식일 때 오류 메시지를 지운다
+      setError("");
     } else {
-      setError("유효한 MAC 주소를 입력하세요."); // 유효하지 않은 형식일 때 오류 메시지를 설정한다
+      setError("유효한 MAC 주소를 입력하세요.");
     }
 
     setMacAddress(value);
@@ -40,7 +41,6 @@ const PcForm = () => {
 
   //주소불러오기
   const [address, setAddress] = useState("");
-  const [detailAddress, setDetailAddress] = useState("");
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -68,11 +68,16 @@ const PcForm = () => {
 
         //주소 정보를 해당 필드에 넣는다.
         setAddress(addr);
-        // 상세주소 입력 필드로 포커스를 이동한다.
-        document.getElementById("detailAddress").focus();
+        // document.getElementById("detailAddress").focus();
+        setTimeout(() => {
+          const detailAddressInput = document.getElementById("detailAddress");
+          if (detailAddressInput) {
+            detailAddressInput.focus();
+          }
+        }, 0);
       },
-      left: window.screen.width / 2 - 500 / 2, // 중앙 정렬
-      top: window.screen.height / 2 - 600 / 2, // 중앙 정렬
+      left: window.screen.width / 2 - 500 / 2,
+      top: window.screen.height / 2 - 600 / 2,
     }).open();
   };
 
@@ -106,32 +111,65 @@ const PcForm = () => {
   };
 
   //post
-  const [data, setPData] = useState([
-    // macAddress: "",
-    // deviceName: "",
-    // location: "",
-    // detailAddress: "",
-    // deviceType: "PC"
-  ]);
+  const [data, setData] = useState({
+    macAddress: macAddress,
+    deviceName: "",
+    location: address,
+    detailAddress: "",
+    deviceType: "PC",
+  });
+
+  useEffect(() => {
+    setData((prevData) => ({
+      ...prevData,
+      macAddress: macAddress,
+      location: address,
+    }));
+  }, [macAddress, address]);
 
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
-    setData({ ...data, [name]: value });
+    setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // const loadPage = async () => {};
+  const handleSave = async (e) => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        "pcFormDto",
+        new Blob([JSON.stringify(data)], { type: "application/json" })
+      );
 
-  // useEffect(() => {
-  //   loadPage();
-  // }, []);
+      const accountIds = responsibles.map((responsible) => {
+        const selectElement = document.getElementById(
+          `responsible-${responsible.id}`
+        );
+        return selectElement ? selectElement.value : "";
+      });
+
+      formData.append("accountList", JSON.stringify(accountIds));
+
+      const response = await fetcher.post(PC_ADD, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response.data);
+
+      alert("pc가 정상적으로 등록되었습니다.");
+      navigate(PC_INVENTORY);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
   //담당자 +, - 버튼
-  const [responsibles, setResponsibles] = useState([{ id: 0 }]);
+  const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
 
   const addResponsible = () => {
     setResponsibles((prev) => [
       ...prev,
-      { id: prev.length ? prev[prev.length - 1].id + 1 : 0 },
+      { id: prev.length ? prev[prev.length - 1].id + 1 : 0, accountId: "" },
     ]);
   };
 
@@ -139,6 +177,13 @@ const PcForm = () => {
     setResponsibles((prev) =>
       prev.filter((responsible) => responsible.id !== id)
     );
+  };
+
+  const handleResponsibleChange = (e, index) => {
+    const { value } = e.target;
+    const newResponsibles = [...responsibles];
+    newResponsibles[index].accountId = value;
+    setResponsibles(newResponsibles);
   };
 
   return (
@@ -153,7 +198,10 @@ const PcForm = () => {
           </label>
           <input
             value={data.deviceName}
-            onChange={onInputHandler}
+            onChange={(e) => {
+              onChangeHandler(e);
+              onInputHandler(e);
+            }}
             maxLength="50"
             name="deviceName"
             type="text"
@@ -164,22 +212,19 @@ const PcForm = () => {
             <span>/50자</span>
           </p>
         </div>
-        {responsibles.map((responsible) => (
+        {responsibles.map((responsible, index) => (
           <div className="flex items-center mt-5" key={responsible.id}>
-            <label
-              htmlFor={`responsible-${responsible.id}`}
-              className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
-            >
+            <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
               담당자
             </label>
             <select
               id={`responsible-${responsible.id}`}
-              name={`responsible-${responsible.id}`}
+              onChange={(e) => handleResponsibleChange(e, index)}
               className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
               <option>담당자 선택</option>
               {accounts.map((account) => (
-                <option>
+                <option value={account.accountId} key={account.accountId}>
                   {account.name}({account.accountId})
                 </option>
               ))}
@@ -227,8 +272,10 @@ const PcForm = () => {
           <input
             placeholder=" 상세주소"
             type="text"
-            value={detailAddress}
-            onChange={(e) => setDetailAddress(e.target.value)}
+            id="detailAddress"
+            value={data.detailAddress}
+            onChange={onChangeHandler}
+            name="detailAddress"
             className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -249,6 +296,7 @@ const PcForm = () => {
         <button
           type="button"
           className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          onClick={handleSave}
         >
           등록하기
         </button>
