@@ -99,6 +99,10 @@ const ApiBoard = () => {
         setCurrentPage(selectedPage.selected);
     };
 
+    const handleRowClick = (apiId) => {
+        navigate(`/apiform/${apiId}`);
+      };
+
     // Determine if all posts in the current page are selected
     const isAllSelected = paginatedPosts.length > 0 && paginatedPosts.every(post => selectedPosts.has(post.apiId));
 
@@ -176,8 +180,9 @@ const ApiBoard = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            
                             {paginatedPosts.map((post) => (
-                                <tr key={post.apiId}>
+                                 <tr key={post.apiId} onClick={() => handleRowClick(post.apiId)}>
                                     <td className="border border-gray-300 p-2 text-center">
                                         <input
                                             type="checkbox"
