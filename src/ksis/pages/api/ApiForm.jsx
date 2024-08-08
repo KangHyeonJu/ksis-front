@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ApiDetail = () => {
+const ApiForm = () => {
     const [apiName, setApiName] = useState('');
     const [provider, setProvider] = useState('');
     const [keyValue, setKeyValue] = useState('');
@@ -118,4 +118,4 @@ const ApiDetail = () => {
     );
 };
 
-export default ApiDetail;
+export default ApiForm;

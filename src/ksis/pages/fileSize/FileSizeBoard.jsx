@@ -45,7 +45,7 @@ const FileSizeBoard = () => {
     return (
         <div className="p-6">
             <header className="mb-6">
-                <h1 className="text-2xl font-bold">최대 용량 설정</h1>
+            <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">최대 용량 설정</h1>
             </header>
             <table className="w-full border-collapse border border-gray-200">
                 <tbody>

@@ -5,7 +5,7 @@ import Sidebar from "./ksis/components/SideBar";
 import { PC_FORM, PC_INVENTORY } from "./constants/page_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import ApiBoard from "./ksis/pages/api/ApiBoard";
-import ApiDetail from "./ksis/pages/api/ApiDetail"; // 수정된 부분
+import ApiForm from "./ksis/pages/api/ApiForm"; // 수정된 부분
 import FileSizeBoard from "./ksis/pages/fileSize/FileSizeBoard"; // 추가
 
 function App() {
@@ -17,9 +17,9 @@ function App() {
           <Routes>
             <Route path={PC_INVENTORY} element={<PcList />} />
             <Route path={PC_FORM} element={<PcForm />} />
-            <Route path="/apiBoard" element={<ApiBoard />} />
-            <Route path="/apiDetail" element={<ApiDetail />} />
-            <Route path="/fileSizeBoard" element={<FileSizeBoard />} />
+            <Route path="/apiboard" element={<ApiBoard />} />
+            <Route path="/apiform" element={<ApiForm />} />
+            <Route path="/filesizeboard" element={<FileSizeBoard />} />
             {/* 다른 라우트들을 추가할 수 있습니다 */}
           </Routes>
         </div>

@@ -113,7 +113,7 @@ const ApiBoard = () => {
     return (
         <div className="p-6">
             <header className="mb-6">
-                <h1 className="text-2xl font-bold">게시판</h1>
+            <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">API목록</h1>
             </header>
             <div className="mb-6 flex items-center">
                 {/* 검색바 셀렉트 박스 */}
@@ -138,18 +138,18 @@ const ApiBoard = () => {
                     <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
                 </div>
             </div>
-            <div className="mb-6">
+            <div className="flex justify-end space-x-2 mb-4">
                 {/* 등록 버튼 */}
                 <button 
-                    onClick={() => navigate('/apiDetail')} // API 등록 페이지로 이동
-                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    onClick={() => navigate('/apiform')} // API 등록 페이지로 이동
+                    className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                 >
                     API 등록
                 </button>
                 {/* 삭제 버튼 */}
                 <button 
                     onClick={handleDeletePosts} // 선택된 API 삭제
-                    className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                 >
                     삭제
                 </button>

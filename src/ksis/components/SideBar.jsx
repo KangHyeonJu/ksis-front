@@ -152,13 +152,13 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link  to="/apiBoard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <Link  to="/apiboard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
                 <FaRegCircle size={10} className="mr-2" />
                 <span>
                   API 조회
                   </span>
                 </Link >
-                <Link  to="/fileSizeBoard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <Link  to="/filesizeboard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
                 <FaRegCircle size={10} className="mr-2" />
                 <span>
                   용량 관리
