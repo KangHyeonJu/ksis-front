@@ -1,0 +1,99 @@
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333333;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    position: relative; /* 상대 위치를 위해 추가 */
+}
+
+.form-label {
+    flex: 0 0 120px;
+    padding: 10px;
+    background-color: #f39704;
+    color: #000000;
+    border-radius: 4px 0 0 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.form-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    background-color: #ffe69c;
+}
+
+.password-match {
+    margin: 5px 0; /* 입력란과 메시지 사이의 여백을 조정 */
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.match {
+    color: green;
+}
+
+.mismatch {
+    color: red;
+}
+
+.form-gender {
+    display: flex;
+    gap: 20px;
+    padding-left: 20px;
+}
+
+.form-radio {
+    margin-right: 5px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.submit-button,
+.cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    width: 100px;
+    font-weight: bold;
+}
+
+.submit-button {
+    background-color: #008080; /* 청록색 */
+}
+
+.submit-button:hover {
+    background-color: #006666;
+}
+
+.cancel-button {
+    background-color: #ff0000; /* 빨간색 */
+}
+
+.cancel-button:hover {
+    background-color: #cc0000;
+}
