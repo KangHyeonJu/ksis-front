@@ -1,12 +1,14 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+      },
+    },
   },
+  variants: {},
   plugins: [],
-  fontFamily: {
-    sans: ["Inter", ...defaultTheme.fontFamily.sans],
-  },
-  plugins: [require("@tailwindcss/line-clamp"), require("daisyui")],
 };
