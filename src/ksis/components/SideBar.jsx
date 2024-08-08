@@ -88,11 +88,11 @@ const Sidebar = () => {
             </div>
             {openMenu === "profile" && (
               <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  계정 조회
+                 <a href="#" className="block py-1">
+                  이미지 관리
                 </a>
                 <a href="#" className="block py-1">
-                  IP 관리
+                  영상 관리
                 </a>
               </div>
             )}
@@ -100,24 +100,10 @@ const Sidebar = () => {
           <div className="item mt-3">
             <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-              onClick={() => toggleMenu("notice")}
             >
               <MdChat className="mr-3" />
-              <span>공지글 관리</span>
+              <span><a href="#" className="block py-1">공지글 관리</a></span>
             </div>
-            {openMenu === "notice" && (
-              <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  이미지 관리
-                </a>
-                <a href="#" className="block py-1">
-                  영상 관리
-                </a>
-                <a href="#" className="block py-1">
-                  컨텐츠 관리
-                </a>
-              </div>
-            )}
           </div>
           <div className="item mt-3">
             <div
