@@ -9,6 +9,8 @@ import ApiForm from "./ksis/pages/api/ApiForm";
 import FileSizeBoard from "./ksis/pages/fileSize/FileSizeBoard";
 import NoticeBoard from "./ksis/pages/notice/NoticeBoard";
 import NoticeForm from "./ksis/pages/notice/NoticeForm";
+import { ACCOUNT_FORM } from "./constants/account_constant";
+import AccountRegForm from "./ksis/pages/account/AccountRegForm";
 
 function App() {
   return (

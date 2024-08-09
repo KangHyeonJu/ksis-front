@@ -1,1 +1,1 @@
-export const ACCOUNT_FORM = "/account"
+export const ACCOUNT_FORM = "/account";

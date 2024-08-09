@@ -101,9 +101,9 @@ const Sidebar = () => {
             <div className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer">
               <MdChat className="mr-3" />
               <span>
-                <a href="noticeboard" className="block py-1">
+                <Link to="/noticeboard" className="block py-1">
                   공지글 관리
-                </a>
+                </Link>
               </span>
             </div>
           </div>
