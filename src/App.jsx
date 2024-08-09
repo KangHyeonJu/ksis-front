@@ -2,7 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PcList from "./ksis/pages/pc/PcList";
 import "./index.css";
 import Sidebar from "./ksis/components/SideBar";
-import { PC_FORM, PC_INVENTORY } from "./constants/page_constant";
+import {
+  PC_DTL,
+  PC_FORM,
+  PC_INVENTORY,
+  PC_UPDATE_FORM,
+} from "./constants/page_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import ApiBoard from "./ksis/pages/api/ApiBoard";
 import ApiForm from "./ksis/pages/api/ApiForm";
@@ -11,8 +16,13 @@ import NoticeBoard from "./ksis/pages/notice/NoticeBoard";
 import NoticeForm from "./ksis/pages/notice/NoticeForm";
 import { ACCOUNT_FORM } from "./constants/account_constant";
 import AccountRegForm from "./ksis/pages/account/AccountRegForm";
+import PcDtl from "./ksis/pages/pc/PcDtl";
+import PcUpdateForm from "./ksis/pages/pc/PcUpdateForm";
+import Modal from "react-modal";
 
 function App() {
+  Modal.setAppElement("#root");
+
   return (
     <div className="dashboard flex">
       <Sidebar />
@@ -21,6 +31,8 @@ function App() {
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
           <Route path={PC_INVENTORY} element={<PcList />} />
           <Route path={PC_FORM} element={<PcForm />} />
+          <Route path={PC_DTL + "/:id"} element={<PcDtl />} />
+          <Route path={PC_UPDATE_FORM + "/:id"} element={<PcUpdateForm />} />
           <Route path="/apiboard" element={<ApiBoard />} />
           <Route path="/apiform" element={<ApiForm />} /> {/* API 등록 */}
           <Route path="/apiform/:apiId" element={<ApiForm />} />{" "}
