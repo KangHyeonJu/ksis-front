@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { API_BOARD, API_FORM } from "../../../constants/page_constant";
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([]);
@@ -71,7 +72,7 @@ const ApiBoard = () => {
             setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.apiId)));
             setSelectedPosts(new Set());
             alert('선택된 게시글이 삭제되었습니다.'); // 삭제 완료 알림
-            navigate('/apiboard'); // 게시글 삭제 후 보드로 이동
+            navigate({API_BOARD}); // 게시글 삭제 후 보드로 이동
         } catch (err) {
             console.error('Error deleting posts:', err);
             setError('게시글 삭제 중 오류가 발생했습니다.');
@@ -103,7 +104,7 @@ const ApiBoard = () => {
 
     // Handle navigation to the API form when API name is clicked
     const handleApiNameClick = (apiId) => {
-        navigate(`/apiform/${apiId}`);
+        navigate(`${API_FORM}/${apiId}`);
     };
 
     // Determine if all posts in the current page are selected
@@ -148,7 +149,7 @@ const ApiBoard = () => {
             <div className="flex justify-end space-x-2 mb-4">
                 {/* 등록 버튼 */}
                 <button 
-                    onClick={() => navigate('/apiform')} // API 등록 페이지로 이동
+                    onClick={() => navigate('{/apiform}')} // API 등록 페이지로 이동
                     className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                 >
                     API 등록

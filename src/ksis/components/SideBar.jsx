@@ -10,7 +10,7 @@ import {
   MdChat,
   MdDevices,
 } from "react-icons/md";
-import { PC_INVENTORY } from "../../constants/page_constant";
+import { PC_INVENTORY, API_BOARD, FILESIZE_FORM, NOTICE_BOARD } from "../../constants/page_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -102,7 +102,8 @@ const Sidebar = () => {
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
             >
               <MdChat className="mr-3" />
-              <span><a href="noticeboard" className="block py-1">공지글 관리</a></span>
+              <span><Link
+                  to={NOTICE_BOARD} className="block py-1">공지글 관리</Link></span>
             </div>
           </div>
           <div className="item mt-3">
@@ -138,13 +139,13 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link  to="/apiboard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <Link  to={API_BOARD} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
                 <FaRegCircle size={10} className="mr-2" />
                 <span>
                   API 조회
                   </span>
                 </Link >
-                <Link  to="/filesizeboard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <Link  to={FILESIZE_FORM} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
                 <FaRegCircle size={10} className="mr-2" />
                 <span>
                   용량 관리
