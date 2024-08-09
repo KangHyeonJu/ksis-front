@@ -88,11 +88,11 @@ const Sidebar = () => {
             </div>
             {openMenu === "profile" && (
               <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  계정 조회
+                 <a href="#" className="block py-1">
+                  이미지 관리
                 </a>
                 <a href="#" className="block py-1">
-                  IP 관리
+                  영상 관리
                 </a>
               </div>
             )}
@@ -100,24 +100,10 @@ const Sidebar = () => {
           <div className="item mt-3">
             <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-              onClick={() => toggleMenu("notice")}
             >
               <MdChat className="mr-3" />
-              <span>공지글 관리</span>
+              <span><a href="noticeboard" className="block py-1">공지글 관리</a></span>
             </div>
-            {openMenu === "notice" && (
-              <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  이미지 관리
-                </a>
-                <a href="#" className="block py-1">
-                  영상 관리
-                </a>
-                <a href="#" className="block py-1">
-                  컨텐츠 관리
-                </a>
-              </div>
-            )}
           </div>
           <div className="item mt-3">
             <div
@@ -152,12 +138,18 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link to="/api-board" className="block py-1">
+                <Link  to="/apiboard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
                   API 조회
-                </Link>
-                <a href="#" className="block py-1">
+                  </span>
+                </Link >
+                <Link  to="/filesizeboard" className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
                   용량 관리
-                </a>
+                  </span>
+                </Link>
               </div>
             )}
           </div>
