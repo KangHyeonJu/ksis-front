@@ -31,7 +31,7 @@ const Sidebar = () => {
     <div className="bg-[#ffcf8f] text-black h-screen w-64 p-4 flex flex-col">
       <div>
         <div className="logo mb-8">
-          <a href="/" className="text-2xl font-semibold">
+          <a href="/public" className="text-2xl font-semibold">
             KSIS
           </a>
         </div>
@@ -88,7 +88,7 @@ const Sidebar = () => {
             </div>
             {openMenu === "profile" && (
               <div className="submenu ml-8 mt-2">
-                 <a href="#" className="block py-1">
+                <a href="#" className="block py-1">
                   이미지 관리
                 </a>
                 <a href="#" className="block py-1">
@@ -98,9 +98,7 @@ const Sidebar = () => {
             )}
           </div>
           <div className="item mt-3">
-            <div
-              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-            >
+            <div className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer">
               <MdChat className="mr-3" />
               <span><Link
                   to={NOTICE_BOARD} className="block py-1">공지글 관리</Link></span>

@@ -1,0 +1,64 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 화면 높이의 100%를 사용하여 중앙에 배치 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+img {
+  width: 150px; /* 원하는 너비로 설정 */
+  height: auto; /* 비율을 유지하면서 높이를 자동으로 조정 */
+  margin-bottom: 20px; /* 이미지와 다른 요소 사이에 여백을 추가 */
+}
+
+h3 {
+  color: rgb(0, 0, 0, 0.5);
+}
+
+.download-button {
+  padding: 25px 35px;
+  font-size: large;
+  color: rgb(0, 0, 0);
+  background: linear-gradient(
+    60deg,
+    #ffea4a,
+    #ff9e01
+  ); /* 선형 그라데이션 적용 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  color: rgb(255, 255, 255);
+  background: linear-gradient(
+    60deg,
+    #ffea4a,
+    #ff9e01
+  ); /* 선형 그라데이션 적용 */
+}
+
+.open-app-button {
+  padding: 25px 35px;
+  font-size: large;
+  color: rgb(0, 0, 0);
+  background: linear-gradient(
+    60deg,
+    #00eaff,
+    #5197ff
+  ); /* 선형 그라데이션 적용 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.open-app-button:hover {
+  color: rgb(255, 255, 255);
+  background: linear-gradient(
+    60deg,
+    #00eaff,
+    #5197ff
+  ); /* 선형 그라데이션 적용 */
+}

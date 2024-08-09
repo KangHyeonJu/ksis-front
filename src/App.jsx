@@ -5,10 +5,12 @@ import Sidebar from "./ksis/components/SideBar";
 import { PC_FORM, PC_INVENTORY, API_BOARD, API_FORM, API_FORM_EDIT, FILESIZE_FORM, NOTICE_BOARD, NOTICE_FORM } from "./constants/page_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import ApiBoard from "./ksis/pages/api/ApiBoard";
-import ApiForm from "./ksis/pages/api/ApiForm"; 
-import FileSizeBoard from "./ksis/pages/fileSize/FileSizeBoard"; 
-import NoticeBoard from "./ksis/pages/notice/NoticeBoard"; 
+import ApiForm from "./ksis/pages/api/ApiForm";
+import FileSizeBoard from "./ksis/pages/fileSize/FileSizeBoard";
+import NoticeBoard from "./ksis/pages/notice/NoticeBoard";
 import NoticeForm from "./ksis/pages/notice/NoticeForm";
+import { ACCOUNT_FORM } from "./constants/account_constant";
+import AccountRegForm from "./ksis/pages/account/AccountRegForm";
 
 function App() {
   return (
@@ -30,7 +32,7 @@ function App() {
           </Routes>
         </div>
       </div>
-    
+   
   );
 }
 

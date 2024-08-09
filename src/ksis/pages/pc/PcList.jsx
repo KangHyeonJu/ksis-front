@@ -13,14 +13,14 @@ const PcList = () => {
   const loadPage = async () => {
     try {
       const response = await fetcher.get(PC_LIST);
-      console.log(response); // 응답 객체 확인을 위해 콘솔 출력
+      console.log(response);
       if (response.data) {
         setPosts(response.data);
       } else {
         console.error("No data property in response");
       }
     } catch (error) {
-      console.error("Error fetching data:", error); // 전체 오류 객체를 콘솔에 출력
+      console.error("Error fetching data:", error);
       alert(error.response?.data || "Unknown error occurred");
     }
   };
@@ -30,9 +30,9 @@ const PcList = () => {
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("deviceName"); // 검색 필터 상태
+  const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedPosts, setSelectedPosts] = useState(new Set()); // 체크박스 선택 상태
+  const [selectedPosts, setSelectedPosts] = useState(new Set());
 
   const postsPerPage = 5;
 
@@ -80,7 +80,7 @@ const PcList = () => {
         >
           <option value="deviceName">PC명</option>
           <option value="account">담당자</option>
-          <option value="regTime">등록일</option>
+          <option value="regDate">등록일</option>
         </select>
         <div className="relative flex-grow">
           <input
@@ -141,9 +141,13 @@ const PcList = () => {
                 />
               </td>
               <td className="border border-gray-300 p-2">{post.deviceName}</td>
-              <td className="border border-gray-300 p-2">{post.account}</td>
               <td className="border border-gray-300 p-2">
-                {format(post.regTime, "yyyy-MM-dd")}
+                {post.accountList
+                  .map((account) => `${account.name}(${account.accountId})`)
+                  .join(", ")}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {format(post.regDate, "yyyy-MM-dd")}
               </td>
             </tr>
           ))}
