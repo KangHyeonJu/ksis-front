@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const NoticeForm = () => {
     const [device, setDevice] = useState('모바일');
@@ -10,24 +11,32 @@ const NoticeForm = () => {
     const [createdAt] = useState(new Date().toISOString().split('T')[0]); // 현재 날짜를 YYYY-MM-DD 형식으로 설정
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // 공지글 등록 로직을 여기에 추가합니다.
-        // 예를 들어, API 호출을 통해 공지글을 서버에 저장할 수 있습니다.
-        console.log({
-            device,
-            title,
-            content,
-            startDate,
-            endDate,
-            createdAt
-        });
-        // 폼 제출 후 페이지 이동 (예: 공지글 목록 페이지로)
-        navigate('/noticeboard');
+        try {
+            const noticeData = {
+                device,
+                title,
+                content,
+                startDate,
+                endDate,
+                createdAt
+            };
+
+            const response = await axios.post('/api/notices', noticeData);
+
+            if (response.status === 200 || response.status === 201) {
+                navigate('/noticeboard');
+            } else {
+                alert('공지글 등록에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('공지글 등록 중 오류 발생:', error);
+            alert('공지글 등록 중 오류가 발생했습니다.');
+        }
     };
 
     const handleCancel = () => {
-        // 취소 버튼 클릭 시 공지글 목록 페이지로 이동
         navigate('/noticeboard');
     };
 
@@ -39,10 +48,7 @@ const NoticeForm = () => {
             <div className="border border-gray-300 rounded-lg p-6 shadow-sm bg-[#ffe69c]">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 gap-4">
-                   
-
-                    <div className="flex space-x-2 mb-4 ">
-
+                        <div className="flex space-x-2 mb-4 ">
                             <label htmlFor="device" className="block text-sm font-semibold leading-6 text-gray-900">재생장치</label>
                             <select
                                 id="device"
@@ -84,31 +90,27 @@ const NoticeForm = () => {
                             />
                         </div>
                         <div className="border border-gray-300 rounded-lg p-2 shadow-sm bg-white">
-                        <div className="flex space-x-2 mb-4">
-                            <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
-                            <input
-                                id="startDate"
-                                type="date"
-                                value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
-                                className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
-                            <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
-                            <input
-                                id="endDate"
-                                type="date"
-                                value={endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
-                                className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                            <div className="flex space-x-2 mb-4">
+                                <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
+                                <input
+                                    id="startDate"
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                />
+                                <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
+                                <input
+                                    id="endDate"
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                />
+                            </div>
                         </div>
                     </div>
-                    </div>
-
-                    
-                </form>
-            </div>
-            <div className="flex justify-end gap-4 mt-2">
+                    <div className="flex justify-end gap-4 mt-2">
                         <button
                             type="submit"
                             className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
@@ -123,6 +125,8 @@ const NoticeForm = () => {
                             뒤로가기
                         </button>
                     </div>
+                </form>
+            </div>
         </div>
     );
 };

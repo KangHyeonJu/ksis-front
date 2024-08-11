@@ -166,7 +166,7 @@ const ApiBoard = () => {
             {/* 조회 테이블 */}
             <div>
                 {filteredPosts.length === 0 ? (
-                    <p>게시글이 없습니다.</p>
+                    <p>등록된 API가 없습니다.</p>
                 ) : (
                     <table className="w-full border-collapse border border-gray-200">
                         <thead>
