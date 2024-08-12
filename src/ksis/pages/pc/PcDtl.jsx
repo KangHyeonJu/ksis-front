@@ -66,7 +66,7 @@ const PcDtl = () => {
           />
         </div>
         {responsibles.map((responsible, index) => (
-          <div className="flex items-center mt-5">
+          <div key={responsible.id} className="flex items-center mt-5">
             <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
               담당자{index + 1}
             </label>

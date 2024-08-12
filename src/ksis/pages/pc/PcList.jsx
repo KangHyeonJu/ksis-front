@@ -5,11 +5,7 @@ import fetcher from "../../../fetcher";
 import { PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import {
-  PC_DTL,
-  PC_FORM,
-  PC_UPDATE_FORM,
-} from "../../../constants/page_constant";
+import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
 
 const PcList = () => {
   const [posts, setPosts] = useState([]);

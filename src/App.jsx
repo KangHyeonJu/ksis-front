@@ -18,11 +18,8 @@ import { ACCOUNT_FORM } from "./constants/account_constant";
 import AccountRegForm from "./ksis/pages/account/AccountRegForm";
 import PcDtl from "./ksis/pages/pc/PcDtl";
 import PcUpdateForm from "./ksis/pages/pc/PcUpdateForm";
-import Modal from "react-modal";
 
 function App() {
-  Modal.setAppElement("#root");
-
   return (
     <div className="dashboard flex">
       <Sidebar />
