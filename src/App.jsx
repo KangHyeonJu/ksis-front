@@ -7,6 +7,8 @@ import {
   PC_FORM,
   PC_INVENTORY,
   PC_UPDATE_FORM,
+  SIGNAGE_FORM,
+  SIGNAGE_INVENTORY,
 } from "./constants/page_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import ApiBoard from "./ksis/pages/api/ApiBoard";
@@ -18,6 +20,8 @@ import { ACCOUNT_FORM } from "./constants/account_constant";
 import AccountRegForm from "./ksis/pages/account/AccountRegForm";
 import PcDtl from "./ksis/pages/pc/PcDtl";
 import PcUpdateForm from "./ksis/pages/pc/PcUpdateForm";
+import SignageList from "./ksis/pages/signage/SignageList";
+import SignageForm from "./ksis/pages/signage/SignageForm";
 
 function App() {
   return (
@@ -26,18 +30,22 @@ function App() {
       <div className="content flex-1 p-4">
         <Routes>
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
+
           <Route path={PC_INVENTORY} element={<PcList />} />
           <Route path={PC_FORM} element={<PcForm />} />
           <Route path={PC_DTL + "/:id"} element={<PcDtl />} />
           <Route path={PC_UPDATE_FORM + "/:id"} element={<PcUpdateForm />} />
+
+          <Route path={SIGNAGE_INVENTORY} element={<SignageList />} />
+          <Route path={SIGNAGE_FORM} element={<SignageForm />} />
+
           <Route path="/apiboard" element={<ApiBoard />} />
-          <Route path="/apiform" element={<ApiForm />} /> {/* API 등록 */}
-          <Route path="/apiform/:apiId" element={<ApiForm />} />{" "}
-          {/* API 수정 */}
+          <Route path="/apiform" element={<ApiForm />} />
+          <Route path="/apiform/:apiId" element={<ApiForm />} />
+
           <Route path="/filesizeboard" element={<FileSizeBoard />} />
           <Route path="/noticeboard" element={<NoticeBoard />} />
           <Route path="/noticeform" element={<NoticeForm />} />
-          {/* 다른 라우트들을 추가할 수 있습니다 */}
         </Routes>
       </div>
     </div>

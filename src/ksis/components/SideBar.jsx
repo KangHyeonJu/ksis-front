@@ -10,7 +10,7 @@ import {
   MdChat,
   MdDevices,
 } from "react-icons/md";
-import { PC_INVENTORY } from "../../constants/page_constant";
+import { PC_INVENTORY, SIGNAGE_INVENTORY } from "../../constants/page_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -117,9 +117,13 @@ const Sidebar = () => {
             </div>
             {openMenu === "device" && (
               <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  재생장치 관리
-                </a>
+                <Link
+                  to={SIGNAGE_INVENTORY}
+                  className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>재생장치 관리</span>
+                </Link>
                 <Link
                   to={PC_INVENTORY}
                   className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"

@@ -2,20 +2,25 @@ import React, { useEffect, useState, useMemo } from "react";
 import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
-import { PC_LIST } from "../../../constants/api_constant";
+import { SIGNAGE_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
+import {
+  PC_DTL,
+  PC_FORM,
+  SIGNAGE_DTL,
+  SIGNAGE_FORM,
+} from "../../../constants/page_constant";
 
-const PcList = () => {
-  const [posts, setPosts] = useState([]);
+const SignageList = () => {
+  const [signages, setSignages] = useState([]);
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(PC_LIST);
+      const response = await fetcher.get(SIGNAGE_LIST);
       console.log(response);
       if (response.data) {
-        setPosts(response.data);
+        setSignages(response.data);
       } else {
         console.error("No data property in response");
       }
@@ -37,17 +42,17 @@ const PcList = () => {
 
   const postsPerPage = 5;
 
-  const handleCheckboxChange = (postId) => {
+  const handleCheckboxChange = (signageId) => {
     setSelectedPosts((prevSelectedPosts) => {
       const newSelectedPosts = new Set(prevSelectedPosts);
-      if (newSelectedPosts.has(postId)) {
-        let newCheckedRowId = checkedRowId.filter((e) => e !== postId);
+      if (newSelectedPosts.has(signageId)) {
+        let newCheckedRowId = checkedRowId.filter((e) => e !== signageId);
         setCheckedRowId(newCheckedRowId);
 
-        newSelectedPosts.delete(postId);
+        newSelectedPosts.delete(signageId);
       } else {
-        setCheckedRowId([...checkedRowId, postId]);
-        newSelectedPosts.add(postId);
+        setCheckedRowId([...checkedRowId, signageId]);
+        newSelectedPosts.add(signageId);
       }
       return newSelectedPosts;
     });
@@ -57,24 +62,26 @@ const PcList = () => {
     console.log(checkedRowId);
   }, [checkedRowId]);
 
-  //pc 삭제
-  const deletePc = async (e) => {
+  //signage 삭제
+  const deleteSignage = async (e) => {
     try {
       if (checkedRowId.length === 0) {
-        alert("삭제할 PC를 선택해주세요.");
+        alert("삭제할 재생장치를 선택해주세요.");
       } else {
         if (window.confirm("삭제하시겠습니까?")) {
           const queryString = checkedRowId.join(",");
 
           const response = await fetcher.delete(
-            PC_LIST + "?pcIds=" + queryString
+            SIGNAGE_LIST + "?signageIds=" + queryString
           );
 
           console.log(response.data);
-          setPosts((prevPcList) =>
-            prevPcList.filter((pc) => !checkedRowId.includes(pc.deviceId))
+          setSignages((prevSignageList) =>
+            prevSignageList.filter(
+              (signage) => !checkedRowId.includes(signage.deviceId)
+            )
           );
-          alert("PC가 정상적으로 삭제되었습니다.");
+          alert("재생장치가 정상적으로 삭제되었습니다.");
         }
       }
     } catch (error) {
@@ -84,11 +91,11 @@ const PcList = () => {
 
   const filteredPosts = useMemo(
     () =>
-      posts.filter((post) => {
-        const value = post[searchCategory]?.toLowerCase() || "";
+      signages.filter((signage) => {
+        const value = signage[searchCategory]?.toLowerCase() || "";
         return value.includes(searchTerm.toLowerCase());
       }),
-    [posts, searchTerm, searchCategory]
+    [signages, searchTerm, searchCategory]
   );
 
   const paginatedPosts = useMemo(() => {
@@ -103,7 +110,7 @@ const PcList = () => {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-        일반 PC 관리
+        재생장치 관리
       </h1>
 
       <div className="mb-4 flex items-center">
@@ -112,7 +119,7 @@ const PcList = () => {
           onChange={(e) => setSearchCategory(e.target.value)}
           className="mr-1 p-2 border border-gray-300 rounded-md"
         >
-          <option value="deviceName">PC명</option>
+          <option value="deviceName">재생장치명</option>
           <option value="account">담당자</option>
           <option value="regDate">등록일</option>
         </select>
@@ -133,10 +140,10 @@ const PcList = () => {
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          <Link to={PC_FORM}>일반 PC 등록</Link>
+          <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
         </button>
         <button
-          onClick={deletePc}
+          onClick={deleteSignage}
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
         >
@@ -160,33 +167,35 @@ const PcList = () => {
                 }}
               />
             </th>
-            <th className="border border-gray-300">PC명</th>
+            <th className="border border-gray-300">재생장치명</th>
             <th className="border border-gray-300">담당자(아이디)</th>
             <th className="border border-gray-300">등록일</th>
           </tr>
         </thead>
         <tbody>
-          {paginatedPosts.map((post) => (
-            <tr key={post.deviceId}>
+          {paginatedPosts.map((signage) => (
+            <tr key={signage.deviceId}>
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
-                  checked={selectedPosts.has(post.deviceId)}
-                  onChange={() => handleCheckboxChange(post.deviceId)}
+                  checked={selectedPosts.has(signage.deviceId)}
+                  onChange={() => handleCheckboxChange(signage.deviceId)}
                 />
               </td>
 
               <td className="border border-gray-300 p-2">
-                <Link to={PC_DTL + `/${post.deviceId}`}>{post.deviceName}</Link>
+                <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
+                  {signage.deviceName}
+                </Link>
               </td>
 
               <td className="border border-gray-300 p-2">
-                {post.accountList
+                {signage.accountList
                   .map((account) => `${account.name}(${account.accountId})`)
                   .join(", ")}
               </td>
               <td className="border border-gray-300 p-2">
-                {format(post.regDate, "yyyy-MM-dd")}
+                {format(signage.regDate, "yyyy-MM-dd")}
               </td>
             </tr>
           ))}
@@ -226,4 +235,4 @@ const PcList = () => {
   );
 };
 
-export default PcList;
+export default SignageList;
