@@ -5,7 +5,7 @@ import fetcher from "../../../fetcher";
 import { PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import { PC_FORM } from "../../../constants/page_constant";
+import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
 
 const PcList = () => {
   const [posts, setPosts] = useState([]);
@@ -140,7 +140,9 @@ const PcList = () => {
                   onChange={() => handleCheckboxChange(post.deviceId)}
                 />
               </td>
-              <td className="border border-gray-300 p-2">{post.deviceName}</td>
+              <td className="border border-gray-300 p-2">
+                <Link to={PC_DTL + `/${post.deviceId}`}>{post.deviceName}</Link>
+              </td>
               <td className="border border-gray-300 p-2">
                 {post.accountList
                   .map((account) => `${account.name}(${account.accountId})`)

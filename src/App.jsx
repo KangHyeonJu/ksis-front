@@ -11,6 +11,8 @@ import NoticeBoard from "./ksis/pages/notice/NoticeBoard";
 import NoticeForm from "./ksis/pages/notice/NoticeForm";
 import { ACCOUNT_FORM } from "./constants/account_constant";
 import AccountRegForm from "./ksis/pages/account/AccountRegForm";
+import PcDtl from "./ksis/pages/pc/PcDtl";
+import PcUpdateForm from "./ksis/pages/pc/PcUpdateForm";
 
 function App() {
   return (

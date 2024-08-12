@@ -1,0 +1,140 @@
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import fetcher from "../../../fetcher";
+import { PC_LIST } from "../../../constants/api_constant";
+import { PC_UPDATE_FORM } from "../../../constants/page_constant";
+import LocationModal from "../../components/LocationModal";
+
+const PcDtl = () => {
+  //불러오기
+  const [data, setData] = useState({});
+  const params = useParams();
+  const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
+
+  const loadPcDtl = async (pcId) => {
+    try {
+      const response = await fetcher.get(PC_LIST + `/${pcId}`);
+      const { accountList, ...rest } = response.data;
+      setData(rest);
+
+      setResponsibles(
+        accountList.map((account, index) => ({
+          id: index,
+          accountId: account.accountId,
+          accountName: account.name,
+        }))
+      );
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  useEffect(() => {
+    loadPcDtl(params.id);
+  }, [params.id]);
+
+  // 이전 페이지로 이동
+  const navigate = useNavigate();
+
+  const onCancel = () => {
+    navigate(-1);
+  };
+
+  //위치 지도 보기
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        일반 PC 상세 조회
+      </h1>
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center pt-5 pb-5">
+        <div className="flex items-center">
+          <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            PC 이름
+          </label>
+          <input
+            value={data.deviceName}
+            readOnly
+            maxLength="50"
+            name="deviceName"
+            type="text"
+            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </div>
+        {responsibles.map((responsible, index) => (
+          <div key={responsible.id} className="flex items-center mt-5">
+            <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+              담당자{index + 1}
+            </label>
+            <input
+              value={`${responsible.accountName}(${responsible.accountId})`}
+              readOnly
+              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            />
+          </div>
+        ))}
+        <div className="flex items-center mt-5">
+          <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
+            위치
+          </label>
+          <input
+            type="text"
+            value={data.location}
+            readOnly
+            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          <button
+            onClick={openModal}
+            type="button"
+            className="ml-2 bg-[#ffe69c] rounded-full px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-yellow-50"
+          >
+            위치 보기
+          </button>
+          <LocationModal isOpen={modalIsOpen} onRequestClose={closeModal} />
+        </div>
+        <div className="flex items-center mt-5">
+          <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
+            상세주소
+          </label>
+          <input
+            type="text"
+            value={data.detailAddress}
+            readOnly
+            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </div>
+        <div className="flex items-center mt-5">
+          <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            Mac주소
+          </label>
+          <input
+            value={data.macAddress}
+            type="text"
+            className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
+          />
+        </div>
+      </div>
+      <div className="mt-2 flex justify-end">
+        <button
+          type="button"
+          className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        >
+          <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>수정하기</Link>
+        </button>
+        <button
+          type="button"
+          className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          onClick={onCancel}
+        >
+          뒤로가기
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default PcDtl;

@@ -1,6 +1,7 @@
 export const PC_INVENTORY = "/pclist";
 export const PC_FORM = "/pcform";
-export const API_BOARD = "/apiboard";
+export const PC_UPDATE_FORM = "/pcupdate";
+export const PC_DTL = "/pcdtl";
 export const API_FORM = "/apiform";
 export const FILESIZE_FORM = "/filesizeboard";
 export const NOTICE_BOARD = "/noticeboard";
