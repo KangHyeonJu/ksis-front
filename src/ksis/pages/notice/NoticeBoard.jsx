@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { NOTICE_FORM, NOTICE_BOARD } from '../../../constants/page_constant'; // 상수 경로 불러오기
+import { NOTICE_FORM, NOTICE_BOARD } from '../../../constants/page_constant';
 
 const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
@@ -106,10 +106,10 @@ const NoticeBoard = () => {
                         <tbody>
                             {paginatedNotices.map((notice) => (
                                 <tr key={notice.noticeId} onClick={() => handleNoticeClick(notice.noticeId)} className="cursor-pointer">
-                                    <td className="border border-gray-300 p-2">{new Date(notice.createdAt).toLocaleDateString()}</td>
-                                    <td className="border border-gray-300 p-2">{notice.author}</td>
+                                    <td className="border border-gray-300 p-2">{new Date(notice.regTime).toLocaleDateString()}</td>
+                                    <td className="border border-gray-300 p-2">{notice.accountId}</td>
                                     <td className="border border-gray-300 p-2">{notice.title}</td>
-                                    <td className="border border-gray-300 p-2">{notice.device}</td>
+                                    <td className="border border-gray-300 p-2">{notice.deviceName}</td>
                                 </tr>
                             ))}
                         </tbody>

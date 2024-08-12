@@ -8,28 +8,35 @@ const NoticeForm = () => {
     const [content, setContent] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [accountId, setAccountId] = useState(1); // 예시 값: 실제로는 로그인된 사용자의 ID를 사용
+    const [accountId, setAccountId] = useState(''); // 예시 값: 실제로는 로그인된 사용자의 ID를 사용
     const [deviceId, setDeviceId] = useState(''); // 필요에 따라 설정
     const [deviceName, setDeviceName] = useState(''); // 필요에 따라 설정
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        // 유효성 검사
+        if (!title.trim() || !content.trim() || !startDate || !endDate) {
+            alert('제목, 내용, 노출 시작일, 종료일 모두 입력해야 합니다.');
+            return;
+        }
+    
         try {
             const noticeData = {
                 title,
                 content,
                 startDate,
                 endDate,
-                accountId,
-                deviceId, // 서버에서 필요로 하는 디바이스 ID
-                deviceName // 서버에서 필요로 하는 디바이스명
+                accountId: accountId || 'JW',
+                deviceId: deviceId || '1', // 임의 값 설정
+                deviceName: deviceName || 'jw-123' // 임의 값 설정
             };
-
+    
             const response = await axios.post('/api/notices', noticeData);
-
+    
             if (response.status === 200 || response.status === 201) {
-                navigate(NOTICE_BOARD); // 공지글 목록 페이지로 이동
+                navigate(NOTICE_BOARD);
             } else {
                 alert('공지글 등록에 실패했습니다.');
             }
@@ -75,20 +82,20 @@ const NoticeForm = () => {
                             <div className="flex space-x-2 mb-4">
                                 <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
                                 <input
-                                    id="startDate"
-                                    type="date"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                />
+    id="startDate"
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+/>
                                 <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
                                 <input
-                                    id="endDate"
-                                    type="date"
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                />
+    id="endDate"
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+/>
                             </div>
                             {/* 필요한 경우, 디바이스 관련 입력 필드를 추가할 수 있습니다. */}
                         </div>
