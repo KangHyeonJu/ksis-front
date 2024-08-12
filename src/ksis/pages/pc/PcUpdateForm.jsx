@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import { PC_ADD, PC_LIST } from "../../../constants/api_constant";
-import { PC_DTL, PC_INVENTORY } from "../../../constants/page_constant";
+import { PC_INVENTORY } from "../../../constants/page_constant";
 
 const PcUpdateForm = () => {
   //불러오기

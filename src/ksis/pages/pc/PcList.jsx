@@ -4,8 +4,12 @@ import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
 import { PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
-import { Link } from "react-router-dom";
-import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  PC_DTL,
+  PC_FORM,
+  PC_INVENTORY,
+} from "../../../constants/page_constant";
 
 const PcList = () => {
   const [posts, setPosts] = useState([]);
@@ -33,6 +37,7 @@ const PcList = () => {
   const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedPosts, setSelectedPosts] = useState(new Set());
+  const [checkedRowId, setCheckedRowId] = useState([]);
 
   const postsPerPage = 5;
 
@@ -40,12 +45,47 @@ const PcList = () => {
     setSelectedPosts((prevSelectedPosts) => {
       const newSelectedPosts = new Set(prevSelectedPosts);
       if (newSelectedPosts.has(postId)) {
+        let newCheckedRowId = checkedRowId.filter((e) => e !== postId);
+        setCheckedRowId(newCheckedRowId);
+
         newSelectedPosts.delete(postId);
       } else {
+        setCheckedRowId([...checkedRowId, postId]);
         newSelectedPosts.add(postId);
       }
       return newSelectedPosts;
     });
+  };
+
+  useEffect(() => {
+    console.log(checkedRowId);
+  }, [checkedRowId]);
+
+  const navigate = useNavigate();
+
+  //pc 삭제
+  const deletePc = async (e) => {
+    try {
+      if (checkedRowId.length === 0) {
+        alert("삭제할 PC를 선택해주세요.");
+      } else {
+        if (window.confirm("삭제하시겠습니까?")) {
+          const queryString = checkedRowId.join(",");
+
+          const response = await fetcher.delete(
+            PC_LIST + "?pcIds=" + queryString
+          );
+
+          console.log(response.data);
+          setPosts((prevPcList) =>
+            prevPcList.filter((pc) => !checkedRowId.includes(pc.deviceId))
+          );
+          alert("pc가 정상적으로 삭제되었습니다.");
+        }
+      }
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
 
   const filteredPosts = useMemo(
@@ -102,6 +142,7 @@ const PcList = () => {
           <Link to={PC_FORM}>일반 PC 등록</Link>
         </button>
         <button
+          onClick={deletePc}
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
         >

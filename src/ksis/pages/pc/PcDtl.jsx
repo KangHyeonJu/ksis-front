@@ -94,7 +94,11 @@ const PcDtl = () => {
           >
             위치 보기
           </button>
-          <LocationModal isOpen={modalIsOpen} onRequestClose={closeModal} />
+          <LocationModal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            address={data.location}
+          />
         </div>
         <div className="flex items-center mt-5">
           <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">

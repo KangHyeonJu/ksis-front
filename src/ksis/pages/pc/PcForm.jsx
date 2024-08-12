@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import { PC_ADD } from "../../../constants/api_constant";
-import { PC_FORM, PC_INVENTORY } from "../../../constants/page_constant";
+import { PC_INVENTORY } from "../../../constants/page_constant";
 
 const PcForm = () => {
   //mac 주소 검증
