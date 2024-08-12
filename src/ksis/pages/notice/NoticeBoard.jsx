@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { NOTICE_FORM, NOTICE_BOARD } from '../../../constants/page_constant'; // 상수 경로 불러오기
 
 const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
@@ -49,7 +50,11 @@ const NoticeBoard = () => {
     };
 
     const handleRegisterClick = () => {
-        navigate('/noticeform'); // 공지글 등록 페이지로 이동
+        navigate(NOTICE_FORM); // 공지글 등록 페이지로 이동
+    };
+
+    const handleNoticeClick = (id) => {
+        navigate(`${NOTICE_BOARD}/${id}`); // 특정 공지사항 상세 페이지로 이동
     };
 
     if (loading) {
@@ -100,7 +105,7 @@ const NoticeBoard = () => {
                         </thead>
                         <tbody>
                             {paginatedNotices.map((notice) => (
-                                <tr key={notice.id}>
+                                <tr key={notice.noticeId} onClick={() => handleNoticeClick(notice.noticeId)} className="cursor-pointer">
                                     <td className="border border-gray-300 p-2">{new Date(notice.createdAt).toLocaleDateString()}</td>
                                     <td className="border border-gray-300 p-2">{notice.author}</td>
                                     <td className="border border-gray-300 p-2">{notice.title}</td>
