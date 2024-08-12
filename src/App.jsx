@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PcList from "./ksis/pages/pc/PcList";
 import "./index.css";
 import Sidebar from "./ksis/components/SideBar";
-import { PC_FORM, PC_INVENTORY, API_BOARD, API_FORM, API_FORM_EDIT, FILESIZE_FORM, NOTICE_BOARD, NOTICE_FORM } from "./constants/page_constant";
+import { PC_FORM, PC_INVENTORY, PC_DTL, PC_UPDATE_FORM, API_BOARD, API_FORM, API_FORM_EDIT, 
+  FILESIZE_FORM, NOTICE_BOARD, NOTICE_FORM } from "./constants/page_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import ApiBoard from "./ksis/pages/api/ApiBoard";
 import ApiForm from "./ksis/pages/api/ApiForm";
@@ -21,8 +22,11 @@ function App() {
         <Sidebar />
         <div className="content flex-1 p-4">
           <Routes>
+             <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
             <Route path={PC_INVENTORY} element={<PcList />} />
             <Route path={PC_FORM} element={<PcForm />} />
+            <Route path={PC_DTL + "/:id"} element={<PcDtl />} />
+            <Route path={PC_UPDATE_FORM + "/:id"} element={<PcUpdateForm />} />
             <Route path={API_BOARD} element={<ApiBoard />} />
             <Route path={API_FORM} element={<ApiForm />} /> {/* API 등록 */}
             <Route path={API_FORM_EDIT} element={<ApiForm />} /> {/* API 수정 */}

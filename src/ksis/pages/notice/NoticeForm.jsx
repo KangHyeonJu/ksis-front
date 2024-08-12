@@ -17,7 +17,7 @@ const NoticeForm = () => {
         e.preventDefault();
     
         // 유효성 검사
-        if (!title.trim() || !content.trim() || !startDate || !endDate) {
+        if (!title.trim() || !content.trim()) {
             alert('제목, 내용, 노출 시작일, 종료일 모두 입력해야 합니다.');
             return;
         }
@@ -26,12 +26,14 @@ const NoticeForm = () => {
             const noticeData = {
                 title,
                 content,
-                startDate,
+                startDate : startDate,
                 endDate,
                 accountId: accountId || 'JW',
                 deviceId: deviceId || '1', // 임의 값 설정
                 deviceName: deviceName || 'jw-123' // 임의 값 설정
             };
+
+           
     
             const response = await axios.post('/api/notices', noticeData);
     
