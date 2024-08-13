@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import PcList from "./ksis/pages/pc/PcList";
 import "./index.css";
 import Sidebar from "./ksis/components/SideBar";
@@ -7,6 +7,7 @@ import {
   PC_FORM,
   PC_INVENTORY,
   PC_UPDATE_FORM,
+  SIGNAGE_DTL,
   SIGNAGE_FORM,
   SIGNAGE_GRID,
   SIGNAGE_INVENTORY,
@@ -24,6 +25,7 @@ import PcUpdateForm from "./ksis/pages/pc/PcUpdateForm";
 import SignageList from "./ksis/pages/signage/SignageList";
 import SignageForm from "./ksis/pages/signage/SignageForm";
 import SignageGrid from "./ksis/pages/signage/SignageGrid";
+import SignageDtl from "./ksis/pages/signage/SignageDtl";
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
           <Route path={SIGNAGE_INVENTORY} element={<SignageList />} />
           <Route path={SIGNAGE_FORM} element={<SignageForm />} />
           <Route path={SIGNAGE_GRID} element={<SignageGrid />} />
+          <Route path={SIGNAGE_DTL + "/:id"} element={<SignageDtl />} />
 
           <Route path="/apiboard" element={<ApiBoard />} />
           <Route path="/apiform" element={<ApiForm />} />

@@ -3,18 +3,14 @@ import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
 import { SIGNAGE_LIST } from "../../../constants/api_constant";
-import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import {
   SIGNAGE_DTL,
   SIGNAGE_FORM,
   SIGNAGE_INVENTORY,
 } from "../../../constants/page_constant";
-import { Switch } from "@headlessui/react";
 
 const SignageGrid = () => {
-  const [enabled, setEnabled] = useState(false);
-
   const [signages, setSignages] = useState([]);
 
   const loadPage = async () => {
@@ -87,33 +83,9 @@ const SignageGrid = () => {
         </div>
       </div>
       <div className="flex justify-end space-x-2 mb-4">
-        <Switch
-          checked={enabled}
-          onChange={setEnabled}
-          className="group relative inline-flex h-6 w-20 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
-        >
-          <span className="sr-only">Use setting</span>
-          <span
-            aria-hidden="true"
-            className={`${
-              enabled ? "translate-x-14" : "translate-x-0"
-            } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
-          />
-          <span
-            className={`absolute left-2 text-sm font-medium transition duration-200 ease-in-out text-white ${
-              enabled ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <Link to={SIGNAGE_INVENTORY}>테이블</Link>
-          </span>
-          <span
-            className={`absolute right-2 text-sm font-medium transition duration-200 ease-in-out ${
-              enabled ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            그리드
-          </span>
-        </Switch>
+        <button>
+          <Link to={SIGNAGE_INVENTORY}>테이블로 보기</Link>
+        </button>
       </div>
       <div className="flex justify-end space-x-2 mb-4">
         <button

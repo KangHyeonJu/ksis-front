@@ -10,11 +10,8 @@ import {
   SIGNAGE_FORM,
   SIGNAGE_GRID,
 } from "../../../constants/page_constant";
-import { Switch } from "@headlessui/react";
 
 const SignageList = () => {
-  const [enabled, setEnabled] = useState(false);
-
   const [signages, setSignages] = useState([]);
 
   const loadPage = async () => {
@@ -138,7 +135,7 @@ const SignageList = () => {
       </div>
       <div className="flex justify-end space-x-2 mb-4">
         <button>
-          <Link to={SIGNAGE_GRID}>그리드</Link>
+          <Link to={SIGNAGE_GRID}>그리드로 보기</Link>
         </button>
       </div>
       <div className="flex justify-end space-x-2 mb-4">
