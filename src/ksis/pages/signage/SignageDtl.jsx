@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import fetcher from "../../../fetcher";
-import { PC_LIST } from "../../../constants/api_constant";
-import { PC_UPDATE_FORM } from "../../../constants/page_constant";
+import { SIGNAGE_LIST, SIGNAGE_UPDATE } from "../../../constants/api_constant";
+import { SIGNAGE_UPDATE_FORM } from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
 import { Switch } from "@headlessui/react";
+import { format, parseISO } from "date-fns";
+
 const SignageDtl = () => {
   const [enabled, setEnabled] = useState(false);
 
@@ -12,19 +14,36 @@ const SignageDtl = () => {
   const [data, setData] = useState({});
   const params = useParams();
 
-  const loadPcDtl = async (pcId) => {
+  const loadSignageDtl = async (signageId) => {
     try {
-      const response = await fetcher.get(PC_LIST + `/${pcId}`);
-      const { ...rest } = response.data;
-      setData(rest);
+      const response = await fetcher.get(SIGNAGE_LIST + `/${signageId}`);
+      console.log(response);
+      setData(response.data);
+
+      setEnabled(response.data.isShow);
     } catch (error) {
       console.log(error.response);
     }
   };
 
   useEffect(() => {
-    loadPcDtl(params.id);
+    loadSignageDtl(params.id);
   }, [params.id]);
+
+  // Switch 상태 변경 핸들러
+  const handleToggle = async () => {
+    const newEnabled = !enabled;
+    setEnabled(newEnabled);
+
+    try {
+      await fetcher.put(SIGNAGE_UPDATE + `/${data.deviceId}`, {
+        isShow: newEnabled,
+      });
+      console.log("DB 상태 업데이트 성공");
+    } catch (error) {
+      console.error("DB 상태 업데이트 실패", error);
+    }
+  };
 
   // 이전 페이지로 이동
   const navigate = useNavigate();
@@ -39,6 +58,11 @@ const SignageDtl = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
+  const formattedDate = data.regTime
+    ? format(parseISO(data.regTime), "yyyy-MM-dd")
+    : "";
+
+  console.log(formattedDate);
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
@@ -63,8 +87,8 @@ const SignageDtl = () => {
 
           <Switch
             checked={enabled}
-            onChange={setEnabled}
-            className="group relative inline-flex h-6 w-16 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-orange-600"
+            onChange={handleToggle}
+            className="ml-auto group relative inline-flex h-6 w-16 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 data-[checked]:bg-orange-600"
           >
             <span className="sr-only">Use setting</span>
             <span
@@ -112,38 +136,9 @@ const SignageDtl = () => {
 
           <input
             type="text"
-            value={data.regDate}
+            value={formattedDate}
             readOnly
-            className="bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
-          />
-          <input
-            type="text"
-            // value={data.accountList
-            //   .map((account) => `${account.name}(${account.accountId})`)
-            //   .join(", ")}
-            readOnly
-            className="bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
-          />
-
-          <button
-            type="button"
-            className="ml-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>정보 수정</Link>
-          </button>
-        </div>
-
-        <div className="flex items-center mt-5">
-          <input
-            value={data.screenSize}
-            type="text"
-            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
-          />
-
-          <input
-            value={data.resolution}
-            type="text"
-            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-none bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
 
           <input
@@ -151,22 +146,71 @@ const SignageDtl = () => {
             type="text"
             className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
+          <button
+            type="button"
+            className="ml-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
+              정보 수정
+            </Link>
+          </button>
         </div>
-      </div>
-      <div className="mt-2 flex justify-end">
-        <button
-          type="button"
-          className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>수정하기</Link>
-        </button>
-        <button
-          type="button"
-          className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          onClick={onCancel}
-        >
-          뒤로가기
-        </button>
+
+        <div className="flex items-center mt-5">
+          <input
+            value={data.screenSize}
+            type="text"
+            className="flex-none bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+          />
+
+          <input
+            value={data.resolution}
+            type="text"
+            className="flex-1 bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+          />
+
+          <input
+            type="text"
+            value={
+              data.accountList &&
+              data.accountList
+                .map((account) => `${account.name}(${account.accountId})`)
+                .join(", ")
+            }
+            readOnly
+            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+          />
+        </div>
+
+        <div className="flex items-center mt-5">
+          <button
+            type="button"
+            className="ml-2 rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          >
+            영상/이미지 불러오기
+          </button>
+        </div>
+
+        <div className="flex items-center mt-5">
+          <div className="flex-auto bg-[#ffe374] ml-2 px-4 py-60"></div>
+          <div className="flex-auto bg-[#ffe374] ml-2 px-4 py-60"></div>
+        </div>
+
+        <div className="flex items-center mt-5 justify-between">
+          <button
+            type="button"
+            className="ml-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            onClick={onCancel}
+          >
+            뒤로가기
+          </button>
+          <button
+            type="button"
+            className="rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          >
+            재생
+          </button>
+        </div>
       </div>
     </div>
   );

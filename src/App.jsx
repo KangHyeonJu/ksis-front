@@ -11,6 +11,7 @@ import {
   SIGNAGE_FORM,
   SIGNAGE_GRID,
   SIGNAGE_INVENTORY,
+  SIGNAGE_UPDATE_FORM,
 } from "./constants/page_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import ApiBoard from "./ksis/pages/api/ApiBoard";
@@ -26,6 +27,7 @@ import SignageList from "./ksis/pages/signage/SignageList";
 import SignageForm from "./ksis/pages/signage/SignageForm";
 import SignageGrid from "./ksis/pages/signage/SignageGrid";
 import SignageDtl from "./ksis/pages/signage/SignageDtl";
+import SignageUpdateForm from "./ksis/pages/signage/SignageUpdateForm";
 
 function App() {
   return (
@@ -44,6 +46,10 @@ function App() {
           <Route path={SIGNAGE_FORM} element={<SignageForm />} />
           <Route path={SIGNAGE_GRID} element={<SignageGrid />} />
           <Route path={SIGNAGE_DTL + "/:id"} element={<SignageDtl />} />
+          <Route
+            path={SIGNAGE_UPDATE_FORM + "/:id"}
+            element={<SignageUpdateForm />}
+          />
 
           <Route path="/apiboard" element={<ApiBoard />} />
           <Route path="/apiform" element={<ApiForm />} />
