@@ -1,38 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
-import { PC_ADD, PC_LIST } from "../../../constants/api_constant";
-import { PC_INVENTORY } from "../../../constants/page_constant";
+import { SIGNAGE_ADD } from "../../../constants/api_constant";
+import { SIGNAGE_INVENTORY } from "../../../constants/page_constant";
 
-const PcUpdateForm = () => {
-  //불러오기
-  const [data, setData] = useState({});
-  const params = useParams();
-  const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
-
-  const loadPcDtl = async (pcId) => {
-    try {
-      const response = await fetcher.get(PC_LIST + `/${pcId}`);
-      const { accountList, location, macAddress, ...rest } = response.data;
-      setData(rest);
-      setAddress(location);
-      setMacAddress(macAddress);
-
-      setResponsibles(
-        accountList.map((account, index) => ({
-          id: index,
-          accountId: account.accountId,
-        }))
-      );
-    } catch (error) {
-      console.log(error.response);
-    }
+const SignageForm = () => {
+  //해상도
+  const [selectedValue, setSelectedValue] = useState();
+  const handleChange = (e) => {
+    setSelectedValue(e.currentTarget.value);
   };
-
-  useEffect(() => {
-    loadPcDtl(params.id);
-  }, [params.id]);
 
   //mac 주소 검증
   const [macAddress, setMacAddress] = useState("");
@@ -114,7 +92,7 @@ const PcUpdateForm = () => {
 
   const accountGet = async () => {
     try {
-      const response = await fetcher.get(PC_ADD);
+      const response = await fetcher.get(SIGNAGE_ADD);
       console.log(response);
       if (response.data) {
         setAccounts(response.data);
@@ -138,14 +116,30 @@ const PcUpdateForm = () => {
     navigate(-1);
   };
 
-  //patch
+  //가로세로크기
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+
+  //post
+  const [data, setData] = useState({
+    macAddress: macAddress,
+    deviceName: "",
+    location: address,
+    detailAddress: "",
+    deviceType: "SIGNAGE",
+    resolution: selectedValue,
+    screenSize: "",
+  });
+
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
       macAddress: macAddress,
       location: address,
+      resolution: selectedValue,
+      screenSize: width + " x " + height,
     }));
-  }, [macAddress, address]);
+  }, [macAddress, address, selectedValue, width, height]);
 
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
@@ -156,7 +150,7 @@ const PcUpdateForm = () => {
     try {
       const formData = new FormData();
       formData.append(
-        "pcFormDto",
+        "signageFormDto",
         new Blob([JSON.stringify(data)], { type: "application/json" })
       );
 
@@ -169,21 +163,22 @@ const PcUpdateForm = () => {
 
       formData.append("accountList", JSON.stringify(accountIds));
 
-      const response = await fetcher.patch(PC_LIST, formData, {
+      const response = await fetcher.post(SIGNAGE_ADD, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       console.log(response.data);
 
-      alert("pc가 정상적으로 수정되었습니다.");
-      navigate(PC_INVENTORY);
+      alert("재생장치가 정상적으로 등록되었습니다.");
+      navigate(SIGNAGE_INVENTORY);
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response.data);
     }
   };
 
   //담당자 +, - 버튼
+  const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
 
   const addResponsible = () => {
     setResponsibles((prev) => [
@@ -208,12 +203,12 @@ const PcUpdateForm = () => {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-        일반 PC 수정
+        재생장치 등록
       </h1>
       <div className="shadow-sm ring-1 ring-gray-900/5 text-center pt-5 pb-5">
         <div className="flex items-center">
-          <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-            PC 이름
+          <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            재생장치 이름
           </label>
           <input
             value={data.deviceName}
@@ -224,7 +219,7 @@ const PcUpdateForm = () => {
             maxLength="50"
             name="deviceName"
             type="text"
-            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
           <p className="ml-2">
             <span>{inputCount}</span>
@@ -233,11 +228,10 @@ const PcUpdateForm = () => {
         </div>
         {responsibles.map((responsible, index) => (
           <div className="flex items-center mt-5" key={responsible.id}>
-            <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
               담당자
             </label>
             <select
-              value={responsible.accountId}
               id={`responsible-${responsible.id}`}
               onChange={(e) => handleResponsibleChange(e, index)}
               className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -270,7 +264,7 @@ const PcUpdateForm = () => {
           </div>
         ))}
         <div className="flex items-center mt-5">
-          <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
+          <label className="w-40 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
             위치
           </label>
           <input
@@ -288,10 +282,9 @@ const PcUpdateForm = () => {
           </button>
         </div>
         <div className="flex items-center mt-5">
-          <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900"></label>
+          <label className="w-40 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900"></label>
           <input
             placeholder=" 상세주소"
-            type="text"
             id="detailAddress"
             value={data.detailAddress}
             onChange={onChangeHandler}
@@ -300,7 +293,7 @@ const PcUpdateForm = () => {
           />
         </div>
         <div className="flex items-center mt-5">
-          <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+          <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
             Mac주소
           </label>
           <input
@@ -311,6 +304,64 @@ const PcUpdateForm = () => {
           />
           {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
         </div>
+        <div className="flex items-center mt-5">
+          <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            해상도
+          </label>
+          <select
+            onChange={handleChange}
+            value={selectedValue}
+            className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          >
+            <option value="">해상도 선택</option>
+            <option value="nHD(640 x 360)">nHD(640 x 360)</option>
+            <option value="qHD(960 x 540)">qHD(960 x 540)</option>
+            <option value="HD(1280 x 720)">HD(1280 x 720)</option>
+            <option value="FHD(1920 x 1080)">FHD(1920 x 1080)</option>
+            <option value="FHD+(2460 x 1080)">FHD+(2460 x 1080)</option>
+            <option value="WFHD(2560 x 1080)">WFHD(2560 x 1080)</option>
+            <option value="DFHD(3840 x 1080)">DFHD(3840 x 1080)</option>
+            <option value="WUXGA(1920 x 1200)">WUXGA(1920 x 1200)</option>
+            <option value="QHD(2560 x 1440)">QHD(2560 x 1440)</option>
+            <option value="QHD+(3200 x 1440)">QHD+(3200 x 1440)</option>
+            <option value="WQHD(3440 x 1440)">WQHD(3440 x 1440)</option>
+            <option value="DQHD(5120 x 1440)">DQHD(5120 x 1440)</option>
+            <option value="WQXGA(2560 x 1600)">WQXGA(2560 x 1600)</option>
+            <option value="WQHD+(3840 x 1600)">WQHD+(3840 x 1600)</option>
+            <option value="4K UHD(3840 x 2160)">4K UHD(3840 x 2160)</option>
+            <option value="4K DCI(4096 x 2160)">4K DCI(4096 x 2160)</option>
+            <option value="WUHD/UHD+(5120 x 2160)">
+              WUHD/UHD+(5120 x 2160)
+            </option>
+            <option value="8K UHD/FUHD(7680 x 4320)">
+              8K UHD/FUHD(7680 x 4320)
+            </option>
+          </select>
+        </div>
+        <div className="flex items-center mt-5">
+          <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            너비(W)
+          </label>
+          <input
+            value={width}
+            onChange={(e) => setWidth(e.target.value)}
+            type="number"
+            className="bg-[#ffe69c] block w-40 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          <p className="ml-2">(cm 기준)</p>
+        </div>
+        <div className="flex items-center mt-5">
+          <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            높이(H)
+          </label>
+          <input
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+            type="number"
+            className="bg-[#ffe69c] block w-40 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          <p className="ml-2">(cm 기준)</p>
+        </div>
       </div>
       <div className="mt-2 flex justify-end">
         <button
@@ -318,7 +369,7 @@ const PcUpdateForm = () => {
           className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           onClick={handleSave}
         >
-          저장하기
+          등록하기
         </button>
         <button
           type="button"
@@ -332,4 +383,4 @@ const PcUpdateForm = () => {
   );
 };
 
-export default PcUpdateForm;
+export default SignageForm;

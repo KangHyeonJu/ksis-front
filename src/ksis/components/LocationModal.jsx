@@ -5,7 +5,7 @@ import MapComponent from "./MapComponent";
 // 접근성 설정을 위해 모달 루트 요소 설정
 Modal.setAppElement("#root");
 
-const LocationModal = ({ isOpen, onRequestClose }) => {
+const LocationModal = ({ isOpen, onRequestClose, address }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -33,7 +33,7 @@ const LocationModal = ({ isOpen, onRequestClose }) => {
           X
         </button>
       </div>
-      <MapComponent />
+      <MapComponent address={address} />
     </Modal>
   );
 };
