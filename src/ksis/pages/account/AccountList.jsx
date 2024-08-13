@@ -53,24 +53,27 @@ const AccountList = () => {
 
 
     const handleToggleActive = async (accountId, isActive) => {
+        console.log(JSON.stringify({
+            isActive: isActive
+        }))
         try {
-            const response = await fetcher.put(`${ACCOUNT_FORM}/${accountId}/active`, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
+            const response = await fetcher.put(
+                `${ACCOUNT_FORM}/${accountId}/active`,
+                JSON.stringify({
                     isActive: isActive,
                 }),
-            });
+                {headers: {
+                    "Content-Type": "application/json"
+                }}
+            );
+            console.log("Sending data:", { isActive: isActive });
+            console.log("Data type of isActive:", typeof isActive);
 
-            if (response.ok) {
+            if (response.status === 200) {
                 console.log("Account status updated successfully");
                 // 로컬 상태 업데이트
-                setPosts((prevPosts) =>
-                    prevPosts.map((post) =>
-                        post.accountId === accountId ? { ...post, isActive: isActive } : post
-                    )
-                );
+                alert("비활성화 여부가 변경되었습니다.")
+                await loadPage();
             } else {
                 console.error("Failed to update account status:", response.statusText);
                 console.log("Sending data:", JSON.stringify({ isActive: isActive }));
