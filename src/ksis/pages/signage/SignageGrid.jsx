@@ -8,11 +8,11 @@ import { Link } from "react-router-dom";
 import {
   SIGNAGE_DTL,
   SIGNAGE_FORM,
-  SIGNAGE_GRID,
+  SIGNAGE_INVENTORY,
 } from "../../../constants/page_constant";
 import { Switch } from "@headlessui/react";
 
-const SignageList = () => {
+const SignageGrid = () => {
   const [enabled, setEnabled] = useState(false);
 
   const [signages, setSignages] = useState([]);
@@ -39,57 +39,8 @@ const SignageList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedPosts, setSelectedPosts] = useState(new Set());
-  const [checkedRowId, setCheckedRowId] = useState([]);
 
-  const postsPerPage = 5;
-
-  const handleCheckboxChange = (signageId) => {
-    setSelectedPosts((prevSelectedPosts) => {
-      const newSelectedPosts = new Set(prevSelectedPosts);
-      if (newSelectedPosts.has(signageId)) {
-        let newCheckedRowId = checkedRowId.filter((e) => e !== signageId);
-        setCheckedRowId(newCheckedRowId);
-
-        newSelectedPosts.delete(signageId);
-      } else {
-        setCheckedRowId([...checkedRowId, signageId]);
-        newSelectedPosts.add(signageId);
-      }
-      return newSelectedPosts;
-    });
-  };
-
-  useEffect(() => {
-    console.log(checkedRowId);
-  }, [checkedRowId]);
-
-  //signage 삭제
-  const deleteSignage = async (e) => {
-    try {
-      if (checkedRowId.length === 0) {
-        alert("삭제할 재생장치를 선택해주세요.");
-      } else {
-        if (window.confirm("삭제하시겠습니까?")) {
-          const queryString = checkedRowId.join(",");
-
-          const response = await fetcher.delete(
-            SIGNAGE_LIST + "?signageIds=" + queryString
-          );
-
-          console.log(response.data);
-          setSignages((prevSignageList) =>
-            prevSignageList.filter(
-              (signage) => !checkedRowId.includes(signage.deviceId)
-            )
-          );
-          alert("재생장치가 정상적으로 삭제되었습니다.");
-        }
-      }
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
+  const postsPerPage = 4;
 
   const filteredPosts = useMemo(
     () =>
@@ -123,7 +74,6 @@ const SignageList = () => {
         >
           <option value="deviceName">재생장치명</option>
           <option value="account">담당자</option>
-          <option value="regDate">등록일</option>
         </select>
         <div className="relative flex-grow">
           <input
@@ -137,9 +87,33 @@ const SignageList = () => {
         </div>
       </div>
       <div className="flex justify-end space-x-2 mb-4">
-        <button>
-          <Link to={SIGNAGE_GRID}>그리드</Link>
-        </button>
+        <Switch
+          checked={enabled}
+          onChange={setEnabled}
+          className="group relative inline-flex h-6 w-20 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
+        >
+          <span className="sr-only">Use setting</span>
+          <span
+            aria-hidden="true"
+            className={`${
+              enabled ? "translate-x-14" : "translate-x-0"
+            } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+          />
+          <span
+            className={`absolute left-2 text-sm font-medium transition duration-200 ease-in-out text-white ${
+              enabled ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <Link to={SIGNAGE_INVENTORY}>테이블</Link>
+          </span>
+          <span
+            className={`absolute right-2 text-sm font-medium transition duration-200 ease-in-out ${
+              enabled ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            그리드
+          </span>
+        </Switch>
       </div>
       <div className="flex justify-end space-x-2 mb-4">
         <button
@@ -148,65 +122,33 @@ const SignageList = () => {
         >
           <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
         </button>
-        <button
-          onClick={deleteSignage}
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-        >
-          삭제
-        </button>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
-        <thead>
-          <tr>
-            <th className="border border-gray-300">
-              <input
-                type="checkbox"
-                onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  setSelectedPosts(
-                    isChecked
-                      ? new Set(filteredPosts.map((post) => post.deviceId))
-                      : new Set()
-                  );
-                }}
+      <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
+        {paginatedPosts.map((signage) => (
+          <div
+            key={signage.deviceId}
+            className="group relative border-2 border-[#fcc310] rounded-md p-3"
+          >
+            <div className="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
+              <img
+                alt={signage.imageAlt}
+                src={signage.imageSrc}
+                className="h-full w-full object-cover object-center"
               />
-            </th>
-            <th className="border border-gray-300">재생장치명</th>
-            <th className="border border-gray-300">담당자(아이디)</th>
-            <th className="border border-gray-300">등록일</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedPosts.map((signage) => (
-            <tr key={signage.deviceId}>
-              <td className="border border-gray-300 p-2 text-center">
-                <input
-                  type="checkbox"
-                  checked={selectedPosts.has(signage.deviceId)}
-                  onChange={() => handleCheckboxChange(signage.deviceId)}
-                />
-              </td>
-
-              <td className="border border-gray-300 p-2">
-                <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
-                  {signage.deviceName}
-                </Link>
-              </td>
-
-              <td className="border border-gray-300 p-2">
-                {signage.accountList
-                  .map((account) => `${account.name}(${account.accountId})`)
-                  .join(", ")}
-              </td>
-              <td className="border border-gray-300 p-2">
-                {format(signage.regDate, "yyyy-MM-dd")}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            </div>
+            <div className="mt-2 text-gray-700 text-center w-full border-2 border-[#fcc310] rounded-md p-1">
+              재생장치 : {signage.deviceName}
+            </div>
+            <button
+              type="button"
+              className="mt-2 bg-[#fad96e] w-full rounded-md p-1"
+            >
+              <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>상세보기</Link>
+            </button>
+          </div>
+        ))}
+      </div>
 
       {filteredPosts.length > postsPerPage && (
         <ReactPaginate
@@ -241,4 +183,4 @@ const SignageList = () => {
   );
 };
 
-export default SignageList;
+export default SignageGrid;

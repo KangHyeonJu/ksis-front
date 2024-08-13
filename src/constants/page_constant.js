@@ -8,6 +8,7 @@ export const PC_DTL = "/pcdtl";
 export const SIGNAGE_INVENTORY = "/signagelist";
 export const SIGNAGE_FORM = "/signageform";
 export const SIGNAGE_DTL = "/signagedtl";
+export const SIGNAGE_GRID = "/signagegrid";
 
 //api
 export const API_FORM = "/apiform";

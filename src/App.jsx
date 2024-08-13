@@ -8,6 +8,7 @@ import {
   PC_INVENTORY,
   PC_UPDATE_FORM,
   SIGNAGE_FORM,
+  SIGNAGE_GRID,
   SIGNAGE_INVENTORY,
 } from "./constants/page_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
@@ -22,6 +23,7 @@ import PcDtl from "./ksis/pages/pc/PcDtl";
 import PcUpdateForm from "./ksis/pages/pc/PcUpdateForm";
 import SignageList from "./ksis/pages/signage/SignageList";
 import SignageForm from "./ksis/pages/signage/SignageForm";
+import SignageGrid from "./ksis/pages/signage/SignageGrid";
 
 function App() {
   return (
@@ -38,6 +40,7 @@ function App() {
 
           <Route path={SIGNAGE_INVENTORY} element={<SignageList />} />
           <Route path={SIGNAGE_FORM} element={<SignageForm />} />
+          <Route path={SIGNAGE_GRID} element={<SignageGrid />} />
 
           <Route path="/apiboard" element={<ApiBoard />} />
           <Route path="/apiform" element={<ApiForm />} />
