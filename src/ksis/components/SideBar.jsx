@@ -38,7 +38,7 @@ const Sidebar = () => {
         <div className="mb-4">
           <a className="flex items-center px-2 font-semibold text-black text-lg">
             <CiFaceSmile className="mr-2" size="24" />
-            <span>강현주(hyeonju)</span>
+            <span>신지원(jiwon)</span>
           </a>
         </div>
         <div className="flex space-x-2 mb-4">

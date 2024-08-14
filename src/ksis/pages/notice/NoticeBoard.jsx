@@ -106,7 +106,7 @@ const NoticeBoard = () => {
                         <tbody>
                             {paginatedNotices.map((notice) => (
                                 <tr key={notice.noticeId} onClick={() => handleNoticeClick(notice.noticeId)} className="cursor-pointer">
-                                    <td className="border border-gray-300 p-2">{new Date(notice.regTime).toLocaleDateString()}</td>
+                                    <td className="border border-gray-300 p-2">{notice.regTime}</td>
                                     <td className="border border-gray-300 p-2">{notice.accountId}</td>
                                     <td className="border border-gray-300 p-2">{notice.title}</td>
                                     <td className="border border-gray-300 p-2">{notice.deviceName}</td>
