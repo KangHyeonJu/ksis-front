@@ -7,6 +7,7 @@ import LocationModal from "../../components/LocationModal";
 import { Switch } from "@headlessui/react";
 import { format, parseISO } from "date-fns";
 import NoticeModal from "./NoticeModal";
+import SignageResourceModal from "./SginageResource";
 
 const SignageDtl = () => {
   const [enabled, setEnabled] = useState(false);
@@ -66,6 +67,12 @@ const SignageDtl = () => {
 
   const openNoticeModal = () => setNoticeModalIsOpen(true);
   const closeNoticeModal = () => setNoticeModalIsOpen(false);
+
+  //이미지/영상 불러오기
+  const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
+
+  const openResourceModal = () => setResourceModalIsOpen(true);
+  const closeResourceModal = () => setResourceModalIsOpen(false);
 
   const formattedDate = data.regTime
     ? format(parseISO(data.regTime), "yyyy-MM-dd")
@@ -198,11 +205,16 @@ const SignageDtl = () => {
 
         <div className="flex items-center mt-5">
           <button
+            onClick={openResourceModal}
             type="button"
             className="ml-2 rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             영상/이미지 불러오기
           </button>
+          <SignageResourceModal
+            isOpen={resourceModalIsOpen}
+            onRequestClose={closeResourceModal}
+          />
         </div>
 
         <div className="flex items-center mt-5">
