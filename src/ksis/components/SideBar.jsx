@@ -68,18 +68,18 @@ const Sidebar = () => {
               <span>계정관리</span>
             </div>
             {openMenu === "account" && (
-              <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  계정조회
-                </a>
-                <a href="#" className="block py-1">
-                  로그기록
-                </a>
-              </div>
+                <div className="submenu ml-8 mt-2">
+                  <Link to="/accountList" className="block py-1">
+                    계정목록 조회
+                  </Link>
+                  <a href="#" className="block py-1">
+                    로그기록
+                  </a>
+                </div>
             )}
           </div>
           <div className="item mt-3">
-            <div
+          <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
               onClick={() => toggleMenu("profile")}
             >
