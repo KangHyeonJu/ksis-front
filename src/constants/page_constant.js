@@ -12,4 +12,13 @@ export const SIGNAGE_GRID = "/signagegrid";
 export const SIGNAGE_UPDATE_FORM = "/signageupdate";
 
 //api
+export const API_BOARD = "/apiboard";
 export const API_FORM = "/apiform";
+export const API_FORM_EDIT = "/apiform/:apiId";
+
+//filesize
+export const FILESIZE_FORM = "/filesizeboard";
+
+//notice
+export const NOTICE_BOARD = "/noticeboard";
+export const NOTICE_FORM = "/noticeform";

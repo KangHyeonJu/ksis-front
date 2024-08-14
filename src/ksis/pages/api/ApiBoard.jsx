@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { API_BOARD, API_FORM } from "../../../constants/page_constant";
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([]);
@@ -71,7 +72,7 @@ const ApiBoard = () => {
             setPosts(prevPosts => prevPosts.filter(post => !selectedPosts.has(post.apiId)));
             setSelectedPosts(new Set());
             alert('선택된 게시글이 삭제되었습니다.'); // 삭제 완료 알림
-            navigate('/apiboard'); // 게시글 삭제 후 보드로 이동
+            navigate({API_BOARD}); // 게시글 삭제 후 보드로 이동
         } catch (err) {
             console.error('Error deleting posts:', err);
             setError('게시글 삭제 중 오류가 발생했습니다.');
@@ -103,7 +104,7 @@ const ApiBoard = () => {
 
     // Handle navigation to the API form when API name is clicked
     const handleApiNameClick = (apiId) => {
-        navigate(`/apiform/${apiId}`);
+        navigate(`${API_FORM}/${apiId}`);
     };
 
     // Determine if all posts in the current page are selected
@@ -165,7 +166,7 @@ const ApiBoard = () => {
             {/* 조회 테이블 */}
             <div>
                 {filteredPosts.length === 0 ? (
-                    <p>게시글이 없습니다.</p>
+                    <p>등록된 API가 없습니다.</p>
                 ) : (
                     <table className="w-full border-collapse border border-gray-200">
                         <thead>

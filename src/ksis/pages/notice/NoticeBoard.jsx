@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { NOTICE_FORM, NOTICE_BOARD } from '../../../constants/page_constant';
 
 const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
@@ -13,30 +15,18 @@ const NoticeBoard = () => {
     const noticesPerPage = 5;
     const navigate = useNavigate();
 
-    // 하드코딩된 공지글 데이터
-    const dummyNotices = [
-        { id: 1, createdAt: '2024-08-01', author: 'user1', title: '공지사항 1', device: '모바일' },
-        { id: 2, createdAt: '2024-08-02', author: 'user2', title: '공지사항 2', device: 'PC' },
-        { id: 3, createdAt: '2024-08-03', author: 'user3', title: '공지사항 3', device: '모바일' },
-        { id: 4, createdAt: '2024-08-04', author: 'user4', title: '공지사항 4', device: '모바일' },
-        { id: 5, createdAt: '2024-08-05', author: 'user5', title: '공지사항 5', device: 'PC' },
-        { id: 6, createdAt: '2024-08-06', author: 'user6', title: '공지사항 6', device: '모바일' },
-        { id: 7, createdAt: '2024-08-07', author: 'user7', title: '공지사항 7', device: 'PC' },
-        { id: 8, createdAt: '2024-08-08', author: 'user8', title: '공지사항 8', device: '모바일' },
-        { id: 9, createdAt: '2024-08-09', author: 'user9', title: '공지사항 9', device: '모바일' },
-        { id: 10, createdAt: '2024-08-10', author: 'user10', title: '공지사항 10', device: 'PC' },
-    ];
-
     useEffect(() => {
         setLoading(true);
-        try {
-            // 실제 API 요청 대신 하드코딩된 데이터 사용
-            setNotices(dummyNotices);
-        } catch (err) {
-            setError('데이터를 가져오는 데 실패했습니다.');
-        } finally {
-            setLoading(false);
-        }
+        axios.get('/api/notices')
+            .then(response => {
+                setNotices(response.data);
+            })
+            .catch(err => {
+                setError('데이터를 가져오는 데 실패했습니다.');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
 
     const filteredNotices = useMemo(() =>
@@ -60,7 +50,11 @@ const NoticeBoard = () => {
     };
 
     const handleRegisterClick = () => {
-        navigate('/noticeform'); // 공지글 등록 페이지로 이동
+        navigate(NOTICE_FORM); // 공지글 등록 페이지로 이동
+    };
+
+    const handleNoticeClick = (id) => {
+        navigate(`${NOTICE_BOARD}/${id}`); // 특정 공지사항 상세 페이지로 이동
     };
 
     if (loading) {
@@ -111,11 +105,11 @@ const NoticeBoard = () => {
                         </thead>
                         <tbody>
                             {paginatedNotices.map((notice) => (
-                                <tr key={notice.id}>
-                                    <td className="border border-gray-300 p-2">{new Date(notice.createdAt).toLocaleDateString()}</td>
-                                    <td className="border border-gray-300 p-2">{notice.author} ({notice.id})</td>
+                                <tr key={notice.noticeId} onClick={() => handleNoticeClick(notice.noticeId)} className="cursor-pointer">
+                                    <td className="border border-gray-300 p-2">{notice.regTime}</td>
+                                    <td className="border border-gray-300 p-2">{notice.accountId}</td>
                                     <td className="border border-gray-300 p-2">{notice.title}</td>
-                                    <td className="border border-gray-300 p-2">{notice.device}</td>
+                                    <td className="border border-gray-300 p-2">{notice.deviceName}</td>
                                 </tr>
                             ))}
                         </tbody>

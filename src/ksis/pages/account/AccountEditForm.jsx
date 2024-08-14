@@ -1,23 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import {Link, useNavigate} from "react-router-dom";
-import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import fetcher from "../../../fetcher";
-import {ACCOUNT_FORM, ACCOUNT_LIST} from "../../../constants/account_constant";
+import { ACCOUNT_FORM, ACCOUNT_LIST } from "../../../constants/account_constant";
 
-const AccountRegForm = () => {
+const AccountEditForm = () => {
+    const { accountId } = useParams();
     const [formData, setFormData] = useState({
-        accountId: '',
-        password: '',
-        confirmPassword: '',
-        name: '',
-        birthDate: '',
-        businessTel: '',
-        emergencyTel: '',
-        email: '',
-        position: '',
-        gender: '',
+        accountId: "",
+        password: "",
+        confirmPassword: "",
+        name: "",
+        birthDate: "",
+        businessTel: "",
+        emergencyTel: "",
+        email: "",
+        position: "",
+        gender: "",
     });
     const [passwordMatch, setPasswordMatch] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // 계정 데이터를 가져와서 폼에 설정합니다.
+        const fetchAccountData = async () => {
+            try {
+                const response = await fetcher.get(`${ACCOUNT_FORM}/${accountId}`);
+                if (response.data) {
+                    setFormData({
+                        ...response.data,
+                        password: "",
+                        confirmPassword: "",
+                    });
+                } else {
+                    console.error("계정 데이터를 가져오지 못했습니다.");
+                }
+            } catch (error) {
+                console.error("데이터를 가져오는 중 오류 발생:", error);
+            }
+        };
+
+        fetchAccountData();
+    }, [accountId]);
 
     useEffect(() => {
         // 비밀번호와 비밀번호 확인이 일치하는지 확인
@@ -36,67 +59,49 @@ const AccountRegForm = () => {
         setFormData({ ...formData, [name]: value });
 
         // 비밀번호와 비밀번호 확인 일치 확인
-        if (name === 'password' || name === 'confirmPassword') {
+        if (name === "password" || name === "confirmPassword") {
             setPasswordMatch(formData.password === formData.confirmPassword);
         }
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!passwordMatch) {
-            alert('비밀번호가 일치하지 않습니다. 다시 확인해 주세요.');
+            alert("비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
             return;
         }
 
         const cleanedFormData = {
             ...formData,
-            gender: formData.gender.trim() === '' ? 'UNKNOWN' : formData.gender, // 'UNKNOWN'으로 설정
+            gender: formData.gender.trim() === "" ? "UNKNOWN" : formData.gender,
         };
 
         try {
-            const response = await fetcher.post(ACCOUNT_FORM, cleanedFormData, {
-            });
-            setFormData({
-                accountId: '',
-                password: '',
-                confirmPassword: '',
-                name: '',
-                birthDate: '',
-                businessTel: '',
-                emergencyTel: '',
-                email: '',
-                position: '',
-                gender: '',
-            });
-
-            console.log(cleanedFormData);
-        } catch (error) {
-            console.error('Error creating account:', error);
-            console.log('Form Data:', JSON.stringify(cleanedFormData));
-
-            // Axios 에러의 상세 정보 확인
-            if (error.response) {
-                console.error('Error Response Data:', error.response.data);
-                console.error('Error Response Status:', error.response.status);
-                console.error('Error Response Headers:', error.response.headers);
-            } else if (error.request) {
-                console.error('Error Request Data:', error.request);
+            const response = await fetcher.put(`${ACCOUNT_FORM}/${accountId}`, cleanedFormData);
+            console.log(response)
+            if (response.status === 200) {
+                alert("계정 정보가 성공적으로 업데이트되었습니다.");
+                navigate(ACCOUNT_LIST);
             } else {
-                console.error('Error Message:', error.message);
+                console.error("계정 업데이트에 실패했습니다.");
             }
+        } catch (error) {
+            console.error("계정 업데이트 중 오류 발생:", error);
         }
     };
 
     return (
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-                계정 등록
+                계정 수정
             </h1>
             <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-6 bg-white rounded-lg">
                 <form onSubmit={handleSubmit}>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="accountId" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="accountId"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             아이디*
                         </label>
                         <input
@@ -104,13 +109,15 @@ const AccountRegForm = () => {
                             name="accountId"
                             type="text"
                             value={formData.accountId}
-                            onChange={handleChange}
-                            required
-                            className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            readOnly
+                            className="bg-gray-200 block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="password" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="password"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             비밀번호*
                         </label>
                         <input
@@ -119,12 +126,14 @@ const AccountRegForm = () => {
                             type="password"
                             value={formData.password}
                             onChange={handlePasswordChange}
-                            required
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="confirmPassword" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="confirmPassword"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             비밀번호 확인*
                         </label>
                         <input
@@ -133,19 +142,23 @@ const AccountRegForm = () => {
                             type="password"
                             value={formData.confirmPassword}
                             onChange={handlePasswordChange}
-                            required
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
                     {formData.confirmPassword && (
                         <div
-                            className={`mt-2 font-bold ${passwordMatch ? 'text-green-600' : 'text-red-600'}`}
+                            className={`mt-2 font-bold ${
+                                passwordMatch ? "text-green-600" : "text-red-600"
+                            }`}
                         >
-                            {passwordMatch ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.'}
+                            {passwordMatch ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다."}
                         </div>
                     )}
                     <div className="flex items-center mt-2">
-                        <label htmlFor="name" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="name"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             이름*
                         </label>
                         <input
@@ -159,7 +172,10 @@ const AccountRegForm = () => {
                         />
                     </div>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="birthDate" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="birthDate"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             생년월일
                         </label>
                         <input
@@ -172,7 +188,10 @@ const AccountRegForm = () => {
                         />
                     </div>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="businessTel" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="businessTel"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             업무 전화번호*
                         </label>
                         <input
@@ -186,7 +205,10 @@ const AccountRegForm = () => {
                         />
                     </div>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="emergencyTel" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="emergencyTel"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             긴급 연락처
                         </label>
                         <input
@@ -199,8 +221,11 @@ const AccountRegForm = () => {
                         />
                     </div>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="email" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-                            이메일*
+                        <label
+                            htmlFor="email"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
+                            이메일
                         </label>
                         <input
                             id="email"
@@ -208,12 +233,14 @@ const AccountRegForm = () => {
                             type="email"
                             value={formData.email}
                             onChange={handleChange}
-                            required
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
                     <div className="flex items-center mt-2">
-                        <label htmlFor="position" className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+                        <label
+                            htmlFor="position"
+                            className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                        >
                             직위
                         </label>
                         <input
@@ -222,7 +249,7 @@ const AccountRegForm = () => {
                             type="text"
                             value={formData.position}
                             onChange={handleChange}
-                            className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                         />
                     </div>
                     <div className="flex items-center mt-2">
@@ -256,19 +283,19 @@ const AccountRegForm = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-4 flex gap-4 justify-end">
+                    <div className= "mt-4 flex gap-2 justify-end" >
                         <button
                             type="submit"
-                            className="bg-[#008080] text-white rounded-full px-4 py-2 font-semibold hover:bg-teal-700"
+                            className="bg-[#0034ff] hover:bg-[#5500ff] mt-4 mx-1 py-1.5 px-4 rounded-full text-sm font-semibold leading-6 text-white shadow-sm"
                         >
-                            등록
+                            저장
                         </button>
-                        <button
-                            type="button"
-                            className="bg-[#ff0000] text-white rounded-full px-4 py-2 font-semibold hover:bg-red-700"
+                        <Link
+                            to={ACCOUNT_LIST}
+                            className="bg-[#ff0000] hover:bg-red-400 mt-4 mx-1 py-1.5 px-4 rounded-full text-sm font-semibold leading-6 text-white shadow-sm"
                         >
-                            <Link to={ACCOUNT_LIST}>취소</Link>
-                        </button>
+                            취소
+                        </Link>
                     </div>
                 </form>
             </div>
@@ -276,5 +303,4 @@ const AccountRegForm = () => {
     );
 };
 
-
-export default AccountRegForm;
+export default AccountEditForm;

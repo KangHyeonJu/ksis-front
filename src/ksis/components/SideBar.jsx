@@ -10,7 +10,7 @@ import {
   MdChat,
   MdDevices,
 } from "react-icons/md";
-import { PC_INVENTORY, SIGNAGE_INVENTORY } from "../../constants/page_constant";
+import { PC_INVENTORY, SIGNAGE_INVENTORY,  API_BOARD, FILESIZE_FORM, NOTICE_BOARD } from "../../constants/page_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -38,7 +38,7 @@ const Sidebar = () => {
         <div className="mb-4">
           <a className="flex items-center px-2 font-semibold text-black text-lg">
             <CiFaceSmile className="mr-2" size="24" />
-            <span>강현주(hyeonju)</span>
+            <span>신지원(jiwon)</span>
           </a>
         </div>
         <div className="flex space-x-2 mb-4">
@@ -68,18 +68,18 @@ const Sidebar = () => {
               <span>계정관리</span>
             </div>
             {openMenu === "account" && (
-              <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  계정조회
-                </a>
-                <a href="#" className="block py-1">
-                  로그기록
-                </a>
-              </div>
+                <div className="submenu ml-8 mt-2">
+                  <Link to="/accountList" className="block py-1">
+                    계정목록 조회
+                  </Link>
+                  <a href="#" className="block py-1">
+                    로그기록
+                  </a>
+                </div>
             )}
           </div>
           <div className="item mt-3">
-            <div
+          <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
               onClick={() => toggleMenu("profile")}
             >
@@ -100,11 +100,8 @@ const Sidebar = () => {
           <div className="item mt-3">
             <div className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer">
               <MdChat className="mr-3" />
-              <span>
-                <Link to="/noticeboard" className="block py-1">
-                  공지글 관리
-                </Link>
-              </span>
+              <span><Link
+                  to={NOTICE_BOARD} className="block py-1">공지글 관리</Link></span>
             </div>
           </div>
           <div className="item mt-3">
@@ -144,19 +141,17 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link
-                  to="/apiboard"
-                  className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                >
-                  <FaRegCircle size={10} className="mr-2" />
-                  <span>API 조회</span>
-                </Link>
-                <Link
-                  to="/filesizeboard"
-                  className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                >
-                  <FaRegCircle size={10} className="mr-2" />
-                  <span>용량 관리</span>
+                <Link  to={API_BOARD} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
+                  API 조회
+                  </span>
+                </Link >
+                <Link  to={FILESIZE_FORM} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
+                  용량 관리
+                  </span>
                 </Link>
               </div>
             )}
