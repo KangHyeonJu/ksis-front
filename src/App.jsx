@@ -59,6 +59,7 @@ function App() {
             
             <Route path={NOTICE_BOARD} element={<NoticeBoard />} />
             <Route path={NOTICE_FORM} element={<NoticeForm />} />
+            <Route path={NOTICE_FORM + "/:id"} element={<NoticeForm />} />
 
             {/* 다른 라우트들을 추가할 수 있습니다 */}
           </Routes>

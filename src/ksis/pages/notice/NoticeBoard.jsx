@@ -54,7 +54,7 @@ const NoticeBoard = () => {
     };
 
     const handleNoticeClick = (id) => {
-        navigate(`${NOTICE_BOARD}/${id}`); // 특정 공지사항 상세 페이지로 이동
+        navigate(`${NOTICE_FORM}/${id}`); // 특정 공지사항 상세 페이지로 이동
     };
 
     if (loading) {
@@ -98,7 +98,7 @@ const NoticeBoard = () => {
                         <thead>
                             <tr>
                                 <th className="border border-gray-300 p-2">작성일</th>
-                                <th className="border border-gray-300 p-2">작성자(아이디)</th>
+                                <th className="border border-gray-300 p-2">작성자</th>
                                 <th className="border border-gray-300 p-2">제목</th>
                                 <th className="border border-gray-300 p-2">재생장치</th>
                             </tr>
@@ -106,8 +106,10 @@ const NoticeBoard = () => {
                         <tbody>
                             {paginatedNotices.map((notice) => (
                                 <tr key={notice.noticeId} onClick={() => handleNoticeClick(notice.noticeId)} className="cursor-pointer">
-                                    <td className="border border-gray-300 p-2">{notice.regTime}</td>
-                                    <td className="border border-gray-300 p-2">{notice.accountId}</td>
+                                    {/* 작성일은 YYYY-MM-DD 형식으로 포맷팅 */}
+                                    <td className="border border-gray-300 p-2">{new Date(notice.regTime).toISOString().split('T')[0]}</td>
+                                    {/* 작성자 이름과 아이디를 함께 표시 */}
+                                    <td className="border border-gray-300 p-2">{notice.name} ({notice.accountId})</td>
                                     <td className="border border-gray-300 p-2">{notice.title}</td>
                                     <td className="border border-gray-300 p-2">{notice.deviceName}</td>
                                 </tr>
