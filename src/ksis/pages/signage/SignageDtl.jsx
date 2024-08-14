@@ -7,7 +7,7 @@ import LocationModal from "../../components/LocationModal";
 import { Switch } from "@headlessui/react";
 import { format, parseISO } from "date-fns";
 import NoticeModal from "./NoticeModal";
-import SignageResourceModal from "./SginageResource";
+import SignageResourceModal from "./SignageResourceModal";
 
 const SignageDtl = () => {
   const [enabled, setEnabled] = useState(false);
