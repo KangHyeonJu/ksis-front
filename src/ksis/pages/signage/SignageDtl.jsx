@@ -6,6 +6,7 @@ import { SIGNAGE_UPDATE_FORM } from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
 import { Switch } from "@headlessui/react";
 import { format, parseISO } from "date-fns";
+import NoticeModal from "./NoticeModal";
 
 const SignageDtl = () => {
   const [enabled, setEnabled] = useState(false);
@@ -35,9 +36,11 @@ const SignageDtl = () => {
     const newEnabled = !enabled;
     setEnabled(newEnabled);
 
+    console.log(newEnabled);
+
     try {
       await fetcher.put(SIGNAGE_UPDATE + `/${data.deviceId}`, {
-        isShow: newEnabled,
+        showNotice: newEnabled,
       });
       console.log("DB 상태 업데이트 성공");
     } catch (error) {
@@ -58,11 +61,16 @@ const SignageDtl = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
+  //공지 조회
+  const [noticeModalIsOpen, setNoticeModalIsOpen] = useState(false);
+
+  const openNoticeModal = () => setNoticeModalIsOpen(true);
+  const closeNoticeModal = () => setNoticeModalIsOpen(false);
+
   const formattedDate = data.regTime
     ? format(parseISO(data.regTime), "yyyy-MM-dd")
     : "";
 
-  console.log(formattedDate);
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
@@ -79,11 +87,17 @@ const SignageDtl = () => {
             className="bg-[#ffe374] block w-80 ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
           <button
+            onClick={openNoticeModal}
             type="button"
             className="ml-2 relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             공지조회
           </button>
+          <NoticeModal
+            isOpen={noticeModalIsOpen}
+            onRequestClose={closeNoticeModal}
+            signageId={data.deviceId}
+          />
 
           <Switch
             checked={enabled}
