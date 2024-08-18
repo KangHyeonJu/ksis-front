@@ -161,7 +161,8 @@ const NoticeForm = () => {
                             
                         </div>
                         <div className="border border-gray-300 rounded-lg p-2 shadow-sm bg-white">
-                            <div className="flex space-x-2 mb-4">
+                            <div className="flex items-center space-x-4 mb-4">
+                                {/* 노출 시작일 */}
                                 <div className="flex-1">
                                     <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
                                     <input
@@ -172,6 +173,11 @@ const NoticeForm = () => {
                                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     />
                                 </div>
+                                
+                                {/* ~ 기호 */}
+                                <span className="text-lg font-semibold">~</span>
+
+                                {/* 종료일 */}
                                 <div className="flex-1">
                                     <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
                                     <input
