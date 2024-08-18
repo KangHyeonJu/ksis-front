@@ -134,11 +134,12 @@ const NoticeDetail = () => {
                                 rows="4"
                             />
                         </div>
-                        <div className="rounded-lg p-2 shadow-sm bg-white">
+                <div className="rounded-lg p-2 shadow-sm bg-white">
                     <div className="flex items-center gap-4 mb-4">
                         {/* 노출 시작일 */}
                         <div className="flex-1 flex items-center">
-                            <label htmlFor="startDate" className="w-2/4 block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
+                            <label htmlFor="startDate" 
+                            className="w-2/4 block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
                             <input
                                 id="startDate"
                                 type="date"

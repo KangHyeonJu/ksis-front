@@ -99,9 +99,10 @@ const NoticeForm = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 gap-4">
                         <div>
-                            <label htmlFor="title" className="block text-sm font-semibold leading-6 text-gray-900">제목</label>
+                            <label htmlFor="title"></label>
                             <input
                                 id="title"
+                                placeholder='제목을 입력하세요.'
                                 type="text"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
@@ -109,9 +110,10 @@ const NoticeForm = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="content" className="block text-sm font-semibold leading-6 text-gray-900">내용</label>
+                            <label htmlFor="content"></label>
                             <textarea
                                 id="content"
+                                placeholder='내용을 입력하세요.'
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 className="mt-1 block w-full p-5 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -119,7 +121,7 @@ const NoticeForm = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold leading-6 text-gray-900">재생장치</label>
+                            <label htmlFor="deviceId"></label>
                             {deviceIds.map((deviceId, index) => (
                                 <div key={index} className="flex items-center mb-2">
                                     <select
@@ -160,11 +162,11 @@ const NoticeForm = () => {
                             ))}
                             
                         </div>
-                        <div className="border border-gray-300 rounded-lg p-2 shadow-sm bg-white">
+                        <div className="rounded-lg p-2 shadow-sm bg-white">
                             <div className="flex items-center space-x-4 mb-4">
                                 {/* 노출 시작일 */}
-                                <div className="flex-1">
-                                    <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
+                                <div className="flex-1 flex items-center">
+                                    <label htmlFor="startDate" className="w-2/4 block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
                                     <input
                                         id="startDate"
                                         type="date"
@@ -178,8 +180,8 @@ const NoticeForm = () => {
                                 <span className="text-lg font-semibold">~</span>
 
                                 {/* 종료일 */}
-                                <div className="flex-1">
-                                    <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
+                                <div className="flex-1 flex items-center">
+                                    <label htmlFor="endDate" className="w-1/4 block text-sm font-semibold leading-6 text-gray-900">종료일</label>
                                     <input
                                         id="endDate"
                                         type="date"
