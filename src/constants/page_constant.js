@@ -22,3 +22,6 @@ export const FILESIZE_FORM = "/filesizeboard";
 export const NOTICE_BOARD = "/noticeboard";
 export const NOTICE_FORM = "/noticeform";
 export const NOTICE_DTL = "/noticedtl";
+
+//fileManage
+export const IMAGE_BOARD = "/imageBoard";
