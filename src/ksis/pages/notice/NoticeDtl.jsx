@@ -79,9 +79,7 @@ const NoticeDetail = () => {
             <div className="border border-gray-300 rounded-lg p-6 shadow-sm bg-[#ffe69c]">
                 <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
                     <div className="grid grid-cols-1 gap-4">
-                        {/* Flex container for alignment */}
                         <div className="flex gap-4">
-                            {/* 재생장치 */}
                             <div className="flex-1 flex items-center">
                                 <label
                                     htmlFor="device_id"
@@ -92,12 +90,11 @@ const NoticeDetail = () => {
                                 <input
                                     id="device_id"
                                     type="text"
-                                    value={notice.deviceIds ? notice.deviceIds.join(', ') : ''} // 배열을 문자열로 변환
+                                    value={notice.deviceIds ? notice.deviceIds.join(', ') : ''}
                                     readOnly
                                     className="ml-0 flex-1 p-2 border border-gray-300 rounded-md shadow-sm bg-white"
                                 />
                             </div>
-                            {/* 작성일 */}
                             <div className="flex-1 flex items-center">
                                 <label
                                     htmlFor="regTime"
@@ -134,42 +131,33 @@ const NoticeDetail = () => {
                                 rows="4"
                             />
                         </div>
-                <div className="rounded-lg p-2 shadow-sm bg-white">
-                    <div className="flex items-center gap-4 mb-4">
-                        {/* 노출 시작일 */}
-                        <div className="flex-1 flex items-center">
-                            <label htmlFor="startDate" 
-                            className="w-2/4 block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
-                            <input
-                                id="startDate"
-                                type="date"
-                                value={notice.startDate}
-                                readOnly
-                                className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
-                            />
-                        </div>
-                        
-                        {/* ~ 기호 */}
-                        <span className="text-lg font-semibold">~</span>
-                        
-                        {/* 종료일 */}
-                        <div className="flex-1 flex items-center">
-                            <label htmlFor="endDate" className="w-1/4 block text-sm font-semibold leading-6 text-gray-900">종료일</label>
-                            <input
-                                id="endDate"
-                                type="date"
-                                value={notice.endDate}
-                                readOnly
-                                className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
-                            />
+                        <div className="rounded-lg p-2 shadow-sm bg-white">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="flex-1 flex items-center">
+                                    <label htmlFor="startDate" className="w-2/4 block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
+                                    <input
+                                        id="startDate"
+                                        type="date"
+                                        value={notice.startDate}
+                                        readOnly
+                                        className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
+                                    />
+                                </div>
+                                <span className="text-lg font-semibold">~</span>
+                                <div className="flex-1 flex items-center">
+                                    <label htmlFor="endDate" className="w-1/4 block text-sm font-semibold leading-6 text-gray-900">종료일</label>
+                                    <input
+                                        id="endDate"
+                                        type="date"
+                                        value={notice.endDate}
+                                        readOnly
+                                        className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                    </div>
-
                     <div className="flex justify-between gap-4 mt-2">
-                        {/* 왼쪽에 위치할 버튼 */}
                         <div className="flex items-center">
                             <button
                                 type="button"
@@ -179,8 +167,6 @@ const NoticeDetail = () => {
                                 뒤로가기
                             </button>
                         </div>
-                        
-                        {/* 오른쪽에 위치할 버튼들 */}
                         <div className="flex gap-2 items-center">
                             <button
                                 type="button"
@@ -198,7 +184,6 @@ const NoticeDetail = () => {
                             </button>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>

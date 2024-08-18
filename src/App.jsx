@@ -1,7 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
-import { API_BOARD, API_FORM, API_FORM_EDIT, FILESIZE_FORM, NOTICE_BOARD, NOTICE_FORM, NOTICE_DTL } from "./constants/page_constant";
+import { 
+  API_BOARD, 
+  API_FORM, 
+  API_FORM_EDIT, 
+  FILESIZE_FORM, 
+  NOTICE_BOARD, 
+  NOTICE_FORM, 
+  NOTICE_DTL 
+} from "./constants/page_constant";
 import {
   PC_DTL,
   PC_FORM,
@@ -38,30 +46,36 @@ function App() {
         <Sidebar />
         <div className="content flex-1 p-4">
           <Routes>
-             <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
-             <Route path={ACCOUNT_LIST} element={<AccountList />} />
-             <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm/>} />
+          {/* 계정 관련 경로 */}
+          <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
+          <Route path={ACCOUNT_LIST} element={<AccountList />} />
+          <Route path={ACCOUNT_EDIT_FORM + "/:accountId"} element={<AccountEditForm />} />
 
-            <Route path={PC_INVENTORY} element={<PcList />} />
-            <Route path={PC_FORM} element={<PcForm />} />
-            <Route path={PC_DTL + "/:id"} element={<PcDtl />} />
-            <Route path={PC_UPDATE_FORM + "/:id"} element={<PcUpdateForm />} />
+          {/* PC 관련 경로 */}
+          <Route path={PC_INVENTORY} element={<PcList />} />
+          <Route path={PC_FORM} element={<PcForm />} />
+          <Route path={PC_DTL + "/:id"} element={<PcDtl />} />
+          <Route path={PC_UPDATE_FORM + "/:id"} element={<PcUpdateForm />} />
 
-            <Route path={SIGNAGE_INVENTORY} element={<SignageList />} />
+          {/* Signage 관련 경로 */}
+          <Route path={SIGNAGE_INVENTORY} element={<SignageList />} />
           <Route path={SIGNAGE_FORM} element={<SignageForm />} />
           <Route path={SIGNAGE_GRID} element={<SignageGrid />} />
           <Route path={SIGNAGE_DTL + "/:id"} element={<SignageDtl />} />
 
-            <Route path={API_BOARD} element={<ApiBoard />} />
-            <Route path={API_FORM} element={<ApiForm />} /> {/* API 등록 */}
-            <Route path={API_FORM_EDIT} element={<ApiForm />} /> {/* API 수정 */}
+          {/* API 관련 경로 */}
+          <Route path={API_BOARD} element={<ApiBoard />} />
+          <Route path={API_FORM} element={<ApiForm />} />
+          <Route path={API_FORM_EDIT + "/:apiId"} element={<ApiForm />} />
 
-            <Route path={FILESIZE_FORM} element={<FileSizeBoard />} />
-            
-            <Route path={NOTICE_BOARD} element={<NoticeBoard />} />
-            <Route path={NOTICE_FORM} element={<NoticeForm />} />
-            <Route path={NOTICE_DTL + "/:noticeId"} element={<NoticeDtl />} />
+          {/* File Size 관련 경로 */}
+          <Route path={FILESIZE_FORM} element={<FileSizeBoard />} />
 
+          {/* 공지사항 관련 경로 */}
+          <Route path={NOTICE_BOARD} element={<NoticeBoard />} />
+          <Route path={NOTICE_FORM} element={<NoticeForm />} />
+          <Route path={NOTICE_FORM + "/:noticeId"} element={<NoticeForm />} />
+          <Route path={NOTICE_DTL + "/:noticeId"} element={<NoticeDtl />} />
             {/* 다른 라우트들을 추가할 수 있습니다 */}
           </Routes>
         </div>
