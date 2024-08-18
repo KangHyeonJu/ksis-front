@@ -115,7 +115,7 @@ const NoticeDetail = () => {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="title" className="block text-sm font-semibold leading-6 text-gray-900">제목</label>
+                            <label htmlFor="title"></label>
                             <input
                                 id="title"
                                 type="text"
@@ -125,7 +125,7 @@ const NoticeDetail = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="content" className="block text-sm font-semibold leading-6 text-gray-900">내용</label>
+                            <label htmlFor="content"></label>
                             <textarea
                                 id="content"
                                 value={notice.content}
@@ -134,17 +134,17 @@ const NoticeDetail = () => {
                                 rows="4"
                             />
                         </div>
-                        <div className="border border-gray-300 rounded-lg p-2 shadow-sm bg-white">
+                        <div className="rounded-lg p-2 shadow-sm bg-white">
                     <div className="flex items-center gap-4 mb-4">
                         {/* 노출 시작일 */}
-                        <div className="flex-1">
-                            <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
+                        <div className="flex-1 flex items-center">
+                            <label htmlFor="startDate" className="w-2/4 block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
                             <input
                                 id="startDate"
                                 type="date"
                                 value={notice.startDate}
                                 readOnly
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
+                                className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
                             />
                         </div>
                         
@@ -152,14 +152,14 @@ const NoticeDetail = () => {
                         <span className="text-lg font-semibold">~</span>
                         
                         {/* 종료일 */}
-                        <div className="flex-1">
-                            <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
+                        <div className="flex-1 flex items-center">
+                            <label htmlFor="endDate" className="w-1/4 block text-sm font-semibold leading-6 text-gray-900">종료일</label>
                             <input
                                 id="endDate"
                                 type="date"
                                 value={notice.endDate}
                                 readOnly
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
+                                className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
                             />
                         </div>
                     </div>
