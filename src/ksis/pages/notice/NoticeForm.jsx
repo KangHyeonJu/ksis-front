@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { NOTICE_BOARD } from '../../../constants/page_constant'; // 공지글 목록 페이지 경로
+import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai'; // 아이콘 임포트
 
 const NoticeForm = () => {
     // 상태 변수 선언
@@ -9,21 +10,32 @@ const NoticeForm = () => {
     const [content, setContent] = useState(''); // 내용
     const [startDate, setStartDate] = useState(''); // 노출 시작일
     const [endDate, setEndDate] = useState(''); // 노출 종료일
-    const [accountId, setAccountId] = useState(''); // 사용자 ID (로그인된 사용자의 ID 사용)
-    const [deviceId, setDeviceId] = useState(''); // 디바이스 ID (필요 시 설정)
-    const [deviceName, setDeviceName] = useState(''); // 디바이스 이름 (필요 시 설정)
+    const [deviceIds, setDeviceIds] = useState(['']); // 재생장치 목록
     const navigate = useNavigate(); // 페이지 이동을 위한 훅
+
+    // 재생장치 목록 예시 (실제 데이터는 API 또는 다른 방법으로 받아올 수 있음)
+    const deviceOptions = [
+        { value: 'device1', label: '디바이스 1' },
+        { value: 'device2', label: '디바이스 2' },
+        { value: 'device3', label: '디바이스 3' },
+    ];
 
     // 폼 제출 처리 함수
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         // 유효성 검사
-        if (!title.trim() || !content.trim()) {
-            alert('제목과 내용, 노출 시작일 및 종료일을 모두 입력해야 합니다.');
+        if (!title.trim() || !content.trim() || !startDate || !endDate) {
+            alert('제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.');
             return;
         }
-    
+
+        // 재생장치 목록 유효성 검사
+        if (deviceIds.some(deviceId => !deviceId.trim())) {
+            alert('모든 재생장치를 선택해야 합니다.');
+            return;
+        }
+
         try {
             // 공지글 데이터 준비
             const noticeData = {
@@ -31,14 +43,12 @@ const NoticeForm = () => {
                 content,
                 startDate,
                 endDate,
-                accountId,
-                deviceId, // 디바이스 ID (필요 시 설정)
-                deviceName: deviceName || 'jw-123' // 디바이스 이름 (기본값 설정)
+                deviceIds: deviceIds.filter(deviceId => deviceId.trim()) // 빈 값 필터링
             };
 
             // 공지글 등록 요청
             const response = await axios.post('/api/notices', noticeData);
-    
+
             // 요청 성공 시 공지글 목록 페이지로 이동
             if (response.status === 200 || response.status === 201) {
                 navigate(NOTICE_BOARD);
@@ -54,6 +64,30 @@ const NoticeForm = () => {
     // 취소 버튼 클릭 시 처리 함수
     const handleCancel = () => {
         navigate(NOTICE_BOARD); // 공지글 목록 페이지로 이동
+    };
+
+    // 재생장치 추가 함수
+    const addDevice = () => {
+        setDeviceIds((prev) => [
+            ...prev,
+            ''
+        ]);
+    };
+
+    // 재생장치 제거 함수
+    const removeDevice = (index) => {
+        setDeviceIds((prev) =>
+            prev.filter((_, i) => i !== index)
+        );
+    };
+
+    // 재생장치 ID 변경 함수
+    const handleDeviceChange = (index, value) => {
+        setDeviceIds((prev) =>
+            prev.map((deviceId, i) =>
+                i === index ? value : deviceId
+            )
+        );
     };
 
     return (
@@ -84,26 +118,71 @@ const NoticeForm = () => {
                                 rows="4"
                             />
                         </div>
+                        <div>
+                            <label className="block text-sm font-semibold leading-6 text-gray-900">재생장치</label>
+                            {deviceIds.map((deviceId, index) => (
+                                <div key={index} className="flex items-center mb-2">
+                                    <select
+                                        value={deviceId}
+                                        onChange={(e) => handleDeviceChange(index, e.target.value)}
+                                        className="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    >
+                                        <option value="">재생장치를 선택하세요</option>
+                                        {deviceOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="ml-2 flex items-center">
+                                <button
+                                    type="button"
+                                    onClick={addDevice}
+                                    className="flex items-center text-blue-500"
+                                >
+                                    <AiFillPlusCircle size={25} color="#f25165" />
+                                    <span className="ml-1"></span>
+                                </button>
+                            </div>
+                                    {deviceIds.length > 1 && (
+                                        <div className="ml-2 flex items-center">
+                                            <button
+                                                type="button"
+                                                onClick={() => removeDevice(index)}
+                                                className="flex items-center"
+                                            >
+                                                <AiFillMinusCircle size={25} color="#717273" />
+                                            </button>
+                                        </div>
+                                        
+                                    )}
+                                </div>
+                            ))}
+                            
+                        </div>
                         <div className="border border-gray-300 rounded-lg p-2 shadow-sm bg-white">
                             <div className="flex space-x-2 mb-4">
-                                <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
-                                <input
-                                    id="startDate"
-                                    type="date"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                />
-                                <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
-                                <input
-                                    id="endDate"
-                                    type="date"
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    className="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                />
+                                <div className="flex-1">
+                                    <label htmlFor="startDate" className="block text-sm font-semibold leading-6 text-gray-900">노출 시작일</label>
+                                    <input
+                                        id="startDate"
+                                        type="date"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <label htmlFor="endDate" className="block text-sm font-semibold leading-6 text-gray-900">종료일</label>
+                                    <input
+                                        id="endDate"
+                                        type="date"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    />
+                                </div>
                             </div>
-                            {/* 필요에 따라 디바이스 관련 입력 필드를 추가할 수 있습니다. */}
                         </div>
                     </div>
                     <div className="flex justify-end gap-4 mt-2">

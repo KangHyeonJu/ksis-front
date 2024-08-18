@@ -21,3 +21,4 @@ export const FILESIZE_FORM = "/filesizeboard";
 //notice
 export const NOTICE_BOARD = "/noticeboard";
 export const NOTICE_FORM = "/noticeform";
+export const NOTICE_DTL = "/noticedtl";

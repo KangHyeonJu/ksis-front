@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { NOTICE_FORM, NOTICE_BOARD } from '../../../constants/page_constant';
+import { NOTICE_FORM, NOTICE_BOARD, NOTICE_DTL } from '../../../constants/page_constant';
 
 const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
@@ -54,7 +54,7 @@ const NoticeBoard = () => {
     };
 
     const handleNoticeClick = (id) => {
-        navigate(`${NOTICE_FORM}/${id}`); // 특정 공지사항 상세 페이지로 이동
+        navigate(`${NOTICE_DTL}/${id}`); // 특정 공지사항 상세 페이지로 이동
     };
 
     if (loading) {
