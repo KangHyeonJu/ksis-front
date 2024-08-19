@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import fetcher from "../../../fetcher";
-import { SIGNAGE_LIST, SIGNAGE_UPDATE } from "../../../constants/api_constant";
+import {
+  SIGNAGE_LIST,
+  SIGNAGE_PLAYLIST,
+  SIGNAGE_UPDATE,
+} from "../../../constants/api_constant";
 import { SIGNAGE_UPDATE_FORM } from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
 import { Switch } from "@headlessui/react";
@@ -15,12 +19,20 @@ const SignageDtl = () => {
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
+  const [playlists, setPlaylists] = useState([]);
 
   const loadSignageDtl = async (signageId) => {
     try {
       const response = await fetcher.get(SIGNAGE_LIST + `/${signageId}`);
-      console.log(response);
+      console.log("Signage response:", response);
       setData(response.data);
+
+      const playlistResponse = await fetcher.get(
+        SIGNAGE_PLAYLIST + `/${signageId}`
+      );
+
+      console.log("Playlist data:", playlistResponse);
+      setPlaylists(playlistResponse.data);
 
       setEnabled(response.data.isShow);
     } catch (error) {
@@ -91,7 +103,7 @@ const SignageDtl = () => {
             maxLength="50"
             name="deviceName"
             type="text"
-            className="bg-[#ffe374] block w-80 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center"
           />
           <button
             onClick={openNoticeModal}
@@ -140,7 +152,7 @@ const SignageDtl = () => {
             type="text"
             value={data.location}
             readOnly
-            className="flex-auto bg-[#ffe374] block w-80 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-auto bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center"
           />
           <button
             onClick={openModal}
@@ -181,7 +193,7 @@ const SignageDtl = () => {
           <input
             value={data.screenSize}
             type="text"
-            className="flex-none bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-none bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center"
           />
 
           <input
@@ -207,25 +219,63 @@ const SignageDtl = () => {
           <button
             onClick={openResourceModal}
             type="button"
-            className="ml-2 rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            className="rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             영상/이미지 불러오기
           </button>
           <SignageResourceModal
             isOpen={resourceModalIsOpen}
             onRequestClose={closeResourceModal}
+            signageId={data.deviceId}
           />
         </div>
 
         <div className="flex items-center mt-5">
-          <div className="flex-auto bg-[#ffe374] ml-2 px-4 py-60"></div>
-          <div className="flex-auto bg-[#ffe374] ml-2 px-4 py-60"></div>
+          <div className="flex-1 overflow-y-auto bg-[#ffe374] px-4 py-4 h-140">
+            <div className="flex items-center justify-between space-x-2">
+              <div className="text-lg font-semibold ml-2">재생목록 내역</div>
+              <button
+                type="button"
+                className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              >
+                추가
+              </button>
+            </div>
+            <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mt-4">
+              <thead>
+                <tr className="bg-[#ffe69c]">
+                  <th className="border border-gray-400 p-2">재생목록명</th>
+                  <th className="border border-gray-400 p-2">등록일</th>
+                  <th className="border border-gray-400 p-2">선택</th>
+                </tr>
+              </thead>
+              <tbody>
+                {playlists.map((playlist) => (
+                  <tr key={playlist.playlistId} className="bg-white">
+                    <td className="border border-gray-400 p-2">
+                      {playlist.title}
+                    </td>
+                    <td className="border border-gray-400 p-2">
+                      {format(parseISO(playlist.regTime), "yyyy-MM-dd")}
+                    </td>
+                    <td className="border border-gray-400 p-2">
+                      <input
+                        type="radio"
+                        className="border-gray-300 text-orange-600 focus:ring-orange-600"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex-1 overflow-y-auto bg-[#ffe374] ml-2 px-4 py-4 h-140"></div>
         </div>
 
         <div className="flex items-center mt-5 justify-between">
           <button
             type="button"
-            className="ml-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
             onClick={onCancel}
           >
             뒤로가기
