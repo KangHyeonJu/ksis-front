@@ -357,7 +357,10 @@ const SignageDtl = () => {
           <div className="flex-1 overflow-y-auto bg-[#ffe374] ml-2 px-4 py-4 h-140">
             <div className="flex items-center justify-between">
               <div className="text-lg font-semibold ml-2">{playlistTitle}</div>
-              <div className="bg-white p-2">slide time : {slideTime}(s)</div>
+              <div className="bg-[#d9d9d8] p-1 flex">
+                <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
+                <p className="bg-white pr-1 pl-1 ml-1">{slideTime}(s)</p>
+              </div>
               <div>
                 <button
                   type="button"
@@ -381,9 +384,10 @@ const SignageDtl = () => {
                   key={resource.encodedResourceId}
                   className="group relative border border-gray-900 mb-5"
                 >
-                  <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6">
+                  <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
                     {resource.sequence}
                   </div>
+
                   <div className="w-full overflow-hidden bg-gray-200 lg:h-52">
                     <img
                       src={`${process.env.REACT_APP_API_BASE_URL}${resource.thumbFilePath}`}
