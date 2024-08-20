@@ -24,4 +24,5 @@ export const NOTICE_FORM = "/noticeform";
 export const NOTICE_DTL = "/noticedtl";
 
 //fileManage
-export const IMAGE_BOARD = "/imageBoard";
+export const IMAGE_RESOURCE_BOARD = "/imageresourceboard";
+export const IMAGE_FILE_BOARD = "/imagefileboard";

@@ -9,7 +9,7 @@ import {
   NOTICE_BOARD, 
   NOTICE_FORM, 
   NOTICE_DTL,
-  IMAGE_BOARD 
+  IMAGE_RESOURCE_BOARD 
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -39,7 +39,7 @@ import NoticeDtl from "./ksis/pages/notice/NoticeDtl.jsx";
 import AccountRegForm from "./ksis/pages/account/AccountRegForm";
 import AccountList from "./ksis/pages/account/AccountList";
 import AccountEditForm from "./ksis/pages/account/AccountEditForm";
-import ImageBoard from "./ksis/pages/fileMng/imageBoard.jsx";
+import ImageResourceBoard from "./ksis/pages/fileMng/ImageResourceBoard.jsx";
 
 function App() {
   return (
@@ -80,7 +80,7 @@ function App() {
           <Route path={NOTICE_DTL + "/:noticeId"} element={<NoticeDtl />} />
 
           {/* 공지사항 관련 경로 */}
-          <Route path={IMAGE_BOARD} element={<ImageBoard />} />
+          <Route path={IMAGE_RESOURCE_BOARD} element={<ImageResourceBoard />} />
 
 
             {/* 다른 라우트들을 추가할 수 있습니다 */}

@@ -3,7 +3,7 @@ import { FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate'; // 페이지네이션 컴포넌트 가져오기
 
-const ImageBoard = () => {
+const ImageResourceBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('total');
     const [isOriginal, setIsOriginal] = useState(false); // 토글 상태 관리
@@ -113,4 +113,4 @@ const ImageBoard = () => {
     );
 };
 
-export default ImageBoard;
+export default ImageResourceBoard;
