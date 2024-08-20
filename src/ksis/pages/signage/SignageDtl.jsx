@@ -34,6 +34,13 @@ const SignageDtl = () => {
       console.log("Playlist data:", playlistResponse);
       setPlaylists(playlistResponse.data);
 
+      const selectedPlaylist = playlistResponse.data.find(
+        (playlist) => playlist.play === true
+      );
+      if (selectedPlaylist) {
+        setRadiobox(selectedPlaylist.playlistId);
+      }
+
       setEnabled(response.data.isShow);
     } catch (error) {
       console.log(error.response);
@@ -48,8 +55,6 @@ const SignageDtl = () => {
   const handleToggle = async () => {
     const newEnabled = !enabled;
     setEnabled(newEnabled);
-
-    console.log(newEnabled);
 
     try {
       await fetcher.put(SIGNAGE_UPDATE + `/${data.deviceId}`, {
@@ -89,6 +94,70 @@ const SignageDtl = () => {
   const formattedDate = data.regTime
     ? format(parseISO(data.regTime), "yyyy-MM-dd")
     : "";
+
+  //재생목록 선택
+  const [radiobox, setRadiobox] = useState(null);
+
+  const onChangeRadio = async (e) => {
+    const selectedRadiobox = Number(e.target.value);
+    setRadiobox(selectedRadiobox);
+
+    try {
+      await fetcher.put(SIGNAGE_PLAYLIST + `/${data.deviceId}`, {
+        selectedPlaylist: selectedRadiobox,
+      });
+      console.log("DB 상태 업데이트 성공");
+    } catch (error) {
+      console.error("DB 상태 업데이트 실패", error);
+    }
+  };
+
+  //재생목록 조회
+  const [playlistDtl, setPlaylistDtl] = useState([]);
+  const [playlistTitle, setPlaylistTitle] = useState("");
+  const [slideTime, setSlideTime] = useState(null);
+  const [playListId, setPlayListId] = useState(null);
+
+  const onClickPlaylist = async (playlistId, title, playTime) => {
+    try {
+      console.log(playlistId);
+      const response = await fetcher.get(SIGNAGE_PLAYLIST, {
+        params: { playlistDtlId: playlistId },
+      });
+      console.log(response);
+
+      setPlaylistDtl(response.data);
+
+      setSlideTime(playTime);
+      setPlaylistTitle(title);
+      setPlayListId(playlistId);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  //재생목록 삭제
+  const deletePlaylist = async (playlistId) => {
+    try {
+      if (window.confirm("삭제하시겠습니까?")) {
+        const response = await fetcher.delete(SIGNAGE_PLAYLIST, {
+          params: { playlistId: playlistId },
+        });
+
+        console.log(response.data);
+
+        setPlaylists((prevPlaylists) =>
+          prevPlaylists.filter((playlist) => playlist.playlistId !== playlistId)
+        );
+        alert("삭제되었습니다.");
+
+        setSlideTime(null);
+        setPlaylistTitle("");
+      }
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -251,7 +320,17 @@ const SignageDtl = () => {
               </thead>
               <tbody>
                 {playlists.map((playlist) => (
-                  <tr key={playlist.playlistId} className="bg-white">
+                  <tr
+                    key={playlist.playlistId}
+                    className="bg-white"
+                    onClick={() =>
+                      onClickPlaylist(
+                        playlist.playlistId,
+                        playlist.title,
+                        playlist.playTime
+                      )
+                    }
+                  >
                     <td className="border border-gray-400 p-2">
                       {playlist.title}
                     </td>
@@ -262,6 +341,10 @@ const SignageDtl = () => {
                       <input
                         type="radio"
                         className="border-gray-300 text-orange-600 focus:ring-orange-600"
+                        value={playlist.playlistId}
+                        onChange={onChangeRadio}
+                        name="selectedPlaylist"
+                        checked={radiobox === playlist.playlistId}
                       />
                     </td>
                   </tr>
@@ -269,7 +352,52 @@ const SignageDtl = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex-1 overflow-y-auto bg-[#ffe374] ml-2 px-4 py-4 h-140"></div>
+          <div className="flex-1 overflow-y-auto bg-[#ffe374] ml-2 px-4 py-4 h-140">
+            <div className="flex items-center justify-between">
+              <div className="text-lg font-semibold ml-2">{playlistTitle}</div>
+              <div className="bg-white p-2">slide time : {slideTime}(s)</div>
+              <div>
+                <button
+                  type="button"
+                  className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                >
+                  수정
+                </button>
+                <button
+                  type="button"
+                  className="ml-2 relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  onClick={() => deletePlaylist(playListId)}
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3">
+              {playlistDtl.map((resource) => (
+                <div
+                  key={resource.encodedResourceId}
+                  className="group relative border border-gray-900 mb-5"
+                >
+                  <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6">
+                    {resource.sequence}
+                  </div>
+                  <div className="w-full overflow-hidden bg-gray-200 lg:h-52">
+                    <img
+                      src={`${process.env.REACT_APP_API_BASE_URL}${resource.thumbFilePath}`}
+                      alt={resource.fileTitle}
+                      height=""
+                      width=""
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
+                  <div className="text-gray-700 text-center w-full p-1 bg-white">
+                    {resource.fileTitle}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center mt-5 justify-between">

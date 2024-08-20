@@ -12,7 +12,6 @@ import { format } from "date-fns";
 import { SIGNAGE_NOTICE } from "../../../constants/api_constant";
 
 const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
-  console.log("signageId=", signageId);
   const [notices, setNotices] = useState([]);
 
   const loadPage = useCallback(async () => {
