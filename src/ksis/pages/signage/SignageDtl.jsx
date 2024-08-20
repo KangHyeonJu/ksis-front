@@ -322,7 +322,9 @@ const SignageDtl = () => {
                 {playlists.map((playlist) => (
                   <tr
                     key={playlist.playlistId}
-                    className="bg-white"
+                    className={`bg-white ${
+                      playListId === playlist.playlistId ? "bg-orange-50" : ""
+                    }`}
                     onClick={() =>
                       onClickPlaylist(
                         playlist.playlistId,
