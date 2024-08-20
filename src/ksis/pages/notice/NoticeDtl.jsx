@@ -83,7 +83,7 @@ const NoticeDetail = () => {
                             <div className="flex-1 flex items-center">
                                 <label
                                     htmlFor="device_id"
-                                    className="block text-sm font-semibold leading-6 text-gray-900 bg-[#fcc310] rounded-md text-center w-1/3 h-full flex items-center justify-center"
+                                    className="text-sm font-semibold leading-6 text-gray-900 bg-[#fcc310] rounded-md text-center w-1/3 h-full flex items-center justify-center"
                                 >
                                     재생장치
                                 </label>
@@ -98,7 +98,7 @@ const NoticeDetail = () => {
                             <div className="flex-1 flex items-center">
                                 <label
                                     htmlFor="regTime"
-                                    className="block text-sm font-semibold leading-6 text-gray-900 bg-[#fcc310] rounded-md text-center w-1/3 h-full flex items-center justify-center"
+                                    className="text-sm font-semibold leading-6 text-gray-900 bg-[#fcc310] rounded-md text-center w-1/3 h-full flex items-center justify-center"
                                 >
                                     작성일
                                 </label>
