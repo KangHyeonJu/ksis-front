@@ -12,29 +12,44 @@ const NoticeForm = () => {
         endDate: '',
         deviceIds: ['']
     });
+    const [deviceOptions, setDeviceOptions] = useState([]); // 디바이스 옵션 상태 추가
     const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
-    const { noticeId } = useParams();  // useParams로 URL에서 noticeId를 가져옴
+    const { noticeId } = useParams();
 
-    const deviceOptions = [
-        { value: 'device1', label: '디바이스 1' },
-        { value: 'device2', label: '디바이스 2' },
-        { value: 'device3', label: '디바이스 3' },
-    ];
+    // 디바이스 목록을 불러오는 useEffect
+    useEffect(() => {
+        const fetchDevices = async () => {
+            try {
+                const response = await axios.get('/signage'); // 백엔드 API에서 디바이스 목록을 불러옴
+                console.log(response.data)
+                setDeviceOptions(response.data.map(device => ({
+                    value: device.deviceId,
+                    label: device.deviceName // 디바이스 이름 (필요에 따라 변경)
+                })));
+            } catch (error) {
+                console.error('디바이스 목록을 불러오는 중 오류 발생:', error);
+                alert('디바이스 목록을 불러오는 중 오류가 발생했습니다.');
+            }
+        };
 
+        fetchDevices();
+    }, []);
+
+    // 공지사항을 불러오는 useEffect
     useEffect(() => {
         if (noticeId) {
             setIsEditing(true);
             const fetchNotice = async () => {
                 try {
                     const response = await axios.get(`/api/notices/${noticeId}`);
-                    const { title, content, startDate, endDate, deviceIds = [] } = response.data;  // deviceIds에 기본값 빈 배열 설정
+                    const { title, content, startDate, endDate, deviceIds = [] } = response.data;
                     setFormData({
                         title,
                         content,
                         startDate,
                         endDate,
-                        deviceIds: deviceIds.length ? deviceIds : ['']  // deviceIds가 빈 배열일 경우 ['']로 대체
+                        deviceIds: deviceIds.length ? deviceIds : ['']
                     });
                 } catch (error) {
                     console.error('공지글을 불러오는 중 오류 발생:', error);
@@ -44,47 +59,45 @@ const NoticeForm = () => {
             fetchNotice();
         }
     }, [noticeId]);
-    
 
-   const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    const { title, content, startDate, endDate, deviceIds } = formData;
+        const { title, content, startDate, endDate, deviceIds } = formData;
 
-    if (!title.trim() || !content.trim() || !startDate || !endDate) {
-        alert('제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.');
-        return;
-    }
-
-    if (deviceIds.some(deviceId => !deviceId.trim())) {
-        alert('모든 재생장치를 선택해야 합니다.');
-        return;
-    }
-
-    try {
-        const noticeData = {
-            title,
-            content,
-            startDate,
-            endDate,
-            deviceIds: deviceIds.filter(deviceId => deviceId.trim())
-        };
-
-        const response = isEditing 
-            ? await axios.put(`/api/notices/${noticeId}`, noticeData) 
-            : await axios.post('/api/notices', noticeData);
-
-        if ([200, 201, 204].includes(response.status)) {
-            navigate(NOTICE_BOARD);
-        } else {
-            alert('공지글 저장에 실패했습니다.');
+        if (!title.trim() || !content.trim() || !startDate || !endDate) {
+            alert('제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.');
+            return;
         }
-    } catch (error) {
-        console.error('공지글 저장 중 오류 발생:', error);
-        alert('공지글 저장 중 오류가 발생했습니다.');
-    }
-};
 
+        if (deviceIds.some(deviceId => !deviceId.trim())) {
+            alert('모든 재생장치를 선택해야 합니다.');
+            return;
+        }
+
+        try {
+            const noticeData = {
+                title,
+                content,
+                startDate,
+                endDate,
+                deviceIds: deviceIds.filter(deviceId => deviceId.trim())
+            };
+
+            const response = isEditing 
+                ? await axios.put(`/api/notices/${noticeId}`, noticeData) 
+                : await axios.post('/api/notices', noticeData);
+
+            if ([200, 201, 204].includes(response.status)) {
+                navigate(NOTICE_BOARD);
+            } else {
+                alert('공지글 저장에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('공지글 저장 중 오류 발생:', error);
+            alert('공지글 저장 중 오류가 발생했습니다.');
+        }
+    };
 
     const handleCancel = () => {
         navigate(NOTICE_BOARD);
