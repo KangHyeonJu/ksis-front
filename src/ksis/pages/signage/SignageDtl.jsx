@@ -160,8 +160,10 @@ const SignageDtl = () => {
               (playlist) => playlist.playlistId !== playlistId
             )
           );
+
           alert("삭제되었습니다.");
 
+          setPlaylistDtl([]);
           setSlideTime(null);
           setPlaylistTitle("");
         }
@@ -411,7 +413,7 @@ const SignageDtl = () => {
 
                   <div className="w-full overflow-hidden bg-gray-200 lg:h-52">
                     <img
-                      src={`${process.env.REACT_APP_API_BASE_URL}${resource.thumbFilePath}`}
+                      src={resource.thumbFilePath}
                       alt={resource.fileTitle}
                       height=""
                       width=""

@@ -92,7 +92,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                             >
                               <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
                                 <img
-                                  src={`${process.env.REACT_APP_API_BASE_URL}${resource.thumbFilePath}`}
+                                  src={resource.thumbFilePath}
                                   alt={resource.fileTitle}
                                   className="h-full w-full object-cover object-center transform hover:brightness-90"
                                 />
