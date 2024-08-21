@@ -16,11 +16,11 @@ const ApiForm = () => {
         if (apiId) {
             const fetchApiData = async () => {
                 try {
-                    const response = await fetch(`http://localhost:8080/api/notices/${apiId}`); // 올바른 엔드포인트 URL
+                    const response = await fetch(`http://localhost:8080/api/posts/${apiId}`); // 올바른 엔드포인트로 수정
                     if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
                     const data = await response.json();
                     console.log(data); // API 응답 데이터 출력
-                    setApiName(data.title); // 데이터 구조에 맞게 수정
+                    setApiName(data.apiName); // 데이터 구조에 맞게 수정
                     setProvider(data.provider || ''); // 제공업체가 없을 경우 기본값 설정
                     setKeyValue(data.keyValue || ''); // API Key가 없을 경우 기본값 설정
                     setExpiryDate(data.expiryDate ? data.expiryDate.substring(0, 10) : ''); // 날짜 형식 조정
@@ -59,7 +59,7 @@ const ApiForm = () => {
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/api/notices${apiId ? '/' + apiId : ''}`, {
+            const response = await fetch(`http://localhost:8080/api/${apiId ? 'update/' + apiId : 'register'}`, {
                 method: apiId ? 'PUT' : 'POST', // PUT 요청 시 수정, POST 요청 시 등록
                 headers: {
                     'Content-Type': 'application/json',

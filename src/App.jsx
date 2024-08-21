@@ -68,7 +68,7 @@ function App() {
           {/* API 관련 경로 */}
           <Route path={API_BOARD} element={<ApiBoard />} />
           <Route path={API_FORM} element={<ApiForm />} />
-          <Route path={API_FORM_EDIT + "/:apiId"} element={<ApiForm />} />
+          <Route path={API_FORM + "/:apiId"} element={<ApiForm />} />
 
           {/* File Size 관련 경로 */}
           <Route path={FILESIZE_FORM} element={<FileSizeBoard />} />
