@@ -74,7 +74,7 @@ const SignageForm = () => {
 
         //주소 정보를 해당 필드에 넣는다.
         setAddress(addr);
-        // document.getElementById("detailAddress").focus();
+        document.getElementById("detailAddress").focus();
         setTimeout(() => {
           const detailAddressInput = document.getElementById("detailAddress");
           if (detailAddressInput) {

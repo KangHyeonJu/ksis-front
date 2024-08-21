@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
-import { 
-  API_BOARD, 
-  API_FORM, 
-  FILESIZE_FORM, 
-  NOTICE_BOARD, 
-  NOTICE_FORM, 
+import {
+  API_BOARD,
+  API_FORM,
+  FILESIZE_FORM,
+  NOTICE_BOARD,
+  NOTICE_FORM,
   NOTICE_DTL,
   IMAGE_RESOURCE_BOARD,
-  IMAGE_FILE_BOARD 
+  IMAGE_FILE_BOARD,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -20,8 +20,13 @@ import {
   SIGNAGE_FORM,
   SIGNAGE_GRID,
   SIGNAGE_INVENTORY,
+  SIGNAGE_UPDATE_FORM,
 } from "./constants/page_constant";
-import { ACCOUNT_EDIT_FORM, ACCOUNT_FORM, ACCOUNT_LIST } from "./constants/account_constant";
+import {
+  ACCOUNT_EDIT_FORM,
+  ACCOUNT_FORM,
+  ACCOUNT_LIST,
+} from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
 import PcDtl from "./ksis/pages/pc/PcDtl";
@@ -30,6 +35,7 @@ import SignageList from "./ksis/pages/signage/SignageList";
 import SignageForm from "./ksis/pages/signage/SignageForm";
 import SignageGrid from "./ksis/pages/signage/SignageGrid";
 import SignageDtl from "./ksis/pages/signage/SignageDtl";
+import SignageUpdateForm from "./ksis/pages/signage/SignageUpdateForm";
 import ApiBoard from "./ksis/pages/api/ApiBoard";
 import ApiForm from "./ksis/pages/api/ApiForm";
 import FileSizeBoard from "./ksis/pages/fileSize/FileSizeBoard";
@@ -44,15 +50,17 @@ import ImageFileBoard from "./ksis/pages/fileMng/ImageFileBoard.jsx";
 
 function App() {
   return (
-   
-      <div className="dashboard flex">
-        <Sidebar />
-        <div className="content flex-1 p-4">
-          <Routes>
+    <div className="dashboard flex">
+      <Sidebar />
+      <div className="content flex-1 p-4">
+        <Routes>
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
           <Route path={ACCOUNT_LIST} element={<AccountList />} />
-          <Route path={ACCOUNT_EDIT_FORM + "/:accountId"} element={<AccountEditForm />} />
+          <Route
+            path={ACCOUNT_EDIT_FORM + "/:accountId"}
+            element={<AccountEditForm />}
+          />
 
           {/* PC 관련 경로 */}
           <Route path={PC_INVENTORY} element={<PcList />} />
@@ -65,6 +73,10 @@ function App() {
           <Route path={SIGNAGE_FORM} element={<SignageForm />} />
           <Route path={SIGNAGE_GRID} element={<SignageGrid />} />
           <Route path={SIGNAGE_DTL + "/:id"} element={<SignageDtl />} />
+          <Route
+            path={SIGNAGE_UPDATE_FORM + "/:id"}
+            element={<SignageUpdateForm />}
+          />
 
           {/* API 관련 경로 */}
           <Route path={API_BOARD} element={<ApiBoard />} />
@@ -84,12 +96,10 @@ function App() {
           <Route path={IMAGE_FILE_BOARD} element={<ImageFileBoard />} />
           <Route path={IMAGE_RESOURCE_BOARD} element={<ImageResourceBoard />} />
 
-
-            {/* 다른 라우트들을 추가할 수 있습니다 */}
-          </Routes>
-        </div>
+          {/* 다른 라우트들을 추가할 수 있습니다 */}
+        </Routes>
       </div>
-   
+    </div>
   );
 }
 

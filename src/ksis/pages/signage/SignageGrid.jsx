@@ -24,7 +24,6 @@ const SignageGrid = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      alert(error.response?.data || "Unknown error occurred");
     }
   };
 
