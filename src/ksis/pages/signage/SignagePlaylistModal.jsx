@@ -26,9 +26,32 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   useEffect(() => {
     if (isOpen && signageId) {
       loadModal();
+      setResourceAdds([]);
     }
   }, [isOpen, signageId, loadModal]);
 
+  //이미지 클릭 시 재생목록 추가 및 삭제
+  const [resourceAdds, setResourceAdds] = useState([]);
+
+  const addList = (resource) => {
+    if (
+      !resourceAdds.some(
+        (res) => res.encodedResourceId === resource.encodedResourceId
+      )
+    ) {
+      setResourceAdds([...resourceAdds, resource]);
+    }
+  };
+
+  const removeList = (resource) => {
+    setResourceAdds((prevResources) =>
+      prevResources.filter(
+        (res) => res.encodedResourceId !== resource.encodedResourceId
+      )
+    );
+  };
+
+  //drag&drop
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
@@ -64,9 +87,10 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                           {resources.map((resource) => (
                             <div
                               key={resource.encodedResourceId}
-                              className="group relative border border-gray-900 mb-5"
+                              className="group relative border border-gray-900 mb-5 cursor-pointer"
+                              onClick={() => addList(resource)}
                             >
-                              <div className="w-full overflow-hidden bg-gray-200 lg:h-40">
+                              <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
                                 <img
                                   src={`${process.env.REACT_APP_API_BASE_URL}${resource.thumbFilePath}`}
                                   alt={resource.fileTitle}
@@ -89,7 +113,18 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                   <div className="mb-4 flex items-center">
                     <div className="w-full h-96 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
                       <div className="space-y-2">
-                        <div className="rounded-full bg-[#fad96e] h-10">{}</div>
+                        {resourceAdds.map((resourceAdd) => (
+                          <div
+                            key={resourceAdd.encodedResourceId}
+                            className="relative rounded-full bg-[#fad96e] h-10 text-center pt-1.5"
+                          >
+                            {resourceAdd.fileTitle}
+                            <ImCross
+                              className="absolute top-0 right-0 text-red-500 cursor-pointer"
+                              onClick={() => removeList(resourceAdd)}
+                            />
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
