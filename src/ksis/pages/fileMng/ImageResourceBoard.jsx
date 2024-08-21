@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaEdit } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
@@ -13,6 +13,8 @@ const ImageResourceBoard = () => {
     const postsPerPage = 10;
     const [images, setImages] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
+    const [editingTitleIndex, setEditingTitleIndex] = useState(null);
+    const [newTitle, setNewTitle] = useState('');
 
     const navigate = useNavigate();
 
@@ -25,8 +27,8 @@ const ImageResourceBoard = () => {
     useEffect(() => {
         axios.get('/resourceList/images')
             .then(response => {
-                setImages(response.data);
-                console.log(response.data)  // 이미지 데이터를 설정
+                setImages(response.data);  // 이미지 데이터를 설정
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('Error fetching images:', error);
@@ -60,6 +62,21 @@ const ImageResourceBoard = () => {
     // 페이지 변경 핸들러
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
+    };
+
+    // 제목 수정 핸들러
+    const handleEditClick = (index, title) => {
+        setEditingTitleIndex(index);
+        setNewTitle(title);
+    };
+
+    // 제목 수정 완료 핸들러
+    const handleSaveClick = (index) => {
+        const updatedImages = [...images];
+        updatedImages[index] = { ...updatedImages[index], title: newTitle };
+        setImages(updatedImages);
+        setEditingTitleIndex(null);
+        setNewTitle('');
     };
 
     // 현재 페이지에 표시할 포스트 계산
@@ -127,14 +144,29 @@ const ImageResourceBoard = () => {
                     이미지 등록
                 </Link>
             </div>
-            
+
             {/* 이미지 리스트 */}
             <div className="">
                 {currentPosts.map((post, index) => (
-                    <div key={index} className="border border-gray-300 rounded-lg p-6 shadow-sm bg-[#ffe69c] mb-4">
-                        <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-                        <p className="text-gray-700">등록일: {post.regDate}</p>
-                        <img src={post.url} alt={post.title} className="w-full h-auto mt-4" />
+                    <div key={index} className="rounded-lg p-6 shadow-sm bg-[#ffe69c] mb-4 w-1/3">
+                        <div className="flex items-center">
+                            {editingTitleIndex === index ? (
+                                <input
+                                    type="text"
+                                    value={newTitle}
+                                    onChange={(e) => setNewTitle(e.target.value)}
+                                    className="text-xl font-bold mb-2 border-b border-gray-400 w-full"
+                                />
+                            ) : (
+                                <h2 className="text-xl font-bold mb-2">{post.fileTitle}</h2>
+                            )}
+                            <FaEdit
+                                onClick={() => editingTitleIndex === index ? handleSaveClick(index) : handleEditClick(index, post.fileTitle)}
+                                className="ml-2 cursor-pointer text-gray-600"
+                            />
+                        </div>
+                        <p className="text-gray-700">등록일: {post.regTime.substring(0, 10)}</p>
+                        <img src={post.filePath} alt={post.fileTitle} className="w-full h-auto mt-4" />
                         <button className="mr-2 mt-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                             인코딩
                         </button>
