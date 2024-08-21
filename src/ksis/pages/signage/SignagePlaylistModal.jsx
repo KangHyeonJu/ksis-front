@@ -3,6 +3,8 @@ import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import { SIGNAGE_RESOURCE } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   const addPlaylist = async () => {
     try {
@@ -52,20 +54,15 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   };
 
   //drag&drop
-  const [enabled, setEnabled] = useState(false);
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
 
-  useEffect(() => {
-    const animation = requestAnimationFrame(() => setEnabled(true));
+    const items = Array.from(resourceAdds);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
-    return () => {
-      cancelAnimationFrame(animation);
-      setEnabled(false);
-    };
-  }, []);
-
-  if (!enabled) {
-    return null;
-  }
+    setResourceAdds(items);
+  };
 
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
@@ -97,6 +94,19 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                   className="h-full w-full object-cover object-center transform hover:brightness-90"
                                 />
                               </div>
+                              {resourceAdds.find(
+                                (r) =>
+                                  r.encodedResourceId ===
+                                  resource.encodedResourceId
+                              ) && (
+                                <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
+                                  {resourceAdds.findIndex(
+                                    (r) =>
+                                      r.encodedResourceId ===
+                                      resource.encodedResourceId
+                                  ) + 1}
+                                </div>
+                              )}
                               <div className="text-gray-700 text-center w-full p-1">
                                 {resource.fileTitle}
                               </div>
@@ -112,20 +122,41 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                 <DialogBody className="mt-2">
                   <div className="mb-4 flex items-center">
                     <div className="w-full h-96 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
-                      <div className="space-y-2">
-                        {resourceAdds.map((resourceAdd) => (
-                          <div
-                            key={resourceAdd.encodedResourceId}
-                            className="relative rounded-full bg-[#fad96e] h-10 text-center pt-1.5"
-                          >
-                            {resourceAdd.fileTitle}
-                            <ImCross
-                              className="absolute top-0 right-0 text-red-500 cursor-pointer"
-                              onClick={() => removeList(resourceAdd)}
-                            />
-                          </div>
-                        ))}
-                      </div>
+                      <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable-1">
+                          {(provided) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}
+                              className="space-y-2"
+                            >
+                              {resourceAdds.map((resourceAdd, index) => (
+                                <Draggable
+                                  key={resourceAdd.encodedResourceId}
+                                  draggableId={resourceAdd.encodedResourceId.toString()}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className="relative rounded-full bg-[#fad96e] h-10 text-center pt-1.5"
+                                    >
+                                      {resourceAdd.fileTitle}
+                                      <ImCross
+                                        className="absolute top-0 right-0 text-red-500 cursor-pointer"
+                                        onClick={() => removeList(resourceAdd)}
+                                      />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
+                      </DragDropContext>
                     </div>
                   </div>
                 </DialogBody>

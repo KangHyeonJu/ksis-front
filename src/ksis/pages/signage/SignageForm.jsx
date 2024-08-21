@@ -146,7 +146,7 @@ const SignageForm = () => {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSave = async (e) => {
+  const handleSave = async () => {
     try {
       const formData = new FormData();
       formData.append(
