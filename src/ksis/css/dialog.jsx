@@ -65,7 +65,7 @@ export function DialogDescription({ className, ...props }) {
 }
 
 export function DialogBody({ className, ...props }) {
-  return <div {...props} className={clsx(className, "mt-6")} />;
+  return <div {...props} className={clsx(className, "mt-5")} />;
 }
 
 export function DialogActions({ className, ...props }) {

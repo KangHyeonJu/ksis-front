@@ -12,6 +12,7 @@ import { Switch } from "@headlessui/react";
 import { format, parseISO } from "date-fns";
 import NoticeModal from "./NoticeModal";
 import SignageResourceModal from "./SignageResourceModal";
+import SignagePlaylistModal from "./SignagePlaylistModal";
 
 const SignageDtl = () => {
   const [enabled, setEnabled] = useState(false);
@@ -91,6 +92,11 @@ const SignageDtl = () => {
   const openResourceModal = () => setResourceModalIsOpen(true);
   const closeResourceModal = () => setResourceModalIsOpen(false);
 
+  //재생목록 추가
+  const [playlistAddIsOpen, setPlaylistAddIsOpen] = useState(false);
+  const openPlaylistAdd = () => setPlaylistAddIsOpen(true);
+  const closePlaylistAdd = () => setPlaylistAddIsOpen(false);
+
   const formattedDate = data.regTime
     ? format(parseISO(data.regTime), "yyyy-MM-dd")
     : "";
@@ -139,20 +145,26 @@ const SignageDtl = () => {
   //재생목록 삭제
   const deletePlaylist = async (playlistId) => {
     try {
-      if (window.confirm("삭제하시겠습니까?")) {
-        const response = await fetcher.delete(SIGNAGE_PLAYLIST, {
-          params: { playlistId: playlistId },
-        });
+      if (playlistId == null) {
+        alert("삭제할 재생목록을 선택하세요.");
+      } else {
+        if (window.confirm("삭제하시겠습니까?")) {
+          const response = await fetcher.delete(SIGNAGE_PLAYLIST, {
+            params: { playlistId: playlistId },
+          });
 
-        console.log(response.data);
+          console.log(response.data);
 
-        setPlaylists((prevPlaylists) =>
-          prevPlaylists.filter((playlist) => playlist.playlistId !== playlistId)
-        );
-        alert("삭제되었습니다.");
+          setPlaylists((prevPlaylists) =>
+            prevPlaylists.filter(
+              (playlist) => playlist.playlistId !== playlistId
+            )
+          );
+          alert("삭제되었습니다.");
 
-        setSlideTime(null);
-        setPlaylistTitle("");
+          setSlideTime(null);
+          setPlaylistTitle("");
+        }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -172,12 +184,12 @@ const SignageDtl = () => {
             maxLength="50"
             name="deviceName"
             type="text"
-            className="bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center"
+            className="bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center h-10"
           />
           <button
             onClick={openNoticeModal}
             type="button"
-            className="ml-2 relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            className="ml-2 h-10 relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             공지조회
           </button>
@@ -187,10 +199,11 @@ const SignageDtl = () => {
             signageId={data.deviceId}
           />
 
+          <div className="ml-auto">공지 표시</div>
           <Switch
             checked={enabled}
             onChange={handleToggle}
-            className="ml-auto group relative inline-flex h-6 w-16 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 data-[checked]:bg-orange-600"
+            className="ml-2 group relative inline-flex h-6 w-16 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 data-[checked]:bg-orange-600"
           >
             <span className="sr-only">Use setting</span>
             <span
@@ -221,12 +234,12 @@ const SignageDtl = () => {
             type="text"
             value={data.location}
             readOnly
-            className="flex-auto bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-auto bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center h-10"
           />
           <button
             onClick={openModal}
             type="button"
-            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            className="relative h-10 inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             위치 보기
           </button>
@@ -240,17 +253,17 @@ const SignageDtl = () => {
             type="text"
             value={formattedDate}
             readOnly
-            className="flex-none bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-none bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
           />
 
           <input
             value={data.macAddress}
             type="text"
-            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
           />
           <button
             type="button"
-            className="ml-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="ml-2 h-10 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
             <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
               정보 수정
@@ -262,13 +275,13 @@ const SignageDtl = () => {
           <input
             value={data.screenSize}
             type="text"
-            className="flex-none bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-none h-10 bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center"
           />
 
           <input
             value={data.resolution}
             type="text"
-            className="flex-1 bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-1 h-10 bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
 
           <input
@@ -280,7 +293,7 @@ const SignageDtl = () => {
                 .join(", ")
             }
             readOnly
-            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-auto h-10 bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
         </div>
 
@@ -304,11 +317,17 @@ const SignageDtl = () => {
             <div className="flex items-center justify-between space-x-2">
               <div className="text-lg font-semibold ml-2">재생목록 내역</div>
               <button
+                onClick={openPlaylistAdd}
                 type="button"
                 className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               >
                 추가
               </button>
+              <SignagePlaylistModal
+                isOpen={playlistAddIsOpen}
+                onRequestClose={closePlaylistAdd}
+                signageId={data.deviceId}
+              />
             </div>
             <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mt-4">
               <thead>
@@ -322,8 +341,10 @@ const SignageDtl = () => {
                 {playlists.map((playlist) => (
                   <tr
                     key={playlist.playlistId}
-                    className={`bg-white ${
-                      playListId === playlist.playlistId ? "bg-orange-50" : ""
+                    className={`${
+                      playListId === playlist.playlistId
+                        ? "bg-orange-50"
+                        : "bg-white"
                     }`}
                     onClick={() =>
                       onClickPlaylist(
