@@ -10,7 +10,7 @@ import {
   MdChat,
   MdDevices,
 } from "react-icons/md";
-import { PC_INVENTORY, SIGNAGE_INVENTORY,  API_BOARD, FILESIZE_FORM, NOTICE_BOARD, IMAGE_RESOURCE_BOARD } from "../../constants/page_constant";
+import { PC_INVENTORY, SIGNAGE_INVENTORY,  API_BOARD, FILESIZE_FORM, NOTICE_BOARD, IMAGE_FILE_BOARD } from "../../constants/page_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -88,7 +88,7 @@ const Sidebar = () => {
             </div>
             {openMenu === "profile" && (
               <div className="submenu ml-8 mt-2">
-                <Link  to={IMAGE_RESOURCE_BOARD} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <Link  to={IMAGE_FILE_BOARD} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
                 <FaRegCircle size={10} className="mr-2" />
                   이미지 관리
                 </Link>
