@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD } from '../../../constants/page_constant';
+import { format, parseISO } from 'date-fns';
 
 const ImageResourceBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -26,6 +27,7 @@ const ImageResourceBoard = () => {
         axios.get('/resourceList/images')
             .then(response => {
                 setImages(response.data);
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('Error fetching images:', error);
@@ -36,6 +38,7 @@ const ImageResourceBoard = () => {
         axios.get('/resourceList/images')
             .then(response => {
                 setImages(response.data);
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('Error fetching images:', error);
@@ -102,6 +105,18 @@ const ImageResourceBoard = () => {
             }
         }
     };
+
+        // 유효한 날짜 포맷으로 변환
+        const formatDate = (dateString) => {
+            try {
+                const date = parseISO(dateString);
+                return format(date, "yyyy-MM-dd");
+            } catch (error) {
+                console.error('Invalid date format:', dateString);
+                return 'Invalid date';
+            }
+        };
+    
 
     const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
 
@@ -187,7 +202,7 @@ const ImageResourceBoard = () => {
                                         className="ml-2 cursor-pointer text-gray-600"
                                     />
                                 </div>
-                                <p className="text-gray-700">등록일: {post.regTime.substring(0, 10)}</p>
+                                <p className="text-gray-700">등록일: {formatDate(post.regTime)}</p>
                                 <img src={post.filePath} alt={post.fileTitle} className="w-full h-auto mt-4" />
                                 <button className="mr-2 mt-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                                     인코딩
