@@ -122,19 +122,19 @@ const SignageForm = () => {
 
   //post
   const [data, setData] = useState({
-    macAddress: macAddress,
+    macAddress: "",
     deviceName: "",
-    location: address,
+    location: "",
     detailAddress: "",
     deviceType: "SIGNAGE",
-    resolution: selectedValue,
+    resolution: "",
     screenSize: "",
   });
 
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
-      macAddress: macAddress,
+      macAddress,
       location: address,
       resolution: selectedValue,
       screenSize: width + " x " + height,

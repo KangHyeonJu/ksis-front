@@ -64,6 +64,25 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
     setResourceAdds(items);
   };
 
+  //재생 목록 등록
+  const [data, setData] = useState({
+    playListTile: "",
+    slidTime: 0,
+    resourceSequence: [],
+  });
+
+  useEffect(() => {
+    setData((prevData) => ({
+      ...prevData,
+      resourceSequence: resourceAdds,
+    }));
+  }, [resourceAdds]);
+
+  const onChangeHandler = (e) => {
+    const { value, name } = e.target;
+    setData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
@@ -167,11 +186,19 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                 <label className="h-10 w-20 block text-center text-sm pt-1.5 font-semibold bg-[#ffb247] leading-6 text-gray-900">
                   제목
                 </label>
-                <input className="h-10 w-60" />
+                <input
+                  className="h-10 w-60"
+                  value={data.playListTile}
+                  onChange={onChangeHandler}
+                />
 
                 <div className="bg-[#d9d9d8] p-1 flex ml-2">
                   <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
-                  <input className="w-20 ml-1" />
+                  <input
+                    className="w-20 ml-1"
+                    value={data.slidTime}
+                    onChange={onChangeHandler}
+                  />
                   <p className="bg-white pr-1 pl-1">(s)</p>
                 </div>
               </div>

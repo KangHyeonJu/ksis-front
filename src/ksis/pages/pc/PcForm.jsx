@@ -112,9 +112,9 @@ const PcForm = () => {
 
   //post
   const [data, setData] = useState({
-    macAddress: macAddress,
+    macAddress: "",
     deviceName: "",
-    location: address,
+    location: "",
     detailAddress: "",
     deviceType: "PC",
   });
@@ -122,7 +122,7 @@ const PcForm = () => {
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
-      macAddress: macAddress,
+      macAddress,
       location: address,
     }));
   }, [macAddress, address]);
