@@ -1,15 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
-import { SIGNAGE_RESOURCE } from "../../../constants/api_constant";
+import {
+  SIGNAGE_PLAYLIST,
+  SIGNAGE_RESOURCE,
+} from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
-  const addPlaylist = async () => {
-    try {
-    } catch (error) {}
-  };
+  const [data, setData] = useState({
+    deviceId: "",
+    fileTitle: "",
+    slideTime: null,
+  });
 
   //재생장치의 인코딩리소스 불러오기
   const [resources, setResources] = useState([]);
@@ -65,22 +69,54 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   };
 
   //재생 목록 등록
-  const [data, setData] = useState({
-    playListTile: "",
-    slidTime: 0,
-    resourceSequence: [],
-  });
+  const [resourceSequence, setResourceSequence] = useState([]);
 
   useEffect(() => {
+    setResourceSequence(
+      resourceAdds.map((resource, index) => ({
+        encodedResourceId: resource.encodedResourceId, // encodedResourceId를 추가
+        sequence: index + 1, // 인덱스를 추가
+      }))
+    );
+
     setData((prevData) => ({
       ...prevData,
-      resourceSequence: resourceAdds,
+      deviceId: signageId,
     }));
-  }, [resourceAdds]);
+  }, [resourceAdds, signageId]);
 
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
     setData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const addPlayList = async () => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        "playListAddDTO",
+        new Blob([JSON.stringify(data)], { type: "application/json" })
+      );
+
+      formData.append(
+        "resourceSequence",
+        new Blob([JSON.stringify(resourceSequence)], {
+          type: "application/json",
+        })
+      );
+
+      const response = await fetcher.post(SIGNAGE_PLAYLIST, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(response.data);
+
+      alert("재생목록이 정상적으로 등록되었습니다.");
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
 
   return (
@@ -187,16 +223,20 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                   제목
                 </label>
                 <input
-                  className="h-10 w-60"
-                  value={data.playListTile}
+                  className="h-10 w-60 p-1"
+                  type="text"
+                  value={data.fileTitle}
+                  name="fileTitle"
                   onChange={onChangeHandler}
                 />
 
                 <div className="bg-[#d9d9d8] p-1 flex ml-2">
                   <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
                   <input
-                    className="w-20 ml-1"
-                    value={data.slidTime}
+                    className="w-20 ml-1 p-1"
+                    type="text"
+                    value={data.slideTime}
+                    name="slideTime"
                     onChange={onChangeHandler}
                   />
                   <p className="bg-white pr-1 pl-1">(s)</p>
@@ -210,7 +250,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                   닫기
                 </button>
                 <button
-                  onClick={addPlaylist}
+                  onClick={addPlayList}
                   className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
                 >
                   등록
