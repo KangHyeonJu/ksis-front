@@ -3,114 +3,92 @@ import { FaSearch, FaEdit } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
-import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD } from '../../../constants/page_constant';
+import { VIDEO_RESOURCE_BOARD, VIDEO_FILE_BOARD } from '../../../constants/page_constant';
 
-const ImageResourceBoard = () => {
+const VideoResourceBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('total');
     const [isOriginal, setIsOriginal] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const postsPerPage = 10;
-    const [images, setImages] = useState([]);
+    const [videos, setVideos] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [editingTitleIndex, setEditingTitleIndex] = useState(null);
     const [newTitle, setNewTitle] = useState('');
 
     const navigate = useNavigate();
 
+    // isOriginal 값에 따라 페이지를 이동
     useEffect(() => {
-        navigate(isOriginal ? IMAGE_RESOURCE_BOARD : IMAGE_FILE_BOARD);
+        navigate(isOriginal ? VIDEO_RESOURCE_BOARD : VIDEO_FILE_BOARD);
     }, [isOriginal, navigate]);
 
+    // 영상 목록을 가져오는 부분
     useEffect(() => {
-        axios.get('/resourceList/images')
+        axios.get('/resourceList/videos')
             .then(response => {
-                setImages(response.data);
+                setVideos(response.data);  // 영상 데이터를 설정
+                console.log(response.data);
             })
             .catch(error => {
-                console.error('Error fetching images:', error);
-            });
-    }, []);
-    
-    useEffect(() => {
-        axios.get('/resourceList/images')
-            .then(response => {
-                setImages(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching images:', error);
+                console.error('Error fetching video:', error);
             });
     }, []);
 
+    // 검색어와 카테고리에 따라 영상 필터링
     useEffect(() => {
-        let filtered = images;
+        let filtered = videos;
 
         if (searchTerm) {
             if (searchCategory === 'title') {
-                filtered = images.filter(image => image.title.includes(searchTerm));
+                filtered = videos.filter(video => video.title.includes(searchTerm));
             } else if (searchCategory === 'regDate') {
-                filtered = images.filter(image => image.regDate.includes(searchTerm));
+                filtered = videos.filter(video => video.regDate.includes(searchTerm));
             } else {
-                filtered = images.filter(image => 
-                    image.title.includes(searchTerm) || image.regDate.includes(searchTerm)
+                filtered = videos.filter(video => 
+                    video.title.includes(searchTerm) || video.regDate.includes(searchTerm)
                 );
             }
         }
 
         setFilteredPosts(filtered);
-    }, [images, searchTerm, searchCategory]);
+    }, [videos, searchTerm, searchCategory]);
 
+    // 토글 버튼 핸들러 함수 추가
     const handleToggle = () => {
         setIsOriginal(prevIsOriginal => !prevIsOriginal);
     };
 
+    // 페이지 변경 핸들러
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
     };
 
+    // 제목 수정 핸들러
     const handleEditClick = (index, title) => {
         setEditingTitleIndex(index);
         setNewTitle(title);
     };
 
-    const handleSaveClick = async (id) => {
-        try {
-            const response = await axios.put(`/resourceList/${id}`, null, {
-                params: { newTitle }
-            });
-            const updatedImages = images.map(image =>
-                image.id === id ? { ...image, title: response.data.title } : image
-            );
-            setImages(updatedImages);
-            setEditingTitleIndex(null);
-            setNewTitle('');
-            navigate(IMAGE_FILE_BOARD);
-        } catch (error) {
-            window.confirm('수정에 실패했습니다.');
-            console.error('제목 수정 중 오류 발생:', error);
-        }
+    // 제목 수정 완료 핸들러
+    const handleSaveClick = (index) => {
+        const updatedVideos = [...videos];
+        updatedVideos[index] = { ...updatedVideos[index], title: newTitle };
+        setVideos(updatedVideos);
+        setEditingTitleIndex(null);
+        setNewTitle('');
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
-            try {
-                await axios.delete(`/resourceList/${id}`);
-                setImages(images.filter(image => image.id !== id));
-            } catch (err) {
-                console.error('이미지 삭제 오류:', err);
-                window.alert('이미지 삭제에 실패했습니다.');
-            }
-        }
-    };
-
+    // 현재 페이지에 표시할 포스트 계산
     const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
 
     return (
         <div className="p-6">
             <header className="mb-6">
-                <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">이미지 원본 페이지</h1>
+                <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">영상 원본 페이지</h1>
             </header>
 
+            {/* 검색바 입력창 */}
             <div className="mb-4 flex items-center">
                 <select
                     value={searchCategory}
@@ -133,6 +111,7 @@ const ImageResourceBoard = () => {
                 </div>
             </div>
 
+            {/* 토글 버튼 */}
             <div className="flex justify-start space-x-2 mb-4">
                 <button
                     type="button"
@@ -159,18 +138,18 @@ const ImageResourceBoard = () => {
                     </span>
                 </button>
             </div>
+
             <div className="flex justify-end space-x-2 mb-4">
                 <Link to="" className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600">
-                    파일 등록
+                파일 등록
                 </Link>
             </div>
 
-            {/* 이미지 리스트 */}
-            <div className="flex flex-wrap gap-4">
-                {currentPosts.length > 0 ? (
-                    currentPosts.map((post, index) => (
-                        <div key={index} className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div className="rounded-lg p-6 shadow-sm bg-[#ffe69c] mb-4">
+            {/* 영상 리스트 */}
+            {currentPosts.length > 0 ? (
+                    <div className="">
+                        {currentPosts.map((post, index) => (
+                            <div key={index} className="rounded-lg p-6 shadow-sm bg-[#ffe69c] mb-4 w-1/3">
                                 <div className="flex items-center">
                                     {editingTitleIndex === index ? (
                                         <input
@@ -183,7 +162,7 @@ const ImageResourceBoard = () => {
                                         <h2 className="text-xl font-bold mb-2">{post.fileTitle}</h2>
                                     )}
                                     <FaEdit
-                                        onClick={() => editingTitleIndex === index ? handleSaveClick(post.originalResourceId) : handleEditClick(index, post.fileTitle)}
+                                        onClick={() => editingTitleIndex === index ? handleSaveClick(index) : handleEditClick(index, post.fileTitle)}
                                         className="ml-2 cursor-pointer text-gray-600"
                                     />
                                 </div>
@@ -192,22 +171,17 @@ const ImageResourceBoard = () => {
                                 <button className="mr-2 mt-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                                     인코딩
                                 </button>
-                                <button
-                                    type="button"
-                                    onClick={() => handleDelete(post.originalResourceId)}
-                                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                                >
+                                <button className="mt-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                                     삭제
                                 </button>
                             </div>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 ) : (
-                    <div className="text-center text-gray-600 mt-10 w-full">
+                    <div className="text-center text-gray-600 mt-10">
                         파일이 없습니다.
                     </div>
-                )}
-            </div>
+                    )}
 
             {/* 페이지네이션 */}
             {filteredPosts.length > postsPerPage && (
@@ -235,4 +209,4 @@ const ImageResourceBoard = () => {
     );
 };
 
-export default ImageResourceBoard;
+export default VideoResourceBoard;

@@ -10,6 +10,8 @@ import {
   NOTICE_DTL,
   IMAGE_RESOURCE_BOARD,
   IMAGE_FILE_BOARD,
+  VIDEO_RESOURCE_BOARD,
+  VIDEO_FILE_BOARD
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -47,6 +49,8 @@ import AccountList from "./ksis/pages/account/AccountList";
 import AccountEditForm from "./ksis/pages/account/AccountEditForm";
 import ImageResourceBoard from "./ksis/pages/fileMng/ImageResourceBoard.jsx";
 import ImageFileBoard from "./ksis/pages/fileMng/ImageFileBoard.jsx";
+import VideoResourceBoard from "./ksis/pages/fileMng/VideoResourceBoard.jsx";
+import VideoFileBoard from "./ksis/pages/fileMng/VideoFileBoard.jsx";
 
 function App() {
   return (
@@ -92,9 +96,11 @@ function App() {
           <Route path={NOTICE_FORM + "/:noticeId"} element={<NoticeForm />} />
           <Route path={NOTICE_DTL + "/:noticeId"} element={<NoticeDtl />} />
 
-          {/* 공지사항 관련 경로 */}
+          {/* 미디어관리 관련 경로 */}
           <Route path={IMAGE_FILE_BOARD} element={<ImageFileBoard />} />
           <Route path={IMAGE_RESOURCE_BOARD} element={<ImageResourceBoard />} />
+          <Route path={VIDEO_FILE_BOARD} element={<VideoFileBoard />} />
+          <Route path={VIDEO_RESOURCE_BOARD} element={<VideoResourceBoard />} />
 
           {/* 다른 라우트들을 추가할 수 있습니다 */}
         </Routes>
