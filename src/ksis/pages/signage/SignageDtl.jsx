@@ -13,14 +13,53 @@ import { format, parseISO } from "date-fns";
 import NoticeModal from "./NoticeModal";
 import SignageResourceModal from "./SignageResourceModal";
 import SignagePlaylistModal from "./SignagePlaylistModal";
+import PlaylistUpdateModal from "./PlaylistUpdateModal";
 
 const SignageDtl = () => {
   const [enabled, setEnabled] = useState(false);
+  const [radiobox, setRadiobox] = useState(null);
 
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
   const [playlists, setPlaylists] = useState([]);
+
+  const [playlistDtl, setPlaylistDtl] = useState([]);
+  const [playlistTitle, setPlaylistTitle] = useState("");
+  const [slideTime, setSlideTime] = useState(null);
+  const [playListId, setPlayListId] = useState(null);
+
+  //위치 지도 보기
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
+  //공지 조회
+  const [noticeModalIsOpen, setNoticeModalIsOpen] = useState(false);
+  const openNoticeModal = () => setNoticeModalIsOpen(true);
+  const closeNoticeModal = () => setNoticeModalIsOpen(false);
+
+  //이미지/영상 불러오기
+  const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
+  const openResourceModal = () => setResourceModalIsOpen(true);
+  const closeResourceModal = () => setResourceModalIsOpen(false);
+
+  //재생목록 추가
+  const [playlistAddIsOpen, setPlaylistAddIsOpen] = useState(false);
+  const openPlaylistAdd = () => setPlaylistAddIsOpen(true);
+  const closePlaylistAdd = () => setPlaylistAddIsOpen(false);
+
+  //재생목록 수정
+  const [playlistUpdateIsOpen, setPlaylistUpdateIsOpen] = useState(false);
+  const openPlaylistUpdate = () => setPlaylistUpdateIsOpen(true);
+  const closePlaylistUpdate = () => setPlaylistUpdateIsOpen(false);
+
+  // 이전 페이지로 이동
+  const navigate = useNavigate();
+
+  const onCancel = () => {
+    navigate(-1);
+  };
 
   const loadSignageDtl = async (signageId) => {
     try {
@@ -67,43 +106,11 @@ const SignageDtl = () => {
     }
   };
 
-  // 이전 페이지로 이동
-  const navigate = useNavigate();
-
-  const onCancel = () => {
-    navigate(-1);
-  };
-
-  //위치 지도 보기
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const openModal = () => setModalIsOpen(true);
-  const closeModal = () => setModalIsOpen(false);
-
-  //공지 조회
-  const [noticeModalIsOpen, setNoticeModalIsOpen] = useState(false);
-
-  const openNoticeModal = () => setNoticeModalIsOpen(true);
-  const closeNoticeModal = () => setNoticeModalIsOpen(false);
-
-  //이미지/영상 불러오기
-  const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
-
-  const openResourceModal = () => setResourceModalIsOpen(true);
-  const closeResourceModal = () => setResourceModalIsOpen(false);
-
-  //재생목록 추가
-  const [playlistAddIsOpen, setPlaylistAddIsOpen] = useState(false);
-  const openPlaylistAdd = () => setPlaylistAddIsOpen(true);
-  const closePlaylistAdd = () => setPlaylistAddIsOpen(false);
-
   const formattedDate = data.regTime
     ? format(parseISO(data.regTime), "yyyy-MM-dd")
     : "";
 
   //재생목록 선택
-  const [radiobox, setRadiobox] = useState(null);
-
   const onChangeRadio = async (e) => {
     const selectedRadiobox = Number(e.target.value);
     setRadiobox(selectedRadiobox);
@@ -119,11 +126,6 @@ const SignageDtl = () => {
   };
 
   //재생목록 조회
-  const [playlistDtl, setPlaylistDtl] = useState([]);
-  const [playlistTitle, setPlaylistTitle] = useState("");
-  const [slideTime, setSlideTime] = useState(null);
-  const [playListId, setPlayListId] = useState(null);
-
   const onClickPlaylist = async (playlistId, title, playTime) => {
     try {
       console.log(playlistId);
@@ -139,6 +141,15 @@ const SignageDtl = () => {
       setPlayListId(playlistId);
     } catch (error) {
       console.error("Error fetching data:", error);
+    }
+  };
+
+  //재생목록 수정
+  const openPlaylist = () => {
+    if (playListId == null) {
+      alert("수정할 재생목록을 선택하세요.");
+    } else {
+      openPlaylistUpdate();
     }
   };
 
@@ -388,9 +399,16 @@ const SignageDtl = () => {
                 <button
                   type="button"
                   className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  onClick={openPlaylist}
                 >
                   수정
                 </button>
+                <PlaylistUpdateModal
+                  isOpen={playlistUpdateIsOpen}
+                  onRequestClose={closePlaylistUpdate}
+                  signageId={data.deviceId}
+                  playlistId={playListId}
+                />
                 <button
                   type="button"
                   className="ml-2 relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
