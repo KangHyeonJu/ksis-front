@@ -155,7 +155,7 @@ const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPag
   //이미지/영상 불러오기
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
 
-  const openResourceModal = async(id) => setResourceModalIsOpen(true);
+  const openResourceModal = async(id) => { await axios.setResourceModalIsOpen(true);}
   const closeResourceModal = () => setResourceModalIsOpen(false);
     
     return (

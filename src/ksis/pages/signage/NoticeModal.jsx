@@ -65,9 +65,6 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
           &#8203;
         </span> */}
         <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-7/12 sm:p-6 h-96">
-          <DialogTitle className="text-lg font-medium leading-6 text-gray-900">
-            공지조회
-          </DialogTitle>
           <DialogBody className="mt-2">
             <div className="mb-4 flex items-center">
               <select
