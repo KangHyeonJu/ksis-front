@@ -29,3 +29,4 @@ export const IMAGE_RESOURCE_BOARD = "/imageresourceboard";
 export const IMAGE_FILE_BOARD = "/imagefileboard";
 export const VIDEO_RESOURCE_BOARD = "/videoresourceboard";
 export const VIDEO_FILE_BOARD = "/videofileboard";
+export const FILE_MODAL = "/fileBoardModal";

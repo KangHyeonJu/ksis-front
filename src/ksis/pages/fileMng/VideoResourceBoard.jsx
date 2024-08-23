@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import { VIDEO_RESOURCE_BOARD, VIDEO_FILE_BOARD } from '../../../constants/page_constant';
+import { format, parseISO } from 'date-fns';
 
 const VideoResourceBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -28,7 +29,7 @@ const VideoResourceBoard = () => {
         axios.get('/resourceList/videos')
             .then(response => {
                 setVideos(response.data);  // 영상 데이터를 설정
-                console.log(response.data);
+                console.log("영상 데이터 : ",response.data);
             })
             .catch(error => {
                 console.error('Error fetching video:', error);
@@ -77,6 +78,30 @@ const VideoResourceBoard = () => {
         setVideos(updatedVideos);
         setEditingTitleIndex(null);
         setNewTitle('');
+    };
+
+    // 삭제 핸들러
+    const handleDelete = async (id) => {
+        if (window.confirm('정말로 이 영상을 삭제하시겠습니까?')) { // '이미지' -> '영상'으로 수정
+            try {
+                await axios.delete(`/resourceList/${id}`);
+                setVideos(videos.filter(video => video.id !== id)); // 'setVideo' -> 'setVideos'로 수정
+            } catch (err) {
+                console.error('영상 삭제 오류:', err);
+                window.alert('영상 삭제에 실패했습니다.');
+            }
+        }
+    };
+
+    // 유효한 날짜 포맷으로 변환
+    const formatDate = (dateString) => {
+        try {
+            const date = parseISO(dateString);
+            return format(date, "yyyy-MM-dd");
+        } catch (error) {
+            console.error('Invalid date format:', dateString);
+            return 'Invalid date';
+        }
     };
 
     // 현재 페이지에 표시할 포스트 계산
@@ -146,10 +171,12 @@ const VideoResourceBoard = () => {
             </div>
 
             {/* 영상 리스트 */}
-            {currentPosts.length > 0 ? (
-                    <div className="">
-                        {currentPosts.map((post, index) => (
-                            <div key={index} className="rounded-lg p-6 shadow-sm bg-[#ffe69c] mb-4 w-1/3">
+            <div className="flex flex-wrap gap-4">
+                {currentPosts.length > 0 ? (
+                    currentPosts.map((post, index) => (
+                        // 비디오 디브
+                        <div key={index} className="flex-shrink-0 w-30 h-30 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
+                            <div className="rounded-lg p-6 shadow-sm bg-[#ffe69c] mb-4">
                                 <div className="flex items-center">
                                     {editingTitleIndex === index ? (
                                         <input
@@ -159,29 +186,34 @@ const VideoResourceBoard = () => {
                                             className="text-xl font-bold mb-2 border-b border-gray-400 w-full"
                                         />
                                     ) : (
-                                        <h2 className="text-xl font-bold mb-2">{post.fileTitle}</h2>
+                                        <h2 className="text-xl font-bold mb-2  overflow-hidden">{post.fileTitle}</h2>
                                     )}
                                     <FaEdit
                                         onClick={() => editingTitleIndex === index ? handleSaveClick(index) : handleEditClick(index, post.fileTitle)}
                                         className="ml-2 cursor-pointer text-gray-600"
                                     />
                                 </div>
-                                <p className="text-gray-700">등록일: {post.regTime.substring(0, 10)}</p>
+                                <p className="text-gray-700">등록일: {formatDate(post.regTime)}</p>
                                 <img src={post.filePath} alt={post.fileTitle} className="w-full h-auto mt-4" />
                                 <button className="mr-2 mt-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                                     인코딩
                                 </button>
-                                <button className="mt-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                <button
+                                    type="button"
+                                    onClick={() => handleDelete(post.originalResourceId)}
+                                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                >
                                     삭제
                                 </button>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))
                 ) : (
-                    <div className="text-center text-gray-600 mt-10">
+                    <div className="text-center text-gray-600 mt-10 w-full">
                         파일이 없습니다.
                     </div>
-                    )}
+                )}
+            </div>
 
             {/* 페이지네이션 */}
             {filteredPosts.length > postsPerPage && (
