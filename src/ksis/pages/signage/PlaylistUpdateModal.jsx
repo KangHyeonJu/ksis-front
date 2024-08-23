@@ -18,7 +18,7 @@ const PlaylistUpdateModal = ({
   const [data, setData] = useState({});
 
   const [resources, setResources] = useState([]);
-  const [resourceAdds, setResourceAdds] = useState([{}]);
+  const [resourceAdds, setResourceAdds] = useState([]);
   const [resourceSequence, setResourceSequence] = useState([]);
 
   const loadModal = useCallback(async () => {
@@ -27,22 +27,21 @@ const PlaylistUpdateModal = ({
       const response = await fetcher.get(SIGNAGE_RESOURCE + `/${signageId}`);
       setResources(response.data);
 
-      console.log(typeof resourceAdds);
-
       //순서, 인코딩리소스
       const playlistSequence = await fetcher.get(
         SIGNAGE_PLAYLIST_DTL + `/${playlistId}`
       );
-      setResourceAdds(playlistSequence);
 
-      console.log("response", response);
-      console.log("playlistSequence", playlistSequence);
+      const { signageResourceDTO = [], ...rest } = playlistSequence.data || {};
+
+      setResourceAdds(signageResourceDTO);
 
       //재생목록 정보 불러오기
+      setData(rest);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [signageId, playlistId, resourceAdds]);
+  }, [signageId, playlistId]);
 
   useEffect(() => {
     if (isOpen && signageId) {
@@ -80,13 +79,14 @@ const PlaylistUpdateModal = ({
     setResourceAdds(items);
   };
 
-  //재생 목록 등록
+  //재생 목록 수정
   useEffect(() => {
     setResourceSequence(
-      resourceAdds.map((resource, index) => ({
-        encodedResourceId: resource.encodedResourceId, // encodedResourceId를 추가
-        sequence: index + 1, // 인덱스를 추가
-      }))
+      resourceAdds &&
+        resourceAdds.map((resource, index) => ({
+          encodedResourceId: resource.encodedResourceId, // encodedResourceId를 추가
+          sequence: index + 1, // 인덱스를 추가
+        }))
     );
 
     setData((prevData) => ({
@@ -100,35 +100,39 @@ const PlaylistUpdateModal = ({
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // const updatePlayList = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append(
-  //       "playListAddDTO",
-  //       new Blob([JSON.stringify(data)], { type: "application/json" })
-  //     );
+  const updatePlayList = async () => {
+    try {
+      const formData = new FormData();
 
-  //     formData.append(
-  //       "resourceSequence",
-  //       new Blob([JSON.stringify(resourceSequence)], {
-  //         type: "application/json",
-  //       })
-  //     );
+      formData.append(
+        "playListAddDTO",
+        new Blob([JSON.stringify(data)], { type: "application/json" })
+      );
 
-  //     const response = await fetcher.put(SIGNAGE_PLAYLIST, formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
+      formData.append(
+        "resourceSequence",
+        new Blob([JSON.stringify(resourceSequence)], {
+          type: "application/json",
+        })
+      );
+      const response = await fetcher.put(
+        SIGNAGE_PLAYLIST_DTL + `/${playlistId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-  //     console.log(response.data);
+      console.log(response.data);
 
-  //     alert("재생목록이 정상적으로 수정되었습니다.");
-  //     onRequestClose();
-  //   } catch (error) {
-  //     console.log(error.response.data);
-  //   }
-  // };
+      alert("재생목록이 정상적으로 수정되었습니다.");
+      onRequestClose();
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
@@ -263,7 +267,7 @@ const PlaylistUpdateModal = ({
                   닫기
                 </button>
                 <button
-                  // onClick={updatePlayList}
+                  onClick={updatePlayList}
                   className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
                 >
                   수정
