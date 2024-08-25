@@ -167,7 +167,10 @@ const PcUpdateForm = () => {
         return selectElement ? selectElement.value : "";
       });
 
-      formData.append("accountList", JSON.stringify(accountIds));
+      formData.append(
+        "accountList",
+        new Blob([JSON.stringify(accountIds)], { type: "application/json" })
+      );
 
       const response = await fetcher.patch(PC_LIST, formData, {
         headers: {
