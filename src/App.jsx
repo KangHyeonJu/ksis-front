@@ -26,6 +26,7 @@ import {
   ACCOUNT_EDIT_FORM,
   ACCOUNT_FORM,
   ACCOUNT_LIST,
+  TOKEN_CALLBACK,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
@@ -57,10 +58,8 @@ function App() {
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
           <Route path={ACCOUNT_LIST} element={<AccountList />} />
-          <Route
-            path={ACCOUNT_EDIT_FORM + "/:accountId"}
-            element={<AccountEditForm />}
-          />
+          <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm />} />
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
 
           {/* PC 관련 경로 */}
           <Route path={PC_INVENTORY} element={<PcList />} />
