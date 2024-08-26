@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { API_BOARD } from "../../../constants/page_constant";
+import { API_NOTICE, API_BASIC, API_UPDATE, API_REGIST } from "../../../constants/api_constant";
 
 const ApiForm = () => {
     const [apiName, setApiName] = useState('');
@@ -16,7 +18,7 @@ const ApiForm = () => {
         if (apiId) {
             const fetchApiData = async () => {
                 try {
-                    const response = await fetch(`http://localhost:8080/api/posts/${apiId}`); // 올바른 엔드포인트로 수정
+                    const response = await fetch(API_NOTICE+`/${apiId}`); // 올바른 엔드포인트로 수정
                     if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
                     const data = await response.json();
                     console.log(data); // API 응답 데이터 출력
@@ -59,7 +61,7 @@ const ApiForm = () => {
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/api/${apiId ? 'update/' + apiId : 'register'}`, {
+            const response = await fetch(API_BASIC + `/${apiId ? 'update/' + apiId : 'register'}`, {
                 method: apiId ? 'PUT' : 'POST', // PUT 요청 시 수정, POST 요청 시 등록
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +71,7 @@ const ApiForm = () => {
 
             if (response.ok) {
                 alert('API 정보가 성공적으로 저장되었습니다.');
-                navigate('/apiBoard'); // 성공 시 ApiBoard로 이동
+                navigate(API_BOARD); // 성공 시 ApiBoard로 이동
             } else {
                 const errorData = await response.json();
                 alert(`저장 실패: ${errorData.error}`);

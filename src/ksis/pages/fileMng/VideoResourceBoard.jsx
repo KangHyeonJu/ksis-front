@@ -3,107 +3,97 @@ import { FaSearch, FaEdit } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
-import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD, FILE_MODAL } from '../../../constants/page_constant';
-import { IMAGE_BOARD, FILE_BASIC } from "../../../constants/api_constant";
+import { VIDEO_RESOURCE_BOARD, VIDEO_FILE_BOARD } from '../../../constants/page_constant';
 import { format, parseISO } from 'date-fns';
 
-// ImageResourceBoard 컴포넌트를 정의합니다.
-const ImageResourceBoard = () => {
+const VideoResourceBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('total');
     const [isOriginal, setIsOriginal] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const postsPerPage = 10;
-    const [images, setImages] = useState([]);
+    const [videos, setVideos] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [editingTitleIndex, setEditingTitleIndex] = useState(null);
     const [newTitle, setNewTitle] = useState('');
+
     const navigate = useNavigate();
 
-    const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);  // 선택한 이미지의 정보를 관리하는 상태값 추가
-
+    // isOriginal 값에 따라 페이지를 이동
     useEffect(() => {
-        navigate(isOriginal ? IMAGE_RESOURCE_BOARD : IMAGE_FILE_BOARD);
+        navigate(isOriginal ? VIDEO_RESOURCE_BOARD : VIDEO_FILE_BOARD);
     }, [isOriginal, navigate]);
 
+    // 영상 목록을 가져오는 부분
     useEffect(() => {
-        axios.get( IMAGE_BOARD )
+        axios.get('/resourceList/videos')
             .then(response => {
-                setImages(response.data);
-                console.log("이미지 데이터 : ", response.data); //이미지 데이터 확인
+                setVideos(response.data);  // 영상 데이터를 설정
+                console.log("영상 데이터 : ",response.data);
             })
             .catch(error => {
-                console.error('Error fetching images:', error);
+                console.error('Error fetching video:', error);
             });
     }, []);
 
-    //받아온 이미지 데이터 필터링하고 그걸로 검색
+    // 검색어와 카테고리에 따라 영상 필터링
     useEffect(() => {
-        let filtered = images;
+        let filtered = videos;
+
         if (searchTerm) {
             if (searchCategory === 'title') {
-                filtered = images.filter(image => image.title.includes(searchTerm));
+                filtered = videos.filter(video => video.title.includes(searchTerm));
             } else if (searchCategory === 'regDate') {
-                filtered = images.filter(image => image.regDate.includes(searchTerm));
+                filtered = videos.filter(video => video.regDate.includes(searchTerm));
             } else {
-                filtered = images.filter(image => 
-                    image.title.includes(searchTerm) || image.regDate.includes(searchTerm)
+                filtered = videos.filter(video => 
+                    video.title.includes(searchTerm) || video.regDate.includes(searchTerm)
                 );
             }
         }
-        setFilteredPosts(filtered);
-    }, [images, searchTerm, searchCategory]);
 
+        setFilteredPosts(filtered);
+    }, [videos, searchTerm, searchCategory]);
+
+    // 토글 버튼 핸들러 함수 추가
     const handleToggle = () => {
         setIsOriginal(prevIsOriginal => !prevIsOriginal);
     };
 
+    // 페이지 변경 핸들러
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
     };
 
+    // 제목 수정 핸들러
     const handleEditClick = (index, title) => {
         setEditingTitleIndex(index);
         setNewTitle(title);
     };
 
-    const handleSaveClick = async (id) => {
-        try {
-            const response = await axios.put(FILE_BASIC +`/${id}`, null, {
-                params: { newTitle }
-            });
-            images.forEach((img) => {
-                if(img.originalResourceId === id) {
-                    img.fileTitle = newTitle;
-                }
-            });
-            
-            const updatedImages = images.map(image =>
-                image.id === id ? { ...image, title: response.data.title } : image
-            );
-            setImages(updatedImages);
-            setEditingTitleIndex(null);
-            setNewTitle('');
-            navigate(IMAGE_RESOURCE_BOARD);
-        } catch (error) {
-            window.confirm('수정에 실패했습니다.');
-            console.error('제목 수정 중 오류 발생:', error);
-        }
+    // 제목 수정 완료 핸들러
+    const handleSaveClick = (index) => {
+        const updatedVideos = [...videos];
+        updatedVideos[index] = { ...updatedVideos[index], title: newTitle };
+        setVideos(updatedVideos);
+        setEditingTitleIndex(null);
+        setNewTitle('');
     };
 
+    // 삭제 핸들러
     const handleDelete = async (id) => {
-        if (window.confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
+        if (window.confirm('정말로 이 영상을 삭제하시겠습니까?')) { // '이미지' -> '영상'으로 수정
             try {
-                await axios.delete(FILE_BASIC+`/${id}`);
-                setImages(images.filter(image => image.id !== id));
+                await axios.delete(`/resourceList/${id}`);
+                setVideos(videos.filter(video => video.id !== id)); // 'setVideo' -> 'setVideos'로 수정
             } catch (err) {
-                console.error('이미지 삭제 오류:', err);
-                window.alert('이미지 삭제에 실패했습니다.');
+                console.error('영상 삭제 오류:', err);
+                window.alert('영상 삭제에 실패했습니다.');
             }
         }
     };
 
+    // 유효한 날짜 포맷으로 변환
     const formatDate = (dateString) => {
         try {
             const date = parseISO(dateString);
@@ -114,25 +104,16 @@ const ImageResourceBoard = () => {
         }
     };
 
-    // 모달 열기 함수 수정
-    const openResourceModal = (image) => {
-        setSelectedImage(image);  // 선택된 이미지를 설정합니다.
-        setResourceModalIsOpen(true);  // 모달을 엽니다.
-    };
-
-    const closeResourceModal = () => {
-        setResourceModalIsOpen(false);
-        setSelectedImage(null);  // 모달을 닫을 때 선택된 이미지를 초기화합니다.
-    };
-
+    // 현재 페이지에 표시할 포스트 계산
     const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
 
     return (
         <div className="p-6">
             <header className="mb-6">
-                <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">이미지 원본 페이지</h1>
+                <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">영상 원본 페이지</h1>
             </header>
-            
+
+            {/* 검색바 입력창 */}
             <div className="mb-4 flex items-center">
                 <select
                     value={searchCategory}
@@ -143,7 +124,6 @@ const ImageResourceBoard = () => {
                     <option value="title">제목</option>
                     <option value="regDate">등록일</option>
                 </select>
-
                 <div className="relative flex-grow">
                     <input
                         type="text"
@@ -156,6 +136,7 @@ const ImageResourceBoard = () => {
                 </div>
             </div>
 
+            {/* 토글 버튼 */}
             <div className="flex justify-start space-x-2 mb-4">
                 <button
                     type="button"
@@ -185,65 +166,45 @@ const ImageResourceBoard = () => {
 
             <div className="flex justify-end space-x-2 mb-4">
                 <Link to="" className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600">
-                    파일 등록
+                파일 등록
                 </Link>
             </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            
+
+            {/* 영상 리스트 */}
+            <div className="flex flex-wrap gap-4">
                 {currentPosts.length > 0 ? (
                     currentPosts.map((post, index) => (
-                        <div key={index} className="grid sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div className="items-center text-center rounded-lg w-75 h-75 p-3 bg-[#ffe69c]">
-                               <div>
+                        // 비디오 디브
+                        <div key={index} className="flex-shrink-0 w-30 h-30 sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
+                            <div className="rounded-lg p-6 shadow-sm bg-[#ffe69c] mb-4">
                                 <div className="flex items-center">
                                     {editingTitleIndex === index ? (
                                         <input
                                             type="text"
                                             value={newTitle}
                                             onChange={(e) => setNewTitle(e.target.value)}
-                                            className="text-xl font-bold mb-2 border-b border-gray-400"
+                                            className="text-xl font-bold mb-2 border-b border-gray-400 w-full"
                                         />
                                     ) : (
-                                        <h2 className=" text-xl font-bold mb-2">{post.fileTitle}</h2>
+                                        <h2 className="text-xl font-bold mb-2  overflow-hidden">{post.fileTitle}</h2>
                                     )}
                                     <FaEdit
-                                        onClick={() => editingTitleIndex === index ? handleSaveClick(post.originalResourceId) : 
-                                            handleEditClick(index, post.fileTitle)}
+                                        onClick={() => editingTitleIndex === index ? handleSaveClick(index) : handleEditClick(index, post.fileTitle)}
                                         className="ml-2 cursor-pointer text-gray-600"
                                     />
                                 </div>
-                                </div>
-                                <p className="text-gray-700  overflow-hidden">등록일: {formatDate(post.regTime)}</p>
-                                <div className="h-40 w-52 overflow-hidden margin-0">
-                                    <div>
-                                    <img 
-                                        src={post.filePath} 
-                                        alt={post.fileTitle} 
-                                        className="w-full h-auto mt-4 cursor-pointer" 
-                                        onClick={() => openResourceModal(post.originalResourceId)}  // 이미지를 클릭하면 모달이 열립니다.
-                                    />
-                                    </div>
-                                </div>
-
-                                <div className="row">
-                                    <button 
-                                        className="items-center mr-2 mt-2 relative inline-flex rounded-md bg-[#6dd7e5]
-                                        px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline 
-                                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                                    >
-                                        인코딩
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDelete(post.originalResourceId)}
-                                        className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm
-                                        hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
-                                        focus-visible:outline-red-600"
-                                    >
-                                        삭제
-                                    </button>
-                                </div>
+                                <p className="text-gray-700">등록일: {formatDate(post.regTime)}</p>
+                                <img src={post.filePath} alt={post.fileTitle} className="w-full h-auto mt-4" />
+                                <button className="mr-2 mt-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                    인코딩
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleDelete(post.originalResourceId)}
+                                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                >
+                                    삭제
+                                </button>
                             </div>
                         </div>
                     ))
@@ -253,6 +214,8 @@ const ImageResourceBoard = () => {
                     </div>
                 )}
             </div>
+
+            {/* 페이지네이션 */}
             {filteredPosts.length > postsPerPage && (
                 <ReactPaginate
                     previousLabel={"이전"}
@@ -274,17 +237,8 @@ const ImageResourceBoard = () => {
                     activeClassName={"bg-blue-500 text-white"}
                 />
             )}
-
-            {/* 모달 컴포넌트 호출 */}
-            {selectedImage && (
-                <FILE_MODAL
-                    isOpen={resourceModalIsOpen}
-                    onRequestClose={closeResourceModal}
-                    image={selectedImage}  // 선택한 이미지의 정보를 전달합니다.
-                />
-            )}
         </div>
     );
 };
 
-export default ImageResourceBoard;
+export default VideoResourceBoard;

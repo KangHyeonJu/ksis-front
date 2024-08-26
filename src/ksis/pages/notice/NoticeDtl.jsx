@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { NOTICE_BOARD, NOTICE_FORM } from '../../../constants/page_constant';
+import { NOTICE_LIST } from '../../../constants/api_constant';
 
 const NoticeDetail = () => {
     const [notice, setNotice] = useState(null);
@@ -13,7 +14,7 @@ const NoticeDetail = () => {
     useEffect(() => {
         const fetchNotice = async () => {
             try {
-                const response = await axios.get(`/api/notices/${noticeId}`);
+                const response = await axios.get(NOTICE_LIST+`/${noticeId}`);
                 const formattedNotice = formatNoticeDates(response.data);
                 setNotice(formattedNotice);
             } catch (err) {
