@@ -76,7 +76,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                             </button>
                             <div className="w-full overflow-hidden bg-gray-200 lg:h-60">
                               <img
-                                src={`${process.env.REACT_APP_API_BASE_URL}${resource.thumbFilePath}`}
+                                src={resource.thumbFilePath}
                                 alt={resource.fileTitle}
                                 height=""
                                 width=""
