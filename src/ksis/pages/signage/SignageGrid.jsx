@@ -15,7 +15,7 @@ const SignageGrid = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_LIST);
+      const response = await fetcher.get(SIGNAGE_LIST + `/grid`);
       console.log(response);
       if (response.data) {
         setSignages(response.data);
@@ -103,8 +103,8 @@ const SignageGrid = () => {
           >
             <div className="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
               <img
-                alt={signage.imageAlt}
-                src={signage.imageSrc}
+                alt={signage.deviceName}
+                src={signage.thumbNail}
                 className="h-full w-full object-cover object-center"
               />
             </div>

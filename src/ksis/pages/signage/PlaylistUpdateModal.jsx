@@ -3,37 +3,49 @@ import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import {
   SIGNAGE_PLAYLIST,
+  SIGNAGE_PLAYLIST_DTL,
   SIGNAGE_RESOURCE,
 } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
-  const [data, setData] = useState({
-    deviceId: "",
-    fileTitle: "",
-    slideTime: null,
-  });
-  const [resources, setResources] = useState([]);
-  const [resourceSequence, setResourceSequence] = useState([]);
-  const [resourceAdds, setResourceAdds] = useState([]);
+const PlaylistUpdateModal = ({
+  isOpen,
+  onRequestClose,
+  signageId,
+  playlistId,
+}) => {
+  const [data, setData] = useState({});
 
-  //재생장치의 인코딩리소스 불러오기
+  const [resources, setResources] = useState([]);
+  const [resourceAdds, setResourceAdds] = useState([]);
+  const [resourceSequence, setResourceSequence] = useState([]);
+
   const loadModal = useCallback(async () => {
     try {
+      // 재생장치의 인코딩리소스 불러오기
       const response = await fetcher.get(SIGNAGE_RESOURCE + `/${signageId}`);
       setResources(response.data);
 
-      console.log(response);
+      //순서, 인코딩리소스
+      const playlistSequence = await fetcher.get(
+        SIGNAGE_PLAYLIST_DTL + `/${playlistId}`
+      );
+
+      const { signageResourceDTO = [], ...rest } = playlistSequence.data || {};
+
+      setResourceAdds(signageResourceDTO);
+
+      //재생목록 정보 불러오기
+      setData(rest);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [signageId]);
+  }, [signageId, playlistId]);
 
   useEffect(() => {
     if (isOpen && signageId) {
       loadModal();
-      setResourceAdds([]);
     }
   }, [isOpen, signageId, loadModal]);
 
@@ -67,13 +79,14 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
     setResourceAdds(items);
   };
 
-  //재생 목록 등록
+  //재생 목록 수정
   useEffect(() => {
     setResourceSequence(
-      resourceAdds.map((resource, index) => ({
-        encodedResourceId: resource.encodedResourceId, // encodedResourceId를 추가
-        sequence: index + 1, // 인덱스를 추가
-      }))
+      resourceAdds &&
+        resourceAdds.map((resource, index) => ({
+          encodedResourceId: resource.encodedResourceId, // encodedResourceId를 추가
+          sequence: index + 1, // 인덱스를 추가
+        }))
     );
 
     setData((prevData) => ({
@@ -87,9 +100,10 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const addPlayList = async () => {
+  const updatePlayList = async () => {
     try {
       const formData = new FormData();
+
       formData.append(
         "playListAddDTO",
         new Blob([JSON.stringify(data)], { type: "application/json" })
@@ -101,16 +115,19 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
           type: "application/json",
         })
       );
-
-      const response = await fetcher.post(SIGNAGE_PLAYLIST, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await fetcher.put(
+        SIGNAGE_PLAYLIST_DTL + `/${playlistId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       console.log(response.data);
 
-      alert("재생목록이 정상적으로 등록되었습니다.");
+      alert("재생목록이 정상적으로 수정되었습니다.");
       onRequestClose();
     } catch (error) {
       console.log(error.response.data);
@@ -124,7 +141,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
           <div className="h-full">
             <div className="items-center justify-center">
               <DialogTitle className="leading-6 text-gray-900 text-center">
-                <p className="text-xl">재생 목록 등록</p>
+                <p className="text-xl">재생 목록 수정</p>
               </DialogTitle>
             </div>
             <div className="flex items-center justify-center">
@@ -134,37 +151,39 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                     <div className="w-full h-96 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
                       <div className="space-y-2">
                         <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4">
-                          {resources.map((resource) => (
-                            <div
-                              key={resource.encodedResourceId}
-                              className="group relative border border-gray-900 mb-5 cursor-pointer"
-                              onClick={() => addList(resource)}
-                            >
-                              <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
-                                <img
-                                  src={resource.thumbFilePath}
-                                  alt={resource.fileTitle}
-                                  className="h-full w-full object-cover object-center transform hover:brightness-90"
-                                />
-                              </div>
-                              {resourceAdds.find(
-                                (r) =>
-                                  r.encodedResourceId ===
-                                  resource.encodedResourceId
-                              ) && (
-                                <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
-                                  {resourceAdds.findIndex(
+                          {resources &&
+                            resources.map((resource) => (
+                              <div
+                                key={resource.encodedResourceId}
+                                className="group relative border border-gray-900 mb-5 cursor-pointer"
+                                onClick={() => addList(resource)}
+                              >
+                                <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
+                                  <img
+                                    src={resource.thumbFilePath}
+                                    alt={resource.fileTitle}
+                                    className="h-full w-full object-cover object-center transform hover:brightness-90"
+                                  />
+                                </div>
+                                {resourceAdds &&
+                                  resourceAdds.find(
                                     (r) =>
                                       r.encodedResourceId ===
                                       resource.encodedResourceId
-                                  ) + 1}
+                                  ) && (
+                                    <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
+                                      {resourceAdds.findIndex(
+                                        (r) =>
+                                          r.encodedResourceId ===
+                                          resource.encodedResourceId
+                                      ) + 1}
+                                    </div>
+                                  )}
+                                <div className="text-gray-700 text-center w-full p-1">
+                                  {resource.fileTitle}
                                 </div>
-                              )}
-                              <div className="text-gray-700 text-center w-full p-1">
-                                {resource.fileTitle}
                               </div>
-                            </div>
-                          ))}
+                            ))}
                         </div>
                       </div>
                     </div>
@@ -248,10 +267,10 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                   닫기
                 </button>
                 <button
-                  onClick={addPlayList}
+                  onClick={updatePlayList}
                   className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
                 >
-                  등록
+                  수정
                 </button>
               </div>
             </div>
@@ -262,4 +281,4 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   );
 };
 
-export default SignagePlaylistModal;
+export default PlaylistUpdateModal;

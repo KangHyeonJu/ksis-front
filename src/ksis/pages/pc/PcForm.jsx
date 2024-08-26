@@ -112,9 +112,9 @@ const PcForm = () => {
 
   //post
   const [data, setData] = useState({
-    macAddress: macAddress,
+    macAddress: "",
     deviceName: "",
-    location: address,
+    location: "",
     detailAddress: "",
     deviceType: "PC",
   });
@@ -122,7 +122,7 @@ const PcForm = () => {
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
-      macAddress: macAddress,
+      macAddress,
       location: address,
     }));
   }, [macAddress, address]);
@@ -147,7 +147,10 @@ const PcForm = () => {
         return selectElement ? selectElement.value : "";
       });
 
-      formData.append("accountList", JSON.stringify(accountIds));
+      formData.append(
+        "accountList",
+        new Blob([JSON.stringify(accountIds)], { type: "application/json" })
+      );
 
       const response = await fetcher.post(PC_ADD, formData, {
         headers: {

@@ -122,19 +122,19 @@ const SignageForm = () => {
 
   //post
   const [data, setData] = useState({
-    macAddress: macAddress,
+    macAddress: "",
     deviceName: "",
-    location: address,
+    location: "",
     detailAddress: "",
     deviceType: "SIGNAGE",
-    resolution: selectedValue,
+    resolution: "",
     screenSize: "",
   });
 
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
-      macAddress: macAddress,
+      macAddress,
       location: address,
       resolution: selectedValue,
       screenSize: width + " x " + height,
@@ -146,7 +146,7 @@ const SignageForm = () => {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSave = async (e) => {
+  const handleSave = async () => {
     try {
       const formData = new FormData();
       formData.append(
@@ -161,7 +161,10 @@ const SignageForm = () => {
         return selectElement ? selectElement.value : "";
       });
 
-      formData.append("accountList", JSON.stringify(accountIds));
+      formData.append(
+        "accountList",
+        new Blob([JSON.stringify(accountIds)], { type: "application/json" })
+      );
 
       const response = await fetcher.post(SIGNAGE_ADD, formData, {
         headers: {
