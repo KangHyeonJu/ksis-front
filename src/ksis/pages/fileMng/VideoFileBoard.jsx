@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import ReactPaginate from 'react-paginate'; // 페이지네이션 컴포넌트 가져오기
-import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD } from '../../../constants/page_constant';
+import { VIDEO_RESOURCE_BOARD, VIDEO_FILE_BOARD } from '../../../constants/page_constant';
 
-const ImageFileBoard = () => {
+const VideoFileBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('total');
     const [isOriginal, setIsOriginal] = useState(false); // 토글 상태 관리
@@ -20,9 +20,9 @@ const ImageFileBoard = () => {
         const newIsOriginal = !isOriginal;
         setIsOriginal(newIsOriginal);
         if (newIsOriginal) {
-            navigate(IMAGE_RESOURCE_BOARD); // 원본 페이지로 이동
+            navigate(VIDEO_RESOURCE_BOARD); // 원본 페이지로 이동
         } else {
-            navigate(IMAGE_FILE_BOARD); // 인코딩 페이지로 이동 (replace with the actual path)
+            navigate(VIDEO_FILE_BOARD); // 인코딩 페이지로 이동 (replace with the actual path)
         }
     };
 
@@ -34,7 +34,7 @@ const ImageFileBoard = () => {
         <div className="p-6">
             <header className="mb-6">
                 <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-                    이미지 인코딩 페이지</h1>
+                    영상 인코딩 페이지</h1>
             </header>
 
             {/* 검색바 입력창 */}
@@ -123,4 +123,4 @@ const ImageFileBoard = () => {
     );
 };
 
-export default ImageFileBoard;
+export default VideoFileBoard;

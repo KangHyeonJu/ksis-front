@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { API_BOARD, API_FORM } from "../../../constants/page_constant";
+import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([]);
@@ -19,7 +20,7 @@ const ApiBoard = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/all');
+                const response = await fetch(API_LIST);
                 if (!response.ok) {
                     throw new Error('네트워크 응답이 올바르지 않습니다.');
                 }
@@ -62,7 +63,7 @@ const ApiBoard = () => {
         try {
             console.log('Selected posts before delete:', [...selectedPosts]);
             const deletePromises = [...selectedPosts].map(id =>
-                fetch(`http://localhost:8080/api/posts/${id}`, {
+                fetch(API_NOTICE+`/${id}`, {
                     method: 'DELETE'
                 })
             );

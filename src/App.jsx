@@ -10,6 +10,9 @@ import {
   NOTICE_DTL,
   IMAGE_RESOURCE_BOARD,
   IMAGE_FILE_BOARD,
+  VIDEO_RESOURCE_BOARD,
+  VIDEO_FILE_BOARD,
+  FILE_MODAL,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -26,6 +29,7 @@ import {
   ACCOUNT_EDIT_FORM,
   ACCOUNT_FORM,
   ACCOUNT_LIST,
+  TOKEN_CALLBACK,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
@@ -45,8 +49,12 @@ import NoticeDtl from "./ksis/pages/notice/NoticeDtl.jsx";
 import AccountRegForm from "./ksis/pages/account/AccountRegForm";
 import AccountList from "./ksis/pages/account/AccountList";
 import AccountEditForm from "./ksis/pages/account/AccountEditForm";
+import TokenCallback from "./ksis/pages/account/TokenCallback";
 import ImageResourceBoard from "./ksis/pages/fileMng/ImageResourceBoard.jsx";
 import ImageFileBoard from "./ksis/pages/fileMng/ImageFileBoard.jsx";
+import VideoResourceBoard from "./ksis/pages/fileMng/VideoResourceBoard.jsx";
+import VideoFileBoard from "./ksis/pages/fileMng/VideoFileBoard.jsx";
+import FileBoardModal from "./ksis/pages/fileMng/FileBoardModal.jsx";
 
 function App() {
   return (
@@ -57,10 +65,8 @@ function App() {
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
           <Route path={ACCOUNT_LIST} element={<AccountList />} />
-          <Route
-            path={ACCOUNT_EDIT_FORM + "/:accountId"}
-            element={<AccountEditForm />}
-          />
+          <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm />} />
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
 
           {/* PC 관련 경로 */}
           <Route path={PC_INVENTORY} element={<PcList />} />
@@ -92,9 +98,15 @@ function App() {
           <Route path={NOTICE_FORM + "/:noticeId"} element={<NoticeForm />} />
           <Route path={NOTICE_DTL + "/:noticeId"} element={<NoticeDtl />} />
 
-          {/* 공지사항 관련 경로 */}
+          {/* 미디어관리 관련 경로 */}
           <Route path={IMAGE_FILE_BOARD} element={<ImageFileBoard />} />
           <Route path={IMAGE_RESOURCE_BOARD} element={<ImageResourceBoard />} />
+          <Route path={VIDEO_FILE_BOARD} element={<VideoFileBoard />} />
+          <Route path={VIDEO_RESOURCE_BOARD} element={<VideoResourceBoard />} />
+          <Route
+            path={FILE_MODAL + "/:originalResourceId"}
+            element={<FileBoardModal />}
+          />
 
           {/* 다른 라우트들을 추가할 수 있습니다 */}
         </Routes>

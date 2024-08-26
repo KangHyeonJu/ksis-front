@@ -80,6 +80,7 @@ const AccountRegForm = () => {
                 console.error('Error Response Data:', error.response.data);
                 console.error('Error Response Status:', error.response.status);
                 console.error('Error Response Headers:', error.response.headers);
+                alert(error.response.data);
             } else if (error.request) {
                 console.error('Error Request Data:', error.request);
             } else {

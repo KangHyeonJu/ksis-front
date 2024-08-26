@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { NOTICE_BOARD } from '../../../constants/page_constant';
+import { NOTICE_LIST } from '../../../constants/api_constant';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 
 const NoticeForm = () => {
@@ -42,7 +43,7 @@ const NoticeForm = () => {
             setIsEditing(true);
             const fetchNotice = async () => {
                 try {
-                    const response = await axios.get(`/api/notices/${noticeId}`);
+                    const response = await axios.get(NOTICE_LIST+`/${noticeId}`);
                     const { title, content, startDate, endDate, deviceIds = [] } = response.data;
                     setFormData({
                         title,
@@ -85,8 +86,8 @@ const NoticeForm = () => {
             };
 
             const response = isEditing 
-                ? await axios.put(`/api/notices/${noticeId}`, noticeData) 
-                : await axios.post('/api/notices', noticeData);
+                ? await axios.put(NOTICE_LIST + `/${noticeId}`, noticeData) 
+                : await axios.post(NOTICE_LIST , noticeData);
 
             if ([200, 201, 204].includes(response.status)) {
                 navigate(NOTICE_BOARD);
