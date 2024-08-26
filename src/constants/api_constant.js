@@ -20,4 +20,5 @@ export const NOTICE_LIST = "/api/notices";
 
 //file
 export const FILE_SIZE = "/api/filesize";
+export const FILE_BASIC = "/resourceList";
 export const IMAGE_BOARD = "/resourceList/images";
