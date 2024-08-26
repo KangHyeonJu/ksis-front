@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FILE_SIZE } from "../../../constants/api_constant";
 
 const FileSizeBoard = () => {
     const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
@@ -8,7 +9,7 @@ const FileSizeBoard = () => {
         // API 호출하여 초기값 설정
         const fetchFileSize = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/filesize');
+                const response = await fetch(FILE_SIZE);
                 const data = await response.json();
                 setImageMaxSize(data.imageMaxSize ?? 10); // 데이터가 없으면 기본값 사용
                 setVideoMaxSize(data.videoMaxSize ?? 50); // 데이터가 없으면 기본값 사용
@@ -23,7 +24,7 @@ const FileSizeBoard = () => {
         const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
 
         try {
-            const response = await fetch('http://localhost:8080/api/filesize', {
+            const response = await fetch(FILE_SIZE, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

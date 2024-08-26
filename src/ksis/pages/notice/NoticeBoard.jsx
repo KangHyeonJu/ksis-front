@@ -4,6 +4,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { NOTICE_FORM, NOTICE_BOARD, NOTICE_DTL } from '../../../constants/page_constant';
+import { NOTICE_LIST } from '../../../constants/api_constant';
 
 const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
@@ -17,7 +18,7 @@ const NoticeBoard = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get('/api/notices')
+        axios.get(NOTICE_LIST)
             .then(response => {
                 setNotices(response.data);
             })
