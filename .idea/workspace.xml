@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e0f9f07c-f96e-4ba6-b197-64423357b890" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants/account_constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/account_constant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants/api_constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/api_constant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants/page_constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/page_constant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fetcher.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fetcher.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ksis/components/SideBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ksis/components/SideBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ksis/pages/pc/PcForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ksis/pages/pc/PcForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ksis/pages/pc/PcList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ksis/pages/pc/PcList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2kOo5Tm96vznFtjWV97cVX2oZ0f" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "jaehyuk",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/kesisTeam/ksis-dev/ksis",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e0f9f07c-f96e-4ba6-b197-64423357b890" name="Changes" comment="" />
+      <created>1723163801011</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1723163801011</updated>
+      <workItem from="1723163802198" duration="1675000" />
+      <workItem from="1723170293762" duration="56000" />
+      <workItem from="1723170360724" duration="11000" />
+      <workItem from="1723180299994" duration="7000" />
+      <workItem from="1724718061833" duration="6275000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

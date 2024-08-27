@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const fetcher = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+      "Content-Type": "application/json",
   },
 });
 
@@ -27,10 +27,9 @@ fetcher.interceptors.response.use(
     async (error) => {
       if (error) {
         // 401 에러 처리 로직 추가 가능 (예: 토큰 갱신)
-          console.log("에러났습니다.");
+        console.log("에러났습니다. 왜냐하면 토큰이 없거든요");
       }
       return Promise.reject(error);
     }
 );
-
 export default fetcher;

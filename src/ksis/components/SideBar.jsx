@@ -10,7 +10,7 @@ import {
   MdChat,
   MdDevices,
 } from "react-icons/md";
-import { PC_INVENTORY } from "../../constants/page_constant";
+import { PC_INVENTORY, SIGNAGE_INVENTORY,  API_BOARD, FILESIZE_FORM, NOTICE_BOARD, IMAGE_FILE_BOARD, VIDEO_FILE_BOARD } from "../../constants/page_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -38,7 +38,7 @@ const Sidebar = () => {
         <div className="mb-4">
           <a className="flex items-center px-2 font-semibold text-black text-lg">
             <CiFaceSmile className="mr-2" size="24" />
-            <span>()</span>
+            <span>신지원(jiwon)</span>
           </a>
         </div>
         <div className="flex space-x-2 mb-4">
@@ -88,36 +88,23 @@ const Sidebar = () => {
             </div>
             {openMenu === "profile" && (
               <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  계정 조회
-                </a>
-                <a href="#" className="block py-1">
-                  IP 관리
-                </a>
+                <Link  to={IMAGE_FILE_BOARD} className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                  이미지 관리
+                </Link>
+                <Link  to={VIDEO_FILE_BOARD} className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                  영상 관리
+                </Link>
               </div>
             )}
           </div>
           <div className="item mt-3">
-            <div
-              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-              onClick={() => toggleMenu("notice")}
-            >
+            <div className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer">
               <MdChat className="mr-3" />
-              <span>공지글 관리</span>
+              <span><Link
+                  to={NOTICE_BOARD} className="block py-1">공지글 관리</Link></span>
             </div>
-            {openMenu === "notice" && (
-              <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  이미지 관리
-                </a>
-                <a href="#" className="block py-1">
-                  영상 관리
-                </a>
-                <a href="#" className="block py-1">
-                  컨텐츠 관리
-                </a>
-              </div>
-            )}
           </div>
           <div className="item mt-3">
             <div
@@ -129,9 +116,13 @@ const Sidebar = () => {
             </div>
             {openMenu === "device" && (
               <div className="submenu ml-8 mt-2">
-                <a href="#" className="block py-1">
-                  재생장치 관리
-                </a>
+                <Link
+                  to={SIGNAGE_INVENTORY}
+                  className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>재생장치 관리</span>
+                </Link>
                 <Link
                   to={PC_INVENTORY}
                   className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
@@ -152,12 +143,18 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link to="/api-board" className="block py-1">
+                <Link  to={API_BOARD} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
                   API 조회
-                </Link>
-                <a href="#" className="block py-1">
+                  </span>
+                </Link >
+                <Link  to={FILESIZE_FORM} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <FaRegCircle size={10} className="mr-2" />
+                <span>
                   용량 관리
-                </a>
+                  </span>
+                </Link>
               </div>
             )}
           </div>
