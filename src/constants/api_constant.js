@@ -22,4 +22,7 @@ export const NOTICE_LIST = "/api/notices";
 //file
 export const FILE_SIZE = "/api/filesize";
 export const FILE_BASIC = "/resourceList";
-export const IMAGE_BOARD = "/resourceList/images";
+export const RSIMAGE_BOARD = "/resourceList/RsImages";
+export const ECIMAGE_BOARD = "/resourceList/EcImages";
+export const RSVIDEO_BOARD = "/resourceList/RsVideos";
+export const ECVIDEO_BOARD = "/resourceList/EcVideos";

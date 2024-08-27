@@ -1,21 +1,81 @@
-import React, { useState } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { format, parseISO } from 'date-fns';
+import { FaSearch, FaEdit } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import ReactPaginate from 'react-paginate'; // 페이지네이션 컴포넌트 가져오기
 import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD } from '../../../constants/page_constant';
+import { ECIMAGE_BOARD, FILE_BASIC } from "../../../constants/api_constant";
 
 const ImageFileBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('total');
     const [isOriginal, setIsOriginal] = useState(false); // 토글 상태 관리
-
+    const [images, setImages] = useState([]);
     // 페이지네이션 관련 상태
     const [currentPage, setCurrentPage] = useState(0);
     const postsPerPage = 10; // 페이지당 게시물 수
     const filteredPosts = []; // 실제 데이터를 여기에 설정할 필요가 있습니다
-
+    const [editingTitleIndex, setEditingTitleIndex] = useState(null);
+    const [newTitle, setNewTitle] = useState('');
+    
     const navigate = useNavigate(); // Initialize useNavigate
 
+
+    useEffect(() => {
+        axios.get( ECIMAGE_BOARD )
+            .then(response => {
+                setImages(response.data);
+                console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
+            })
+            .catch(error => {
+                console.error('Error fetching images:', error);
+            });
+    }, []);
+
+    
+
+    const handleEditClick = (index, title) => {
+        setEditingTitleIndex(index);
+        setNewTitle(title);
+    };
+
+    const handleSaveClick = async (id) => {
+        try {
+            const response = await axios.put(FILE_BASIC +`/${id}`, null, {
+                params: { newTitle }
+            });
+            images.forEach((img) => {
+                if(img.encodedResourceId === id) {
+                    img.fileTitle = newTitle;
+                }
+            });
+            
+            const updatedImages = images.map(image =>
+                image.id === id ? { ...image, title: response.data.title } : image
+            );
+            setImages(updatedImages);
+            setEditingTitleIndex(null);
+            setNewTitle('');
+            navigate(IMAGE_FILE_BOARD);
+        } catch (error) {
+            window.confirm('수정에 실패했습니다.');
+            console.error('제목 수정 중 오류 발생:', error);
+        }
+    };
+
+    useEffect(() => {
+        axios.get( ECIMAGE_BOARD )
+            .then(response => {
+                setImages(response.data);
+                console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
+            })
+            .catch(error => {
+                console.error('Error fetching images:', error);
+            });
+    }, []);
+
+    
     const handleToggle = () => {
         const newIsOriginal = !isOriginal;
         setIsOriginal(newIsOriginal);
@@ -29,6 +89,30 @@ const ImageFileBoard = () => {
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
     };
+
+    const handleDelete = async (id) => {
+        if (window.confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
+            try {
+                await axios.delete(FILE_BASIC+`/${id}`);
+                setImages(images.filter(image => image.id !== id));
+            } catch (err) {
+                console.error('이미지 삭제 오류:', err);
+                window.alert('이미지 삭제에 실패했습니다.');
+            }
+        }
+    };
+
+    const formatDate = (dateString) => {
+        try {
+            const date = parseISO(dateString);
+            return format(date, "yyyy-MM-dd");
+        } catch (error) {
+            console.error('Invalid date format:', dateString);
+            return 'Invalid date';
+        }
+    };
+
+    const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
 
     return (
         <div className="p-6">
@@ -96,6 +180,77 @@ const ImageFileBoard = () => {
                     <Link to="">파일 등록</Link>
                 </button>
             </div>
+
+{/* 그리드 시작 */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            
+            {currentPosts.length > 0 ? (
+                currentPosts.map((post, index) => (
+                    <div key={index} className="grid p-1">
+
+                        {/* 네모틀 */}
+                        <div className="items-center text-center rounded-lg w-2/3 h-full p-3 bg-[#ffe69c]">
+                           {/* 제목 */}
+                           <div>
+                            <div className="flex items-center">
+                                {editingTitleIndex === index ? (
+                                    <input
+                                        type="text"
+                                        value={newTitle}
+                                        onChange={(e) => setNewTitle(e.target.value)}
+                                        className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
+                                    />
+                                ) : (
+                                    <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto">{post.fileTitle}</h2>
+                                )}
+                                <FaEdit
+                                    onClick={() => editingTitleIndex === index ? handleSaveClick(post.encodedResourceId) : 
+                                        handleEditClick(index, post.fileTitle)}
+                                    className="ml-2 cursor-pointer text-gray-600"
+                                />
+                            </div>
+                            </div>
+
+                            {/* 등록일 */}
+                            <div>
+                            <p className="text-gray-700 ">등록일: {formatDate(post.regTime)}</p>
+                            </div>
+
+                            {/* 이미지 */}
+                            <div>
+                                <div className="w-5/6 h-5/6 overflow-hidden  mt-4 cursor-pointer mx-auto">
+                                <img 
+                                    src={post.filePath} 
+                                    //이미지 파일 깨질시 이미지 제목으로 설정
+                                    alt={post.fileTitle} 
+                                    className="w-full h-full" 
+                                />
+                                </div>
+                            </div>
+
+                            {/* 삭제 버튼 */}
+                            <div>
+                            <div className="items-center text-center row mx-auto">
+                                <button
+                                    type="button"
+                                    onClick={() => handleDelete(post.encodedResourceId)}
+                                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm
+                                    hover:bg-red-400 focus-visible:outline-red-600"
+                                >
+                                    삭제
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div className="text-center text-gray-600 mt-10 w-full">
+                    파일이 없습니다.
+                </div>
+            )}
+        </div>
+
 
             {/* 페이지네이션 */}
             {filteredPosts.length > postsPerPage && (
