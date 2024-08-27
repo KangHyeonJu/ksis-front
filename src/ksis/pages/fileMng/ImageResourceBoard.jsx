@@ -99,7 +99,7 @@ const ImageResourceBoard = () => {
     const handleDelete = async (id) => {
         if (window.confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
             try {
-                await axios.delete(FILE_BASIC+`/${id}`);
+                await axios.delete(FILE_BASIC+`/original/${id}`);
                 setImages(images.filter(image => image.id !== id));
             } catch (err) {
                 console.error('이미지 삭제 오류:', err);

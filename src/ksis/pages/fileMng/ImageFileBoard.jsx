@@ -15,7 +15,7 @@ const ImageFileBoard = () => {
     // 페이지네이션 관련 상태
     const [currentPage, setCurrentPage] = useState(0);
     const postsPerPage = 10; // 페이지당 게시물 수
-    const filteredPosts = []; // 실제 데이터를 여기에 설정할 필요가 있습니다
+    const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
     const [editingTitleIndex, setEditingTitleIndex] = useState(null);
     const [newTitle, setNewTitle] = useState('');
     
@@ -26,6 +26,7 @@ const ImageFileBoard = () => {
         axios.get( ECIMAGE_BOARD )
             .then(response => {
                 setImages(response.data);
+                setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
                 console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
             })
             .catch(error => {
@@ -55,6 +56,7 @@ const ImageFileBoard = () => {
                 image.id === id ? { ...image, title: response.data.title } : image
             );
             setImages(updatedImages);
+            
             setEditingTitleIndex(null);
             setNewTitle('');
             navigate(IMAGE_FILE_BOARD);
@@ -93,7 +95,7 @@ const ImageFileBoard = () => {
     const handleDelete = async (id) => {
         if (window.confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
             try {
-                await axios.delete(FILE_BASIC+`/${id}`);
+                await axios.delete(FILE_BASIC+`/encoded/${id}`);
                 setImages(images.filter(image => image.id !== id));
             } catch (err) {
                 console.error('이미지 삭제 오류:', err);
