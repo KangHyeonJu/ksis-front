@@ -4,8 +4,11 @@ import { format, parseISO } from 'date-fns';
 import { FaSearch, FaEdit } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import ReactPaginate from 'react-paginate'; // 페이지네이션 컴포넌트 가져오기
-import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD } from '../../../constants/page_constant';
-import { ECIMAGE_BOARD, FILE_BASIC } from "../../../constants/api_constant";
+import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD,  } from '../../../constants/page_constant';
+import { ECIMAGE_BOARD, FILE_ENCODED_BASIC } from "../../../constants/api_constant";
+
+
+
 
 const ImageFileBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -18,7 +21,8 @@ const ImageFileBoard = () => {
     const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
     const [editingTitleIndex, setEditingTitleIndex] = useState(null);
     const [newTitle, setNewTitle] = useState('');
-    
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState('');
     const navigate = useNavigate(); // Initialize useNavigate
 
 
@@ -43,7 +47,7 @@ const ImageFileBoard = () => {
 
     const handleSaveClick = async (id) => {
         try {
-            const response = await axios.put(FILE_BASIC +`/${id}`, null, {
+            const response = await axios.put(FILE_ENCODED_BASIC +`/${id}`, null, {
                 params: { newTitle }
             });
             images.forEach((img) => {
@@ -59,23 +63,11 @@ const ImageFileBoard = () => {
             
             setEditingTitleIndex(null);
             setNewTitle('');
-            navigate(IMAGE_FILE_BOARD);
         } catch (error) {
             window.confirm('수정에 실패했습니다.');
             console.error('제목 수정 중 오류 발생:', error);
         }
     };
-
-    useEffect(() => {
-        axios.get( ECIMAGE_BOARD )
-            .then(response => {
-                setImages(response.data);
-                console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
-            })
-            .catch(error => {
-                console.error('Error fetching images:', error);
-            });
-    }, []);
 
     
     const handleToggle = () => {
@@ -95,7 +87,7 @@ const ImageFileBoard = () => {
     const handleDelete = async (id) => {
         if (window.confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
             try {
-                await axios.delete(FILE_BASIC+`/encoded/${id}`);
+                await axios.delete(FILE_ENCODED_BASIC+`/${id}`);
                 setImages(images.filter(image => image.id !== id));
             } catch (err) {
                 console.error('이미지 삭제 오류:', err);
@@ -113,6 +105,17 @@ const ImageFileBoard = () => {
             return 'Invalid date';
         }
     };
+
+    const openResourceModal = (src) => {
+        setSelectedImage(src);
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+        setSelectedImage('');
+    };
+    
 
     const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
 
@@ -201,15 +204,17 @@ const ImageFileBoard = () => {
                                         value={newTitle}
                                         onChange={(e) => setNewTitle(e.target.value)}
                                         className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
+                                   
                                     />
                                 ) : (
-                                    <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto">{post.fileTitle}</h2>
+                                    <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">{post.fileTitle}</h2>
                                 )}
                                 <FaEdit
                                     onClick={() => editingTitleIndex === index ? handleSaveClick(post.encodedResourceId) : 
                                         handleEditClick(index, post.fileTitle)}
                                     className="ml-2 cursor-pointer text-gray-600"
-                                />
+                              
+                               />
                             </div>
                             </div>
 
@@ -220,13 +225,13 @@ const ImageFileBoard = () => {
 
                             {/* 이미지 */}
                             <div>
-                                <div className="w-5/6 h-5/6 overflow-hidden  mt-4 cursor-pointer mx-auto">
+                                <div className="w-5/6 h-5/6 overflow-hidden mb-4 mt-4 cursor-pointer mx-auto">
                                 <img 
-                                    src={post.filePath} 
-                                    //이미지 파일 깨질시 이미지 제목으로 설정
-                                    alt={post.fileTitle} 
-                                    className="w-full h-full" 
-                                />
+                                            src={post.filePath} 
+                                            alt={post.fileTitle} 
+                                            className="w-full h-full object-cover"
+                                            onClick={() => openResourceModal(post.filePath)}
+                                        />
                                 </div>
                             </div>
 
@@ -275,6 +280,23 @@ const ImageFileBoard = () => {
                     breakLinkClassName={"px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"}
                     activeClassName={"bg-blue-500 text-white"}
                 />
+            )}
+
+            {/* 모달창 */}
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+                    <div className="relative w-1/3 h 1/3">
+                        <img src={selectedImage} alt="Selected" className="w-full max-h-screen" />
+                        <button
+                            className="absolute text-center top-0 right-0 m-4 text-gray-600 text-xl rounded-full hover:bg-red-200 
+                focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 w-7 h-7 
+                font-bold"
+                            onClick={closeModal}
+                        >
+                            &times;
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );

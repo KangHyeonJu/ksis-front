@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react"; // React의 훅을 가져옵니다.
-import { Dialog, DialogTitle } from "../../css/dialog"; // Dialog 컴포넌트를 가져옵니다.
-import fetcher from "../../../fetcher"; // 데이터를 가져오기 위한 fetcher를 가져옵니다.
-import { FILE_MODAL } from "../../../constants/page_constant";
-import { FILE_BASIC  } from "../../../constants/api_constant"; // 상수를 가져옵니다.
+import { Dialog } from "../../css/dialog"; // Dialog 컴포넌트를 가져옵니다.
+import { FILE_ORIGINAL_BASIC  } from "../../../constants/api_constant"; // 상수를 가져옵니다.
 import axios from "axios"; // axios를 가져옵니다.
 import { format, parseISO } from 'date-fns';
 
@@ -11,7 +9,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
 
   const loadModal = useCallback(async () => {
 
-    axios.get(FILE_BASIC + `/${originalResourceId}`)
+    axios.get(FILE_ORIGINAL_BASIC + `/${originalResourceId}`)
     .then(response => {
       setModal(response.data); // 이미지를 상태에 저장합니다.
       console.log("이미지 모달 데이터 : ", response.data); // 이미지 데이터를 콘솔에 출력합니다.

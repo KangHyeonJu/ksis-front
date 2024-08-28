@@ -12,7 +12,8 @@ import {
   IMAGE_FILE_BOARD,
   VIDEO_RESOURCE_BOARD,
   VIDEO_FILE_BOARD,
-  FILE_MODAL,
+  IMAGE_RESOURCE_MODAL,
+  IMAGE_MODAL,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -54,7 +55,8 @@ import ImageResourceBoard from "./ksis/pages/fileMng/ImageResourceBoard.jsx";
 import ImageFileBoard from "./ksis/pages/fileMng/ImageFileBoard.jsx";
 import VideoResourceBoard from "./ksis/pages/fileMng/VideoResourceBoard.jsx";
 import VideoFileBoard from "./ksis/pages/fileMng/VideoFileBoard.jsx";
-import FileBoardModal from "./ksis/pages/fileMng/FileBoardModal.jsx";
+import ImageResourceModal from "./ksis/pages/fileMng/ImageResourceModal.jsx";
+import ImageModal from "./ksis/pages/fileMng/ImageModal.jsx";
 
 function App() {
   return (
@@ -104,8 +106,12 @@ function App() {
           <Route path={VIDEO_FILE_BOARD} element={<VideoFileBoard />} />
           <Route path={VIDEO_RESOURCE_BOARD} element={<VideoResourceBoard />} />
           <Route
-            path={FILE_MODAL + "/:originalResourceId"}
-            element={<FileBoardModal />}
+            path={IMAGE_RESOURCE_MODAL + "/:originalResourceId"}
+            element={<ImageResourceModal />}
+          />
+          <Route
+            path={IMAGE_MODAL + "/:encodedResourceId"}
+            element={<ImageModal />}
           />
 
           {/* 다른 라우트들을 추가할 수 있습니다 */}

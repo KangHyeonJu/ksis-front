@@ -22,6 +22,8 @@ export const NOTICE_LIST = "/api/notices";
 //file
 export const FILE_SIZE = "/api/filesize";
 export const FILE_BASIC = "/resourceList";
+export const FILE_ORIGINAL_BASIC = "/resourceList/original";
+export const FILE_ENCODED_BASIC = "/resourceList/encoded";
 export const RSIMAGE_BOARD = "/resourceList/RsImages";
 export const ECIMAGE_BOARD = "/resourceList/EcImages";
 export const RSVIDEO_BOARD = "/resourceList/RsVideos";

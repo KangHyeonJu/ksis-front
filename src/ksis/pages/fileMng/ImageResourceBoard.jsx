@@ -4,9 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD } from '../../../constants/page_constant';
-import { RSIMAGE_BOARD, FILE_BASIC } from "../../../constants/api_constant";
+import { RSIMAGE_BOARD, FILE_ORIGINAL_BASIC } from "../../../constants/api_constant";
 import { format, parseISO } from 'date-fns';
-import FileBoardModal from "./FileBoardModal";
+import ImageResourceModal from "./ImageResourceModal";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const ImageResourceBoard = () => {
@@ -74,7 +74,7 @@ const ImageResourceBoard = () => {
     //제목 수정
     const handleSaveClick = async (id) => {
         try {
-            const response = await axios.put(FILE_BASIC +`/${id}`, null, {
+            const response = await axios.put(FILE_ORIGINAL_BASIC +`/${id}`, null, {
                 params: { newTitle }
             });
             images.forEach((img) => {
@@ -99,7 +99,7 @@ const ImageResourceBoard = () => {
     const handleDelete = async (id) => {
         if (window.confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
             try {
-                await axios.delete(FILE_BASIC+`/original/${id}`);
+                await axios.delete(FILE_ORIGINAL_BASIC+`/${id}`);
                 setImages(images.filter(image => image.id !== id));
             } catch (err) {
                 console.error('이미지 삭제 오류:', err);
@@ -213,26 +213,30 @@ const ImageResourceBoard = () => {
                         <div key={index} className="grid p-1">
 
                             {/* 네모틀 */}
-                            <div className="items-center text-center rounded-lg w-2/3 h-full p-3 bg-[#ffe69c]">
+                            <div className="items-center text-center rounded-lg 
+                            w-2/3 h-full p-3 bg-[#ffe69c]">
                                {/* 제목 */}
-                               <div>
                                 <div className="flex items-center">
+                                    
                                     {editingTitleIndex === index ? (
                                         <input
                                             type="text"
                                             value={newTitle}
                                             onChange={(e) => setNewTitle(e.target.value)}
                                             className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
+                                       
                                         />
                                     ) : (
-                                        <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto">{post.fileTitle}</h2>
+                                        <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap"
+                                        >{post.fileTitle}</h2>
                                     )}
+                                    
                                     <FaEdit
                                         onClick={() => editingTitleIndex === index ? handleSaveClick(post.originalResourceId) : 
                                             handleEditClick(index, post.fileTitle)}
                                         className="ml-2 cursor-pointer text-gray-600"
                                     />
-                                </div>
+                            
                                 </div>
 
                                 {/* 등록일 */}
@@ -255,8 +259,8 @@ const ImageResourceBoard = () => {
                                 </div>
 
                                 {/* 인코딩, 삭제 버튼 */}
-                                <div>
-                                <div className="items-center text-center row mx-auto">
+                                
+                                <div className="items-center text-center row mx-auto p-2">
                                     
                                     <button 
                                         className="mr-2 mt-2 rounded-md bg-[#6dd7e5]
@@ -276,7 +280,7 @@ const ImageResourceBoard = () => {
                                 </div>
                                 </div>
                             </div>
-                        </div>
+                        
                     ))
                 ) : (
                     <div className="text-center text-gray-600 mt-10 w-full">
@@ -310,7 +314,7 @@ const ImageResourceBoard = () => {
 
             {/* 모달 컴포넌트 호출 */}
             {selectedImage && (
-                <FileBoardModal 
+                <ImageResourceModal 
                     isOpen={resourceModalIsOpen}
                     onRequestClose={closeResourceModal}
                     originalResourceId={selectedImage}  // 선택한 이미지의 정보를 전달합니다.

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_BOARD } from "../../../constants/page_constant";
-import { API_NOTICE, API_BASIC, API_UPDATE, API_REGIST } from "../../../constants/api_constant";
+import { API_NOTICE, API_BASIC } from "../../../constants/api_constant";
 
 const ApiForm = () => {
     const [apiName, setApiName] = useState('');
