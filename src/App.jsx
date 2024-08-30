@@ -114,7 +114,7 @@ function App() {
             element={<ImageResourceModal />}
           />
           <Route
-            path={IMAGE_ENCODING + "/:encodedResourceId"}
+            path={IMAGE_ENCODING  + "/:originalResourceId"}
             element={<ImageEncoding/>}
           />
           <Route
@@ -122,7 +122,7 @@ function App() {
             element={<VideoResourceModal />}
           />
            <Route
-            path={VIDEO_ENCODING + "/:encodedResourceId"}
+            path={VIDEO_ENCODING + "/:originalResourceId"}
             element={<VideoEncoding />}
             />
 

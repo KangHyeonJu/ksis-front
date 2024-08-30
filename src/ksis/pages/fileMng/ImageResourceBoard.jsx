@@ -3,7 +3,7 @@ import { FaSearch, FaEdit } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
-import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD } from '../../../constants/page_constant';
+import { IMAGE_RESOURCE_BOARD, IMAGE_FILE_BOARD,IMAGE_ENCODING } from '../../../constants/page_constant';
 import { RSIMAGE_BOARD, FILE_ORIGINAL_BASIC } from "../../../constants/api_constant";
 import { format, parseISO } from 'date-fns';
 import ImageResourceModal from "./ImageResourceModal";
@@ -265,8 +265,9 @@ const ImageResourceBoard = () => {
                                         className="mr-2 mt-2 rounded-md bg-[#6dd7e5]
                                         px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
                                          focus-visible:outline-blue-600"
+                                         
                                     >
-                                        인코딩
+                                        <Link to ={IMAGE_ENCODING + `/${post.originalResourceId}`}>인코딩</Link>
                                     </button>
                                     <button
                                         type="button"

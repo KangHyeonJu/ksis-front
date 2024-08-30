@@ -22,6 +22,7 @@ export const NOTICE_LIST = "/api/notices";
 //file
 export const FILE_SIZE = "/api/filesize";
 export const FILE_BASIC = "/resourceList";
+export const FILE_ALL = "/resourceList/All";
 export const FILE_ORIGINAL_BASIC = "/resourceList/original";
 export const IMG_ORIGINAL_BASIC = "/resourceList/Img";
 export const VIDEO_ORIGINAL_BASIC = "/resourceList/Video";
