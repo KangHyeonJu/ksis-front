@@ -47,27 +47,26 @@ const ImageFileBoard = () => {
 
     const handleSaveClick = async (id) => {
         try {
-            const response = await axios.put(FILE_ENCODED_BASIC +`/${id}`, null, {
-                params: { newTitle }
+            await axios.put(`${FILE_ENCODED_BASIC}/${id}`, {
+                fileTitle: newTitle // newTitle을 JSON 형태로 보냄
             });
-            images.forEach((img) => {
-                if(img.encodedResourceId === id) {
-                    img.fileTitle = newTitle;
-                }
-            });
-            
-            const updatedImages = images.map(image =>
-                image.id === id ? { ...image, title: response.data.title } : image
-            );
-            setImages(updatedImages);
-            
-            setEditingTitleIndex(null);
-            setNewTitle('');
-        } catch (error) {
-            window.confirm('수정에 실패했습니다.');
-            console.error('제목 수정 중 오류 발생:', error);
-        }
-    };
+
+           // 제목이 변경된 후 images 상태를 업데이트
+           const updatedImages = images.map(image =>
+            image.encodedResourceId === id ? { ...image, fileTitle: newTitle } : image
+        );
+        setImages(updatedImages);
+
+        // 변경된 images를 기반으로 filteredPosts 상태도 업데이트
+        setFilteredPosts(updatedImages);
+
+        setEditingTitleIndex(null);
+        setNewTitle('');
+    } catch (error) {
+        window.confirm('수정에 실패했습니다.');
+        console.error('제목 수정 중 오류 발생:', error);
+    }
+};
 
     
     const handleToggle = () => {
