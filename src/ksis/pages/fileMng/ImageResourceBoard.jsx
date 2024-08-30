@@ -89,7 +89,6 @@ const ImageResourceBoard = () => {
             setImages(updatedImages);
             setEditingTitleIndex(null);
             setNewTitle('');
-            navigate(IMAGE_RESOURCE_BOARD);
         } catch (error) {
             window.confirm('수정에 실패했습니다.');
             console.error('제목 수정 중 오류 발생:', error);

@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react"; // React의 훅을 가져옵니다.
 import { Dialog } from "../../css/dialog"; // Dialog 컴포넌트를 가져옵니다.
-import { IMG_ORIGINAL_BASIC  } from "../../../constants/api_constant"; // 상수를 가져옵니다.
+import { VIDEO_ORIGINAL_BASIC  } from "../../../constants/api_constant"; // 상수를 가져옵니다.
 import axios from "axios"; // axios를 가져옵니다.
 import { format, parseISO } from 'date-fns';
 
-const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {  
+const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {  
   const [modals, setModal] = useState([]); // 모달을 관리하기 위한 상태를 선언합니다.
 
   const loadModal = useCallback(async () => {
 
-    axios.get(IMG_ORIGINAL_BASIC + `/${originalResourceId}`)
+    axios.get(VIDEO_ORIGINAL_BASIC + `/${originalResourceId}`)
     .then(response => {
-      setModal(response.data); // 이미지를 상태에 저장합니다.
-      console.log("이미지 모달 데이터 : ", response.data); // 이미지 데이터를 콘솔에 출력합니다.
+      setModal(response.data); // 영상을 상태에 저장합니다.
+      console.log("영상 모달 데이터 : ", response.data); // 영상 데이터를 콘솔에 출력합니다.
     })
     .catch(error => {
       console.error(':', error); // 에러 발생 시 콘솔에 출력합니다.
@@ -62,14 +62,15 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
 
             {/* 모달 내용 */}
             <div className=" text-center items-center p-2">
-              {modals.map((post, index) => ( // resources 배열을 반복하여 이미지를 렌더링합니다.
+              {modals.map((post, index) => ( // resources 배열을 반복하여 영상을 렌더링합니다.
                 <div key={index} className="mb-4">
-                  {/* 이미지 */}
-                  <div className="w-1/3 h-1/3 overflow-hidden mx-auto mb-4 ">
-                  <img 
+                  {/* 영상 */}
+                  <div className="w-1/2 h-1/2 overflow-hidden mx-auto mb-4 ">
+                  <video 
                     src={post.filePath} 
                     alt={post.fileTitle} 
-                    className=" w-full h-full"  
+                    className=" w-100% h-100%" 
+                    controls  // 비디오 컨트롤러 추가
                   />
                   </div>
 
@@ -105,4 +106,4 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
   );
 };
 
-export default FileBoardModal; // 컴포넌트를 내보냅니다.
+export default VideoResourceModal; // 컴포넌트를 내보냅니다.
