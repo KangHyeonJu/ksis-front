@@ -6,6 +6,7 @@ import { PC_ADD, PC_LIST } from "../../../constants/api_constant";
 import { PC_INVENTORY } from "../../../constants/page_constant";
 
 const PcUpdateForm = () => {
+  const authority = localStorage.getItem("authority");
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
@@ -227,7 +228,7 @@ const PcUpdateForm = () => {
             maxLength="50"
             name="deviceName"
             type="text"
-            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
           />
           <p className="ml-2">
             <span>{inputCount}</span>
@@ -239,39 +240,61 @@ const PcUpdateForm = () => {
             <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
               담당자
             </label>
-            <select
-              value={responsible.accountId}
-              id={`responsible-${responsible.id}`}
-              onChange={(e) => handleResponsibleChange(e, index)}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              <option>담당자 선택</option>
-              {accounts.map((account) => (
-                <option value={account.accountId} key={account.accountId}>
-                  {account.name}({account.accountId})
-                </option>
-              ))}
-            </select>
-            {responsibles.length > 1 && (
+            {authority === "ROLE_ADMIN" ? (
               <>
-                <button onClick={addResponsible} className="ml-2">
-                  <AiFillPlusCircle size={25} color="#f25165" />
-                </button>
-                <button
-                  onClick={() => removeResponsible(responsible.id)}
-                  className="ml-2"
+                <select
+                  value={responsible.accountId}
+                  id={`responsible-${responsible.id}`}
+                  onChange={(e) => handleResponsibleChange(e, index)}
+                  className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
                 >
-                  <AiFillMinusCircle size={25} color="#717273" />
-                </button>
+                  <option>담당자 선택</option>
+                  {accounts.map((account) => (
+                    <option value={account.accountId} key={account.accountId}>
+                      {account.name}({account.accountId})
+                    </option>
+                  ))}
+                </select>
+                {responsibles.length > 1 && (
+                  <>
+                    <button onClick={addResponsible} className="ml-2">
+                      <AiFillPlusCircle size={25} color="#f25165" />
+                    </button>
+                    <button
+                      onClick={() => removeResponsible(responsible.id)}
+                      className="ml-2"
+                    >
+                      <AiFillMinusCircle size={25} color="#717273" />
+                    </button>
+                  </>
+                )}
+                {responsibles.length === 1 && (
+                  <button onClick={addResponsible} className="ml-2">
+                    <AiFillPlusCircle size={25} color="#f25165" />
+                  </button>
+                )}
               </>
-            )}
-            {responsibles.length === 1 && (
-              <button onClick={addResponsible} className="ml-2">
-                <AiFillPlusCircle size={25} color="#f25165" />
-              </button>
+            ) : (
+              <>
+                <select
+                  disabled
+                  value={responsible.accountId}
+                  id={`responsible-${responsible.id}`}
+                  onChange={(e) => handleResponsibleChange(e, index)}
+                  className="bg-[#e7d8ac] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                >
+                  <option>담당자 선택</option>
+                  {accounts.map((account) => (
+                    <option value={account.accountId} key={account.accountId}>
+                      {account.name}({account.accountId})
+                    </option>
+                  ))}
+                </select>
+              </>
             )}
           </div>
         ))}
+
         <div className="flex items-center mt-5">
           <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
             위치
@@ -280,7 +303,7 @@ const PcUpdateForm = () => {
             type="text"
             value={address}
             readOnly
-            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
           />
           <button
             type="button"
@@ -299,19 +322,28 @@ const PcUpdateForm = () => {
             value={data.detailAddress}
             onChange={onChangeHandler}
             name="detailAddress"
-            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
           />
         </div>
         <div className="flex items-center mt-5">
           <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
             Mac주소
           </label>
-          <input
-            onChange={handleMacAddressChange}
-            value={macAddress}
-            type="text"
-            className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
-          />
+          {authority === "ROLE_ADMIN" ? (
+            <input
+              onChange={handleMacAddressChange}
+              value={macAddress}
+              type="text"
+              className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
+            />
+          ) : (
+            <input
+              readOnly
+              value={macAddress}
+              type="text"
+              className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#e7d8ac]"
+            />
+          )}
           {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
         </div>
       </div>

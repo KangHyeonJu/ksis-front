@@ -9,6 +9,7 @@ import {
 } from "../../../constants/page_constant";
 
 const SignageUpdateForm = () => {
+  const authority = localStorage.getItem("authority");
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
@@ -324,12 +325,22 @@ const SignageUpdateForm = () => {
           <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
             Mac주소
           </label>
-          <input
-            onChange={handleMacAddressChange}
-            value={macAddress}
-            type="text"
-            className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
-          />
+
+          {authority === "ROLE_ADMIN" ? (
+            <input
+              onChange={handleMacAddressChange}
+              value={macAddress}
+              type="text"
+              className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
+            />
+          ) : (
+            <input
+              readOnly
+              value={macAddress}
+              type="text"
+              className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#e7d8ac]"
+            />
+          )}
           {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
         </div>
         <div className="flex items-center mt-5">

@@ -55,6 +55,7 @@ import ImageFileBoard from "./ksis/pages/fileMng/ImageFileBoard.jsx";
 import VideoResourceBoard from "./ksis/pages/fileMng/VideoResourceBoard.jsx";
 import VideoFileBoard from "./ksis/pages/fileMng/VideoFileBoard.jsx";
 import FileBoardModal from "./ksis/pages/fileMng/FileBoardModal.jsx";
+import DownloadApp from "./ksis/pages/download-app/download_app.jsx";
 
 function App() {
   return (
@@ -109,6 +110,7 @@ function App() {
           />
 
           {/* 다른 라우트들을 추가할 수 있습니다 */}
+          <Route path={"/downloadApp"} element={<DownloadApp />} />
         </Routes>
       </div>
     </div>
