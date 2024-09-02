@@ -267,7 +267,7 @@ const ImageResourceBoard = () => {
                                          focus-visible:outline-blue-600"
                                          
                                     >
-                                        <Link to ={IMAGE_ENCODING + `/${post.originalResourceId}`}>인코딩</Link>
+                                        <Link to ={`${IMAGE_ENCODING}/${post.originalResourceId}`}>인코딩</Link>
                                     </button>
                                     <button
                                         type="button"
