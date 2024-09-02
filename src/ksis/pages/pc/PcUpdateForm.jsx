@@ -44,30 +44,15 @@ const PcUpdateForm = () => {
   const handleMacAddressChange = (e) => {
     let value = e.target.value;
 
-    value = value.replace(/-/g, "");
+    value = value.replace(/:/g, "");
 
     if (value.length > 12) {
       value = value.slice(0, 12);
     }
 
-    value = value.match(/.{1,2}/g)?.join("-") || "";
-
-    const macRegex = /^([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}$/;
-
-    if (value.length > 0 && macRegex.test(value)) {
-      setMacAddress(value);
-      setError("");
-    } else {
-      setError("유효한 MAC 주소를 입력하세요.");
-    }
+    value = value.match(/.{1,2}/g)?.join(":") || "";
 
     setMacAddress(value);
-  };
-
-  //input 길이 제한
-  let [inputCount, setInputCount] = useState(0);
-  const onInputHandler = (e) => {
-    setInputCount(e.target.value.length);
   };
 
   //주소불러오기
@@ -157,8 +142,18 @@ const PcUpdateForm = () => {
 
   const handleSave = async (e) => {
     try {
+      e.preventDefault();
+
       setIsDisabled(false);
       setIsReadOnly(false);
+
+      const macRegex = /^([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}$/;
+
+      if (macAddress === "" || !macRegex.test(macAddress)) {
+        setError("유효한 mac주소를 입력하세요.");
+        document.getElementById("macAddress").focus();
+        return false;
+      }
 
       const formData = new FormData();
       formData.append(
@@ -228,20 +223,16 @@ const PcUpdateForm = () => {
             PC 이름
           </label>
           <input
+            required
             value={data.deviceName}
             onChange={(e) => {
               onChangeHandler(e);
-              onInputHandler(e);
             }}
             maxLength="50"
             name="deviceName"
             type="text"
             className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
           />
-          <p className="ml-2">
-            <span>{inputCount}</span>
-            <span>/50자</span>
-          </p>
         </div>
         {responsibles.map((responsible, index) => (
           <div className="flex items-center mt-5" key={responsible.id}>
@@ -251,6 +242,7 @@ const PcUpdateForm = () => {
             {authority === "ROLE_ADMIN" ? (
               <>
                 <select
+                  required
                   value={responsible.accountId}
                   id={`responsible-${responsible.id}`}
                   onChange={(e) => handleResponsibleChange(e, index)}
@@ -324,6 +316,7 @@ const PcUpdateForm = () => {
         <div className="flex items-center mt-5">
           <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900"></label>
           <input
+            required
             placeholder=" 상세주소"
             type="text"
             id="detailAddress"
