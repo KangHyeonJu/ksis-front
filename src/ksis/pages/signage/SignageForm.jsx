@@ -19,13 +19,13 @@ const SignageForm = () => {
   const handleMacAddressChange = (e) => {
     let value = e.target.value;
 
-    value = value.replace(/-/g, "");
+    value = value.replace(/:/g, "");
 
     if (value.length > 12) {
       value = value.slice(0, 12);
     }
 
-    value = value.match(/.{1,2}/g)?.join("-") || "";
+    value = value.match(/.{1,2}/g)?.join(":") || "";
 
     const macRegex = /^([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}$/;
 
@@ -35,7 +35,6 @@ const SignageForm = () => {
     } else {
       setError("유효한 MAC 주소를 입력하세요.");
     }
-
     setMacAddress(value);
   };
 

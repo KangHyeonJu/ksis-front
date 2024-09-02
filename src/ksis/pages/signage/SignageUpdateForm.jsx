@@ -3,10 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import { SIGNAGE_ADD, SIGNAGE_UPDATE } from "../../../constants/api_constant";
-import {
-  SIGNAGE_DTL,
-  SIGNAGE_INVENTORY,
-} from "../../../constants/page_constant";
+import { SIGNAGE_DTL } from "../../../constants/page_constant";
 
 const SignageUpdateForm = () => {
   const authority = localStorage.getItem("authority");
@@ -14,6 +11,8 @@ const SignageUpdateForm = () => {
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isReadOnly, setIsReadOnly] = useState(true);
 
   const loadPcDtl = async (signageId) => {
     try {
@@ -56,13 +55,13 @@ const SignageUpdateForm = () => {
   const handleMacAddressChange = (e) => {
     let value = e.target.value;
 
-    value = value.replace(/-/g, "");
+    value = value.replace(/:/g, "");
 
     if (value.length > 12) {
       value = value.slice(0, 12);
     }
 
-    value = value.match(/.{1,2}/g)?.join("-") || "";
+    value = value.match(/.{1,2}/g)?.join(":") || "";
 
     const macRegex = /^([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}$/;
 
@@ -175,6 +174,9 @@ const SignageUpdateForm = () => {
 
   const handleSave = async (e) => {
     try {
+      setIsDisabled(false);
+      setIsReadOnly(false);
+
       const formData = new FormData();
       formData.append(
         "signageFormDto",
@@ -201,6 +203,9 @@ const SignageUpdateForm = () => {
       console.log(response.data);
 
       alert("재생장치가 정상적으로 수정되었습니다.");
+      setIsDisabled(true);
+      setIsReadOnly(true);
+
       navigate(SIGNAGE_DTL + `/${data.deviceId}`);
     } catch (error) {
       console.log(error.response.data);
@@ -254,44 +259,67 @@ const SignageUpdateForm = () => {
             <span>/50자</span>
           </p>
         </div>
+
         {responsibles.map((responsible, index) => (
           <div className="flex items-center mt-5" key={responsible.id}>
             <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
               담당자
             </label>
-            <select
-              value={responsible.accountId}
-              id={`responsible-${responsible.id}`}
-              onChange={(e) => handleResponsibleChange(e, index)}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              <option>담당자 선택</option>
-              {accounts.map((account) => (
-                <option value={account.accountId} key={account.accountId}>
-                  {account.name}({account.accountId})
-                </option>
-              ))}
-            </select>
-            {responsibles.length > 1 && (
+            {authority === "ROLE_ADMIN" ? (
               <>
-                <button onClick={addResponsible} className="ml-2">
-                  <AiFillPlusCircle size={25} color="#f25165" />
-                </button>
-                <button
-                  onClick={() => removeResponsible(responsible.id)}
-                  className="ml-2"
+                <select
+                  value={responsible.accountId}
+                  id={`responsible-${responsible.id}`}
+                  onChange={(e) => handleResponsibleChange(e, index)}
+                  className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
                 >
-                  <AiFillMinusCircle size={25} color="#717273" />
-                </button>
+                  <option>담당자 선택</option>
+                  {accounts.map((account) => (
+                    <option value={account.accountId} key={account.accountId}>
+                      {account.name}({account.accountId})
+                    </option>
+                  ))}
+                </select>
+                {responsibles.length > 1 && (
+                  <>
+                    <button onClick={addResponsible} className="ml-2">
+                      <AiFillPlusCircle size={25} color="#f25165" />
+                    </button>
+                    <button
+                      onClick={() => removeResponsible(responsible.id)}
+                      className="ml-2"
+                    >
+                      <AiFillMinusCircle size={25} color="#717273" />
+                    </button>
+                  </>
+                )}
+                {responsibles.length === 1 && (
+                  <button onClick={addResponsible} className="ml-2">
+                    <AiFillPlusCircle size={25} color="#f25165" />
+                  </button>
+                )}
               </>
-            )}
-            {responsibles.length === 1 && (
-              <button onClick={addResponsible} className="ml-2">
-                <AiFillPlusCircle size={25} color="#f25165" />
-              </button>
+            ) : (
+              <>
+                <select
+                  disabled={isDisabled}
+                  value={responsible.accountId}
+                  id={`responsible-${responsible.id}`}
+                  onChange={(e) => handleResponsibleChange(e, index)}
+                  className="bg-[#e7d8ac] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                >
+                  <option>담당자 선택</option>
+                  {accounts.map((account) => (
+                    <option value={account.accountId} key={account.accountId}>
+                      {account.name}({account.accountId})
+                    </option>
+                  ))}
+                </select>
+              </>
             )}
           </div>
         ))}
+
         <div className="flex items-center mt-5">
           <label className="w-40 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
             위치
@@ -335,7 +363,7 @@ const SignageUpdateForm = () => {
             />
           ) : (
             <input
-              readOnly
+              readOnly={isReadOnly}
               value={macAddress}
               type="text"
               className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#e7d8ac]"

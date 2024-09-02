@@ -11,6 +11,8 @@ const PcUpdateForm = () => {
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isReadOnly, setIsReadOnly] = useState(true);
 
   const loadPcDtl = async (pcId) => {
     try {
@@ -155,6 +157,9 @@ const PcUpdateForm = () => {
 
   const handleSave = async (e) => {
     try {
+      setIsDisabled(false);
+      setIsReadOnly(false);
+
       const formData = new FormData();
       formData.append(
         "pcFormDto",
@@ -181,6 +186,9 @@ const PcUpdateForm = () => {
       console.log(response.data);
 
       alert("pc가 정상적으로 수정되었습니다.");
+      setIsDisabled(true);
+      setIsReadOnly(true);
+
       navigate(PC_INVENTORY);
     } catch (error) {
       console.log(error.response);
@@ -277,7 +285,7 @@ const PcUpdateForm = () => {
             ) : (
               <>
                 <select
-                  disabled
+                  disabled={isDisabled}
                   value={responsible.accountId}
                   id={`responsible-${responsible.id}`}
                   onChange={(e) => handleResponsibleChange(e, index)}
@@ -338,7 +346,7 @@ const PcUpdateForm = () => {
             />
           ) : (
             <input
-              readOnly
+              readOnly={isReadOnly}
               value={macAddress}
               type="text"
               className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#e7d8ac]"
