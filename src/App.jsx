@@ -63,11 +63,13 @@ function App() {
       <Sidebar />
       <div className="content flex-1 p-4">
         <Routes>
+          {/* 접근제어 페이지 */}
+          {/*<Route element={<ProtectedRoute />}>*/}
+
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
           <Route path={ACCOUNT_LIST} element={<AccountList />} />
           <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm />} />
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
 
           {/* PC 관련 경로 */}
           <Route path={PC_INVENTORY} element={<PcList />} />
@@ -109,11 +111,14 @@ function App() {
             element={<FileBoardModal />}
           />
 
-
-          <Route path={"/downloadApp"} element={<DownloadApp />} />
-
           {/* 다른 라우트들을 추가할 수 있습니다 */}
+          {/*</Route>*/}
+
+          {/* 접근허용 페이지 */}
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
+          <Route path={"/downloadApp"} element={<DownloadApp />} />
         </Routes>
+
       </div>
     </div>
   );

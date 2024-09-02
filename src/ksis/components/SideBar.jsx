@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
@@ -11,9 +11,27 @@ import {
   MdDevices,
 } from "react-icons/md";
 import { PC_INVENTORY, SIGNAGE_INVENTORY,  API_BOARD, FILESIZE_FORM, NOTICE_BOARD, IMAGE_FILE_BOARD, VIDEO_FILE_BOARD } from "../../constants/page_constant";
+import {jwtDecode} from "jwt-decode";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
+  const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log(decodedToken);
+        setUserInfo({
+          accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
+          roles: decodedToken.auth, // 토큰에서 권한 정보 가져오기
+        });
+      } catch (error) {
+        console.error("Failed to decode token", error);
+      }
+    }
+  }, []);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
@@ -22,6 +40,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     // 로그아웃 로직을 여기에 추가하세요
     console.log("로그아웃");
+    localStorage.removeItem('accessToken');
     // 예를 들어, 세션을 삭제하고 로그인 페이지로 리디렉션할 수 있습니다.
     // sessionStorage.removeItem("user");
     // window.location.href = "/login";
@@ -38,7 +57,7 @@ const Sidebar = () => {
         <div className="mb-4">
           <a className="flex items-center px-2 font-semibold text-black text-lg">
             <CiFaceSmile className="mr-2" size="24" />
-            <span>신지원(jiwon)</span>
+            <span>{userInfo.accountId}</span>
           </a>
         </div>
         <div className="flex space-x-2 mb-4">
