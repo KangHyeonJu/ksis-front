@@ -302,6 +302,7 @@ const PcForm = () => {
               Mac주소
             </label>
             <input
+              required
               id="macAddress"
               onChange={handleMacAddressChange}
               value={macAddress}

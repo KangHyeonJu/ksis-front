@@ -307,6 +307,7 @@ const SignageForm = () => {
               Mac주소
             </label>
             <input
+              required
               id="macAddress"
               onChange={handleMacAddressChange}
               value={macAddress}
