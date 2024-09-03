@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
@@ -10,10 +10,36 @@ import {
   MdChat,
   MdDevices,
 } from "react-icons/md";
-import { PC_INVENTORY, SIGNAGE_INVENTORY,  API_BOARD, FILESIZE_FORM, NOTICE_BOARD, IMAGE_FILE_BOARD, VIDEO_FILE_BOARD } from "../../constants/page_constant";
+import {
+  PC_INVENTORY,
+  SIGNAGE_INVENTORY,
+  API_BOARD,
+  FILESIZE_FORM,
+  NOTICE_BOARD,
+  IMAGE_FILE_BOARD,
+  VIDEO_FILE_BOARD,
+} from "../../constants/page_constant";
+import { jwtDecode } from "jwt-decode";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
+  const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log(decodedToken);
+        setUserInfo({
+          accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
+          roles: decodedToken.auth, // 토큰에서 권한 정보 가져오기
+        });
+      } catch (error) {
+        console.error("Failed to decode token", error);
+      }
+    }
+  }, []);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
@@ -22,6 +48,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     // 로그아웃 로직을 여기에 추가하세요
     console.log("로그아웃");
+    localStorage.removeItem("accessToken");
     // 예를 들어, 세션을 삭제하고 로그인 페이지로 리디렉션할 수 있습니다.
     // sessionStorage.removeItem("user");
     // window.location.href = "/login";
@@ -38,7 +65,7 @@ const Sidebar = () => {
         <div className="mb-4">
           <a className="flex items-center px-2 font-semibold text-black text-lg">
             <CiFaceSmile className="mr-2" size="24" />
-            <span>신지원(jiwon)</span>
+            <span>{userInfo.accountId}</span>
           </a>
         </div>
         <div className="flex space-x-2 mb-4">
@@ -68,18 +95,18 @@ const Sidebar = () => {
               <span>계정관리</span>
             </div>
             {openMenu === "account" && (
-                <div className="submenu ml-8 mt-2">
-                  <Link to="/accountList" className="block py-1">
-                    계정목록 조회
-                  </Link>
-                  <a href="#" className="block py-1">
-                    로그기록
-                  </a>
-                </div>
+              <div className="submenu ml-8 mt-2">
+                <Link to="/accountList" className="block py-1">
+                  계정목록 조회
+                </Link>
+                <a href="#" className="block py-1">
+                  로그기록
+                </a>
+              </div>
             )}
           </div>
           <div className="item mt-3">
-          <div
+            <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
               onClick={() => toggleMenu("profile")}
             >
@@ -88,12 +115,18 @@ const Sidebar = () => {
             </div>
             {openMenu === "profile" && (
               <div className="submenu ml-8 mt-2">
-                <Link  to={IMAGE_FILE_BOARD} className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
-                <FaRegCircle size={10} className="mr-2" />
+                <Link
+                  to={IMAGE_FILE_BOARD}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
                   이미지 관리
                 </Link>
-                <Link  to={VIDEO_FILE_BOARD} className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
-                <FaRegCircle size={10} className="mr-2" />
+                <Link
+                  to={VIDEO_FILE_BOARD}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
                   영상 관리
                 </Link>
               </div>
@@ -102,8 +135,11 @@ const Sidebar = () => {
           <div className="item mt-3">
             <div className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer">
               <MdChat className="mr-3" />
-              <span><Link
-                  to={NOTICE_BOARD} className="block py-1">공지글 관리</Link></span>
+              <span>
+                <Link to={NOTICE_BOARD} className="block py-1">
+                  공지글 관리
+                </Link>
+              </span>
             </div>
           </div>
           <div className="item mt-3">
@@ -143,17 +179,19 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link  to={API_BOARD} className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
-                <FaRegCircle size={10} className="mr-2" />
-                <span>
-                  API 조회
-                  </span>
-                </Link >
-                <Link  to={FILESIZE_FORM} className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
-                <FaRegCircle size={10} className="mr-2" />
-                <span>
-                  용량 관리
-                  </span>
+                <Link
+                  to={API_BOARD}
+                  className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>API 조회</span>
+                </Link>
+                <Link
+                  to={FILESIZE_FORM}
+                  className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>용량 관리</span>
                 </Link>
               </div>
             )}

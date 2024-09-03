@@ -70,11 +70,14 @@ function App() {
       <Sidebar />
       <div className="content flex-1 p-4">
         <Routes>
+          {/* 접근제어 페이지 */}
+          {/*<Route element={<ProtectedRoute />}>*/}
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
+
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
           <Route path={ACCOUNT_LIST} element={<AccountList />} />
           <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm />} />
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
 
           {/* PC 관련 경로 */}
           <Route path={PC_INVENTORY} element={<PcList />} />
