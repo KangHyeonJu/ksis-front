@@ -12,6 +12,8 @@ import {
 } from "../../../constants/page_constant";
 
 const SignageList = () => {
+  const authority = localStorage.getItem("authority");
+
   const [signages, setSignages] = useState([]);
 
   const loadPage = async () => {
@@ -138,21 +140,23 @@ const SignageList = () => {
           <Link to={SIGNAGE_GRID}>그리드로 보기</Link>
         </button>
       </div>
-      <div className="flex justify-end space-x-2 mb-4">
-        <button
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
-        </button>
-        <button
-          onClick={deleteSignage}
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-        >
-          삭제
-        </button>
-      </div>
+      {authority === "ROLE_ADMIN" ? (
+        <div className="flex justify-end space-x-2 mb-4">
+          <button
+            type="button"
+            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          >
+            <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
+          </button>
+          <button
+            onClick={deleteSignage}
+            type="button"
+            className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          >
+            삭제
+          </button>
+        </div>
+      ) : null}
 
       <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
         <thead>

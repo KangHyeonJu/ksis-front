@@ -10,6 +10,9 @@ export const SIGNAGE_NOTICE = "/signage/notice";
 export const SIGNAGE_RESOURCE = "/signage/resource";
 export const SIGNAGE_PLAYLIST = "/signage/playlist";
 export const SIGNAGE_PLAYLIST_DTL = "/signage/playlistDtl";
+export const SIGNAGE_PLAY = "/signage/play";
+export const SIGNAGE_PLAY_NOTICE = "/signage/play/notice";
+export const SIGNAGE_ACCOUNT_RESOURCE = "/signage/accountResource";
 
 //api
 export const API_LIST = "/api/all";

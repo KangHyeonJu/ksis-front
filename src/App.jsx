@@ -57,6 +57,8 @@ import ImageResourceBoard from "./ksis/pages/fileMng/ImageResourceBoard.jsx";
 import ImageFileBoard from "./ksis/pages/fileMng/ImageFileBoard.jsx";
 import VideoResourceBoard from "./ksis/pages/fileMng/VideoResourceBoard.jsx";
 import VideoFileBoard from "./ksis/pages/fileMng/VideoFileBoard.jsx";
+import FileBoardModal from "./ksis/pages/fileMng/FileBoardModal.jsx";
+import DownloadApp from "./ksis/pages/download-app/download_app.jsx";
 import ImageResourceModal from "./ksis/pages/fileMng/ImageResourceModal.jsx";
 import ImageEncoding from "./ksis/pages/fileMng/ImageEncoding.jsx";
 import VideoResourceModal from "./ksis/pages/fileMng/VideoResourceModal.jsx";
@@ -68,11 +70,14 @@ function App() {
       <Sidebar />
       <div className="content flex-1 p-4">
         <Routes>
+          {/* 접근제어 페이지 */}
+          {/*<Route element={<ProtectedRoute />}>*/}
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
+
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
           <Route path={ACCOUNT_LIST} element={<AccountList />} />
           <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm />} />
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
 
           {/* PC 관련 경로 */}
           <Route path={PC_INVENTORY} element={<PcList />} />
@@ -114,19 +119,20 @@ function App() {
             element={<ImageResourceModal />}
           />
           <Route
-            path={IMAGE_ENCODING  + "/:originalResourceId"}
-            element={<ImageEncoding/>}
+            path={IMAGE_ENCODING + "/:originalResourceId"}
+            element={<ImageEncoding />}
           />
           <Route
             path={VIDEO_RESOURCE_MODAL + "/:originalResourceId"}
             element={<VideoResourceModal />}
           />
-           <Route
+          <Route
             path={VIDEO_ENCODING + "/:originalResourceId"}
             element={<VideoEncoding />}
-            />
+          />
 
           {/* 다른 라우트들을 추가할 수 있습니다 */}
+          <Route path={"/downloadApp"} element={<DownloadApp />} />
         </Routes>
       </div>
     </div>
