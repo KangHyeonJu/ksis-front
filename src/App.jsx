@@ -1,6 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
+import ProtectedRoute from "./ksis/components/ProtectedRoute";
 import {
   API_BOARD,
   API_FORM,
