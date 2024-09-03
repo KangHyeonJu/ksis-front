@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RSIMAGE_BOARD } from '../../../constants/api_constant';
+import { RSIMAGE_BOARD, ENCODED_IMG } from '../../../constants/api_constant';
 import axios from 'axios';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useParams, useNavigate } from "react-router-dom";
@@ -39,11 +39,9 @@ const ImageEncoding = () => {
 
     const handleEncoding = async () => {
         try {
-            const response = await axios.post('/api/encoding', {
-                originalResourceId: params.originalResourceId,
-                encodingOptions: encodingOptions,
-            });
-
+            console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
+            const response = await axios.post(`/resourceList/encoding/${params.originalResourceId}`, encodingOptions);
+    
             if (response.status === 200) {
                 alert('인코딩이 성공적으로 시작되었습니다.');
             } else {
@@ -54,6 +52,7 @@ const ImageEncoding = () => {
             alert('인코딩 중 오류가 발생했습니다.');
         }
     };
+    
 
     if (!image) {
         return <div>Loading...</div>;
