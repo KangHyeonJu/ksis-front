@@ -74,14 +74,14 @@ const Sidebar = () => {
         <div className="flex space-x-2 mb-4">
           <a
             href="#"
-            className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+            className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
           >
             <BiUser className="mr-1" />
             <span>계정정보</span>
           </a>
           <a
             href="#"
-            className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+            className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
           >
             <BiBell className="mr-1" />
             <span>알림</span>
