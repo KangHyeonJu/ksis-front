@@ -1,7 +1,6 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
-import ProtectedRoute from "./ksis/components/ProtectedRoute";
 import {
   API_BOARD,
   API_FORM,
@@ -13,7 +12,10 @@ import {
   IMAGE_FILE_BOARD,
   VIDEO_RESOURCE_BOARD,
   VIDEO_FILE_BOARD,
-  FILE_MODAL,
+  VIDEO_RESOURCE_MODAL,
+  VIDEO_ENCODING,
+  IMAGE_RESOURCE_MODAL,
+  IMAGE_ENCODING,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -57,6 +59,10 @@ import VideoResourceBoard from "./ksis/pages/fileMng/VideoResourceBoard.jsx";
 import VideoFileBoard from "./ksis/pages/fileMng/VideoFileBoard.jsx";
 import FileBoardModal from "./ksis/pages/fileMng/FileBoardModal.jsx";
 import DownloadApp from "./ksis/pages/download-app/download_app.jsx";
+import ImageResourceModal from "./ksis/pages/fileMng/ImageResourceModal.jsx";
+import ImageEncoding from "./ksis/pages/fileMng/ImageEncoding.jsx";
+import VideoResourceModal from "./ksis/pages/fileMng/VideoResourceModal.jsx";
+import VideoEncoding from "./ksis/pages/fileMng/VideoEncoding.jsx";
 
 function App() {
   const location = useLocation();
@@ -118,17 +124,28 @@ function App() {
           <Route path={VIDEO_FILE_BOARD} element={<VideoFileBoard />} />
           <Route path={VIDEO_RESOURCE_BOARD} element={<VideoResourceBoard />} />
           <Route
-            path={FILE_MODAL + "/:originalResourceId"}
-            element={<FileBoardModal />}
+            path={IMAGE_RESOURCE_MODAL + "/:originalResourceId"}
+            element={<ImageResourceModal />}
           />
-          {/* 다른 라우트들을 추가할 수 있습니다 */}
+          <Route
+            path={IMAGE_ENCODING + "/:originalResourceId"}
+            element={<ImageEncoding />}
+          />
+          <Route
+            path={VIDEO_RESOURCE_MODAL + "/:originalResourceId"}
+            element={<VideoResourceModal />}
+          />
+          <Route
+            path={VIDEO_ENCODING + "/:originalResourceId"}
+            element={<VideoEncoding />}
+          />
+            {/* 다른 라우트들을 추가할 수 있습니다 */}
           </Route>
 
           {/* 접근허용 페이지 */}
           <Route path={"/downloadApp"} element={<DownloadApp />} />
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
         </Routes>
-
       </div>
     </div>
   );

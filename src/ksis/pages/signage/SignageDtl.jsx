@@ -14,6 +14,7 @@ import NoticeModal from "./NoticeModal";
 import SignageResourceModal from "./SignageResourceModal";
 import SignagePlaylistModal from "./SignagePlaylistModal";
 import PlaylistUpdateModal from "./PlaylistUpdateModal";
+import SignagePlay from "./SignagePlay";
 
 const SignageDtl = () => {
   const [enabled, setEnabled] = useState(false);
@@ -53,6 +54,11 @@ const SignageDtl = () => {
   const [playlistUpdateIsOpen, setPlaylistUpdateIsOpen] = useState(false);
   const openPlaylistUpdate = () => setPlaylistUpdateIsOpen(true);
   const closePlaylistUpdate = () => setPlaylistUpdateIsOpen(false);
+
+  //재생
+  const [playIsOpen, setPlayIsOpen] = useState(false);
+  const openPlay = () => setPlayIsOpen(true);
+  const closePlay = () => setPlayIsOpen(false);
 
   // 이전 페이지로 이동
   const navigate = useNavigate();
@@ -458,9 +464,15 @@ const SignageDtl = () => {
           <button
             type="button"
             className="rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            onClick={openPlay}
           >
             재생
           </button>
+          <SignagePlay
+            isOpen={playIsOpen}
+            onRequestClose={closePlay}
+            signageId={data.deviceId}
+          />
         </div>
       </div>
     </div>

@@ -10,6 +10,9 @@ export const SIGNAGE_NOTICE = "/signage/notice";
 export const SIGNAGE_RESOURCE = "/signage/resource";
 export const SIGNAGE_PLAYLIST = "/signage/playlist";
 export const SIGNAGE_PLAYLIST_DTL = "/signage/playlistDtl";
+export const SIGNAGE_PLAY = "/signage/play";
+export const SIGNAGE_PLAY_NOTICE = "/signage/play/notice";
+export const SIGNAGE_ACCOUNT_RESOURCE = "/signage/accountResource";
 
 //api
 export const API_LIST = "/api/all";
@@ -22,4 +25,12 @@ export const NOTICE_LIST = "/api/notices";
 //file
 export const FILE_SIZE = "/api/filesize";
 export const FILE_BASIC = "/resourceList";
-export const IMAGE_BOARD = "/resourceList/images";
+export const FILE_ALL = "/resourceList/All";
+export const FILE_ORIGINAL_BASIC = "/resourceList/original";
+export const IMG_ORIGINAL_BASIC = "/resourceList/Img";
+export const VIDEO_ORIGINAL_BASIC = "/resourceList/Video";
+export const FILE_ENCODED_BASIC = "/resourceList/encoded";
+export const RSIMAGE_BOARD = "/resourceList/RsImages";
+export const ECIMAGE_BOARD = "/resourceList/EcImages";
+export const RSVIDEO_BOARD = "/resourceList/RsVideos";
+export const ECVIDEO_BOARD = "/resourceList/EcVideos";
