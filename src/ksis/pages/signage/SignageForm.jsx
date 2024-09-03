@@ -143,7 +143,7 @@ const SignageForm = () => {
         return false;
       }
 
-      const macRegex = /^([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}$/;
+      const macRegex = /^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$/;
 
       if (macAddress === "" || !macRegex.test(macAddress)) {
         setError("유효한 mac주소를 입력하세요.");
