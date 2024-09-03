@@ -93,7 +93,7 @@ const AccountEditForm = () => {
     return (
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-                계정 수정
+                계정 정보
             </h1>
             <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-6 bg-white rounded-lg">
                 <form onSubmit={handleSubmit}>

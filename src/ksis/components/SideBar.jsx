@@ -46,6 +46,8 @@ const Sidebar = () => {
     // window.location.href = "/login";
   };
 
+  const isAdmin = userInfo.roles.includes("ROLE_ADMIN");
+
   return (
     <div className="bg-[#ffcf8f] text-black h-screen w-64 p-4 flex flex-col">
       <div>
@@ -66,7 +68,7 @@ const Sidebar = () => {
             className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
           >
             <BiUser className="mr-1" />
-            <span>계정정보</span>
+            <Link to={`/account/${userInfo.accountId}`}> 계정정보</Link>
           </a>
           <a
             href="#"
@@ -78,6 +80,7 @@ const Sidebar = () => {
         </div>
         <hr className="border-black border-1 border-dashed" />
         <div className="menu--list">
+          {isAdmin && (
           <div className="item mt-3">
             <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
@@ -97,6 +100,7 @@ const Sidebar = () => {
                 </div>
             )}
           </div>
+          )}
           <div className="item mt-3">
           <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
@@ -152,6 +156,7 @@ const Sidebar = () => {
               </div>
             )}
           </div>
+          {isAdmin && (
           <div className="item mt-3">
             <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
@@ -177,6 +182,7 @@ const Sidebar = () => {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
       <div className="mt-auto">

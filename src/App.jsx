@@ -1,6 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
+import ProtectedRoute from "./ksis/components/ProtectedRoute";
 import {
   API_BOARD,
   API_FORM,
@@ -58,13 +59,23 @@ import FileBoardModal from "./ksis/pages/fileMng/FileBoardModal.jsx";
 import DownloadApp from "./ksis/pages/download-app/download_app.jsx";
 
 function App() {
+  const location = useLocation();
+
+  // 사이드바를 숨기고 싶은 경로들
+  const noSidebarRoutes = ["/downloadApp"];
+
+  // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
+  const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
+
   return (
     <div className="dashboard flex">
-      <Sidebar />
+      {/* 사이드바를 조건부로 렌더링 */}
+      {!isNoSidebarRoute && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
           {/* 접근제어 페이지 */}
           {/*<Route element={<ProtectedRoute />}>*/}
+          <Route element={<ProtectedRoute />}>
 
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
@@ -110,13 +121,12 @@ function App() {
             path={FILE_MODAL + "/:originalResourceId"}
             element={<FileBoardModal />}
           />
-
           {/* 다른 라우트들을 추가할 수 있습니다 */}
-          {/*</Route>*/}
+          </Route>
 
           {/* 접근허용 페이지 */}
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route path={"/downloadApp"} element={<DownloadApp />} />
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
         </Routes>
 
       </div>
