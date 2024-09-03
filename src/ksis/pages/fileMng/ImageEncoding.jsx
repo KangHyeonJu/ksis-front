@@ -10,20 +10,18 @@ const ImageEncoding = () => {
     const [image, setImage] = useState(null);
     const [encodingOptions, setEncodingOptions] = useState([{ format: 'png', resolution: '720p' }]);
 
-    const ImageEncodingss = async (originalResourceId) => {
-        axios.get(RSIMAGE_BOARD + `/${originalResourceId}`)
-            .then(response => {
-                setImage(response.data);
-                console.log("원본 이미지 인코딩 페이지 데이터 : ", response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching image:', error);
-            });
+    const fetchImageData = async (originalResourceId) => {
+        try {
+            const response = await axios.get(`${RSIMAGE_BOARD}/${originalResourceId}`);
+            setImage(response.data);
+            console.log("원본 이미지 인코딩 페이지 데이터: ", response.data);
+        } catch (error) {
+            console.error('Error fetching image:', error);
+        }
     };
 
     useEffect(() => {
-        ImageEncodingss(params.originalResourceId);
-        console.log(params.originalResourceId);
+        fetchImageData(params.originalResourceId);
     }, [params.originalResourceId]);
 
     const handleAddOption = () => {
@@ -37,6 +35,24 @@ const ImageEncoding = () => {
 
     const handleCancel = () => {
         navigate(-1);
+    };
+
+    const handleEncoding = async () => {
+        try {
+            const response = await axios.post('/api/encoding', {
+                originalResourceId: params.originalResourceId,
+                encodingOptions: encodingOptions,
+            });
+
+            if (response.status === 200) {
+                alert('인코딩이 성공적으로 시작되었습니다.');
+            } else {
+                alert('인코딩 요청에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('인코딩 요청 중 오류 발생:', error);
+            alert('인코딩 중 오류가 발생했습니다.');
+        }
     };
 
     if (!image) {
@@ -112,9 +128,9 @@ const ImageEncoding = () => {
                     </div>
                 </div>
 
-                {/* 버튼이 확실하게 흰 네모 밖에 있고 노란 네모 안에 위치하도록 조정 */}
                 <div className="mt-2 bottom-2 flex justify-end">
                     <button 
+                        onClick={handleEncoding}
                         className="mr-2 rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600">
                         인코딩
                     </button>
