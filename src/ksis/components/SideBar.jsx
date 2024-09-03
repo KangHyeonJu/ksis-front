@@ -30,6 +30,8 @@ const Sidebar = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
+
+        localStorage.setItem("authority", decodedToken.auth);
         console.log(decodedToken);
         setUserInfo({
           accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
@@ -49,6 +51,7 @@ const Sidebar = () => {
     // 로그아웃 로직을 여기에 추가하세요
     console.log("로그아웃");
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("authority");
     // 예를 들어, 세션을 삭제하고 로그인 페이지로 리디렉션할 수 있습니다.
     // sessionStorage.removeItem("user");
     // window.location.href = "/login";

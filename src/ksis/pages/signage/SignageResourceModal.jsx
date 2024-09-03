@@ -1,20 +1,27 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
-import { SIGNAGE_RESOURCE } from "../../../constants/api_constant";
+import {
+  SIGNAGE_ACCOUNT_RESOURCE,
+  SIGNAGE_RESOURCE,
+} from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
 import { RxCrossCircled } from "react-icons/rx";
 import { BsXCircleFill } from "react-icons/bs";
 const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
   //재생장치의 인코딩리소스 불러오기
   const [resources, setResources] = useState([]);
+  const [muResources, setMyResources] = useState([]);
 
   const loadModal = useCallback(async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_RESOURCE + `/${signageId}`);
-      setResources(response.data);
+      const [responseResource, responseMyResource] = await Promise.all([
+        fetcher.get(SIGNAGE_RESOURCE + `/${signageId}`),
+        fetcher.get(SIGNAGE_ACCOUNT_RESOURCE),
+      ]);
 
-      console.log(response);
+      setResources(responseResource.data);
+      setMyResources(responseMyResource.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
