@@ -118,14 +118,14 @@ const Sidebar = () => {
               <div className="submenu ml-8 mt-2">
                 <Link
                   to={SIGNAGE_INVENTORY}
-                  className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                  className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
                   <span>재생장치 관리</span>
                 </Link>
                 <Link
                   to={PC_INVENTORY}
-                  className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                  className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
                   <span>일반 PC 관리</span>
@@ -143,13 +143,13 @@ const Sidebar = () => {
             </div>
             {openMenu === "settings" && (
               <div className="submenu ml-8 mt-2">
-                <Link  to={API_BOARD} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <Link  to={API_BOARD} className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
                 <FaRegCircle size={10} className="mr-2" />
                 <span>
                   API 조회
                   </span>
                 </Link >
-                <Link  to={FILESIZE_FORM} className="flex items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
+                <Link  to={FILESIZE_FORM} className=" items-center block py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer">
                 <FaRegCircle size={10} className="mr-2" />
                 <span>
                   용량 관리

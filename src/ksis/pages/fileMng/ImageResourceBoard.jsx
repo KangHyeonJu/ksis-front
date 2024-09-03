@@ -6,11 +6,14 @@ import axios from "axios";
 import {
   IMAGE_RESOURCE_BOARD,
   IMAGE_FILE_BOARD,
-  FILE_MODAL,
+  IMAGE_ENCODING,
 } from "../../../constants/page_constant";
-import { IMAGE_BOARD, FILE_BASIC } from "../../../constants/api_constant";
+import {
+  RSIMAGE_BOARD,
+  FILE_ORIGINAL_BASIC,
+} from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
-import FileBoardModal from "./FileBoardModal";
+import ImageResourceModal from "./ImageResourceModal";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const ImageResourceBoard = () => {
@@ -34,10 +37,10 @@ const ImageResourceBoard = () => {
 
   useEffect(() => {
     axios
-      .get(IMAGE_BOARD)
+      .get(RSIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
-        console.log("이미지 데이터 : ", response.data); //이미지 데이터 확인
+        console.log("원본 이미지 데이터 : ", response.data); //이미지 데이터 확인
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -76,9 +79,10 @@ const ImageResourceBoard = () => {
     setNewTitle(title);
   };
 
+  //제목 수정
   const handleSaveClick = async (id) => {
     try {
-      const response = await axios.put(FILE_BASIC + `/${id}`, null, {
+      const response = await axios.put(FILE_ORIGINAL_BASIC + `/${id}`, null, {
         params: { newTitle },
       });
       images.forEach((img) => {
@@ -93,7 +97,6 @@ const ImageResourceBoard = () => {
       setImages(updatedImages);
       setEditingTitleIndex(null);
       setNewTitle("");
-      navigate(IMAGE_RESOURCE_BOARD);
     } catch (error) {
       window.confirm("수정에 실패했습니다.");
       console.error("제목 수정 중 오류 발생:", error);
@@ -103,7 +106,7 @@ const ImageResourceBoard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
       try {
-        await axios.delete(FILE_BASIC + `/${id}`);
+        await axios.delete(FILE_ORIGINAL_BASIC + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
       } catch (err) {
         console.error("이미지 삭제 오류:", err);
@@ -146,6 +149,8 @@ const ImageResourceBoard = () => {
         </h1>
       </header>
 
+      {/* 검색창 */}
+      {/* 검색창 선택 */}
       <div className="mb-4 flex items-center">
         <select
           value={searchCategory}
@@ -156,7 +161,7 @@ const ImageResourceBoard = () => {
           <option value="title">제목</option>
           <option value="regDate">등록일</option>
         </select>
-
+        {/* 검색어 작성 */}
         <div className="relative flex-grow">
           <input
             type="text"
@@ -169,6 +174,7 @@ const ImageResourceBoard = () => {
         </div>
       </div>
 
+      {/* 원본, 인코딩 페이지 선택 토글버튼 */}
       <div className="flex justify-start space-x-2 mb-4">
         <button
           type="button"
@@ -196,72 +202,88 @@ const ImageResourceBoard = () => {
         </button>
       </div>
 
+      {/* 파일등록 버튼 */}
       <div className="flex justify-end space-x-2 mb-4">
-        <Link
-          to=""
+        <button
+          type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          파일 등록
-        </Link>
+          <Link to="">파일 등록</Link>
+        </button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
-            <div key={index} className="grid sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-              <div className="items-center text-center rounded-lg w-75 h-75 p-3 bg-[#ffe69c]">
-                <div>
-                  <div className="flex items-center">
-                    {editingTitleIndex === index ? (
-                      <input
-                        type="text"
-                        value={newTitle}
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        className="text-xl font-bold mb-2 border-b border-gray-400"
-                      />
-                    ) : (
-                      <h2 className=" text-xl font-bold mb-2">
-                        {post.fileTitle}
-                      </h2>
-                    )}
-                    <FaEdit
-                      onClick={() =>
-                        editingTitleIndex === index
-                          ? handleSaveClick(post.originalResourceId)
-                          : handleEditClick(index, post.fileTitle)
-                      }
-                      className="ml-2 cursor-pointer text-gray-600"
+            <div key={index} className="grid p-1">
+              {/* 네모틀 */}
+              <div
+                className="items-center text-center rounded-lg 
+                            w-2/3 h-full p-3 bg-[#ffe69c]"
+              >
+                {/* 제목 */}
+                <div className="flex items-center">
+                  {editingTitleIndex === index ? (
+                    <input
+                      type="text"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
                     />
-                  </div>
+                  ) : (
+                    <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
+                      {post.fileTitle}
+                    </h2>
+                  )}
+
+                  <FaEdit
+                    onClick={() =>
+                      editingTitleIndex === index
+                        ? handleSaveClick(post.originalResourceId)
+                        : handleEditClick(index, post.fileTitle)
+                    }
+                    className="ml-2 cursor-pointer text-gray-600"
+                  />
                 </div>
-                <p className="text-gray-700  overflow-hidden">
-                  등록일: {formatDate(post.regTime)}
-                </p>
-                <div className="h-40 w-52 overflow-hidden margin-0">
-                  <div>
+
+                {/* 등록일 */}
+                <div>
+                  <p className="text-gray-700 ">
+                    등록일: {formatDate(post.regTime)}
+                  </p>
+                </div>
+
+                {/* 이미지 */}
+                <div>
+                  <div className="w-5/6 h-5/6 overflow-hidden  mt-4 cursor-pointer mx-auto">
                     <img
                       src={post.filePath}
+                      //이미지 파일 깨질시 이미지 제목으로 설정
                       alt={post.fileTitle}
-                      className="w-full h-auto mt-4 cursor-pointer"
-                      onClick={() => openResourceModal(post.originalResourceId)} // 이미지를 클릭하면 모달이 열립니다.
+                      className="w-full h-full"
+                      //이미지 클릭하면 모달 열림
+                      onClick={() => openResourceModal(post.originalResourceId)}
                     />
                   </div>
                 </div>
 
-                <div className="row">
+                {/* 인코딩, 삭제 버튼 */}
+
+                <div className="items-center text-center row mx-auto p-2">
                   <button
-                    className="items-center mr-2 mt-2 relative inline-flex rounded-md bg-[#6dd7e5]
-                                        px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline 
-                                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    className="mr-2 mt-2 rounded-md bg-[#6dd7e5]
+                                        px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
+                                         focus-visible:outline-blue-600"
                   >
-                    인코딩
+                    <Link to={`${IMAGE_ENCODING}/${post.originalResourceId}`}>
+                      인코딩
+                    </Link>
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(post.originalResourceId)}
                     className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm
-                                        hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
-                                        focus-visible:outline-red-600"
+                                        hover:bg-red-400 focus-visible:outline-red-600"
                   >
                     삭제
                   </button>
@@ -275,6 +297,8 @@ const ImageResourceBoard = () => {
           </div>
         )}
       </div>
+
+      {/* 페이지네이션 */}
       {filteredPosts.length > postsPerPage && (
         <ReactPaginate
           previousLabel={"이전"}
@@ -307,7 +331,7 @@ const ImageResourceBoard = () => {
 
       {/* 모달 컴포넌트 호출 */}
       {selectedImage && (
-        <FileBoardModal
+        <ImageResourceModal
           isOpen={resourceModalIsOpen}
           onRequestClose={closeResourceModal}
           originalResourceId={selectedImage} // 선택한 이미지의 정보를 전달합니다.

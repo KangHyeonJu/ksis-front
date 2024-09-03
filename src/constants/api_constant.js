@@ -24,4 +24,12 @@ export const NOTICE_LIST = "/api/notices";
 //file
 export const FILE_SIZE = "/api/filesize";
 export const FILE_BASIC = "/resourceList";
-export const IMAGE_BOARD = "/resourceList/images";
+export const FILE_ALL = "/resourceList/All";
+export const FILE_ORIGINAL_BASIC = "/resourceList/original";
+export const IMG_ORIGINAL_BASIC = "/resourceList/Img";
+export const VIDEO_ORIGINAL_BASIC = "/resourceList/Video";
+export const FILE_ENCODED_BASIC = "/resourceList/encoded";
+export const RSIMAGE_BOARD = "/resourceList/RsImages";
+export const ECIMAGE_BOARD = "/resourceList/EcImages";
+export const RSVIDEO_BOARD = "/resourceList/RsVideos";
+export const ECVIDEO_BOARD = "/resourceList/EcVideos";
