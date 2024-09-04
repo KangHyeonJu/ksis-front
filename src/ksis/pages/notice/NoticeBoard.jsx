@@ -21,6 +21,7 @@ const NoticeBoard = () => {
         axios.get(NOTICE_LIST)
             .then(response => {
                 setNotices(response.data);
+                console.log("데이터 : " , response.data );
             })
             .catch(err => {
                 setError('데이터를 가져오는 데 실패했습니다.');

@@ -16,6 +16,7 @@ const NoticeDetail = () => {
             try {
                 const response = await axios.get(NOTICE_LIST+`/${noticeId}`);
                 const formattedNotice = formatNoticeDates(response.data);
+                console.log("데이터 : " , response.data);
                 setNotice(formattedNotice);
             } catch (err) {
                 setError('공지사항 정보를 가져오는 데 실패했습니다.');
