@@ -35,3 +35,7 @@ export const RSIMAGE_BOARD = "/resourceList/RsImages";
 export const ECIMAGE_BOARD = "/resourceList/EcImages";
 export const RSVIDEO_BOARD = "/resourceList/RsVideos";
 export const ECVIDEO_BOARD = "/resourceList/EcVideos";
+
+//main
+export const TOTAL_FILE_SIZE = "/total/filesize";
+export const VISIT = "/total/visit";

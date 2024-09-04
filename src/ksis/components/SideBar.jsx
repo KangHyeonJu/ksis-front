@@ -32,6 +32,7 @@ const Sidebar = () => {
         const decodedToken = jwtDecode(token);
 
         localStorage.setItem("authority", decodedToken.auth);
+
         console.log(decodedToken);
         setUserInfo({
           accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
@@ -61,7 +62,7 @@ const Sidebar = () => {
     <div className="bg-[#ffcf8f] text-black h-screen w-64 p-4 flex flex-col">
       <div>
         <div className="logo mb-8">
-          <a href="/public" className="text-2xl font-semibold">
+          <a href="/main" className="text-2xl font-semibold">
             KSIS
           </a>
         </div>

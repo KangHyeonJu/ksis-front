@@ -63,6 +63,7 @@ import ImageResourceModal from "./ksis/pages/fileMng/ImageResourceModal.jsx";
 import ImageEncoding from "./ksis/pages/fileMng/ImageEncoding.jsx";
 import VideoResourceModal from "./ksis/pages/fileMng/VideoResourceModal.jsx";
 import VideoEncoding from "./ksis/pages/fileMng/VideoEncoding.jsx";
+import Main from "./ksis/pages/main/Main.jsx";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
       <Sidebar />
       <div className="content flex-1 p-4">
         <Routes>
+          <Route path={"/main"} element={<Main />} />
           {/* 접근제어 페이지 */}
           {/*<Route element={<ProtectedRoute />}>*/}
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
