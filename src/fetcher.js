@@ -46,7 +46,7 @@ fetcher.interceptors.response.use(
           console.log("에러났습니다. 리프레시토큰도 만료됐거든요");
           localStorage.removeItem("accessToken");
           // 일렉트론 앱이 다운로드 되어있어야 함
-          // window.location.href = "ksis://open";
+          window.location.href = "ksis://open";
           return Promise.resolve();
         }
 
