@@ -49,7 +49,7 @@ const ImageEncoding = () => {
                 };
             console.log("리퀘스트 데이터 : ", requestData);
             console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
-            const response = await axios.post(`/resourceList/encoding/${params.originalResourceId}`, requestData);
+            const response = await axios.post(`${ENCODED_IMG}/${params.originalResourceId}`, requestData);
 
             if (response.status === 200) {
                 alert('인코딩이 성공적으로 시작되었습니다.');
@@ -110,6 +110,7 @@ const ImageEncoding = () => {
                                     }}
                                     className="ml-4 p-2 border border-gray-300 rounded-md"
                                 >
+                                   <option value="360p">360p</option>
                                     <option value="720p">720p</option>
                                     <option value="1080p">1080p</option>
                                     <option value="4k">4K</option>
