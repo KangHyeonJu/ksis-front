@@ -94,7 +94,7 @@ const NoticeBoard = () => {
             </div>
             <div>
                 {filteredNotices.length === 0 ? (
-                    <p>공지글이 없습니다.</p>
+                    <p className="text-center text-gray-600 mt-10 w-full">공지글이 없습니다.</p>
                 ) : (
                     <table className="w-full border-collapse border border-gray-200">
                         <thead>
