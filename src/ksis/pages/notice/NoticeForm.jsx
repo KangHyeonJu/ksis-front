@@ -23,7 +23,7 @@ const NoticeForm = () => {
         const fetchDevices = async () => {
             try {
                 const response = await axios.get('/signage'); // 백엔드 API에서 디바이스 목록을 불러옴
-                console.log(response.data)
+                console.log('사이니지 불러오기:', response.data)
                 setDeviceOptions(response.data.map(device => ({
                     value: device.deviceId,
                     label: device.deviceName // 디바이스 이름 (필요에 따라 변경)
@@ -44,7 +44,9 @@ const NoticeForm = () => {
             const fetchNotice = async () => {
                 try {
                     const response = await axios.get(NOTICE_LIST+`/${noticeId}`);
+                    console.error('공지사항 상황:', response);
                     const { title, content, startDate, endDate, deviceIds = [] } = response.data;
+                    console.error('공지사항 데이터:', response.data);
                     setFormData({
                         title,
                         content,
