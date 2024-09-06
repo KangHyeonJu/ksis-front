@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RSIMAGE_BOARD, ENCODED_VIDEO } from '../../../constants/api_constant';
+import { ENCODING_RESOURCE_FILE, ENCODED_VIDEO } from '../../../constants/api_constant';
 import axios from 'axios';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useParams, useNavigate } from "react-router-dom";
@@ -8,11 +8,11 @@ const VideoEncoding = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [video, setVideo] = useState(null);
-    const [encodingOptions, setEncodingOptions] = useState([{ format: 'png', resolution: '720p' }]);
+    const [encodingOptions, setEncodingOptions] = useState([{ format: 'mp4', resolution: '360p' }]);
 
     const fetchImageData = async (originalResourceId) => {
         try {
-            const response = await axios.get(`${RSIMAGE_BOARD}/${originalResourceId}`);
+            const response = await axios.get(`${ENCODING_RESOURCE_FILE}/${originalResourceId}`);
             setVideo(response.data);
             console.log("원본 이미지 인코딩 페이지 데이터: ", response.data);
         } catch (error) {
@@ -25,7 +25,7 @@ const VideoEncoding = () => {
     }, [params.originalResourceId]);
 
     const handleAddOption = () => {
-        setEncodingOptions([...encodingOptions, { format: 'mp4', resolution: '720p' }]);
+        setEncodingOptions([...encodingOptions, { format: 'mp4', resolution: '360p' }]);
     };
 
     const handleRemoveOption = (index) => {
@@ -50,9 +50,9 @@ const VideoEncoding = () => {
             console.log("리퀘스트 데이터 : ", requestData);
             console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
             const response = await axios.post(`${ENCODED_VIDEO}/${params.originalResourceId}`, requestData);
-
+            navigate();
             if (response.status === 200) {
-                alert('인코딩이 성공적으로 시작되었습니다.');
+                console.log("인코딩 요청에 성공했습니다. ");
             } else {
                 alert('인코딩 요청에 실패했습니다.');
             }
@@ -144,7 +144,7 @@ const VideoEncoding = () => {
                     <button 
                         onClick={handleEncoding}
                         className="mr-2 rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600">
-                        인코딩
+                      인코딩
                     </button>
                     <button
                         type="button"

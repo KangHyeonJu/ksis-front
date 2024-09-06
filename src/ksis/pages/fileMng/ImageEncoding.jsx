@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RSIMAGE_BOARD, ENCODED_IMG } from '../../../constants/api_constant';
+import { ENCODING_RESOURCE_FILE, ENCODED_IMG } from '../../../constants/api_constant';
 import axios from 'axios';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useParams, useNavigate } from "react-router-dom";
@@ -8,11 +8,11 @@ const ImageEncoding = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
-    const [encodingOptions, setEncodingOptions] = useState([{ format: 'png', resolution: '720p' }]);
+    const [encodingOptions, setEncodingOptions] = useState([{ format: 'png', resolution: '360p' }]);
 
     const fetchImageData = async (originalResourceId) => {
         try {
-            const response = await axios.get(`${RSIMAGE_BOARD}/${originalResourceId}`);
+            const response = await axios.get(`${ENCODING_RESOURCE_FILE}/${originalResourceId}`);
             setImage(response.data);
             console.log("원본 이미지 인코딩 페이지 데이터: ", response.data);
         } catch (error) {
@@ -25,7 +25,7 @@ const ImageEncoding = () => {
     }, [params.originalResourceId]);
 
     const handleAddOption = () => {
-        setEncodingOptions([...encodingOptions, { format: 'png', resolution: '720p' }]);
+        setEncodingOptions([...encodingOptions, { format: 'png', resolution: '360p' }]);
     };
 
     const handleRemoveOption = (index) => {
@@ -52,7 +52,7 @@ const ImageEncoding = () => {
             const response = await axios.post(`${ENCODED_IMG}/${params.originalResourceId}`, requestData);
 
             if (response.status === 200) {
-                alert('인코딩이 성공적으로 시작되었습니다.');
+                console.log("인코딩 요청에 성공했습니다. ");
             } else {
                 alert('인코딩 요청에 실패했습니다.');
             }
