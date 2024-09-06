@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
-import { PC_LIST } from "../../../constants/api_constant";
+import { PC_DELETE, PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
@@ -68,7 +68,7 @@ const PcList = () => {
           const queryString = checkedRowId.join(",");
 
           const response = await fetcher.delete(
-            PC_LIST + "?pcIds=" + queryString
+            PC_DELETE + "?pcIds=" + queryString
           );
 
           console.log(response.data);

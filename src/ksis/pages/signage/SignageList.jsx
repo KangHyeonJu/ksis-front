@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
-import { SIGNAGE_LIST } from "../../../constants/api_constant";
+import { SIGNAGE_DELETE, SIGNAGE_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import {
@@ -73,7 +73,7 @@ const SignageList = () => {
           const queryString = checkedRowId.join(",");
 
           const response = await fetcher.delete(
-            SIGNAGE_LIST + "?signageIds=" + queryString
+            SIGNAGE_DELETE + "?signageIds=" + queryString
           );
 
           console.log(response.data);

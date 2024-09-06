@@ -1,10 +1,12 @@
 //pc
 export const PC_LIST = "/pc";
-export const PC_ADD = "/pc/new";
+export const PC_ADD = "/admin/pc/new";
+export const PC_DELETE = "/admin/pc/delete";
 
 //signage
 export const SIGNAGE_LIST = "/signage";
-export const SIGNAGE_ADD = "/signage/new";
+export const SIGNAGE_DELETE = "/admin/signage/delete";
+export const SIGNAGE_ADD = "/admin/signage/new";
 export const SIGNAGE_UPDATE = "/signage/update";
 export const SIGNAGE_NOTICE = "/signage/notice";
 export const SIGNAGE_RESOURCE = "/signage/resource";
