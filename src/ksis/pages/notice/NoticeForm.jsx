@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { NOTICE_BOARD } from '../../../constants/page_constant';
-import { NOTICE_LIST, SIGNAGE_LIST } from '../../../constants/api_constant';
+import { NOTICE_LIST } from '../../../constants/api_constant';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 
 const NoticeForm = () => {
@@ -14,6 +14,7 @@ const NoticeForm = () => {
         deviceIds: ['']
     });
     const [deviceOptions, setDeviceOptions] = useState([]); // 디바이스 옵션 상태 추가
+    const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
     const { noticeId } = useParams();
 
@@ -21,7 +22,7 @@ const NoticeForm = () => {
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const response = await axios.get(SIGNAGE_LIST); // 백엔드 API에서 디바이스 목록을 불러옴
+                const response = await axios.get('/signage'); // 백엔드 API에서 디바이스 목록을 불러옴
                 console.log(response.data)
                 setDeviceOptions(response.data.map(device => ({
                     value: device.deviceId,
@@ -35,6 +36,30 @@ const NoticeForm = () => {
 
         fetchDevices();
     }, []);
+
+    // 공지사항을 불러오는 useEffect
+    useEffect(() => {
+        if (noticeId) {
+            setIsEditing(true);
+            const fetchNotice = async () => {
+                try {
+                    const response = await axios.get(NOTICE_LIST+`/${noticeId}`);
+                    const { title, content, startDate, endDate, deviceIds = [] } = response.data;
+                    setFormData({
+                        title,
+                        content,
+                        startDate,
+                        endDate,
+                        deviceIds: deviceIds.length ? deviceIds : ['']
+                    });
+                } catch (error) {
+                    console.error('공지글을 불러오는 중 오류 발생:', error);
+                    alert('공지글을 불러오는 중 오류가 발생했습니다.');
+                }
+            };
+            fetchNotice();
+        }
+    }, [noticeId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -60,10 +85,12 @@ const NoticeForm = () => {
                 deviceIds: deviceIds.filter(deviceId => deviceId.trim())
             };
 
-            const response = await axios.post(NOTICE_LIST, noticeData);
+            const response = isEditing 
+                ? await axios.put(NOTICE_LIST + `/${noticeId}`, noticeData) 
+                : await axios.post(NOTICE_LIST , noticeData);
 
             if ([200, 201, 204].includes(response.status)) {
-                navigate(NOTICE_BOARD);
+                navigate(-1);
             } else {
                 alert('공지글 저장에 실패했습니다.');
             }
@@ -104,7 +131,7 @@ const NoticeForm = () => {
         <div className="p-6 max-w-2xl mx-auto">
             <header className="mb-6">
                 <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-                    공지글 작성
+                    {isEditing ? '공지글 수정' : '공지글 작성'}
                 </h1>
             </header>
             <div className="border border-gray-300 rounded-lg p-6 shadow-sm bg-[#ffe69c]">
@@ -206,7 +233,7 @@ const NoticeForm = () => {
                             type="submit"
                             className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                         >
-                            등록하기
+                            {isEditing ? '수정하기' : '등록하기'}
                         </button>
                         <button
                             type="button"
