@@ -204,11 +204,16 @@ const SignageUpdateForm = () => {
       });
       console.log(response.data);
 
-      alert("재생장치가 정상적으로 수정되었습니다.");
-      setIsDisabled(true);
-      setIsReadOnly(true);
+      if (response.status === 200) {
+        alert("재생장치가 정상적으로 수정되었습니다.");
+        setIsDisabled(true);
+        setIsReadOnly(true);
 
-      navigate(SIGNAGE_DTL + `/${data.deviceId}`);
+        navigate(SIGNAGE_DTL + `/${data.deviceId}`);
+      } else if (response.status === 202) {
+        alert("이미 등록된 MAC주소입니다.");
+        return;
+      }
     } catch (error) {
       console.log(error.response.data);
     }
