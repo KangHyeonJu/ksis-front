@@ -17,6 +17,9 @@ import {
   VIDEO_ENCODING,
   IMAGE_RESOURCE_MODAL,
   IMAGE_ENCODING,
+  ACCESSLOG_INVENTORY,
+  ACTIVITYLOG_INVENTORY,
+  UPLOADLOG_INVENTORY,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -65,6 +68,9 @@ import ImageEncoding from "./ksis/pages/fileMng/ImageEncoding.jsx";
 import VideoResourceModal from "./ksis/pages/fileMng/VideoResourceModal.jsx";
 import VideoEncoding from "./ksis/pages/fileMng/VideoEncoding.jsx";
 import Main from "./ksis/pages/main/Main.jsx";
+import AccessLogBoard from "./ksis/pages/log/AccessLogBoard.jsx";
+import UploadLogBoard from "./ksis/pages/log/UploadLogBoard.jsx";
+import ActivityLogBoard from "./ksis/pages/log/ActivityLogBoard.jsx";
 
 function App() {
   const location = useLocation();
@@ -146,6 +152,11 @@ function App() {
           {/* 다른 라우트들을 추가할 수 있습니다 */}
           <Route path={"/downloadApp"} element={<DownloadApp />} />
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
+
+          {/* 로그 */}
+          <Route path={ACCESSLOG_INVENTORY} element={<AccessLogBoard />} />
+          <Route path={ACTIVITYLOG_INVENTORY} element={<ActivityLogBoard />} />
+          <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
         </Routes>
       </div>
     </div>

@@ -44,3 +44,8 @@ export const ENCODING_RESOURCE_FILE = "/resourceList/files";
 //main
 export const TOTAL_FILE_SIZE = "/total/filesize";
 export const VISIT = "/total/visit";
+
+//log
+export const ACCESSLOG_LIST = "/log/access";
+export const ACTIVITYLOG_LIST = "/log/activity";
+export const UPLOADLOG_LIST = "/log/upload";

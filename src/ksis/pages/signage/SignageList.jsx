@@ -140,7 +140,7 @@ const SignageList = () => {
           <Link to={SIGNAGE_GRID}>그리드로 보기</Link>
         </button>
       </div>
-      {authority !== "ROLE_ADMIN" ? (
+      {authority === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 mb-4">
           <button
             type="button"

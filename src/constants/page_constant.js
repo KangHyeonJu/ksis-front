@@ -35,3 +35,8 @@ export const VIDEO_RESOURCE_BOARD = "/videoresourceboard";
 export const VIDEO_FILE_BOARD = "/videofileboard";
 export const VIDEO_RESOURCE_MODAL = "/videoResourceModal";
 export const VIDEO_ENCODING = "/videoEncoding";
+
+//log
+export const ACCESSLOG_INVENTORY = "/accesslog";
+export const ACTIVITYLOG_INVENTORY = "/activitylog";
+export const UPLOADLOG_INVENTORY = "/uploadlog";

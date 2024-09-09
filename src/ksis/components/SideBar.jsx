@@ -18,6 +18,7 @@ import {
   NOTICE_BOARD,
   IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
+  ACCESSLOG_INVENTORY,
 } from "../../constants/page_constant";
 import { jwtDecode } from "jwt-decode";
 import fetcher from "../../fetcher";
@@ -124,18 +125,20 @@ const Sidebar = () => {
                 <div className="submenu ml-8 mt-2">
                   <Link
                     to="/accountList"
-                    className="block py-1"
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                     onClick={() => handleMenuClick("ACCOUNT_LIST")}
                   >
-                    계정목록 조회
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>계정목록 조회</span>
                   </Link>
-                  <a
-                    href="#"
-                    className="block py-1"
+                  <Link
+                    to={ACCESSLOG_INVENTORY}
                     onClick={() => handleMenuClick("LOG")}
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                   >
-                    로그기록
-                  </a>
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>로그 기록</span>
+                  </Link>
                 </div>
               )}
             </div>
