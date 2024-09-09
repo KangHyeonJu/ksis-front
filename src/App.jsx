@@ -64,6 +64,7 @@ import ImageResourceModal from "./ksis/pages/fileMng/ImageResourceModal.jsx";
 import ImageEncoding from "./ksis/pages/fileMng/ImageEncoding.jsx";
 import VideoResourceModal from "./ksis/pages/fileMng/VideoResourceModal.jsx";
 import VideoEncoding from "./ksis/pages/fileMng/VideoEncoding.jsx";
+import Main from "./ksis/pages/main/Main.jsx";
 
 function App() {
   const location = useLocation();
@@ -80,9 +81,10 @@ function App() {
       {!isNoSidebarRoute && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
+          <Route path={"/main"} element={<Main />} />
           {/* 접근제어 페이지 */}
           {/*<Route element={<ProtectedRoute />}>*/}
-          <Route element={<ProtectedRoute />}>
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
 
           {/* 계정 관련 경로 */}
           <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
@@ -140,10 +142,8 @@ function App() {
             path={VIDEO_ENCODING + "/:originalResourceId"}
             element={<VideoEncoding />}
           />
-            {/* 다른 라우트들을 추가할 수 있습니다 */}
-          </Route>
 
-          {/* 접근허용 페이지 */}
+          {/* 다른 라우트들을 추가할 수 있습니다 */}
           <Route path={"/downloadApp"} element={<DownloadApp />} />
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
         </Routes>

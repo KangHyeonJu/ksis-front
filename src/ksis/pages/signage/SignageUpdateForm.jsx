@@ -171,7 +171,7 @@ const SignageUpdateForm = () => {
       setIsDisabled(false);
       setIsReadOnly(false);
 
-      const macRegex = /^([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}$/;
+      const macRegex = /^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$/;
 
       if (macAddress === "" || !macRegex.test(macAddress)) {
         setError("유효한 mac주소를 입력하세요.");
@@ -204,11 +204,16 @@ const SignageUpdateForm = () => {
       });
       console.log(response.data);
 
-      alert("재생장치가 정상적으로 수정되었습니다.");
-      setIsDisabled(true);
-      setIsReadOnly(true);
+      if (response.status === 200) {
+        alert("재생장치가 정상적으로 수정되었습니다.");
+        setIsDisabled(true);
+        setIsReadOnly(true);
 
-      navigate(SIGNAGE_DTL + `/${data.deviceId}`);
+        navigate(SIGNAGE_DTL + `/${data.deviceId}`);
+      } else if (response.status === 202) {
+        alert("이미 등록된 MAC주소입니다.");
+        return;
+      }
     } catch (error) {
       console.log(error.response.data);
     }

@@ -63,10 +63,10 @@ const Sidebar = () => {
       category: category,
     };
     try {
-      const response = await fetcher.post('/access-log', accessLog);
-      console.log('Log saved successfully', response.data);
+      const response = await fetcher.post("/access-log", accessLog);
+      console.log("Log saved successfully", response.data);
     } catch (error) {
-      console.error('Error saving log:', error);
+      console.error("Error saving log:", error);
       alert(error.response?.data || "Unknown error occurred");
     }
   };
@@ -77,8 +77,11 @@ const Sidebar = () => {
     <div className="bg-[#ffcf8f] text-black h-screen w-64 p-4 flex flex-col">
       <div>
         <div className="logo mb-8">
-          <a href="/public" className="text-2xl font-semibold"
-             onClick={() => handleMenuClick('MAIN')}>
+          <a
+            href="/main"
+            className="text-2xl font-semibold"
+            onClick={() => handleMenuClick("MAIN")}
+          >
             KSIS
           </a>
         </div>
@@ -90,8 +93,9 @@ const Sidebar = () => {
         </div>
         <div className="flex space-x-2 mb-4">
           <a
+            href="#"
             className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
-            onClick={() => handleMenuClick('ACCOUNT_INFO')}
+            onClick={() => handleMenuClick("ACCOUNT_INFO")}
           >
             <BiUser className="mr-1" />
             <Link to={`/account/${userInfo.accountId}`}> 계정정보</Link>
@@ -99,7 +103,7 @@ const Sidebar = () => {
           <a
             href="#"
             className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
-            onClick={() => handleMenuClick('NOTIFICATION')}
+            onClick={() => handleMenuClick("NOTIFICATION")}
           >
             <BiBell className="mr-1" />
             <span>알림</span>
@@ -108,28 +112,33 @@ const Sidebar = () => {
         <hr className="border-black border-1 border-dashed" />
         <div className="menu--list">
           {isAdmin && (
-          <div className="item mt-3">
-            <div
-              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-              onClick={() => toggleMenu("account")}
-            >
-              <MdManageAccounts className="mr-3" />
-              <span>계정관리</span>
-            </div>
-            {openMenu === "account" && (
-              <div className="submenu ml-8 mt-2">
-                <Link
-                    to="/accountList" className="block py-1"
-                    onClick={() => handleMenuClick('ACCOUNT_LIST')}>
-                  계정목록 조회
-                </Link>
-                <a href="#" className="block py-1"
-                   onClick={() => handleMenuClick('LOG')}>
-                  로그기록
-                </a>
+            <div className="item mt-3">
+              <div
+                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                onClick={() => toggleMenu("account")}
+              >
+                <MdManageAccounts className="mr-3" />
+                <span>계정관리</span>
               </div>
-            )}
-          </div>
+              {openMenu === "account" && (
+                <div className="submenu ml-8 mt-2">
+                  <Link
+                    to="/accountList"
+                    className="block py-1"
+                    onClick={() => handleMenuClick("ACCOUNT_LIST")}
+                  >
+                    계정목록 조회
+                  </Link>
+                  <a
+                    href="#"
+                    className="block py-1"
+                    onClick={() => handleMenuClick("LOG")}
+                  >
+                    로그기록
+                  </a>
+                </div>
+              )}
+            </div>
           )}
           <div className="item mt-3">
             <div
@@ -143,7 +152,7 @@ const Sidebar = () => {
               <div className="submenu ml-8 mt-2">
                 <Link
                   to={IMAGE_FILE_BOARD}
-                  onClick={() => handleMenuClick('IMAGE')}
+                  onClick={() => handleMenuClick("IMAGE")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -151,7 +160,7 @@ const Sidebar = () => {
                 </Link>
                 <Link
                   to={VIDEO_FILE_BOARD}
-                  onClick={() => handleMenuClick('VIDEO')}
+                  onClick={() => handleMenuClick("VIDEO")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -165,8 +174,10 @@ const Sidebar = () => {
               <MdChat className="mr-3" />
               <span>
                 <Link
-                    to={NOTICE_BOARD} className="block py-1"
-                    onClick={() => handleMenuClick('NOTICE')}>
+                  to={NOTICE_BOARD}
+                  className="block py-1"
+                  onClick={() => handleMenuClick("NOTICE")}
+                >
                   공지글 관리
                 </Link>
               </span>
@@ -184,7 +195,7 @@ const Sidebar = () => {
               <div className="submenu ml-8 mt-2">
                 <Link
                   to={SIGNAGE_INVENTORY}
-                  onClick={() => handleMenuClick('SIGNAGE')}
+                  onClick={() => handleMenuClick("SIGNAGE")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -192,7 +203,7 @@ const Sidebar = () => {
                 </Link>
                 <Link
                   to={PC_INVENTORY}
-                  onClick={() => handleMenuClick('PC')}
+                  onClick={() => handleMenuClick("PC")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -202,35 +213,35 @@ const Sidebar = () => {
             )}
           </div>
           {isAdmin && (
-          <div className="item mt-3">
-            <div
-              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-              onClick={() => toggleMenu("settings")}
-            >
-              <BiCog className="mr-3" />
-              <span>기타 관리</span>
-            </div>
-            {openMenu === "settings" && (
-              <div className="submenu ml-8 mt-2">
-                <Link
-                  to={API_BOARD}
-                  onClick={() => handleMenuClick('API')}
-                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                >
-                  <FaRegCircle size={10} className="mr-2" />
-                  <span>API 조회</span>
-                </Link>
-                <Link
-                  to={FILESIZE_FORM}
-                  onClick={() => handleMenuClick('FILE_SIZE')}
-                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                >
-                  <FaRegCircle size={10} className="mr-2" />
-                  <span>용량 관리</span>
-                </Link>
+            <div className="item mt-3">
+              <div
+                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                onClick={() => toggleMenu("settings")}
+              >
+                <BiCog className="mr-3" />
+                <span>기타 관리</span>
               </div>
-            )}
-          </div>
+              {openMenu === "settings" && (
+                <div className="submenu ml-8 mt-2">
+                  <Link
+                    to={API_BOARD}
+                    onClick={() => handleMenuClick("API")}
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                  >
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>API 조회</span>
+                  </Link>
+                  <Link
+                    to={FILESIZE_FORM}
+                    onClick={() => handleMenuClick("FILE_SIZE")}
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                  >
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>용량 관리</span>
+                  </Link>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
