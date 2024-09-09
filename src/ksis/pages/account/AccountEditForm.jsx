@@ -51,7 +51,29 @@ const AccountEditForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        // 전화번호 필드인 경우 handlePhoneNumberChange 호출
+        if (name === 'businessTel' || name === 'emergencyTel') {
+            handlePhoneNumberChange(e, name);
+        } else {
+            // 일반적인 필드에 대한 처리
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
+    };
+
+    const handlePhoneNumberChange = (e, fieldName) => {
+        let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자 이외의 문자 제거
+        if (value.length > 11) value = value.slice(0, 11); // 최대 11자리 제한
+        if (value.length <= 3) {
+            value = value;
+        } else if (value.length <= 7) {
+            value = value.slice(0, 3) + '-' + value.slice(3);
+        } else {
+            value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+        }
+        setFormData({ ...formData, [fieldName]: value });
     };
 
     const handlePasswordChange = (e) => {
@@ -93,7 +115,7 @@ const AccountEditForm = () => {
     return (
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-                계정 수정
+                계정 정보
             </h1>
             <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-6 bg-white rounded-lg">
                 <form onSubmit={handleSubmit}>
@@ -124,6 +146,8 @@ const AccountEditForm = () => {
                             id="password"
                             name="password"
                             type="password"
+                            minLength={8}
+                            maxLength={20}
                             value={formData.password}
                             onChange={handlePasswordChange}
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -140,6 +164,7 @@ const AccountEditForm = () => {
                             id="confirmPassword"
                             name="confirmPassword"
                             type="password"
+                            maxLength={20}
                             value={formData.confirmPassword}
                             onChange={handlePasswordChange}
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -183,6 +208,7 @@ const AccountEditForm = () => {
                             name="birthDate"
                             type="date"
                             value={formData.birthDate}
+                            max={new Date().toISOString().split('T')[0]}
                             onChange={handleChange}
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
@@ -231,6 +257,7 @@ const AccountEditForm = () => {
                             id="email"
                             name="email"
                             type="email"
+                            maxLength={50}
                             value={formData.email}
                             onChange={handleChange}
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -247,6 +274,7 @@ const AccountEditForm = () => {
                             id="position"
                             name="position"
                             type="text"
+                            maxLength={20}
                             value={formData.position}
                             onChange={handleChange}
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"

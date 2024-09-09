@@ -176,8 +176,13 @@ const SignageForm = () => {
       });
       console.log(response.data);
 
-      alert("재생장치가 정상적으로 등록되었습니다.");
-      navigate(SIGNAGE_INVENTORY);
+      if (response.status === 200) {
+        alert("재생장치가 정상적으로 등록되었습니다.");
+        navigate(SIGNAGE_INVENTORY);
+      } else if (response.status === 202) {
+        alert("이미 등록된 MAC주소입니다.");
+        return;
+      }
     } catch (error) {
       console.log(error.response.data);
     }

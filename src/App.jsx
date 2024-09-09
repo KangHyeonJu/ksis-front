@@ -1,6 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
+import ProtectedRoute from "./ksis/components/ProtectedRoute";
 import {
   API_BOARD,
   API_FORM,
@@ -63,13 +64,24 @@ import ImageResourceModal from "./ksis/pages/fileMng/ImageResourceModal.jsx";
 import ImageEncoding from "./ksis/pages/fileMng/ImageEncoding.jsx";
 import VideoResourceModal from "./ksis/pages/fileMng/VideoResourceModal.jsx";
 import VideoEncoding from "./ksis/pages/fileMng/VideoEncoding.jsx";
+import Main from "./ksis/pages/main/Main.jsx";
 
 function App() {
+  const location = useLocation();
+
+  // 사이드바를 숨기고 싶은 경로들
+  const noSidebarRoutes = ["/downloadApp"];
+
+  // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
+  const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
+
   return (
     <div className="dashboard flex">
-      <Sidebar />
+      {/* 사이드바를 조건부로 렌더링 */}
+      {!isNoSidebarRoute && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
+          <Route path={"/main"} element={<Main />} />
           {/* 접근제어 페이지 */}
           {/*<Route element={<ProtectedRoute />}>*/}
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
@@ -133,6 +145,7 @@ function App() {
 
           {/* 다른 라우트들을 추가할 수 있습니다 */}
           <Route path={"/downloadApp"} element={<DownloadApp />} />
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
         </Routes>
       </div>
     </div>

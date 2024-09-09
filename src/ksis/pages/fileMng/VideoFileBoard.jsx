@@ -261,9 +261,7 @@ const VideoFileBoard = () => {
           ))
         ) : (
           <div className="w-screen">
-        <p className="text-center text-gray-600 w-4/5">
-            파일이 없습니다.
-          </p>
+            <p className="text-center text-gray-600 w-4/5">파일이 없습니다.</p>
           </div>
         )}
       </div>

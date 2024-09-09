@@ -170,8 +170,13 @@ const PcForm = () => {
       });
       console.log(response.data);
 
-      alert("pc가 정상적으로 등록되었습니다.");
-      navigate(PC_INVENTORY);
+      if (response.status === 200) {
+        alert("PC가 정상적으로 등록되었습니다.");
+        navigate(PC_INVENTORY);
+      } else if (response.status === 202) {
+        alert("이미 등록된 MAC주소입니다.");
+        return;
+      }
     } catch (error) {
       console.log(error.response.data);
     }
