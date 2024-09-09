@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RSIMAGE_BOARD } from '../../../constants/api_constant';
+import { ENCODING_RESOURCE_FILE, ENCODED_IMG } from '../../../constants/api_constant';
 import axios from 'axios';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useParams, useNavigate } from "react-router-dom";
@@ -8,11 +8,11 @@ const ImageEncoding = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
-    const [encodingOptions, setEncodingOptions] = useState([{ format: 'png', resolution: '720p' }]);
+    const [encodingOptions, setEncodingOptions] = useState([{ format: 'png', resolution: '360p' }]);
 
     const fetchImageData = async (originalResourceId) => {
         try {
-            const response = await axios.get(`${RSIMAGE_BOARD}/${originalResourceId}`);
+            const response = await axios.get(`${ENCODING_RESOURCE_FILE}/${originalResourceId}`);
             setImage(response.data);
             console.log("원본 이미지 인코딩 페이지 데이터: ", response.data);
         } catch (error) {
@@ -25,7 +25,7 @@ const ImageEncoding = () => {
     }, [params.originalResourceId]);
 
     const handleAddOption = () => {
-        setEncodingOptions([...encodingOptions, { format: 'png', resolution: '720p' }]);
+        setEncodingOptions([...encodingOptions, { format: 'png', resolution: '360p' }]);
     };
 
     const handleRemoveOption = (index) => {
@@ -39,21 +39,30 @@ const ImageEncoding = () => {
 
     const handleEncoding = async () => {
         try {
-            const response = await axios.post('/api/encoding', {
-                originalResourceId: params.originalResourceId,
-                encodingOptions: encodingOptions,
-            });
+            for (const option of encodingOptions) {
+                const requestData = {
+                    fileTitle: image.fileTitle,
+                    filePath: image.filePath,
+                    fileRegTime: image.regTime,
+                    format: option.format,
+                    resolution: option.resolution
+                };
+            console.log("리퀘스트 데이터 : ", requestData);
+            console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
+            const response = await axios.post(`${ENCODED_IMG}/${params.originalResourceId}`, requestData);
 
             if (response.status === 200) {
-                alert('인코딩이 성공적으로 시작되었습니다.');
+                console.log("인코딩 요청에 성공했습니다. ");
             } else {
                 alert('인코딩 요청에 실패했습니다.');
             }
-        } catch (error) {
-            console.error('인코딩 요청 중 오류 발생:', error);
-            alert('인코딩 중 오류가 발생했습니다.');
         }
-    };
+    } catch (error) {
+        console.error('인코딩 요청 중 오류 발생:', error);
+        alert('인코딩 중 오류가 발생했습니다.');
+    }
+};
+    
 
     if (!image) {
         return <div>Loading...</div>;
@@ -61,12 +70,12 @@ const ImageEncoding = () => {
 
     return (
         <div className="flex justify-center items-center p-6">
-            <div className="bg-[#ffe69c] p-6 rounded-lg relative">
-                <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white">
+             <div className="bg-[#ffe69c] p-6 rounded-lg relative">
+             <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white">
                     {image.fileTitle || "파일 제목"}
                 </h1>
 
-                <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-4 rounded-lg">
+                <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg">
                     <div className="w-1/2 flex-shrink-0">
                         <img 
                             src={image.filePath} 
@@ -75,9 +84,9 @@ const ImageEncoding = () => {
                         />
                     </div>
 
-                    <div className="ml-6 flex flex-col">
+                    <div className="flex flex-col">
                         {encodingOptions.map((option, idx) => (
-                            <div key={idx} className="flex items-center mb-2">
+                            <div key={idx} className="flex items-center mb-4">
                                 <select
                                     value={option.format}
                                     onChange={(e) => {
@@ -101,6 +110,7 @@ const ImageEncoding = () => {
                                     }}
                                     className="ml-4 p-2 border border-gray-300 rounded-md"
                                 >
+                                   <option value="360p">360p</option>
                                     <option value="720p">720p</option>
                                     <option value="1080p">1080p</option>
                                     <option value="4k">4K</option>

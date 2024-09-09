@@ -6,6 +6,7 @@ import axios from "axios";
 import {
   VIDEO_RESOURCE_BOARD,
   VIDEO_FILE_BOARD,
+  VIDEO_ENCODING,
 } from "../../../constants/page_constant";
 import {
   RSVIDEO_BOARD,
@@ -283,7 +284,9 @@ const VideoResourceBoard = () => {
                                         px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
                                          focus-visible:outline-blue-600"
                   >
-                    인코딩
+                    <Link to={`${VIDEO_ENCODING}/${post.originalResourceId}`}>
+                      인코딩
+                    </Link>
                   </button>
                   <button
                     type="button"
@@ -298,8 +301,10 @@ const VideoResourceBoard = () => {
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-600 mt-10 w-full">
+          <div className="w-screen">
+          <p className="text-center text-gray-600 w-4/5">
             파일이 없습니다.
+          </p>
           </div>
         )}
       </div>

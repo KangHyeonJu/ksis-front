@@ -37,6 +37,9 @@ export const RSIMAGE_BOARD = "/resourceList/RsImages";
 export const ECIMAGE_BOARD = "/resourceList/EcImages";
 export const RSVIDEO_BOARD = "/resourceList/RsVideos";
 export const ECVIDEO_BOARD = "/resourceList/EcVideos";
+export const ENCODED_IMG = "/resourceList/img/encoding";
+export const ENCODED_VIDEO = "/resourceList/video/encoding";
+export const ENCODING_RESOURCE_FILE = "/resourceList/files";
 
 //main
 export const TOTAL_FILE_SIZE = "/total/filesize";

@@ -21,6 +21,7 @@ const NoticeBoard = () => {
         axios.get(NOTICE_LIST)
             .then(response => {
                 setNotices(response.data);
+                console.log("공지 전체 조회 데이터 : " , response.data );
             })
             .catch(err => {
                 setError('데이터를 가져오는 데 실패했습니다.');
@@ -93,7 +94,7 @@ const NoticeBoard = () => {
             </div>
             <div>
                 {filteredNotices.length === 0 ? (
-                    <p>공지글이 없습니다.</p>
+                    <p className="text-center text-gray-600 mt-10 w-full">공지글이 없습니다.</p>
                 ) : (
                     <table className="w-full border-collapse border border-gray-200">
                         <thead>
