@@ -17,7 +17,7 @@ const TokenCallback = () => {
 
             // accessToken을 로컬 스토리지에 저장
             localStorage.setItem('accessToken', accessToken);
-            navigate('/');
+            navigate('/main');
 
             window.location.reload();
         };

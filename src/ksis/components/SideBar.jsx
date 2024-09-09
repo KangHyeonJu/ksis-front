@@ -33,6 +33,7 @@ const Sidebar = () => {
         const decodedToken = jwtDecode(token);
 
         localStorage.setItem("authority", decodedToken.auth);
+        localStorage.setItem("accountId", decodedToken.sub);
         console.log(decodedToken);
         setUserInfo({
           accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
@@ -48,14 +49,27 @@ const Sidebar = () => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
-  // const handleLogout = () => {
-  //   // 로그아웃 로직을 여기에 추가하세요
-  //   console.log("로그아웃");
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("authority");
-  //   window.location.href = "/downloadApp";
-  //
-  // };
+  const handleLogout = async () => {
+    // 로그아웃 로직을 여기에 추가하세요
+    const accountId = localStorage.getItem('accountId');
+
+    try {
+      // 서버로 로그아웃 요청 전송
+      await fetcher.delete(`/logout/${accountId}`);
+
+      await fetcher.post('/access-log',{
+        accountId,
+        category: 'LOGOUT',
+      })
+      // 로그아웃 성공 시 로컬스토리지 토큰 제거
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('accountId');
+      localStorage.removeItem("authority");
+      window.location.href = "/downloadApp";
+    } catch (error) {
+      console.error("로그아웃 실패: ", error);
+    }
+  };
 
   const handleMenuClick = async (category) => {
     const accessLog = {
@@ -245,18 +259,18 @@ const Sidebar = () => {
           )}
         </div>
       </div>
-      {/*<div className="mt-auto">*/}
-      {/*  <button*/}
-      {/*    onClick={() => {*/}
-      {/*      handleMenuClick('LOGOUT');*/}
-      {/*      handleLogout();*/}
-      {/*    }}*/}
-      {/*    className="w-full text-left flex items-center p-2 hover:bg-[#fe6500]/30 rounded"*/}
-      {/*  >*/}
-      {/*    <RiLogoutBoxRLine className="mr-2" />*/}
-      {/*    <span>로그아웃</span>*/}
-      {/*  </button>*/}
-      {/*</div>*/}
+      <div className="mt-auto">
+        <button
+          onClick={() => {
+            handleMenuClick('LOGOUT');
+            handleLogout();
+          }}
+          className="w-full text-left flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+        >
+          <RiLogoutBoxRLine className="mr-2" />
+          <span>로그아웃</span>
+        </button>
+      </div>
     </div>
   );
 };
