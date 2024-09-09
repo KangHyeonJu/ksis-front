@@ -18,7 +18,9 @@ const SignageList = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_LIST);
+      const response = await fetcher.get(SIGNAGE_LIST, {
+        params: { role: authority },
+      });
       console.log(response);
       if (response.data) {
         setSignages(response.data);

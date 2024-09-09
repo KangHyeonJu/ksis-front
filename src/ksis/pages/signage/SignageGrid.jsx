@@ -16,7 +16,9 @@ const SignageGrid = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_LIST + `/grid`);
+      const response = await fetcher.get(SIGNAGE_LIST + `/grid`, {
+        params: { role: authority },
+      });
       console.log(response);
       if (response.data) {
         setSignages(response.data);
