@@ -216,7 +216,7 @@ const VideoResourceBoard = () => {
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          <Link to="">파일 등록</Link>
+          <Link to="ksis://open">파일 등록</Link>
         </button>
       </div>
 

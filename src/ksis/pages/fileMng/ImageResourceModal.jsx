@@ -35,6 +35,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
         return 'Invalid date';
     }}
 
+    
  
 
   return (
