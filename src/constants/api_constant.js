@@ -20,7 +20,7 @@ export const API_NOTICE = "/api/posts";
 export const API_BASIC = "/api";
 
 //notice
-export const NOTICE_LIST = "/api/notices";
+export const NOTICE_LIST = "/notices";
 
 //file
 export const FILE_SIZE = "/api/filesize";

@@ -65,32 +65,32 @@ const NoticeForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const { title, content, startDate, endDate, deviceIds } = formData;
-
+    
         if (!title.trim() || !content.trim() || !startDate || !endDate) {
             alert('제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.');
             return;
         }
-
+    
         if (deviceIds.some(deviceId => !deviceId.trim())) {
             alert('모든 재생장치를 선택해야 합니다.');
             return;
         }
-
+    
         try {
             const noticeData = {
                 title,
                 content,
                 startDate,
                 endDate,
-                deviceIds: deviceIds.filter(deviceId => deviceId.trim())
+                deviceIds: deviceIds.filter(deviceId => deviceId.trim()),
             };
-
+    
             const response = isEditing 
-                ? await axios.put(NOTICE_LIST + `/${noticeId}`, noticeData) 
-                : await axios.post(NOTICE_LIST , noticeData);
-
+                ? await axios.put(`/notices/${noticeId}`, noticeData) 
+                : await axios.post('/notices/register', noticeData);  // 여기서 /notices/register로 요청을 보냄
+    
             if ([200, 201, 204].includes(response.status)) {
                 navigate(-1);
             } else {
