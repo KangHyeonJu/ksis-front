@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ENCODING_RESOURCE_FILE, ENCODED_VIDEO } from '../../../constants/api_constant';
-import axios from 'axios';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useParams, useNavigate } from "react-router-dom";
+import fetcher from "../../../fetcher";
 
 const VideoEncoding = () => {
     const params = useParams();
@@ -12,7 +12,7 @@ const VideoEncoding = () => {
 
     const fetchImageData = async (originalResourceId) => {
         try {
-            const response = await axios.get(`${ENCODING_RESOURCE_FILE}/${originalResourceId}`);
+            const response = await fetcher.get(`${ENCODING_RESOURCE_FILE}/${originalResourceId}`);
             setVideo(response.data);
             console.log("원본 이미지 인코딩 페이지 데이터: ", response.data);
         } catch (error) {
@@ -49,7 +49,7 @@ const VideoEncoding = () => {
                 };
             console.log("리퀘스트 데이터 : ", requestData);
             console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
-            const response = await axios.post(`${ENCODED_VIDEO}/${params.originalResourceId}`, requestData);
+            const response = await fetcher.post(`${ENCODED_VIDEO}/${params.originalResourceId}`, requestData);
             navigate();
             if (response.status === 200) {
                 console.log("인코딩 요청에 성공했습니다. ");

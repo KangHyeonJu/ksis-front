@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { FaSearch, FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
@@ -12,6 +11,7 @@ import {
   ECIMAGE_BOARD,
   FILE_ENCODED_BASIC,
 } from "../../../constants/api_constant";
+import fetcher from "../../../fetcher";
 
 const ImageFileBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,9 +28,11 @@ const ImageFileBoard = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
+  
   useEffect(() => {
-    axios
-      .get(ECIMAGE_BOARD)
+
+    fetcher 
+    .get(ECIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
@@ -48,7 +50,7 @@ const ImageFileBoard = () => {
 
   const handleSaveClick = async (id) => {
     try {
-      await axios.put(`${FILE_ENCODED_BASIC}/${id}`, {
+      await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
         fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
       });
 
@@ -88,7 +90,7 @@ const ImageFileBoard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
       try {
-        await axios.delete(FILE_ENCODED_BASIC + `/${id}`);
+        await fetcher.delete(FILE_ENCODED_BASIC + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
       } catch (err) {
         console.error("이미지 삭제 오류:", err);
@@ -186,7 +188,7 @@ const ImageFileBoard = () => {
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          <Link to="">파일 등록</Link>
+          <Link to="ksis://open">파일 등록</Link>
         </button>
       </div>
 

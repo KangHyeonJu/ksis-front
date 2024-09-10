@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react"; // React의 훅을 가져옵니다.
 import { Dialog } from "../../css/dialog"; // Dialog 컴포넌트를 가져옵니다.
 import { VIDEO_ORIGINAL_BASIC  } from "../../../constants/api_constant"; // 상수를 가져옵니다.
-import axios from "axios"; // axios를 가져옵니다.
 import { format, parseISO } from 'date-fns';
+import fetcher from "../../../fetcher";
 
 const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {  
   const [modals, setModal] = useState([]); // 모달을 관리하기 위한 상태를 선언합니다.
 
   const loadModal = useCallback(async () => {
 
-    axios.get(VIDEO_ORIGINAL_BASIC + `/${originalResourceId}`)
+    fetcher.get(VIDEO_ORIGINAL_BASIC + `/${originalResourceId}`)
     .then(response => {
       setModal(response.data); // 영상을 상태에 저장합니다.
       console.log("영상 모달 데이터 : ", response.data); // 영상 데이터를 콘솔에 출력합니다.
