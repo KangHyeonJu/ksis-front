@@ -10,7 +10,7 @@ const AccountList = () => {
 
     const loadPage = async () => {
         try {
-            const response = await fetcher.get(ACCOUNT_LIST);
+            const response = await fetcher.get('/admin' + ACCOUNT_LIST);
             console.log(response); // 응답 객체 확인을 위해 콘솔 출력
             if (response.data) {
                 setPosts(response.data);

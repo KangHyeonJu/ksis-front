@@ -18,7 +18,7 @@ const AccountRegForm = () => {
         gender: '',
     });
     const [passwordMatch, setPasswordMatch] = useState(true);
-
+    const navigate = useNavigate();
     useEffect(() => {
         // 비밀번호와 비밀번호 확인이 일치하는지 확인
         if (formData.password && formData.confirmPassword) {
@@ -93,6 +93,7 @@ const AccountRegForm = () => {
             });
 
             console.log(cleanedFormData);
+            navigate(ACCOUNT_LIST);
         } catch (error) {
             console.error('Error creating account:', error);
             console.log('Form Data:', JSON.stringify(cleanedFormData));
