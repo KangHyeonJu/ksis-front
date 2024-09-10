@@ -18,7 +18,7 @@ const AccountRegForm = () => {
         gender: '',
     });
     const [passwordMatch, setPasswordMatch] = useState(true);
-
+    const navigate = useNavigate();
     useEffect(() => {
         // 비밀번호와 비밀번호 확인이 일치하는지 확인
         if (formData.password && formData.confirmPassword) {
@@ -93,6 +93,7 @@ const AccountRegForm = () => {
             });
 
             console.log(cleanedFormData);
+            navigate(ACCOUNT_LIST);
         } catch (error) {
             console.error('Error creating account:', error);
             console.log('Form Data:', JSON.stringify(cleanedFormData));
@@ -212,6 +213,7 @@ const AccountRegForm = () => {
                             value={formData.businessTel}
                             onChange={handleChange}
                             required
+                            pattern="\d{3}-\d{4}-\d{4}"
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
@@ -225,6 +227,7 @@ const AccountRegForm = () => {
                             type="tel"
                             value={formData.emergencyTel}
                             onChange={handleChange}
+                            pattern="\d{3}-\d{4}-\d{4}"
                             className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
