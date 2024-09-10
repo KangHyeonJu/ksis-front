@@ -23,10 +23,13 @@ import {
 import { jwtDecode } from "jwt-decode";
 import fetcher from "../../fetcher";
 import ksisLogo from "../../img/ksis-logo.png";
+import Notification from "../pages/notification/Notification"; // 알림 모달 컴포넌트 import
+import NotificationCountComponent from "../pages/notification/NotificationCount"; // 알림 개수 컴포넌트
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
+  const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -35,7 +38,6 @@ const Sidebar = () => {
         const decodedToken = jwtDecode(token);
 
         localStorage.setItem("authority", decodedToken.auth);
-        console.log(decodedToken);
         setUserInfo({
           accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
           roles: decodedToken.auth, // 토큰에서 권한 정보 가져오기
@@ -77,6 +79,11 @@ const Sidebar = () => {
 
   return (
     <div className="bg-[#ffcf8f] text-black h-screen w-64 p-4 flex flex-col">
+      {/* 알림 모달 창 표시 */}
+      {isNotificationOpen && (
+        <Notification onClose={() => setNotificationOpen(false)} />
+      )}
+
       <div>
         <div className="logo mb-8">
           <a
@@ -104,10 +111,10 @@ const Sidebar = () => {
           </a>
           <a
             href="#"
-            className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
-            onClick={() => handleMenuClick("NOTIFICATION")}
+            className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+            onClick={() => setNotificationOpen(true)} // 알림 버튼 클릭 시 모달 열기
           >
-            <BiBell className="mr-1" />
+            <NotificationCountComponent />
             <span>알림</span>
           </a>
         </div>

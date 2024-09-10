@@ -25,6 +25,11 @@ export const API_BASIC = "/api";
 //notice
 export const NOTICE_LIST = "/notices";
 
+//notification
+export const NOTIFICATION_LIST = "/api/notifications";
+export const NOTIFICATION_ISREAD = "/api/isRead";
+export const NOTIFICATION_COUNT = "/api/notifications/unread";
+
 //file
 export const FILE_SIZE = "/api/filesize";
 export const FILE_BASIC = "/resourceList";
