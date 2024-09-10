@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { NOTICE_BOARD } from '../../../constants/page_constant';
 import { NOTICE_LIST } from '../../../constants/api_constant';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
+import fetcher from "../../../fetcher";
 
 const NoticeForm = () => {
     const [formData, setFormData] = useState({
@@ -22,8 +22,8 @@ const NoticeForm = () => {
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const response = await axios.get('/signage'); // 백엔드 API에서 디바이스 목록을 불러옴
-                console.log('사이니지 불러오기:', response.data)
+                const response = await fetcher.get('/signage'); // 백엔드 API에서 디바이스 목록을 불러옴
+                console.log(response.data)
                 setDeviceOptions(response.data.map(device => ({
                     value: device.deviceId,
                     label: device.deviceName // 디바이스 이름 (필요에 따라 변경)
@@ -43,10 +43,8 @@ const NoticeForm = () => {
             setIsEditing(true);
             const fetchNotice = async () => {
                 try {
-                    const response = await axios.get(NOTICE_LIST+`/${noticeId}`);
-                    console.error('공지사항 상황:', response);
+                    const response = await fetcher.get(NOTICE_LIST+`/${noticeId}`);
                     const { title, content, startDate, endDate, deviceIds = [] } = response.data;
-                    console.error('공지사항 데이터:', response.data);
                     setFormData({
                         title,
                         content,
@@ -65,32 +63,32 @@ const NoticeForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const { title, content, startDate, endDate, deviceIds } = formData;
-    
+
         if (!title.trim() || !content.trim() || !startDate || !endDate) {
             alert('제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.');
             return;
         }
-    
+
         if (deviceIds.some(deviceId => !deviceId.trim())) {
             alert('모든 재생장치를 선택해야 합니다.');
             return;
         }
-    
+
         try {
             const noticeData = {
                 title,
                 content,
                 startDate,
                 endDate,
-                deviceIds: deviceIds.filter(deviceId => deviceId.trim()),
+                deviceIds: deviceIds.filter(deviceId => deviceId.trim())
             };
-    
+
             const response = isEditing 
-                ? await axios.put(`/notices/${noticeId}`, noticeData) 
-                : await axios.post('/notices/register', noticeData);  // 여기서 /notices/register로 요청을 보냄
-    
+                ? await fetcher.put(NOTICE_LIST + `/${noticeId}`, noticeData) 
+                : await fetcher.post(NOTICE_LIST , noticeData);
+
             if ([200, 201, 204].includes(response.status)) {
                 navigate(-1);
             } else {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
 import { FaSearch, FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
@@ -30,7 +30,7 @@ const VideoFileBoard = () => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
-    axios
+    fetcher
       .get(ECVIDEO_BOARD)
       .then((response) => {
         setVideos(response.data);
@@ -59,7 +59,7 @@ const VideoFileBoard = () => {
 
   const handleSaveClick = async (id) => {
     try {
-      await axios.put(`${FILE_ENCODED_BASIC}/${id}`, {
+      await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
         fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
       });
 
@@ -89,7 +89,7 @@ const VideoFileBoard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
       try {
-        await axios.delete(FILE_ENCODED_BASIC + `/${id}`);
+        await fetcher.delete(FILE_ENCODED_BASIC + `/${id}`);
         setVideos(videos.filter((video) => video.id !== id));
       } catch (err) {
         console.error("영상 삭제 오류:", err);

@@ -3,9 +3,9 @@ import {
   ENCODING_RESOURCE_FILE,
   ENCODED_IMG,
 } from "../../../constants/api_constant";
-import axios from "axios";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
+import fetcher from "../../../fetcher";
 
 const ImageEncoding = () => {
   const params = useParams();
@@ -17,7 +17,7 @@ const ImageEncoding = () => {
 
   const fetchImageData = async (originalResourceId) => {
     try {
-      const response = await axios.get(
+      const response = await fetcher.get(
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
       setImage(response.data);
@@ -59,7 +59,7 @@ const ImageEncoding = () => {
         };
         console.log("리퀘스트 데이터 : ", requestData);
         console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
-        const response = await axios.post(
+        const response = await fetcher.post(
           `${ENCODED_IMG}/${params.originalResourceId}`,
           requestData
         );

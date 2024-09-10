@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FaSearch, FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
 import {
   VIDEO_RESOURCE_BOARD,
   VIDEO_FILE_BOARD,
@@ -14,6 +13,7 @@ import {
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import VideoResourceModal from "./VideoResourceModal";
+import fetcher from "../../../fetcher";
 
 const VideoResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,7 +37,7 @@ const VideoResourceBoard = () => {
 
   // 영상 목록을 가져오는 부분
   useEffect(() => {
-    axios
+    fetcher
       .get(RSVIDEO_BOARD)
       .then((response) => {
         setVideos(response.data); // 영상 데이터를 설정
@@ -88,7 +88,7 @@ const VideoResourceBoard = () => {
   //제목 수정
   const handleSaveClick = async (id) => {
     try {
-      const response = await axios.put(FILE_ORIGINAL_BASIC + `/${id}`, null, {
+      const response = await fetcher.put(FILE_ORIGINAL_BASIC + `/${id}`, null, {
         params: { newTitle },
       });
       videos.forEach((vdo) => {
@@ -113,7 +113,7 @@ const VideoResourceBoard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
       try {
-        await axios.delete(FILE_ORIGINAL_BASIC + `/${id}`);
+        await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
         setVideos(videos.filter((video) => video.id !== id));
       } catch (err) {
         console.error("영상 삭제 오류:", err);
