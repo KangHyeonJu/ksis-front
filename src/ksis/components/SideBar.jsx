@@ -22,6 +22,7 @@ import {
 } from "../../constants/page_constant";
 import { jwtDecode } from "jwt-decode";
 import fetcher from "../../fetcher";
+import ksisLogo from "../../img/ksis-logo.png";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -83,7 +84,7 @@ const Sidebar = () => {
             className="text-2xl font-semibold"
             onClick={() => handleMenuClick("MAIN")}
           >
-            KSIS
+            <img src={ksisLogo} alt="KSIS Logo" className="w-32" />
           </a>
         </div>
         <div className="mb-4">
