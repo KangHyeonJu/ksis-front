@@ -20,7 +20,6 @@ const Notification = ({ onClose }) => {
       try {
         const response = await fetcher.get(NOTIFICATION_LIST);
         setNotifications(response.data);
-        console.log(response.data); // 데이터 확인
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }

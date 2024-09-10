@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BiBell } from "react-icons/bi";
 import fetcher from "../../../fetcher";
 import { NOTIFICATION_COUNT } from "../../../constants/api_constant";
+import { EventSourcePolyfill } from "event-source-polyfill";
 
 const NotificationCountComponent = () => {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -17,29 +18,6 @@ const NotificationCountComponent = () => {
     };
 
     fetchUnreadCount();
-  }, []);
-
-  // 실시간 알림 업데이트
-  useEffect(() => {
-    const eventSource = new EventSource("http://localhost:8080/api/events");
-
-    eventSource.onmessage = (event) => {
-      // 서버에서 보낸 메시지를 처리합니다.
-      const data = JSON.parse(event.data);
-      if (data.unreadCount !== undefined) {
-        setUnreadCount(data.unreadCount);
-      }
-    };
-
-    eventSource.onerror = (error) => {
-      console.error("Error occurred:", error);
-      eventSource.close();
-    };
-
-    // 컴포넌트 언마운트 시 SSE 연결을 종료합니다.
-    return () => {
-      eventSource.close();
-    };
   }, []);
 
   return (

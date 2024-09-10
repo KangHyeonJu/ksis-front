@@ -36,7 +36,6 @@ const Sidebar = () => {
         const decodedToken = jwtDecode(token);
 
         localStorage.setItem("authority", decodedToken.auth);
-        console.log(decodedToken);
         setUserInfo({
           accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
           roles: decodedToken.auth, // 토큰에서 권한 정보 가져오기
