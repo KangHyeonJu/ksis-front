@@ -57,7 +57,7 @@ const NoticeDetail = () => {
     const handleDelete = async () => {
         if (window.confirm('정말로 이 공지사항을 삭제하시겠습니까?')) {
             try {
-                await fetcher.delete(`/notices/${noticeId}`);
+                await fetcher.delete(`${NOTICE_LIST}/${noticeId}`);
                 navigate(NOTICE_BOARD);
             } catch (err) {
                 setError('공지사항 삭제에 실패했습니다.');

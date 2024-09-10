@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { NOTICE_BOARD } from '../../../constants/page_constant';
-import { NOTICE_LIST } from '../../../constants/api_constant';
+import { NOTICE_LIST, SIGNAGE_LIST } from '../../../constants/api_constant';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import fetcher from "../../../fetcher";
 
@@ -22,7 +22,7 @@ const NoticeForm = () => {
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const response = await fetcher.get('/signage'); // 백엔드 API에서 디바이스 목록을 불러옴
+                const response = await fetcher.get({SIGNAGE_LIST}); // 백엔드 API에서 디바이스 목록을 불러옴
                 console.log(response.data)
                 setDeviceOptions(response.data.map(device => ({
                     value: device.deviceId,

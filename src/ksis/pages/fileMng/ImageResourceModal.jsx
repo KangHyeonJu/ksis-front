@@ -9,7 +9,8 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
 
   const loadModal = useCallback(async () => {
 
-    fetcher.get(IMG_ORIGINAL_BASIC + `/${originalResourceId}`)
+    fetcher 
+    .get(IMG_ORIGINAL_BASIC + `/${originalResourceId}`)
     .then(response => {
       setModal(response.data); // 이미지를 상태에 저장합니다.
       console.log("이미지 모달 데이터 : ", response.data); // 이미지 데이터를 콘솔에 출력합니다.
