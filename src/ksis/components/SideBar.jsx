@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Link 컴포넌트 import
+import {Link} from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
@@ -20,11 +20,11 @@ import {
   VIDEO_FILE_BOARD,
   ACCESSLOG_INVENTORY,
 } from "../../constants/page_constant";
-import { jwtDecode } from "jwt-decode";
 import fetcher from "../../fetcher";
 import ksisLogo from "../../img/ksis-logo.png";
 import Notification from "../pages/notification/Notification"; // 알림 모달 컴포넌트 import
 import NotificationCountComponent from "../pages/notification/NotificationCount"; // 알림 개수 컴포넌트
+import { decodeJwt } from "../../decodeJwt";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -32,19 +32,10 @@ const Sidebar = () => {
   const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-
-        localStorage.setItem("authority", decodedToken.auth);
-        setUserInfo({
-          accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
-          roles: decodedToken.auth, // 토큰에서 권한 정보 가져오기
-        });
-      } catch (error) {
-        console.error("Failed to decode token", error);
-      }
+    const userInfo = decodeJwt();
+    if (userInfo) {
+      localStorage.setItem("authority", userInfo.roles);
+      setUserInfo(userInfo);
     }
   }, []);
 
