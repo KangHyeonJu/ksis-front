@@ -133,11 +133,10 @@ function App() {
       {!isNoSidebarRoute && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
-          <Route path={"/main"} element={<Main />} />
-          {/* 접근제어 페이지 */}
-          {/*<Route element={<ProtectedRoute />}>*/}
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
-          <Route element={<ProtectedRoute />}>
+          <Route path={"/downloadApp"} element={<DownloadApp />} />
+
+          {/*<Route element={<ProtectedRoute />}>*/}
             <Route path={"/main"} element={<Main />} />
 
             {/* 계정 관련 경로 */}
@@ -210,10 +209,8 @@ function App() {
               element={<ActivityLogBoard />}
             />
             <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
-          </Route>
+          {/*</Route>*/}
           {/* 다른 라우트들을 추가할 수 있습니다 */}
-          <Route path={"/downloadApp"} element={<DownloadApp />} />
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
         </Routes>
       </div>
     </div>

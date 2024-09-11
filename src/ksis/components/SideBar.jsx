@@ -115,7 +115,6 @@ const Sidebar = () => {
         </div>
         <div className="flex space-x-2 mb-4">
           <a
-            href="#"
             className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
             onClick={() => handleMenuClick("ACCOUNT_INFO")}
           >
