@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { NOTICE_BOARD, NOTICE_FORM } from '../../../constants/page_constant';
 import { NOTICE_LIST } from '../../../constants/api_constant';
+import fetcher from "../../../fetcher";
 
 const NoticeDetail = () => {
     const [notice, setNotice] = useState(null);
@@ -14,7 +14,7 @@ const NoticeDetail = () => {
     useEffect(() => {
         const fetchNotice = async () => {
             try {
-                const response = await axios.get(NOTICE_LIST+`/${noticeId}`);
+                const response = await fetcher.get(NOTICE_LIST+`/${noticeId}`);
                 const formattedNotice = formatNoticeDates(response.data);
                 console.log("데이터 : " , response.data);
                 setNotice(formattedNotice);
@@ -57,7 +57,7 @@ const NoticeDetail = () => {
     const handleDelete = async () => {
         if (window.confirm('정말로 이 공지사항을 삭제하시겠습니까?')) {
             try {
-                await axios.delete(`/api/notices/${noticeId}`);
+                await fetcher.delete(`${NOTICE_LIST}/${noticeId}`);
                 navigate(NOTICE_BOARD);
             } catch (err) {
                 setError('공지사항 삭제에 실패했습니다.');

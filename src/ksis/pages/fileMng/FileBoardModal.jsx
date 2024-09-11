@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Dialog } from "../../css/dialog";
 import { FILE_BASIC } from "../../../constants/api_constant";
-import axios from "axios";
+import fetcher from "../../../fetcher";
 
 const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {  
   const [modalData, setModalData] = useState([]); // 모달 데이터를 관리하기 위한 상태
 
   const loadModal = useCallback(async () => {
     try {
-      const response = await axios.get(FILE_BASIC + `/${originalResourceId}`);
+      const response = await fetcher.get(FILE_BASIC + `/${originalResourceId}`);
       setModalData([response.data]); // 서버에서 받은 데이터를 상태에 저장
       console.log("이미지 모달 데이터 : ", response.data);
     } catch (error) {

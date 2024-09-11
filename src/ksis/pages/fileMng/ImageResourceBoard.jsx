@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FaSearch, FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
 import {
   IMAGE_RESOURCE_BOARD,
   IMAGE_FILE_BOARD,
@@ -14,6 +13,7 @@ import {
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import ImageResourceModal from "./ImageResourceModal";
+import fetcher from "../../../fetcher";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const ImageResourceBoard = () => {
@@ -36,7 +36,7 @@ const ImageResourceBoard = () => {
   }, [isOriginal, navigate]);
 
   useEffect(() => {
-    axios
+    fetcher
       .get(RSIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
@@ -82,7 +82,7 @@ const ImageResourceBoard = () => {
   //제목 수정
   const handleSaveClick = async (id) => {
     try {
-      const response = await axios.put(FILE_ORIGINAL_BASIC + `/${id}`, null, {
+      const response = await fetcher.put(FILE_ORIGINAL_BASIC + `/${id}`, null, {
         params: { newTitle },
       });
       images.forEach((img) => {
@@ -106,7 +106,7 @@ const ImageResourceBoard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
       try {
-        await axios.delete(FILE_ORIGINAL_BASIC + `/${id}`);
+        await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
       } catch (err) {
         console.error("이미지 삭제 오류:", err);
@@ -208,7 +208,7 @@ const ImageResourceBoard = () => {
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          <Link to="">파일 등록</Link>
+          <Link to="ksis://open">파일 등록</Link>
         </button>
       </div>
 

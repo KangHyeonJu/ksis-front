@@ -196,10 +196,10 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
         },
       }}
     >
-      <div id="container" className="h-11/12 w-full"></div>
+      <div id="container" className="h-full w-full absolute"></div>
 
-      <div className="h-1/12 w-full bg-gray-800/10 flex items-center">
-        <div className="flex-auto text-center w-2/12 text-3xl font-bold text-black">
+      <div className="h-1/12 w-full bg-gray-800/10 flex items-center fixed bottom-0">
+        <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
           <img
             src={weather.icon}
             alt="이미지를 불러올 수 없습니다."
@@ -208,7 +208,7 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
           <div className="inline-flex ">{weather.temp}℃</div>
         </div>
 
-        <div className="overflow-hidden flex-auto w-8/12 ">
+        <div className="overflow-hidden flex-auto w-10/12">
           <div ref={scrollRef} className="whitespace-nowrap animate-flow">
             <span className="text-5xl font-bold text-black">
               {combinedNotices}
@@ -216,7 +216,7 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
           </div>
         </div>
 
-        <div className="flex-auto text-center w-2/12 text-3xl font-bold text-black">
+        <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
           {date.toLocaleTimeString()}
         </div>
       </div>

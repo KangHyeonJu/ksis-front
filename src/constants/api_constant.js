@@ -23,7 +23,12 @@ export const API_NOTICE = "/api/posts";
 export const API_BASIC = "/api";
 
 //notice
-export const NOTICE_LIST = "/api/notices";
+export const NOTICE_LIST = "/notices";
+
+//notification
+export const NOTIFICATION_LIST = "/api/notifications";
+export const NOTIFICATION_ISREAD = "/api/isRead";
+export const NOTIFICATION_COUNT = "/api/notifications/unread";
 
 //file
 export const FILE_SIZE = "/api/filesize";
@@ -44,3 +49,8 @@ export const ENCODING_RESOURCE_FILE = "/resourceList/files";
 //main
 export const TOTAL_FILE_SIZE = "/total/filesize";
 export const VISIT = "/total/visit";
+
+//log
+export const ACCESSLOG_LIST = "/log/access";
+export const ACTIVITYLOG_LIST = "/log/activity";
+export const UPLOADLOG_LIST = "/log/upload";
