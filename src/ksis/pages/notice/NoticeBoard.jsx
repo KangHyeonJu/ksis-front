@@ -2,9 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { NOTICE_FORM, NOTICE_DTL } from '../../../constants/page_constant';
-import { NOTICE_LIST } from '../../../constants/api_constant';
 import fetcher from "../../../fetcher";
+import { NOTICE_FORM, NOTICE_DTL } from '../../../constants/page_constant';
+import { NOTICE_ALL } from '../../../constants/api_constant';
 
 const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
@@ -18,7 +18,7 @@ const NoticeBoard = () => {
 
     useEffect(() => {
         setLoading(true);
-        fetcher.get(NOTICE_LIST)
+        fetcher.get(NOTICE_ALL)
             .then(response => {
                 setNotices(response.data);
                 console.log("공지 전체 조회 데이터 : " , response.data );
