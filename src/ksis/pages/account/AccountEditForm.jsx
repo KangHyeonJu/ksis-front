@@ -103,7 +103,11 @@ const AccountEditForm = () => {
             console.log(response)
             if (response.status === 200) {
                 alert("계정 정보가 성공적으로 업데이트되었습니다.");
-                navigate(ACCOUNT_LIST);
+                if(localStorage.getItem('authority') === 'ROLE_ADMIN'){
+                    navigate(ACCOUNT_LIST)
+                }else{
+                    navigate("/main")
+                }
             } else {
                 console.error("계정 업데이트에 실패했습니다.");
             }
