@@ -35,6 +35,7 @@ const Sidebar = () => {
     const userInfo = decodeJwt();
     if (userInfo) {
       localStorage.setItem("authority", userInfo.roles);
+      localStorage.setItem("accountId", userInfo.accountId);
       setUserInfo(userInfo);
     }
   }, []);
