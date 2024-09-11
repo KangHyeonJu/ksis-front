@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   NOTIFICATION_PAGE,
   NOTIFICATION_ISREAD,
@@ -12,6 +13,7 @@ const Notification = ({ onClose }) => {
   const [page, setPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
   const [pageSize] = useState(10); // 페이지당 알림 개수
+  const navigate = useNavigate();
 
   // 데이터베이스에서 알림 데이터 요청
   useEffect(() => {
@@ -29,6 +31,17 @@ const Notification = ({ onClose }) => {
 
     fetchNotifications(page); // 컴포넌트가 마운트되면 현재 페이지의 알림을 요청
   }, [page]); // 페이지 변경 시 데이터 다시 요청
+
+  // 알림 눌렀을때 타입에 따라 페이지 이동 메서드
+  const handleNavigate = (resourceType) => {
+    if (resourceType === "IMAGE") {
+      navigate("/imagefileboard");
+      onClose();
+    } else if (resourceType === "VIDEO") {
+      navigate("/videofileboard");
+      onClose();
+    }
+  };
 
   // 마우스를 올려놓으면 알림 읽음표시로 바꾸는 함수
   const handleMouseOver = async (index, notificationId) => {
@@ -54,7 +67,7 @@ const Notification = ({ onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       onClick={onClose} // 모달 바깥 클릭 시 모달 닫기
     >
       <div
@@ -83,6 +96,8 @@ const Notification = ({ onClose }) => {
                   onMouseEnter={() =>
                     handleMouseOver(index, notification.notificationId)
                   }
+                  onClick={() => handleNavigate(notification.resourceType)}
+                  style={{ cursor: "pointer" }}
                 >
                   <td className="py-2 px-4">{notification.message}</td>
                 </tr>
