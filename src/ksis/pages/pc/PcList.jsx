@@ -13,7 +13,9 @@ const PcList = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(PC_LIST);
+      const response = await fetcher.get(PC_LIST, {
+        params: { role: authority },
+      });
       console.log(response);
       if (response.data) {
         setPosts(response.data);

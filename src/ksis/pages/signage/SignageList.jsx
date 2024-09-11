@@ -18,7 +18,9 @@ const SignageList = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_LIST);
+      const response = await fetcher.get(SIGNAGE_LIST, {
+        params: { role: authority },
+      });
       console.log(response);
       if (response.data) {
         setSignages(response.data);
@@ -140,7 +142,7 @@ const SignageList = () => {
           <Link to={SIGNAGE_GRID}>그리드로 보기</Link>
         </button>
       </div>
-      {authority !== "ROLE_ADMIN" ? (
+      {authority === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 mb-4">
           <button
             type="button"

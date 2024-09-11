@@ -18,13 +18,18 @@ import {
   NOTICE_BOARD,
   IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
+  ACCESSLOG_INVENTORY,
 } from "../../constants/page_constant";
 import { jwtDecode } from "jwt-decode";
 import fetcher from "../../fetcher";
+import ksisLogo from "../../img/ksis-logo.png";
+import Notification from "../pages/notification/Notification"; // 알림 모달 컴포넌트 import
+import NotificationCountComponent from "../pages/notification/NotificationCount"; // 알림 개수 컴포넌트
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
+  const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -33,7 +38,6 @@ const Sidebar = () => {
         const decodedToken = jwtDecode(token);
 
         localStorage.setItem("authority", decodedToken.auth);
-        console.log(decodedToken);
         setUserInfo({
           accountId: decodedToken.sub, // 토큰에서 계정 ID 가져오기
           roles: decodedToken.auth, // 토큰에서 권한 정보 가져오기
@@ -48,14 +52,27 @@ const Sidebar = () => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
-  // const handleLogout = () => {
-  //   // 로그아웃 로직을 여기에 추가하세요
-  //   console.log("로그아웃");
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("authority");
-  //   window.location.href = "/downloadApp";
-  //
-  // };
+  const handleLogout = async () => {
+    // 로그아웃 로직을 여기에 추가하세요
+    const accountId = localStorage.getItem("accountId");
+
+    try {
+      // 서버로 로그아웃 요청 전송
+      await fetcher.delete(`/logout/${accountId}`);
+
+      await fetcher.post("/access-log", {
+        accountId,
+        category: "LOGOUT",
+      });
+      // 로그아웃 성공 시 로컬스토리지 토큰 제거
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("accountId");
+      localStorage.removeItem("authority");
+      window.location.href = "/downloadApp";
+    } catch (error) {
+      console.error("로그아웃 실패: ", error);
+    }
+  };
 
   const handleMenuClick = async (category) => {
     const accessLog = {
@@ -75,6 +92,11 @@ const Sidebar = () => {
 
   return (
     <div className="bg-[#ffcf8f] text-black h-screen w-64 p-4 flex flex-col">
+      {/* 알림 모달 창 표시 */}
+      {isNotificationOpen && (
+        <Notification onClose={() => setNotificationOpen(false)} />
+      )}
+
       <div>
         <div className="logo mb-8">
           <a
@@ -82,7 +104,7 @@ const Sidebar = () => {
             className="text-2xl font-semibold"
             onClick={() => handleMenuClick("MAIN")}
           >
-            KSIS
+            <img src={ksisLogo} alt="KSIS Logo" className="w-32" />
           </a>
         </div>
         <div className="mb-4">
@@ -102,10 +124,10 @@ const Sidebar = () => {
           </a>
           <a
             href="#"
-            className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
-            onClick={() => handleMenuClick("NOTIFICATION")}
+            className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+            onClick={() => setNotificationOpen(true)} // 알림 버튼 클릭 시 모달 열기
           >
-            <BiBell className="mr-1" />
+            <NotificationCountComponent />
             <span>알림</span>
           </a>
         </div>
@@ -124,18 +146,20 @@ const Sidebar = () => {
                 <div className="submenu ml-8 mt-2">
                   <Link
                     to="/accountList"
-                    className="block py-1"
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                     onClick={() => handleMenuClick("ACCOUNT_LIST")}
                   >
-                    계정목록 조회
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>계정목록 조회</span>
                   </Link>
-                  <a
-                    href="#"
-                    className="block py-1"
+                  <Link
+                    to={ACCESSLOG_INVENTORY}
                     onClick={() => handleMenuClick("LOG")}
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                   >
-                    로그기록
-                  </a>
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>로그 기록</span>
+                  </Link>
                 </div>
               )}
             </div>
@@ -245,18 +269,18 @@ const Sidebar = () => {
           )}
         </div>
       </div>
-      {/*<div className="mt-auto">*/}
-      {/*  <button*/}
-      {/*    onClick={() => {*/}
-      {/*      handleMenuClick('LOGOUT');*/}
-      {/*      handleLogout();*/}
-      {/*    }}*/}
-      {/*    className="w-full text-left flex items-center p-2 hover:bg-[#fe6500]/30 rounded"*/}
-      {/*  >*/}
-      {/*    <RiLogoutBoxRLine className="mr-2" />*/}
-      {/*    <span>로그아웃</span>*/}
-      {/*  </button>*/}
-      {/*</div>*/}
+      <div className="mt-auto">
+        <button
+          onClick={() => {
+            handleMenuClick("LOGOUT");
+            handleLogout();
+          }}
+          className="w-full text-left flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+        >
+          <RiLogoutBoxRLine className="mr-2" />
+          <span>로그아웃</span>
+        </button>
+      </div>
     </div>
   );
 };
