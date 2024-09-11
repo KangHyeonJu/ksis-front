@@ -133,10 +133,7 @@ function App() {
       {!isNoSidebarRoute && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
-          <Route path={"/main"} element={<Main />} />
           {/* 접근제어 페이지 */}
-          {/*<Route element={<ProtectedRoute />}>*/}
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route element={<ProtectedRoute />}>
             <Route path={"/main"} element={<Main />} />
 
