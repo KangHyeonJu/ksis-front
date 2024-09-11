@@ -21,7 +21,7 @@ const NoticeBoard = () => {
         fetcher.get(NOTICE_ALL)
             .then(response => {
                 setNotices(response.data);
-                console.log("공지 전체 조회 데이터 : " , response.data );
+                console.log("공지 전체 조회 데이터 : ", response.data);
             })
             .catch(err => {
                 setError('데이터를 가져오는 데 실패했습니다.');
@@ -31,12 +31,11 @@ const NoticeBoard = () => {
             });
     }, []);
 
-    const filteredNotices = useMemo(() =>
-        notices.filter(notice =>
+    const filteredNotices = useMemo(() => {
+        return notices.filter(notice =>
             notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-        ),
-        [notices, searchTerm]
-    );
+        );
+    }, [notices, searchTerm]);
 
     const paginatedNotices = useMemo(() => {
         const startIndex = currentPage * noticesPerPage;
@@ -107,13 +106,26 @@ const NoticeBoard = () => {
                         </thead>
                         <tbody>
                             {paginatedNotices.map((notice) => (
-                                <tr key={notice.noticeId} onClick={() => handleNoticeClick(notice.noticeId)} className="cursor-pointer">
+                                <tr
+                                    key={notice.noticeId}
+                                    onClick={() => handleNoticeClick(notice.noticeId)}
+                                    className="cursor-pointer"
+                                >
                                     {/* 작성일은 YYYY-MM-DD 형식으로 포맷팅 */}
-                                    <td className="border border-gray-300 p-2">{new Date(notice.regTime).toISOString().split('T')[0]}</td>
+                                    <td className="border border-gray-300 p-2">
+                                        {new Date(notice.regTime).toISOString().split('T')[0]}
+                                    </td>
                                     {/* 작성자 이름과 아이디를 함께 표시 */}
-                                    <td className="border border-gray-300 p-2">{notice.name} ({notice.accountId})</td>
+                                    <td className="border border-gray-300 p-2">
+                                        {notice.name} ({notice.accountId})
+                                    </td>
                                     <td className="border border-gray-300 p-2">{notice.title}</td>
-                                    <td className="border border-gray-300 p-2">{notice.deviceName}</td>
+                                    {/* 수정된 부분: 재생장치 목록을 표시 */}
+                                    <td className="border border-gray-300 p-2">
+                                        {notice.deviceIds && notice.deviceIds.length > 0
+                                            ? notice.deviceIds.join(', ')
+                                            : '없음'}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

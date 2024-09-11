@@ -4,9 +4,10 @@ import fetcher from "../../../fetcher";
 import { NOTICE_BOARD } from '../../../constants/page_constant';
 import { NOTICE_LIST, SIGNAGE_LIST } from '../../../constants/api_constant';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
-
+import { format, parseISO } from 'date-fns';
 const NoticeForm = () => {
     const [formData, setFormData] = useState({
+        accountId: '',
         title: '',
         content: '',
         startDate: '',
@@ -17,6 +18,7 @@ const NoticeForm = () => {
     const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
     const { noticeId } = useParams();
+    
 
     // 디바이스 목록을 불러오는 useEffect
     useEffect(() => {
@@ -49,9 +51,10 @@ const NoticeForm = () => {
                 try {
                     const response = await fetcher.get(NOTICE_LIST+`/${noticeId}`);
                     console.error('공지사항 상황:', response);
-                    const { title, content, startDate, endDate, deviceIds = [] } = response.data;
+                    const { accountId, title, content, startDate, endDate, deviceIds = [] } = response.data;
                     console.error('공지사항 데이터:', response.data);
                     setFormData({
+                        accountId,
                         title,
                         content,
                         startDate,
@@ -70,7 +73,7 @@ const NoticeForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { title, content, startDate, endDate, deviceIds } = formData;
+        const { accountId, title, content, startDate, endDate, deviceIds } = formData;
 
         if (!title.trim() || !content.trim() || !startDate || !endDate) {
             alert('제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.');
@@ -84,6 +87,7 @@ const NoticeForm = () => {
 
         try {
             const noticeData = {
+                accountId,
                 title,
                 content,
                 startDate,
@@ -94,6 +98,7 @@ const NoticeForm = () => {
             const response = isEditing 
                 ? await fetcher.put(NOTICE_LIST + `/${noticeId}`, noticeData) 
                 : await fetcher.post(NOTICE_LIST , noticeData);
+                console.log(noticeData);
 
             if ([200, 201, 204].includes(response.status)) {
                 navigate(-1);
@@ -132,6 +137,15 @@ const NoticeForm = () => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
+
+    const formatDate = (dateString) => {
+        try {
+            const date = parseISO(dateString);
+            return format(date, "yyyy-MM-dd");
+        } catch (error) {
+            console.error('Invalid date format:', dateString);
+            return 'Invalid date';
+        }}
 
     return (
         <div className="p-6 max-w-2xl mx-auto">
@@ -239,6 +253,7 @@ const NoticeForm = () => {
                             type="submit"
                             className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                         >
+                            
                             {isEditing ? '수정하기' : '등록하기'}
                         </button>
                         <button
