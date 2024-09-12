@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
-import {ACCOUNT_FORM, ACCOUNT_LIST} from "../../../constants/account_constant";
+import {ACCOUNT_CREATE, ACCOUNT_LIST_BOARD} from "../../../constants/account_constant";
 
 const AccountRegForm = () => {
     const [formData, setFormData] = useState({
@@ -77,7 +77,7 @@ const AccountRegForm = () => {
         };
 
         try {
-            const response = await fetcher.post(ACCOUNT_FORM, cleanedFormData, {
+            const response = await fetcher.post(ACCOUNT_CREATE, cleanedFormData, {
             });
             setFormData({
                 accountId: '',
@@ -93,7 +93,7 @@ const AccountRegForm = () => {
             });
 
             console.log(cleanedFormData);
-            navigate(ACCOUNT_LIST);
+            navigate(ACCOUNT_LIST_BOARD);
         } catch (error) {
             console.error('Error creating account:', error);
             console.log('Form Data:', JSON.stringify(cleanedFormData));
@@ -302,7 +302,7 @@ const AccountRegForm = () => {
                             type="button"
                             className="bg-[#ff0000] text-white rounded-full px-4 py-2 font-semibold hover:bg-red-700"
                         >
-                            <Link to={ACCOUNT_LIST}>취소</Link>
+                            <Link to={ACCOUNT_LIST_BOARD}>취소</Link>
                         </button>
                     </div>
                 </form>
