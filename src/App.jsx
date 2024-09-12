@@ -36,7 +36,7 @@ import {
 import {
   ACCOUNT_EDIT_FORM,
   ACCOUNT_FORM,
-  ACCOUNT_LIST,
+  ACCOUNT_LIST_BOARD,
   TOKEN_CALLBACK,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
@@ -84,7 +84,8 @@ function App() {
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
 
   useEffect(() => {
-    let eventSource = new EventSource("http://localhost:8080/events");
+    // let eventSource = new EventSource("http://localhost:8080/events");
+    let eventSource = new EventSource("http://125.6.38.247/api/events");
 
     eventSource.addEventListener("logout", (event) => {
       alert("로그아웃 되었습니다.");
@@ -133,16 +134,15 @@ function App() {
       {!isNoSidebarRoute && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
-          <Route path={"/main"} element={<Main />} />
-          {/* 접근제어 페이지 */}
-          {/*<Route element={<ProtectedRoute />}>*/}
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
+          <Route path={"/downloadApp"} element={<DownloadApp />} />
+
           <Route element={<ProtectedRoute />}>
             <Route path={"/main"} element={<Main />} />
 
             {/* 계정 관련 경로 */}
             <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
-            <Route path={ACCOUNT_LIST} element={<AccountList />} />
+            <Route path={ACCOUNT_LIST_BOARD} element={<AccountList />} />
             <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm />} />
 
             {/* PC 관련 경로 */}
@@ -212,8 +212,6 @@ function App() {
             <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
           </Route>
           {/* 다른 라우트들을 추가할 수 있습니다 */}
-          <Route path={"/downloadApp"} element={<DownloadApp />} />
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
         </Routes>
       </div>
     </div>

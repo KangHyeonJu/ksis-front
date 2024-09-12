@@ -1,32 +1,47 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
-  NOTIFICATION_LIST,
+  NOTIFICATION_PAGE,
   NOTIFICATION_ISREAD,
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const Notification = ({ onClose }) => {
-  const [notifications, setNotifications] = useState([]);
-
-  // 읽지 않은 알림 개수를 계산하는 함수
-  const getUnreadCount = () => {
-    return notifications.filter((notification) => !notification.isRead).length;
-  };
+  const [notifications, setNotifications] = useState([]); // 알림 데이터
+  const [page, setPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+  const [pageSize] = useState(10); // 페이지당 알림 개수
+  const navigate = useNavigate();
 
   // 데이터베이스에서 알림 데이터 요청
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetcher.get(NOTIFICATION_LIST);
-        setNotifications(response.data);
+        const response = await fetcher.get(
+          `${NOTIFICATION_PAGE}?page=${page}&size=${pageSize}`
+        );
+        setNotifications(response.data.content); // 현재 페이지 알림 데이터
+        setTotalPages(response.data.totalPages); // 전체 페이지 수 설정
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
     };
 
-    fetchNotifications();
-  }, []);
+    fetchNotifications(page); // 컴포넌트가 마운트되면 현재 페이지의 알림을 요청
+  }, [page]); // 페이지 변경 시 데이터 다시 요청
+
+  // 알림 눌렀을때 타입에 따라 페이지 이동 메서드
+  const handleNavigate = (resourceType) => {
+    if (resourceType === "IMAGE") {
+      navigate("/imagefileboard");
+      onClose();
+    } else if (resourceType === "VIDEO") {
+      navigate("/videofileboard");
+      onClose();
+    }
+  };
 
   // 마우스를 올려놓으면 알림 읽음표시로 바꾸는 함수
   const handleMouseOver = async (index, notificationId) => {
@@ -45,16 +60,21 @@ const Notification = ({ onClose }) => {
     }
   };
 
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, value) => {
+    setPage(value); // 선택된 페이지로 상태 업데이트
+  };
+
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       onClick={onClose} // 모달 바깥 클릭 시 모달 닫기
     >
       <div
         className="bg-white p-6 rounded shadow-lg w-1/3"
         onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫히지 않게
       >
-        <h2 className="text-xl font-semibold mb-4">알림({getUnreadCount()})</h2>
+        <h2 className="text-xl font-semibold mb-4">알림</h2>
 
         {/* 알림 목록을 테이블로 표시 */}
         <table className="w-full table-auto">
@@ -76,6 +96,8 @@ const Notification = ({ onClose }) => {
                   onMouseEnter={() =>
                     handleMouseOver(index, notification.notificationId)
                   }
+                  onClick={() => handleNavigate(notification.resourceType)}
+                  style={{ cursor: "pointer" }}
                 >
                   <td className="py-2 px-4">{notification.message}</td>
                 </tr>
@@ -83,6 +105,15 @@ const Notification = ({ onClose }) => {
             )}
           </tbody>
         </table>
+        <br />
+        <Stack spacing={2}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
       </div>
     </div>
   );

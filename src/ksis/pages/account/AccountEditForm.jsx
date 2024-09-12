@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import fetcher from "../../../fetcher";
-import { ACCOUNT_FORM, ACCOUNT_LIST } from "../../../constants/account_constant";
+import {ACCOUNT_FORM, ACCOUNT_LIST_BOARD} from "../../../constants/account_constant";
+import { decodeJwt } from "../../../decodeJwt";
 
 const AccountEditForm = () => {
     const { accountId } = useParams();
@@ -21,6 +22,15 @@ const AccountEditForm = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+
+        const userInfo = decodeJwt();
+
+        if (userInfo.accountId !== accountId && !userInfo.roles.includes("ROLE_ADMIN")) {
+            alert("본인 계정이거나 관리자만 접근 가능합니다.");
+            navigate("/main");
+            return;
+        }
+
         // 계정 데이터를 가져와서 폼에 설정합니다.
         const fetchAccountData = async () => {
             try {
@@ -103,7 +113,11 @@ const AccountEditForm = () => {
             console.log(response)
             if (response.status === 200) {
                 alert("계정 정보가 성공적으로 업데이트되었습니다.");
-                navigate(ACCOUNT_LIST);
+                if(localStorage.getItem('authority') === 'ROLE_ADMIN'){
+                    navigate(ACCOUNT_LIST_BOARD)
+                }else{
+                    navigate("/main")
+                }
             } else {
                 console.error("계정 업데이트에 실패했습니다.");
             }
@@ -321,7 +335,7 @@ const AccountEditForm = () => {
                             저장
                         </button>
                         <Link
-                            to={localStorage.getItem('authority') === 'ROLE_ADMIN' ? ACCOUNT_LIST : "/main"}
+                            to={localStorage.getItem('authority') === 'ROLE_ADMIN' ? ACCOUNT_LIST_BOARD : "/main"}
                             className="bg-[#ff0000] hover:bg-red-400 mt-4 mx-1 py-1.5 px-4 rounded-full text-sm font-semibold leading-6 text-white shadow-sm"
                         >
                             취소

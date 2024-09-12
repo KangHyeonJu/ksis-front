@@ -2,15 +2,16 @@ import React, {useEffect, useMemo, useState} from "react";
 import fetcher from "../../../fetcher";
 import {ACCOUNT_FORM, ACCOUNT_LIST} from "../../../constants/account_constant";
 import {FaSearch} from "react-icons/fa";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import ReactPaginate from "react-paginate";
+import {decodeJwt} from "../../../decodeJwt";
 
 const AccountList = () => {
     const [posts, setPosts] = useState([]);
-
+    const navigate = useNavigate();
     const loadPage = async () => {
         try {
-            const response = await fetcher.get('/admin' + ACCOUNT_LIST);
+            const response = await fetcher.get(ACCOUNT_LIST);
             console.log(response); // 응답 객체 확인을 위해 콘솔 출력
             if (response.data) {
                 setPosts(response.data);
@@ -25,6 +26,12 @@ const AccountList = () => {
 
     useEffect(() => {
         loadPage();
+        const userInfo = decodeJwt();
+
+        if (!userInfo.roles.includes("ROLE_ADMIN")) {
+            alert("관리자만 접근 가능합니다.");
+            navigate("/main");
+        }
     }, []);
 
     const [searchTerm, setSearchTerm] = useState("");

@@ -27,7 +27,7 @@ export const NOTICE_LIST = "/notices";
 export const NOTICE_ALL = "/notices/all";
 
 //notification
-export const NOTIFICATION_LIST = "/api/notifications";
+export const NOTIFICATION_PAGE = "/api/notifications";
 export const NOTIFICATION_ISREAD = "/api/isRead";
 export const NOTIFICATION_COUNT = "/api/notifications/unread";
 
