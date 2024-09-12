@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { NOTICE_BOARD, NOTICE_FORM } from '../../../constants/page_constant';
 import { NOTICE_LIST } from '../../../constants/api_constant';
 import fetcher from "../../../fetcher";
+import { format, parseISO } from 'date-fns';
 
 const NoticeDetail = () => {
     const [notice, setNotice] = useState(null);
@@ -15,9 +16,8 @@ const NoticeDetail = () => {
         const fetchNotice = async () => {
             try {
                 const response = await fetcher.get(NOTICE_LIST+`/${noticeId}`);
-                const formattedNotice = formatNoticeDates(response.data);
                 console.log("데이터 : " , response.data);
-                setNotice(formattedNotice);
+                setNotice(response.data)
             } catch (err) {
                 setError('공지사항 정보를 가져오는 데 실패했습니다.');
             } finally {
@@ -28,19 +28,6 @@ const NoticeDetail = () => {
         fetchNotice();
     }, [noticeId]);
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toISOString().split('T')[0];
-    };
-
-    const formatNoticeDates = (notice) => {
-        return {
-            ...notice,
-            regTime: formatDate(notice.regTime),
-            startDate: formatDate(notice.startDate),
-            endDate: formatDate(notice.endDate),
-        };
-    };
 
     if (loading) {
         return <p>로딩 중...</p>;
@@ -73,6 +60,33 @@ const NoticeDetail = () => {
         navigate(NOTICE_BOARD);
     };
 
+     // deviceList에서 deviceName을 추출하는 함수
+     const getDeviceNames = (deviceList) => {
+        if (!deviceList || deviceList.length === 0) {
+            return '없음'; // deviceList가 비어 있으면 '없음' 표시
+        }
+
+        // 각 디바이스의 deviceName을 추출하고, 콤마로 구분하여 반환
+        const deviceNames = deviceList.map(device => device.deviceName);
+        return deviceNames.join(', '); // 디바이스 이름을 콤마로 구분
+    };
+
+    const formatDate = (dateString) => {
+        // dateString이 유효한지 먼저 체크
+        if (!dateString) {
+            return '날짜 없음'; // dateString이 null 또는 undefined일 때 처리
+        }
+    
+        try {
+            // parseISO 함수로 변환, 변환 실패 시 catch로 넘어감
+            const date = parseISO(dateString);
+            return format(date, "yyyy-MM-dd");
+        } catch (error) {
+            console.error('Invalid date format:', dateString);
+            return 'Invalid date'; // 오류 발생 시 처리
+        }
+    };
+
     return (
         <div className="p-6 max-w-2xl mx-auto">
             <header className="mb-6">
@@ -92,10 +106,11 @@ const NoticeDetail = () => {
                                 <input
                                     id="device_id"
                                     type="text"
-                                    value={notice.deviceIds ? notice.deviceIds.join(', ') : ''}
+                                    value={getDeviceNames(notice.deviceList)}
                                     readOnly
                                     className="ml-0 flex-1 p-2 border border-gray-300 rounded-md shadow-sm bg-white"
                                 />
+                                
                             </div>
                             <div className="flex-1 flex items-center">
                                 <label
@@ -107,7 +122,7 @@ const NoticeDetail = () => {
                                 <input
                                     id="regTime"
                                     type="text"
-                                    value={notice.regTime}
+                                    value={formatDate(notice.regDate)}
                                     readOnly
                                     className="ml-0 flex-1 p-2 border border-gray-300 rounded-md shadow-sm bg-white"
                                 />
@@ -140,7 +155,7 @@ const NoticeDetail = () => {
                                     <input
                                         id="startDate"
                                         type="date"
-                                        value={notice.startDate}
+                                        value={formatDate(notice.startDate)}
                                         readOnly
                                         className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
                                     />
@@ -151,7 +166,7 @@ const NoticeDetail = () => {
                                     <input
                                         id="endDate"
                                         type="date"
-                                        value={notice.endDate}
+                                        value={formatDate(notice.endDate)}
                                         readOnly
                                         className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
                                     />

@@ -228,7 +228,7 @@ const NoticeForm = () => {
                                         id="startDate"
                                         name="startDate"
                                         type="date"
-                                        value={formData.startDate}
+                                        value={formatDate(formData.startDate)}
                                         onChange={handleChange}
                                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     />
@@ -240,7 +240,7 @@ const NoticeForm = () => {
                                         id="endDate"
                                         name="endDate"
                                         type="date"
-                                        value={formData.endDate}
+                                        value={formatDate(formData.endDate)}
                                         onChange={handleChange}
                                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     />
