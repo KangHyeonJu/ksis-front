@@ -60,6 +60,7 @@ const NoticeForm = () => {
                         startDate,
                         endDate,
                         deviceIds: deviceIds.length ? deviceIds : ['']
+                        //디바이스id가 없을경우 공백으로 처리
                     });
                 } catch (error) {
                     console.error('공지글을 불러오는 중 오류 발생:', error);
