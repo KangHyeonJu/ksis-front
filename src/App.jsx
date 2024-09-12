@@ -85,6 +85,7 @@ function App() {
 
   useEffect(() => {
     let eventSource = new EventSource("http://localhost:8080/events");
+    // let eventSource = new EventSource("http://125.6.38.247/api/events");
 
     eventSource.addEventListener("logout", (event) => {
       alert("로그아웃 되었습니다.");
@@ -136,7 +137,7 @@ function App() {
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route path={"/downloadApp"} element={<DownloadApp />} />
 
-          {/*<Route element={<ProtectedRoute />}>*/}
+          <Route element={<ProtectedRoute />}>
             <Route path={"/main"} element={<Main />} />
 
             {/* 계정 관련 경로 */}
@@ -209,7 +210,7 @@ function App() {
               element={<ActivityLogBoard />}
             />
             <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
-          {/*</Route>*/}
+          </Route>
           {/* 다른 라우트들을 추가할 수 있습니다 */}
         </Routes>
       </div>

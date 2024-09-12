@@ -35,6 +35,12 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
   useEffect(() => {
     const scrollContainer = scrollRef.current;
 
+    navigator.geolocation.getCurrentPosition((position) => {
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+      getWeather(lat, lon);
+    });
+
     if (scrollContainer) {
       const handleAnimationIteration = () => {
         scrollContainer.appendChild(scrollContainer.firstChild.cloneNode(true));
@@ -145,14 +151,6 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
   const tick = () => {
     setDate(new Date());
   };
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      let lat = position.coords.latitude;
-      let lon = position.coords.longitude;
-      getWeather(lat, lon);
-    });
-  }, []);
 
   const getWeather = async (lat, lon) => {
     const apiKey = process.env.REACT_APP_WEATHER_KEY;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Link} from "react-router-dom"; // Link 컴포넌트 import
+import { Link } from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import fetcher from "../../../fetcher";
 import { NOTICE_BOARD } from "../../../constants/page_constant";
 import { NOTICE_LIST, SIGNAGE_LIST } from "../../../constants/api_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
-import fetcher from "../../../fetcher";
-
+import { format, parseISO } from "date-fns";
 const NoticeForm = () => {
   const [formData, setFormData] = useState({
+    accountId: "",
     title: "",
     content: "",
     startDate: "",
@@ -21,9 +22,13 @@ const NoticeForm = () => {
   // 디바이스 목록을 불러오는 useEffect
   useEffect(() => {
     const fetchDevices = async () => {
+      const authority = localStorage.getItem("authority");
       try {
-        const response = await fetcher.get({ SIGNAGE_LIST }); // 백엔드 API에서 디바이스 목록을 불러옴
-        console.log(response.data);
+        const response = await fetcher.get(SIGNAGE_LIST, {
+          params: { role: authority },
+        });
+        // 백엔드 API에서 디바이스 목록을 불러옴
+        console.log("사이니지 불러오기:", response.data);
         setDeviceOptions(
           response.data.map((device) => ({
             value: device.deviceId,
@@ -46,7 +51,9 @@ const NoticeForm = () => {
       const fetchNotice = async () => {
         try {
           const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
+          console.error("공지사항 상황:", response);
           const {
+            accountId,
             title,
             content,
             startDate,
@@ -55,11 +62,13 @@ const NoticeForm = () => {
           } = response.data;
           console.error("공지사항 데이터:", response.data);
           setFormData({
+            accountId,
             title,
             content,
             startDate,
             endDate,
             deviceIds: deviceIds.length ? deviceIds : [""],
+            //디바이스id가 없을경우 공백으로 처리
           });
         } catch (error) {
           console.error("공지글을 불러오는 중 오류 발생:", error);
@@ -73,7 +82,8 @@ const NoticeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { title, content, startDate, endDate, deviceIds } = formData;
+    const { accountId, title, content, startDate, endDate, deviceIds } =
+      formData;
 
     if (!title.trim() || !content.trim() || !startDate || !endDate) {
       alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
@@ -87,6 +97,7 @@ const NoticeForm = () => {
 
     try {
       const noticeData = {
+        accountId,
         title,
         content,
         startDate,
@@ -97,6 +108,7 @@ const NoticeForm = () => {
       const response = isEditing
         ? await fetcher.put(NOTICE_LIST + `/${noticeId}`, noticeData)
         : await fetcher.post(NOTICE_LIST, noticeData);
+      console.log(noticeData);
 
       if ([200, 201, 204].includes(response.status)) {
         navigate(-1);
@@ -136,6 +148,16 @@ const NoticeForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const formatDate = (dateString) => {
+    try {
+      const date = parseISO(dateString);
+      return format(date, "yyyy-MM-dd");
+    } catch (error) {
+      console.error("Invalid date format:", dateString);
+      return "Invalid date";
+    }
   };
 
   return (
@@ -224,7 +246,7 @@ const NoticeForm = () => {
                     id="startDate"
                     name="startDate"
                     type="date"
-                    value={formData.startDate}
+                    value={formatDate(formData.startDate)}
                     onChange={handleChange}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
@@ -241,7 +263,7 @@ const NoticeForm = () => {
                     id="endDate"
                     name="endDate"
                     type="date"
-                    value={formData.endDate}
+                    value={formatDate(formData.endDate)}
                     onChange={handleChange}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
