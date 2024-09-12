@@ -2,9 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ReactPaginate from 'react-paginate';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { NOTICE_FORM, NOTICE_DTL } from '../../../constants/page_constant';
-import { NOTICE_LIST } from '../../../constants/api_constant';
 import fetcher from "../../../fetcher";
+import { NOTICE_FORM, NOTICE_DTL } from '../../../constants/page_constant';
+import { NOTICE_ALL } from '../../../constants/api_constant';
+import { format, parseISO } from 'date-fns';
 
 const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
@@ -18,10 +19,10 @@ const NoticeBoard = () => {
 
     useEffect(() => {
         setLoading(true);
-        fetcher.get(NOTICE_LIST)
+        fetcher.get(NOTICE_ALL)
             .then(response => {
                 setNotices(response.data);
-                console.log("공지 전체 조회 데이터 : " , response.data );
+                console.log("공지 전체 조회 데이터 : ", response.data);
             })
             .catch(err => {
                 setError('데이터를 가져오는 데 실패했습니다.');
@@ -31,12 +32,11 @@ const NoticeBoard = () => {
             });
     }, []);
 
-    const filteredNotices = useMemo(() =>
-        notices.filter(notice =>
+    const filteredNotices = useMemo(() => {
+        return notices.filter(notice =>
             notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-        ),
-        [notices, searchTerm]
-    );
+        );
+    }, [notices, searchTerm]);
 
     const paginatedNotices = useMemo(() => {
         const startIndex = currentPage * noticesPerPage;
@@ -66,6 +66,34 @@ const NoticeBoard = () => {
     if (error) {
         return <p>오류 발생: {error}</p>;
     }
+    
+    const formatDate = (dateString) => {
+        // dateString이 유효한지 먼저 체크
+        if (!dateString) {
+            return '날짜 없음'; // dateString이 null 또는 undefined일 때 처리
+        }
+    
+        try {
+            // parseISO 함수로 변환, 변환 실패 시 catch로 넘어감
+            const date = parseISO(dateString);
+            return format(date, "yyyy-MM-dd");
+        } catch (error) {
+            console.error('Invalid date format:', dateString);
+            return 'Invalid date'; // 오류 발생 시 처리
+        }
+    };
+
+    // deviceList에서 deviceName을 추출하는 함수
+    const getDeviceNames = (deviceList) => {
+        if (!deviceList || deviceList.length === 0) {
+            return '없음'; // deviceList가 비어 있으면 '없음' 표시
+        }
+
+        // 각 디바이스의 deviceName을 추출하고, 콤마로 구분하여 반환
+        const deviceNames = deviceList.map(device => device.deviceName);
+        return deviceNames.join(', '); // 디바이스 이름을 콤마로 구분
+    };
+
 
     return (
         <div className="p-6">
@@ -107,13 +135,24 @@ const NoticeBoard = () => {
                         </thead>
                         <tbody>
                             {paginatedNotices.map((notice) => (
-                                <tr key={notice.noticeId} onClick={() => handleNoticeClick(notice.noticeId)} className="cursor-pointer">
+                                <tr
+                                    key={notice.noticeId}
+                                    onClick={() => handleNoticeClick(notice.noticeId)}
+                                    className="cursor-pointer"
+                                >
                                     {/* 작성일은 YYYY-MM-DD 형식으로 포맷팅 */}
-                                    <td className="border border-gray-300 p-2">{new Date(notice.regTime).toISOString().split('T')[0]}</td>
+                                    <td className="border border-gray-300 p-2">
+                                         {formatDate(notice.regDate)} 
+                                    </td>
                                     {/* 작성자 이름과 아이디를 함께 표시 */}
-                                    <td className="border border-gray-300 p-2">{notice.name} ({notice.accountId})</td>
+                                    <td className="border border-gray-300 p-2">
+                                        {notice.name} ({notice.accountId})
+                                    </td>
                                     <td className="border border-gray-300 p-2">{notice.title}</td>
-                                    <td className="border border-gray-300 p-2">{notice.deviceName}</td>
+                                  {/* deviceList에서 deviceName을 추출하여 표시 */}
+                                  <td className="border border-gray-300 p-2">
+                                        {getDeviceNames(notice.deviceList)}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

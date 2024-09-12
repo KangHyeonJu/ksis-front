@@ -24,6 +24,7 @@ export const API_BASIC = "/api";
 
 //notice
 export const NOTICE_LIST = "/notices";
+export const NOTICE_ALL = "/notices/all";
 
 //notification
 export const NOTIFICATION_PAGE = "/api/notifications";
