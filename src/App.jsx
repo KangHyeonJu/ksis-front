@@ -135,7 +135,7 @@ function App() {
         <Routes>
           <Route path={"/main"} element={<Main />} />
           {/* 접근제어 페이지 */}
-          {/*<Route element={<ProtectedRoute />}>*/}
+          {/* <Route element={<ProtectedRoute />}> */}
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route element={<ProtectedRoute />}>
             <Route path={"/main"} element={<Main />} />
