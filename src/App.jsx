@@ -84,8 +84,8 @@ function App() {
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
 
   useEffect(() => {
-    let eventSource = new EventSource("http://localhost:8080/events");
-    // let eventSource = new EventSource("http://125.6.38.247/api/events");
+    // let eventSource = new EventSource("http://localhost:8080/events");
+    let eventSource = new EventSource("http://125.6.38.247/api/events");
 
     eventSource.addEventListener("logout", (event) => {
       alert("로그아웃 되었습니다.");

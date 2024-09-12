@@ -20,8 +20,8 @@ const NotificationCountComponent = () => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken"); // 로컬 스토리지에서 토큰 가져오기
     const eventSource = new EventSourcePolyfill(
-      "http://localhost:8080/sse/notifications",
-      // "http://125.6.38.247/api/sse/notifications",
+      // "http://localhost:8080/sse/notifications",
+      "http://125.6.38.247/api/sse/notifications",
       {
         headers: {
           Authorization: `Bearer ${token}`, // 토큰을 헤더에 추가
