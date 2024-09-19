@@ -1,8 +1,16 @@
-FROM node:lts-alpine as build  
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-COPY . .  
+FROM node:lts-alpine3.18 as build
+
+# Set the working directory
+WORKDIR /usr/app
+
+# Install all the dependencies
+COPY ./package.json /usr/app/package.json
+RUN npm install
+
+# Add the source code to app
+COPY ./src /usr/app/src
+
+# Generate the build of the application
 RUN npm run build
   
 FROM nginx:stable-alpine  
