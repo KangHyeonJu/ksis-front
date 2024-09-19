@@ -67,7 +67,7 @@ pipeline {
                         sh """
                         docker run \
                           --name=fe_ksis \
-                          -p 82:80 \
+                          -p 80:80 \
                           -v /docker_projects/fe_ksis/volumes/gen:/gen \
                           --restart unless-stopped \
                           --network app \
