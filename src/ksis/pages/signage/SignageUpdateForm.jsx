@@ -2,17 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
-import { SIGNAGE_ADD, SIGNAGE_UPDATE } from "../../../constants/api_constant";
-import { SIGNAGE_DTL } from "../../../constants/page_constant";
+import {
+  SIGNAGE_ACCOUNT,
+  SIGNAGE_UPDATE,
+} from "../../../constants/api_constant";
+import {
+  SIGNAGE_INVENTORY,
+  SIGNAGE_DTL,
+} from "../../../constants/page_constant";
 
 const SignageUpdateForm = () => {
   const authority = localStorage.getItem("authority");
+  const loginAccountId = localStorage.getItem("accountId");
+  const navigate = useNavigate();
+
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isReadOnly, setIsReadOnly] = useState(true);
+  const [accounts, setAccounts] = useState([]);
 
   const loadPcDtl = async (signageId) => {
     try {
@@ -25,6 +35,30 @@ const SignageUpdateForm = () => {
         resolution,
         ...rest
       } = response.data;
+
+      const accountGet = await fetcher.get(SIGNAGE_ACCOUNT);
+      console.log(response);
+      if (accountGet.data) {
+        setAccounts(accountGet.data);
+      } else {
+        console.error("No data property in response");
+      }
+
+      setResponsibles(
+        accountList.map((account, index) => ({
+          id: index,
+          accountId: account.accountId,
+        }))
+      );
+
+      if (
+        authority !== "ROLE_ADMIN" &&
+        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(SIGNAGE_INVENTORY);
+      }
+
       setData(rest);
       setAddress(location);
       setMacAddress(macAddress);
@@ -33,13 +67,6 @@ const SignageUpdateForm = () => {
       const screen = screenSize.split(" x ");
       setWidth(screen[0]);
       setHeight(screen[1]);
-
-      setResponsibles(
-        accountList.map((account, index) => ({
-          id: index,
-          accountId: account.accountId,
-        }))
-      );
     } catch (error) {
       console.log(error.response);
     }
@@ -115,31 +142,7 @@ const SignageUpdateForm = () => {
     }).open();
   };
 
-  //전체 user불러오기
-  const [accounts, setAccounts] = useState([]);
-
-  const accountGet = async () => {
-    try {
-      const response = await fetcher.get(SIGNAGE_ADD);
-      console.log(response);
-      if (response.data) {
-        setAccounts(response.data);
-      } else {
-        console.error("No data property in response");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      alert(error.response?.data || "Unknown error occurred");
-    }
-  };
-
-  useEffect(() => {
-    accountGet();
-  }, []);
-
   // 이전 페이지로 이동
-  const navigate = useNavigate();
-
   const onCancel = () => {
     navigate(-1);
   };

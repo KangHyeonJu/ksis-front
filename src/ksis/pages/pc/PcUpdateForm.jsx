@@ -7,6 +7,8 @@ import { PC_INVENTORY } from "../../../constants/page_constant";
 
 const PcUpdateForm = () => {
   const authority = localStorage.getItem("authority");
+  const loginAccountId = localStorage.getItem("accountId");
+
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
@@ -17,6 +19,15 @@ const PcUpdateForm = () => {
   const loadPcDtl = async (pcId) => {
     try {
       const response = await fetcher.get(PC_LIST + `/${pcId}`);
+
+      if (
+        authority !== "ROLE_ADMIN" &&
+        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(PC_INVENTORY);
+      }
+
       const { accountList, location, macAddress, ...rest } = response.data;
       setData(rest);
       setAddress(location);

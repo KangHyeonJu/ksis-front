@@ -16,6 +16,7 @@ export const SIGNAGE_PLAY = "/signage/play";
 export const SIGNAGE_PLAY_NOTICE = "/signage/play/notice";
 export const SIGNAGE_ACCOUNT_RESOURCE = "/signage/accountResource";
 export const SIGNAGE_ADD_RESOURCE = "/signage/resource/add";
+export const SIGNAGE_ACCOUNT = "/signage/account";
 
 //api
 export const API_LIST = "/api/all";

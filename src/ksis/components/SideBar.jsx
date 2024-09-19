@@ -19,6 +19,7 @@ import {
   IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
   ACCESSLOG_INVENTORY,
+  MAIN,
 } from "../../constants/page_constant";
 import fetcher from "../../fetcher";
 import ksisLogo from "../../img/ksis-logo.png";
@@ -91,13 +92,13 @@ const Sidebar = () => {
 
       <div>
         <div className="logo mb-8">
-          <a
-            href="/main"
+          <Link
+            to={MAIN}
             className="text-2xl font-semibold"
             onClick={() => handleMenuClick("MAIN")}
           >
             <img src={ksisLogo} alt="KSIS Logo" className="w-32" />
-          </a>
+          </Link>
         </div>
         <div className="mb-4">
           <a className="flex items-center px-2 font-semibold text-black text-lg">
