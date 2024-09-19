@@ -15,7 +15,7 @@ pipeline {
                     env.oldImageId = oldImageId
                 }
 
-                git branch: 'main',
+                git branch: 'master',
                     url: 'https://github.com/KangHyeonJu/ksis-front'
             }
 
