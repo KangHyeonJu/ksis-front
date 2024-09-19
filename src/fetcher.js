@@ -11,6 +11,7 @@ const fetcher = axios.create({
 // 요청 인터셉터 설정
 fetcher.interceptors.request.use(
   (config) => {
+    console.log(API_BASE_URL);
     const token = localStorage.getItem("accessToken"); // 로컬스토리지에서 액세스 토큰 가져오기
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // 요청 헤더에 토큰 추가
