@@ -33,6 +33,12 @@ pipeline {
             steps {
                 dir('.') {
                     sh """
+                    cp /.env .env
+                    """
+                }
+
+                dir('.') {
+                    sh """
                     npm ci
                     """
                 }
