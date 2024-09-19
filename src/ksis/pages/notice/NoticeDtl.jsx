@@ -7,6 +7,7 @@ import { format, parseISO } from "date-fns";
 
 const NoticeDetail = () => {
   const [notice, setNotice] = useState(null);
+  const [userRole, setUserRole] = useState(""); // 현재 사용자의 role 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { noticeId } = useParams();
@@ -18,6 +19,11 @@ const NoticeDetail = () => {
         const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
         console.log("데이터 : ", response.data);
         setNotice(response.data);
+
+        // 사용자 권한 정보를 localStorage에서 가져옴
+        const storedUserRole = localStorage.getItem("authority");
+        setUserRole(storedUserRole); // 사용자 role을 상태에 저장
+        console.log("현재 role :", storedUserRole);
       } catch (err) {
         setError("공지사항 정보를 가져오는 데 실패했습니다.");
       } finally {
@@ -27,6 +33,7 @@ const NoticeDetail = () => {
 
     fetchNotice();
   }, [noticeId]);
+
 
   if (loading) {
     return <p>로딩 중...</p>;
@@ -195,20 +202,25 @@ const NoticeDetail = () => {
               </button>
             </div>
             <div className="flex gap-2 items-center">
-              <button
-                type="button"
-                onClick={handleEdit}
-                className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              >
-                수정하기
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-              >
-                삭제하기
-              </button>
+              {/* 현재 사용자의 role이 admin이 아니면서 notice 작성자가 admin인 경우 버튼 숨기기 */}
+              {userRole !== "ROLE_ADMIN" && notice.role === "ADMIN" ? null : (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleEdit}
+                    className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  >
+                    수정하기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  >
+                    삭제하기
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </form>
