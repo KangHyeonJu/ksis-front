@@ -90,7 +90,7 @@ const NoticeBoard = () => {
 
   const getDeviceNames = (deviceList) => {
     if (!deviceList || deviceList.length === 0) {
-      return "없음";
+      return "";
     }
     const deviceNames = deviceList.map((device) => device.deviceName);
     return deviceNames.join(", ");
