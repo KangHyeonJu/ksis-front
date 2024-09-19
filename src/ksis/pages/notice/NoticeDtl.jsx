@@ -5,7 +5,7 @@ import { NOTICE_LIST } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
 
-const NoticeDetail = () => {
+const NoticeDetail = ({ userRole }) => {
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -198,14 +198,16 @@ const NoticeDetail = () => {
               <button
                 type="button"
                 onClick={handleEdit}
-                className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                className={`relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm ${userRole === 'admin' ? 'bg-[#6dd7e5] hover:bg-sky-400' : 'bg-gray-300 cursor-not-allowed'}`}
+                disabled={userRole !== 'admin'}
               >
                 수정하기
               </button>
               <button
                 type="button"
                 onClick={handleDelete}
-                className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                className={`rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm ${userRole === 'admin' ? 'bg-[#f48f8f] hover:bg-red-400' : 'bg-gray-300 cursor-not-allowed'}`}
+                disabled={userRole !== 'admin'}
               >
                 삭제하기
               </button>

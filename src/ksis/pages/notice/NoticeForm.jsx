@@ -14,6 +14,7 @@ const NoticeForm = () => {
     startDate: "",
     endDate: "",
     deviceIds: [""],
+    role:"",
   });
   const [deviceOptions, setDeviceOptions] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -82,6 +83,7 @@ const NoticeForm = () => {
 
    // 관리자가 아닌 경우에만 노출 시작일과 종료일을 필수로 체크
   if (!title.trim() || !content.trim() || (role === 'admin' && (!startDate || !endDate))) {
+    console.log(role);
     alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
     return;
   }

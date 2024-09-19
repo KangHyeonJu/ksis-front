@@ -151,7 +151,8 @@ const NoticeBoard = () => {
                   <td className="border border-gray-300 p-2">
                     {notice.name} ({notice.accountId})
                   </td>
-                  <td className="border border-gray-300 p-2">{notice.title}</td>
+                  <td className="border border-gray-300 p-2">
+                     {notice.role === "ADMIN" ? "📢 " : ""}{notice.title}</td>
                   <td className="border border-gray-300 p-2">
                     {getDeviceNames(notice.deviceList)}
                   </td>
