@@ -26,6 +26,7 @@ const NoticeForm = () => {
     const fetchDevices = async () => {
       const authority = localStorage.getItem("authority");
       setRole(authority); // 역할 상태 설정
+      console.log("noticeForm 역할 :", authority);
       try {
         const response = await fetcher.get(SIGNAGE_LIST, {
           params: { role: authority },
@@ -34,6 +35,7 @@ const NoticeForm = () => {
           response.data.map((device) => ({
             value: device.deviceId,
             label: device.deviceName,
+            
           }))
         );
       } catch (error) {
@@ -51,6 +53,8 @@ const NoticeForm = () => {
       const fetchNotice = async () => {
         try {
           const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
+          console.log("공지글 데이터 :", response.data); // 추가된 로그
+          
           const {
             accountId,
             title,
@@ -82,14 +86,14 @@ const NoticeForm = () => {
     const { accountId, title, content, startDate, endDate, deviceIds } = formData;
 
    // 관리자가 아닌 경우에만 노출 시작일과 종료일을 필수로 체크
-  if (!title.trim() || !content.trim() || (role === 'admin' && (!startDate || !endDate))) {
+  if (!title.trim() || !content.trim() || (role !== 'ROLE_ADMIN' && (!startDate || !endDate))) {
     console.log(role);
     alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
     return;
   }
 
   // 관리자가 아닌 경우에만 재생장치 선택 검사
-  if (role === 'admin' && deviceIds.some((deviceId) => !deviceId.trim())) {
+  if (role !== 'ROLE_ADMIN' && deviceIds.some((deviceId) => !deviceId.trim())) {
     alert("모든 재생장치를 선택해야 합니다.");
     return;
   }
@@ -190,7 +194,7 @@ const NoticeForm = () => {
                 rows="4"
               />
             </div>
-            {role === 'admin' && (
+            {role !== 'ROLE_ADMIN' && (
               <>
                 <div>
                   {formData.deviceIds.map((deviceId, index) => (
