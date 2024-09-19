@@ -37,7 +37,7 @@ import {
   ACCOUNT_EDIT_FORM,
   ACCOUNT_FORM,
   ACCOUNT_LIST_BOARD,
-  TOKEN_CALLBACK,
+  TOKEN_CALLBACK, TOKEN_CHECK,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
@@ -83,9 +83,11 @@ function App() {
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
 
+  const URL = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
-    // let eventSource = new EventSource("http://localhost:8080/events");
-    let eventSource = new EventSource("http://125.6.38.247/api/events");
+    let eventSource = new EventSource(`${URL}/events`);
+    // let eventSource = new EventSource("${URL}/api/events");
 
     eventSource.addEventListener("logout", (event) => {
       alert("로그아웃 되었습니다.");
@@ -104,7 +106,7 @@ function App() {
 
     if (accessToken) {
       fetcher
-        .post("/check-access-token")
+        .post(TOKEN_CHECK)
         .then((response) => {
           if (response.data.logout) {
             // 로그아웃 처리
