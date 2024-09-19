@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
-import { SIGNAGE_ADD } from "../../../constants/api_constant";
-import { SIGNAGE_INVENTORY } from "../../../constants/page_constant";
+import { SIGNAGE_ADD, SIGNAGE_ACCOUNT } from "../../../constants/api_constant";
+import { SIGNAGE_INVENTORY, MAIN } from "../../../constants/page_constant";
 
 const SignageForm = () => {
+  const navigate = useNavigate();
+  const authority = localStorage.getItem("authority");
+
   const [addressError, setAddressError] = useState("");
 
   //해상도
@@ -79,7 +82,12 @@ const SignageForm = () => {
 
   const accountGet = async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_ADD);
+      if (authority !== "ROLE_ADMIN") {
+        alert("접근권한이 없습니다.");
+        navigate(MAIN);
+      }
+
+      const response = await fetcher.get(SIGNAGE_ACCOUNT);
       console.log(response);
       if (response.data) {
         setAccounts(response.data);
@@ -97,8 +105,6 @@ const SignageForm = () => {
   }, []);
 
   // 이전 페이지로 이동
-  const navigate = useNavigate();
-
   const onCancel = () => {
     navigate(-1);
   };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
-import { PC_ADD, PC_LIST } from "../../../constants/api_constant";
+import { PC_ACCOUNT, PC_LIST } from "../../../constants/api_constant";
 import { PC_INVENTORY } from "../../../constants/page_constant";
 
 const PcUpdateForm = () => {
@@ -113,7 +113,7 @@ const PcUpdateForm = () => {
 
   const accountGet = async () => {
     try {
-      const response = await fetcher.get(PC_ADD);
+      const response = await fetcher.get(PC_ACCOUNT);
       console.log(response);
       if (response.data) {
         setAccounts(response.data);

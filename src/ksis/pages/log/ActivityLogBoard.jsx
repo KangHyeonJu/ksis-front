@@ -20,12 +20,12 @@ const ActivityLogBoard = () => {
 
   const authority = localStorage.getItem("authority");
 
-  if (authority !== "ROLE_ADMIN") {
-    alert("접근권한이 없습니다.");
-    navigate(MAIN);
-  }
-
   const loadPage = async () => {
+    if (authority !== "ROLE_ADMIN") {
+      alert("접근권한이 없습니다.");
+      navigate(MAIN);
+    }
+
     try {
       const response = await fetcher.get(ACTIVITYLOG_LIST);
       console.log(response);

@@ -2,6 +2,7 @@
 export const PC_LIST = "/pc";
 export const PC_ADD = "/admin/pc/new";
 export const PC_DELETE = "/admin/pc/delete";
+export const PC_ACCOUNT = "/pc/account";
 
 //signage
 export const SIGNAGE_LIST = "/signage";
