@@ -5,6 +5,8 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import { NOTIFICATION_COUNT } from "../../../constants/api_constant";
 
 const NotificationCountComponent = () => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   const [unreadCount, setUnreadCount] = useState(0);
 
   // 알림 개수를 서버로부터 가져오는 함수
@@ -21,7 +23,7 @@ const NotificationCountComponent = () => {
     const token = localStorage.getItem("accessToken"); // 로컬 스토리지에서 토큰 가져오기
     const eventSource = new EventSourcePolyfill(
       "http://localhost:8080/sse/notifications",
-      // "http://125.6.38.247/api/sse/notifications",
+      // API_BASE_URL + "/api/sse/notifications",
       {
         headers: {
           Authorization: `Bearer ${token}`, // 토큰을 헤더에 추가
