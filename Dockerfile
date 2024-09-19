@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .  
-RUN export NODE_OPTIONS="--max-old-space-size=4096"
+RUN export NODE_OPTIONS="--max-old-space-size=8192"
 RUN npm run build
   
 FROM nginx:stable-alpine  
