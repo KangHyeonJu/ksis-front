@@ -3,7 +3,7 @@ import "./download_app.css"; // css 파일 임포트
 
 function download_app() {
   const handleDownload = () => {
-    // 다운로드 링크를 설정!
+    // 다운로드 링크를 설정
     // const url = "http://localhost:8080/api/download";
     const url = "http://125.6.38.247/api/api/download";
     const link = document.createElement("a");
