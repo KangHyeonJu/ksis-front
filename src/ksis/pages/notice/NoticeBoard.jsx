@@ -17,15 +17,12 @@ const NoticeBoard = () => {
   const noticesPerPage = 5;
   const navigate = useNavigate();
 
-  
-
-  useEffect(() => { 
+  useEffect(() => {
     setLoading(true);
     fetcher
       .get(NOTICE_ALL)
       .then((response) => {
         setNotices(response.data);
-        
         console.log("공지 전체 조회 데이터 : ", response.data);
       })
       .catch((err) => {
@@ -38,9 +35,15 @@ const NoticeBoard = () => {
   }, []);
 
   const filteredNotices = useMemo(() => {
-    return notices.filter((notice) =>
+    const filtered = notices.filter((notice) =>
       notice.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    // role이 ADMIN인 공지가 먼저 오도록 정렬
+    return filtered.sort((a, b) => {
+      if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
+      if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
+      return 0;
+    });
   }, [notices, searchTerm]);
 
   const paginatedNotices = useMemo(() => {
@@ -73,30 +76,24 @@ const NoticeBoard = () => {
   }
 
   const formatDate = (dateString) => {
-    // dateString이 유효한지 먼저 체크
     if (!dateString) {
-      return "날짜 없음"; // dateString이 null 또는 undefined일 때 처리
+      return "날짜 없음";
     }
-
     try {
-      // parseISO 함수로 변환, 변환 실패 시 catch로 넘어감
       const date = parseISO(dateString);
       return format(date, "yyyy-MM-dd");
     } catch (error) {
       console.error("Invalid date format:", dateString);
-      return "Invalid date"; // 오류 발생 시 처리
+      return "Invalid date";
     }
   };
 
-  // deviceList에서 deviceName을 추출하는 함수
   const getDeviceNames = (deviceList) => {
     if (!deviceList || deviceList.length === 0) {
-      return "없음"; // deviceList가 비어 있으면 '없음' 표시
+      return "없음";
     }
-
-    // 각 디바이스의 deviceName을 추출하고, 콤마로 구분하여 반환
     const deviceNames = deviceList.map((device) => device.deviceName);
-    return deviceNames.join(", "); // 디바이스 이름을 콤마로 구분
+    return deviceNames.join(", ");
   };
 
   return (
@@ -146,18 +143,15 @@ const NoticeBoard = () => {
                 <tr
                   key={notice.noticeId}
                   onClick={() => handleNoticeClick(notice.noticeId)}
-                  className="cursor-pointer"
+                  className={`cursor-pointer ${notice.role === "ADMIN" ? "bg-gray-200 font-bold" : ""}`}
                 >
-                  {/* 작성일은 YYYY-MM-DD 형식으로 포맷팅 */}
                   <td className="border border-gray-300 p-2">
                     {formatDate(notice.regDate)}
                   </td>
-                  {/* 작성자 이름과 아이디를 함께 표시 */}
                   <td className="border border-gray-300 p-2">
                     {notice.name} ({notice.accountId})
                   </td>
                   <td className="border border-gray-300 p-2">{notice.title}</td>
-                  {/* deviceList에서 deviceName을 추출하여 표시 */}
                   <td className="border border-gray-300 p-2">
                     {getDeviceNames(notice.deviceList)}
                   </td>
