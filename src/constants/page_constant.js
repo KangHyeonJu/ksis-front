@@ -40,3 +40,9 @@ export const VIDEO_ENCODING = "/videoEncoding";
 export const ACCESSLOG_INVENTORY = "/accesslog";
 export const ACTIVITYLOG_INVENTORY = "/activitylog";
 export const UPLOADLOG_INVENTORY = "/uploadlog";
+
+//error
+export const ERROR_403 = "/error403";
+
+//main
+export const MAIN = "/";

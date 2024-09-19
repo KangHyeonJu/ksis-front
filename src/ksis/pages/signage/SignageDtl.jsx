@@ -6,7 +6,10 @@ import {
   SIGNAGE_PLAYLIST,
   SIGNAGE_UPDATE,
 } from "../../../constants/api_constant";
-import { SIGNAGE_UPDATE_FORM } from "../../../constants/page_constant";
+import {
+  SIGNAGE_UPDATE_FORM,
+  SIGNAGE_INVENTORY,
+} from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
 import { Switch } from "@headlessui/react";
 import { format, parseISO } from "date-fns";
@@ -17,6 +20,9 @@ import PlaylistUpdateModal from "./PlaylistUpdateModal";
 import SignagePlay from "./SignagePlay";
 
 const SignageDtl = () => {
+  const authority = localStorage.getItem("authority");
+  const loginAccountId = localStorage.getItem("accountId");
+
   const [enabled, setEnabled] = useState(false);
   const [radiobox, setRadiobox] = useState(null);
 
@@ -72,6 +78,14 @@ const SignageDtl = () => {
       const response = await fetcher.get(SIGNAGE_LIST + `/${signageId}`);
       console.log("Signage response:", response);
       setData(response.data);
+
+      if (
+        authority !== "ROLE_ADMIN" &&
+        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(SIGNAGE_INVENTORY);
+      }
 
       const playlistResponse = await fetcher.get(
         SIGNAGE_PLAYLIST + `/${signageId}`
