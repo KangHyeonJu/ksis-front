@@ -4,6 +4,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { API_BOARD, API_FORM } from "../../../constants/page_constant";
 import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
+import fetcher from "../../../fetcher";  // fetcher 가져오기
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([]);
@@ -20,15 +21,11 @@ const ApiBoard = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(API_LIST);
-                if (!response.ok) {
-                    throw new Error('네트워크 응답이 올바르지 않습니다.');
-                }
-                const data = await response.json();
-                console.log('Fetched data:', data); // 데이터 확인
-                setPosts(data);
+                const response = await fetcher.get(API_LIST); // fetcher를 사용
+                console.log('Fetched data:', response.data); // 데이터를 확인하기 위해 로그 추가
+                setPosts(response.data); // Axios 기반 fetcher에서는 response.data 사용
             } catch (err) {
-                setError(err.message);
+                setError(err.message || '데이터를 가져오는 중 오류가 발생했습니다.');
             } finally {
                 setLoading(false);
             }

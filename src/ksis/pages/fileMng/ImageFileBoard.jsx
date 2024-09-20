@@ -51,7 +51,7 @@ const ImageFileBoard = () => {
   const handleSaveClick = async (id) => {
     try {
       await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
-        fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
+        fileTitle: newTitle, 
       });
 
       // 제목이 변경된 후 images 상태를 업데이트
