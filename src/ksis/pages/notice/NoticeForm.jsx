@@ -53,7 +53,7 @@ const NoticeForm = () => {
       const fetchNotice = async () => {
         try {
           const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
-          console.log("공지글 데이터 :", response.data); // 추가된 로그
+          console.log("공지글 데이터 :", response.data); // 데이터 확인
           
           const {
             accountId,
@@ -63,19 +63,21 @@ const NoticeForm = () => {
             endDate,
             deviceIds = [],
           } = response.data;
-          setFormData({
-            accountId,
-            title,
-            content,
-            startDate,
-            endDate,
-            deviceIds: deviceIds.length ? deviceIds : [""],
-          });
-        } catch (error) {
-          console.error("공지글을 불러오는 중 오류 발생:", error);
-          alert("공지글을 불러오는 중 오류가 발생했습니다.");
-        }
-      };
+          
+          // deviceIds가 존재하면 해당 값을 설정합니다.
+        setFormData({
+          accountId,
+          title,
+          content,
+          startDate,
+          endDate,
+          deviceIds: deviceIds.length ? deviceIds : [""],
+        });
+      } catch (error) {
+        console.error("공지글을 불러오는 중 오류 발생:", error);
+        alert("공지글을 불러오는 중 오류가 발생했습니다.");
+      }
+    };
       fetchNotice();
     }
   }, [noticeId]);
@@ -275,18 +277,18 @@ const NoticeForm = () => {
             )}
           </div>
           <div className="flex justify-end space-x-4">
+          <button
+              type="submit"
+              className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              저장
+            </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="py-2 px-4 bg-gray-500 text-white rounded-md"
+              className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
             >
               취소
-            </button>
-            <button
-              type="submit"
-              className="py-2 px-4 bg-blue-500 text-white rounded-md"
-            >
-              저장
             </button>
           </div>
         </form>

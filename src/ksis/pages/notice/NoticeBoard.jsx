@@ -63,8 +63,8 @@ const NoticeBoard = () => {
     navigate(NOTICE_FORM); // 공지글 등록 페이지로 이동
   };
 
-  const handleNoticeClick = (id, writerRole) => {
-    navigate(`${NOTICE_DTL}/${id}`); // writerRole을 쿼리 파라미터로 추가
+  const handleNoticeClick = (id) => {
+    navigate(`${NOTICE_DTL}/${id}`);
   };
 
   if (loading) {
