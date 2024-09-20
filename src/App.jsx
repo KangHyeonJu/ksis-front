@@ -41,6 +41,7 @@ import {
   ACCOUNT_LIST_BOARD,
   TOKEN_CALLBACK,
   TOKEN_CHECK,
+  EVENT
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
@@ -89,7 +90,7 @@ function App() {
   const URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    let eventSource = new EventSource(`${URL}/events`);
+    let eventSource = new EventSource(`${URL}${EVENT}`);
     // let eventSource = new EventSource("${URL}/api/events");
 
     eventSource.addEventListener("logout", (event) => {
