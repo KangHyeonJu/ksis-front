@@ -64,7 +64,7 @@ const NoticeBoard = () => {
   };
 
   const handleNoticeClick = (id, writerRole) => {
-    navigate(`${NOTICE_DTL}/${id}?writerRole=${writerRole}`); // writerRole을 쿼리 파라미터로 추가
+    navigate(`${NOTICE_DTL}/${id}`); // writerRole을 쿼리 파라미터로 추가
   };
 
   if (loading) {
