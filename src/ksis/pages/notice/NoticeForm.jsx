@@ -54,7 +54,8 @@ const NoticeForm = () => {
         try {
           const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
           console.log("공지글 데이터 :", response.data); // 데이터 확인
-          
+          console.log(response.data.deviceList);
+
           const {
             accountId,
             title,
