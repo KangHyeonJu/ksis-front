@@ -41,7 +41,7 @@ import {
   ACCOUNT_LIST_BOARD,
   TOKEN_CALLBACK,
   TOKEN_CHECK,
-  EVENT
+  EVENT,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";

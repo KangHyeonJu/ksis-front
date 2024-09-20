@@ -59,6 +59,7 @@ const Sidebar = () => {
         category: "LOGOUT",
       });
       // 로그아웃 성공 시 로컬스토리지 토큰 제거
+      alert('로그아웃되었습니다.');
       localStorage.removeItem("accessToken");
       localStorage.removeItem("accountId");
       localStorage.removeItem("authority");

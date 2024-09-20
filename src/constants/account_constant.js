@@ -12,4 +12,4 @@ export const TOKEN_CHECK = "/check-access-token";
 export const ACCESS_LOG = "/access-log";
 export const LOG_OUT = "/logout";
 
-export const EVENT = "/event";
+export const EVENT = "/events";
