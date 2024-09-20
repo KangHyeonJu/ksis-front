@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { PC_LIST } from "../../../constants/api_constant";
-import { PC_UPDATE_FORM } from "../../../constants/page_constant";
+import { PC_UPDATE_FORM, PC_INVENTORY } from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
 
 const PcDtl = () => {
+  const authority = localStorage.getItem("authority");
+  const loginAccountId = localStorage.getItem("accountId");
+
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
@@ -15,6 +18,15 @@ const PcDtl = () => {
     try {
       const response = await fetcher.get(PC_LIST + `/${pcId}`);
       const { accountList, ...rest } = response.data;
+
+      if (
+        authority !== "ROLE_ADMIN" &&
+        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(PC_INVENTORY);
+      }
+
       setData(rest);
 
       setResponsibles(
