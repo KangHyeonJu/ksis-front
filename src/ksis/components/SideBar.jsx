@@ -26,6 +26,7 @@ import ksisLogo from "../../img/ksis-logo.png";
 import Notification from "../pages/notification/Notification"; // 알림 모달 컴포넌트 import
 import NotificationCountComponent from "../pages/notification/NotificationCount"; // 알림 개수 컴포넌트
 import { decodeJwt } from "../../decodeJwt";
+import {ACCESS_LOG, LOG_OUT} from "../../constants/account_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -51,9 +52,9 @@ const Sidebar = () => {
 
     try {
       // 서버로 로그아웃 요청 전송
-      await fetcher.delete(`/logout/${accountId}`);
+      await fetcher.delete(`${LOG_OUT}/${accountId}`);
 
-      await fetcher.post("/access-log", {
+      await fetcher.post(ACCESS_LOG, {
         accountId,
         category: "LOGOUT",
       });
@@ -73,11 +74,10 @@ const Sidebar = () => {
       category: category,
     };
     try {
-      const response = await fetcher.post("/access-log", accessLog);
+      const response = await fetcher.post(ACCESS_LOG, accessLog);
       console.log("Log saved successfully", response.data);
     } catch (error) {
       console.error("Error saving log:", error);
-      alert(error.response?.data || "Unknown error occurred");
     }
   };
 
@@ -115,7 +115,6 @@ const Sidebar = () => {
             <Link to={`/account/${userInfo.accountId}`}> 계정정보</Link>
           </a>
           <a
-            href="#"
             className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
             onClick={() => setNotificationOpen(true)} // 알림 버튼 클릭 시 모달 열기
           >
