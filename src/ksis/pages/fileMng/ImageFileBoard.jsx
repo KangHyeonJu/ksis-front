@@ -234,7 +234,7 @@ const ImageFileBoard = () => {
                 <div>
                   <div className="w-5/6 h-5/6 overflow-hidden mb-4 mt-4 cursor-pointer mx-auto">
                     <img
-                      src={`${process.env.REACT_APP_API_BASE_URL}${post.filePath}`}
+                      src={post.filePath}
                       alt={post.fileTitle}
                       className="w-full h-full object-cover"
                       onClick={() => openResourceModal(post.filePath)}
