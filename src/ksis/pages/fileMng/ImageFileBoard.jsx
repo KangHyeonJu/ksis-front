@@ -28,11 +28,9 @@ const ImageFileBoard = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
-  
   useEffect(() => {
-
-    fetcher 
-    .get(ECIMAGE_BOARD)
+    fetcher
+      .get(ECIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
@@ -236,7 +234,7 @@ const ImageFileBoard = () => {
                 <div>
                   <div className="w-5/6 h-5/6 overflow-hidden mb-4 mt-4 cursor-pointer mx-auto">
                     <img
-                      src={post.filePath}
+                      src={`${process.env.REACT_APP_API_BASE_URL}${post.filePath}`}
                       alt={post.fileTitle}
                       className="w-full h-full object-cover"
                       onClick={() => openResourceModal(post.filePath)}
