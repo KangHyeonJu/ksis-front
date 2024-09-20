@@ -2,6 +2,7 @@
 export const PC_LIST = "/pc";
 export const PC_ADD = "/admin/pc/new";
 export const PC_DELETE = "/admin/pc/delete";
+export const PC_ACCOUNT = "/pc/account";
 
 //signage
 export const SIGNAGE_LIST = "/signage";
@@ -16,6 +17,7 @@ export const SIGNAGE_PLAY = "/signage/play";
 export const SIGNAGE_PLAY_NOTICE = "/signage/play/notice";
 export const SIGNAGE_ACCOUNT_RESOURCE = "/signage/accountResource";
 export const SIGNAGE_ADD_RESOURCE = "/signage/resource/add";
+export const SIGNAGE_ACCOUNT = "/signage/account";
 
 //api
 export const API_LIST = "/api/all";

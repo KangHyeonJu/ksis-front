@@ -21,6 +21,8 @@ import {
   ACCESSLOG_INVENTORY,
   ACTIVITYLOG_INVENTORY,
   UPLOADLOG_INVENTORY,
+  ERROR_403,
+  MAIN,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -37,7 +39,8 @@ import {
   ACCOUNT_EDIT_FORM,
   ACCOUNT_FORM,
   ACCOUNT_LIST_BOARD,
-  TOKEN_CALLBACK, TOKEN_CHECK,
+  TOKEN_CALLBACK,
+  TOKEN_CHECK,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
@@ -62,7 +65,6 @@ import ImageResourceBoard from "./ksis/pages/fileMng/ImageResourceBoard.jsx";
 import ImageFileBoard from "./ksis/pages/fileMng/ImageFileBoard.jsx";
 import VideoResourceBoard from "./ksis/pages/fileMng/VideoResourceBoard.jsx";
 import VideoFileBoard from "./ksis/pages/fileMng/VideoFileBoard.jsx";
-import FileBoardModal from "./ksis/pages/fileMng/FileBoardModal.jsx";
 import DownloadApp from "./ksis/pages/download-app/download_app.jsx";
 import ImageResourceModal from "./ksis/pages/fileMng/ImageResourceModal.jsx";
 import ImageEncoding from "./ksis/pages/fileMng/ImageEncoding.jsx";
@@ -73,6 +75,7 @@ import AccessLogBoard from "./ksis/pages/log/AccessLogBoard.jsx";
 import UploadLogBoard from "./ksis/pages/log/UploadLogBoard.jsx";
 import ActivityLogBoard from "./ksis/pages/log/ActivityLogBoard.jsx";
 import fetcher from "./fetcher";
+import Error403 from "./ksis/pages/main/error403.jsx";
 
 function App() {
   const location = useLocation();
@@ -140,7 +143,7 @@ function App() {
           <Route path={"/downloadApp"} element={<DownloadApp />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path={"/main"} element={<Main />} />
+            <Route path={MAIN} element={<Main />} />
 
             {/* 계정 관련 경로 */}
             <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
@@ -212,8 +215,10 @@ function App() {
               element={<ActivityLogBoard />}
             />
             <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
+
+            {/* error */}
+            <Route pate={ERROR_403} element={<Error403 />} />
           </Route>
-          {/* 다른 라우트들을 추가할 수 있습니다 */}
         </Routes>
       </div>
     </div>
