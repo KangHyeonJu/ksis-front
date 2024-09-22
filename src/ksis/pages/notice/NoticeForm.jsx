@@ -82,14 +82,14 @@ const NoticeForm = () => {
     const { accountId, title, content, startDate, endDate, deviceIds } = formData;
 
    // 관리자가 아닌 경우에만 노출 시작일과 종료일을 필수로 체크
-  if (!title.trim() || !content.trim() || (role === 'ROLE_ADMIN' && (!startDate || !endDate))) {
+  if (!title.trim() || !content.trim() || (role !== 'ROLE_ADMIN' && (!startDate || !endDate))) {
     console.log(role);
     alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
     return;
   }
 
   // 관리자가 아닌 경우에만 재생장치 선택 검사
-  if (role === 'ROLE_ADMIN' && deviceIds.some((deviceId) => !deviceId.trim())) {
+  if (role !== 'ROLE_ADMIN' && deviceIds.some((deviceId) => !deviceId.trim())) {
     alert("모든 재생장치를 선택해야 합니다.");
     return;
   }
@@ -190,7 +190,7 @@ const NoticeForm = () => {
                 rows="4"
               />
             </div>
-            {role === 'ROLE_ADMIN' && (
+            {role !== 'ROLE_ADMIN' && (
               <>
                 <div>
                   {formData.deviceIds.map((deviceId, index) => (

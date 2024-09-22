@@ -22,7 +22,7 @@ const ApiForm = () => {
           const response = await fetcher(API_NOTICE + `/${apiId}`); // 올바른 엔드포인트로 수정
           if (!response.ok)
             throw new Error("네트워크 응답이 올바르지 않습니다.");
-          const data = await response.json();
+          const data = await response.data;
           console.log(data); // API 응답 데이터 출력
           setApiName(data.apiName); // 데이터 구조에 맞게 수정
           setProvider(data.provider || ""); // 제공업체가 없을 경우 기본값 설정
