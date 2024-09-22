@@ -22,9 +22,9 @@ const ApiBoard = () => {
         const fetchPosts = async () => {
             try {
                 const response = await fetcher.get(API_LIST);
-                if (!response.ok) {
-                    throw new Error('네트워크 응답이 올바르지 않습니다.??');
-                }
+                // if (!response.ok) {
+                //     throw new Error('네트워크 응답이 올바르지 않습니다.');
+                // }
                 const data = response.data;
                 console.log('Fetched data:', data); // 데이터 확인
                 setPosts(data);
