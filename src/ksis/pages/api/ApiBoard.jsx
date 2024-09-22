@@ -64,7 +64,7 @@ const ApiBoard = () => {
         try {
             console.log('Selected posts before delete:', [...selectedPosts]);
             const deletePromises = [...selectedPosts].map(id =>
-                fetch(API_NOTICE+`/${id}`, {
+                fetcher.delete(API_NOTICE+`/${id}`, {
                     method: 'DELETE'
                 })
             );
