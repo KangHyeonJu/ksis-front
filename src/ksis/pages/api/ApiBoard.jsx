@@ -4,6 +4,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { API_BOARD, API_FORM } from "../../../constants/page_constant";
 import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
+import fetcher from "../../../fetcher";
 
 const ApiBoard = () => {
     const [posts, setPosts] = useState([]);
@@ -20,7 +21,7 @@ const ApiBoard = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(API_LIST);
+                const response = await fetcher(API_LIST);
                 if (!response.ok) {
                     throw new Error('네트워크 응답이 올바르지 않습니다.');
                 }

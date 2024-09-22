@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FILE_SIZE } from "../../../constants/api_constant";
+import fetcher from "../../../fetcher";
+
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
@@ -9,7 +11,7 @@ const FileSizeBoard = () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
 
     try {
-      const response = await fetch(FILE_SIZE, {
+      const response = await fetcher(FILE_SIZE, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

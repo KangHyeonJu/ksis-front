@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BOARD } from "../../../constants/page_constant";
 import { API_NOTICE, API_BASIC } from "../../../constants/api_constant";
+import fetcher from "../../../fetcher";
 
 const ApiForm = () => {
   const [apiName, setApiName] = useState("");
@@ -18,7 +19,7 @@ const ApiForm = () => {
     if (apiId) {
       const fetchApiData = async () => {
         try {
-          const response = await fetch(API_NOTICE + `/${apiId}`); // 올바른 엔드포인트로 수정
+          const response = await fetcher(API_NOTICE + `/${apiId}`); // 올바른 엔드포인트로 수정
           if (!response.ok)
             throw new Error("네트워크 응답이 올바르지 않습니다.");
           const data = await response.json();
@@ -64,7 +65,7 @@ const ApiForm = () => {
     };
 
     try {
-      const response = await fetch(
+      const response = await fetcher(
         API_BASIC + `/${apiId ? "update/" + apiId : "register"}`,
         {
           method: apiId ? "PUT" : "POST", // PUT 요청 시 수정, POST 요청 시 등록
