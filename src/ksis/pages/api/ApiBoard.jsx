@@ -21,7 +21,7 @@ const ApiBoard = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetcher(API_LIST);
+                const response = await fetcher.get(API_LIST);
                 if (!response.ok) {
                     throw new Error('네트워크 응답이 올바르지 않습니다.');
                 }

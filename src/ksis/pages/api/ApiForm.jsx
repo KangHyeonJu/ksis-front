@@ -19,10 +19,10 @@ const ApiForm = () => {
     if (apiId) {
       const fetchApiData = async () => {
         try {
-          const response = await fetcher(API_NOTICE + `/${apiId}`); // 올바른 엔드포인트로 수정
+          const response = await fetch(API_NOTICE + `/${apiId}`); // 올바른 엔드포인트로 수정
           if (!response.ok)
             throw new Error("네트워크 응답이 올바르지 않습니다.");
-          const data = await response.data;
+          const data = await response.json();
           console.log(data); // API 응답 데이터 출력
           setApiName(data.apiName); // 데이터 구조에 맞게 수정
           setProvider(data.provider || ""); // 제공업체가 없을 경우 기본값 설정
@@ -65,7 +65,7 @@ const ApiForm = () => {
     };
 
     try {
-      const response = await fetcher(
+      const response = await fetch(
         API_BASIC + `/${apiId ? "update/" + apiId : "register"}`,
         {
           method: apiId ? "PUT" : "POST", // PUT 요청 시 수정, POST 요청 시 등록

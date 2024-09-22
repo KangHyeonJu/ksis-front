@@ -25,7 +25,7 @@ function download_app() {
 
   return (
     <div className="App">
-      <img src="/images/ksis-logo.png" alt="Ksis Logo"></img>
+      {/* <img src="/images/ksis-logo.png" alt="Ksis Logo"></img> */}
       <h1>사이트 이용을 원하시면 애플리케이션을 설치해주세요.</h1>
       <h3>이미 다운로드 하셨다면 앱을 실행해주세요.</h3>
       <button onClick={handleDownload} className="download-button">
