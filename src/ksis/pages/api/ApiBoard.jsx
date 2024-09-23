@@ -83,11 +83,11 @@ const ApiBoard = () => {
         return dateString.substring(0, 10); // '2024-08-07' 형식으로 반환
     };
 
-    const filteredPosts = useMemo(() => 
-        posts.filter(post => {
-            const value = post[searchCategory]?.toLowerCase() || '';
-            return value.includes(searchTerm.toLowerCase());
-        }),
+    const filteredPosts = useMemo(() =>
+            posts.filter(post => {
+                const value = post[searchCategory]?.toLowerCase() || '';
+                return value.includes(searchTerm.toLowerCase());
+            }),
         [posts, searchTerm, searchCategory]
     );
 
@@ -146,14 +146,14 @@ const ApiBoard = () => {
             </div>
             <div className="flex justify-end space-x-2 mb-4">
                 {/* 등록 버튼 */}
-                <button 
+                <button
                     onClick={() => navigate('/apiform')} // API 등록 페이지로 이동
                     className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                 >
                     API 등록
                 </button>
                 {/* 삭제 버튼 */}
-                <button 
+                <button
                     onClick={handleDeletePosts} // 선택된 API 삭제
                     className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                 >
@@ -168,39 +168,39 @@ const ApiBoard = () => {
                 ) : (
                     <table className="w-full border-collapse border border-gray-200">
                         <thead>
-                            <tr>
-                                <th className="border border-gray-300 p-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={isAllSelected}
-                                        onChange={handleSelectAllChange}
-                                    />
-                                </th>
-                                <th className="border border-gray-300 p-2">API 이름</th>
-                                <th className="border border-gray-300 p-2">만료일</th>
-                                <th className="border border-gray-300 p-2">제공업체</th>
-                            </tr>
+                        <tr>
+                            <th className="border border-gray-300 p-2">
+                                <input
+                                    type="checkbox"
+                                    checked={isAllSelected}
+                                    onChange={handleSelectAllChange}
+                                />
+                            </th>
+                            <th className="border border-gray-300 p-2">API 이름</th>
+                            <th className="border border-gray-300 p-2">만료일</th>
+                            <th className="border border-gray-300 p-2">제공업체</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {paginatedPosts.map((post) => (
-                                <tr key={post.apiId}>
-                                    <td className="border border-gray-300 p-2 text-center">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedPosts.has(post.apiId)}
-                                            onChange={(e) => handleCheckboxChange(post.apiId, e)}
-                                        />
-                                    </td>
-                                    <td
-                                        className="border border-gray-300 p-2 text-black cursor-pointer"
-                                        onClick={() => handleApiNameClick(post.apiId)}
-                                    >
-                                        {post.apiName}
-                                    </td>
-                                    <td className="border border-gray-300 p-2">{formatDate(post.expiryDate)}</td>
-                                    <td className="border border-gray-300 p-2">{post.provider}</td>
-                                </tr>
-                            ))}
+                        {paginatedPosts.map((post) => (
+                            <tr key={post.apiId}>
+                                <td className="border border-gray-300 p-2 text-center">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedPosts.has(post.apiId)}
+                                        onChange={(e) => handleCheckboxChange(post.apiId, e)}
+                                    />
+                                </td>
+                                <td
+                                    className="border border-gray-300 p-2 text-black cursor-pointer"
+                                    onClick={() => handleApiNameClick(post.apiId)}
+                                >
+                                    {post.apiName}
+                                </td>
+                                <td className="border border-gray-300 p-2">{formatDate(post.expiryDate)}</td>
+                                <td className="border border-gray-300 p-2">{post.provider}</td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 )}
