@@ -28,11 +28,9 @@ const ImageFileBoard = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
-  
   useEffect(() => {
-
-    fetcher 
-    .get(ECIMAGE_BOARD)
+    fetcher
+      .get(ECIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
@@ -51,7 +49,7 @@ const ImageFileBoard = () => {
   const handleSaveClick = async (id) => {
     try {
       await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
-        fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
+        fileTitle: newTitle, 
       });
 
       // 제목이 변경된 후 images 상태를 업데이트

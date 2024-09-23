@@ -1,23 +1,18 @@
 import React, { useState } from "react";
 import { FILE_SIZE } from "../../../constants/api_constant";
+import fetcher from "../../../fetcher"; // fetcher import
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
-  const [videoMaxSize, setVideoMaxSize] = useState(50); // 기본값 설정
+  const [videoMaxSize, setVideoMaxSize] = useState(500); // 기본값 설정
 
   const handleSave = async () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
 
     try {
-      const response = await fetch(FILE_SIZE, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(fileSizeData),
-      });
+      const response = await fetcher.put(FILE_SIZE, fileSizeData); 
 
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         alert("설정이 저장되었습니다.");
       } else {
         alert("설정 저장에 실패했습니다.");

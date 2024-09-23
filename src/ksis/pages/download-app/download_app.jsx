@@ -6,8 +6,8 @@ function download_app() {
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
     // 다운로드 링크를 설정
-    const url = "http://localhost:8080/api/download";
-    // const url = API_BASE_URL + "/api/download";
+    // const url = "http://localhost:8080/api/download";
+    const url = API_BASE_URL + "/api/download";
     const link = document.createElement("a");
     link.href = url;
     link.download = "ElectronReact Setup 4.6.0.exe";
@@ -25,7 +25,7 @@ function download_app() {
 
   return (
     <div className="App">
-      <img src="/images/ksis-logo.png" alt="Ksis Logo"></img>
+      {/* <img src="/images/ksis-logo.png" alt="Ksis Logo"></img> */}
       <h1>사이트 이용을 원하시면 애플리케이션을 설치해주세요.</h1>
       <h3>이미 다운로드 하셨다면 앱을 실행해주세요.</h3>
       <button onClick={handleDownload} className="download-button">

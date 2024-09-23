@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BOARD } from "../../../constants/page_constant";
 import { API_NOTICE, API_BASIC } from "../../../constants/api_constant";
+import fetcher from "../../../fetcher"; // fetcher 가져오기
 
 const ApiForm = () => {
   const [apiName, setApiName] = useState("");
@@ -18,10 +19,8 @@ const ApiForm = () => {
     if (apiId) {
       const fetchApiData = async () => {
         try {
-          const response = await fetch(API_NOTICE + `/${apiId}`); // 올바른 엔드포인트로 수정
-          if (!response.ok)
-            throw new Error("네트워크 응답이 올바르지 않습니다.");
-          const data = await response.json();
+          const response = await fetcher.get(API_NOTICE + `/${apiId}`); // fetcher로 데이터 가져오기
+          const data = response.data;
           console.log(data); // API 응답 데이터 출력
           setApiName(data.apiName); // 데이터 구조에 맞게 수정
           setProvider(data.provider || ""); // 제공업체가 없을 경우 기본값 설정
@@ -64,23 +63,15 @@ const ApiForm = () => {
     };
 
     try {
-      const response = await fetch(
-        API_BASIC + `/${apiId ? "update/" + apiId : "register"}`,
-        {
-          method: apiId ? "PUT" : "POST", // PUT 요청 시 수정, POST 요청 시 등록
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(apiData),
-        }
-      );
+      const response = apiId
+        ? await fetcher.put(API_BASIC + `/update/${apiId}`, apiData) // PUT 요청 시 수정
+        : await fetcher.post(API_BASIC + "/register", apiData); // POST 요청 시 등록
 
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         alert("API 정보가 성공적으로 저장되었습니다.");
         navigate(API_BOARD); // 성공 시 ApiBoard로 이동
       } else {
-        const errorData = await response.json();
-        alert(`저장 실패: ${errorData.error}`);
+        alert("저장 실패");
       }
     } catch (error) {
       console.error("Error:", error);
