@@ -4,7 +4,7 @@ import fetcher from "../../../fetcher"; // fetcher import
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
-  const [videoMaxSize, setVideoMaxSize] = useState(50); // 기본값 설정
+  const [videoMaxSize, setVideoMaxSize] = useState(500); // 기본값 설정
 
   const handleSave = async () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
