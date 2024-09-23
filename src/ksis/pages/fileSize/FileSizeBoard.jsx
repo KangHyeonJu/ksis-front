@@ -10,7 +10,7 @@ const FileSizeBoard = () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
 
     try {
-      const response = await fetcher.put(FILE_SIZE, fileSizeData); // fetcher를 사용한 PUT 요청
+      const response = await fetcher.put(FILE_SIZE, fileSizeData); 
 
       if (response.status === 200 || response.status === 201) {
         alert("설정이 저장되었습니다.");
