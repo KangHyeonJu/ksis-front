@@ -41,6 +41,7 @@ import {
   ACCOUNT_LIST_BOARD,
   TOKEN_CALLBACK,
   TOKEN_CHECK,
+  EVENT,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
@@ -89,20 +90,26 @@ function App() {
   const URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    let eventSource = new EventSource(`${URL}/events`);
+    let eventSource = new EventSource(`${URL}${EVENT}`);
     // let eventSource = new EventSource("${URL}/api/events");
 
     eventSource.addEventListener("logout", (event) => {
-      alert("로그아웃 되었습니다.");
-      // 로컬 스토리지에서 액세스 토큰 제거
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("authority");
-      localStorage.removeItem("accountId");
-      // 로그인 페이지로 리디렉션
-      window.location.href = "/downloadApp";
-      console.log("로그아웃 이벤트 수신:", event.data);
-      // SSE 연결 종료
-      eventSource.close(); // 로그아웃 후 SSE 연결 종료
+      const loggedOutAccountId = event.data;
+      const currentAccountId = localStorage.getItem("accountId");
+
+      if (loggedOutAccountId === currentAccountId) {
+        console.log(loggedOutAccountId, currentAccountId);
+        alert("로그아웃 되었습니다.");
+        // 로컬 스토리지에서 액세스 토큰 제거
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("authority");
+        localStorage.removeItem("accountId");
+        // 로그인 페이지로 리디렉션
+        window.location.href = "/downloadApp";
+        console.log("로그아웃 이벤트 수신:", event.data);
+        // SSE 연결 종료
+        eventSource.close(); // 로그아웃 후 SSE 연결 종료
+      }
     });
 
     const accessToken = localStorage.getItem("accessToken");
