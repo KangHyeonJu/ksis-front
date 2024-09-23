@@ -86,7 +86,7 @@ function App() {
 
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
-
+  const accessToken = localStorage.getItem('accessToken');
   const URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -143,7 +143,7 @@ function App() {
   return (
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
-      {!isNoSidebarRoute && <Sidebar />}
+      {!isNoSidebarRoute && accessToken && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
