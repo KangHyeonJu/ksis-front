@@ -6,10 +6,16 @@ import { SIGNAGE_ADD, SIGNAGE_ACCOUNT } from "../../../constants/api_constant";
 import { SIGNAGE_INVENTORY, MAIN } from "../../../constants/page_constant";
 
 const SignageForm = () => {
+  //가로세로크기
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+
+  const [accounts, setAccounts] = useState([]);
+  const [resolutions, setResolution] = useState([]);
+  const [address, setAddress] = useState("");
+  const [addressError, setAddressError] = useState("");
   const navigate = useNavigate();
   const authority = localStorage.getItem("authority");
-
-  const [addressError, setAddressError] = useState("");
 
   //해상도
   const [selectedValue, setSelectedValue] = useState();
@@ -36,8 +42,6 @@ const SignageForm = () => {
   };
 
   //주소불러오기
-  const [address, setAddress] = useState("");
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -77,15 +81,14 @@ const SignageForm = () => {
     }).open();
   };
 
-  //전체 user불러오기
-  const [accounts, setAccounts] = useState([]);
-
-  const accountGet = async () => {
+  //전체 user불러오기, 해상도 불러오기
+  const loadPage = async () => {
     try {
       if (authority !== "ROLE_ADMIN") {
         alert("접근권한이 없습니다.");
         navigate(MAIN);
       }
+      // const [responseAccount, response]
 
       const response = await fetcher.get(SIGNAGE_ACCOUNT);
       console.log(response);
@@ -101,17 +104,13 @@ const SignageForm = () => {
   };
 
   useEffect(() => {
-    accountGet();
+    loadPage();
   }, []);
 
   // 이전 페이지로 이동
   const onCancel = () => {
     navigate(-1);
   };
-
-  //가로세로크기
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
 
   //post
   const [data, setData] = useState({

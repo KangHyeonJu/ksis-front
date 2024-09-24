@@ -12,7 +12,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   const [data, setData] = useState({
     deviceId: "",
     fileTitle: "",
-    slideTime: null,
+    slideTime: "",
   });
   const [resources, setResources] = useState([]);
   const [resourceSequence, setResourceSequence] = useState([]);
@@ -89,6 +89,24 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
 
   const addPlayList = async () => {
     try {
+      console.log("resourceAdds", resourceAdds);
+      if (data.fileTitle === null || data.fileTitle === "") {
+        alert("재생목록 제목을 입력하세요.");
+        return;
+      } else if (data.fileTitle.length > 50) {
+        alert("제목을 50자 이내로 작성하세요.");
+        return;
+      }
+
+      if (data.slideTime === null || data.slideTime === "") {
+        alert("Slide Time을 입력하세요.");
+        return;
+      }
+
+      if (resourceAdds.length === 0) {
+        alert("재생목록에 추가할 파일을 선택하세요.");
+        return;
+      }
       const formData = new FormData();
       formData.append(
         "playListAddDTO",
@@ -111,10 +129,16 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
       console.log(response.data);
 
       alert("재생목록이 정상적으로 등록되었습니다.");
+      setData({ fileTitle: "", slideTime: "" });
       onRequestClose();
     } catch (error) {
       console.log(error.response.data);
     }
+  };
+
+  const onCloseHandler = async () => {
+    setData({ fileTitle: "", slideTime: "" });
+    onRequestClose();
   };
 
   return (
@@ -232,7 +256,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                   <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
                   <input
                     className="w-20 ml-1 p-1"
-                    type="text"
+                    type="number"
                     value={data.slideTime}
                     name="slideTime"
                     onChange={onChangeHandler}
@@ -242,7 +266,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               </div>
               <div className="flex flex-row-reverse">
                 <button
-                  onClick={onRequestClose}
+                  onClick={onCloseHandler}
                   className="ml-2 inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#f48f8f] text-base font-bold text-black shadow-sm hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
                 >
                   닫기
