@@ -1,9 +1,15 @@
 // src/components/ProtectedRoute.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 function ProtectedRoute() {
     const accessToken = localStorage.getItem('accessToken');
+
+    useEffect(() => {
+        if (!accessToken) {
+            alert("접근할 수 없습니다. 다운로드 페이지로 이동합니다.");
+        }
+    }, [accessToken]);
 
     if (!accessToken) {
         return <Navigate to="/downloadApp" />;

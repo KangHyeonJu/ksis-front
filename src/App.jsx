@@ -23,6 +23,7 @@ import {
   UPLOADLOG_INVENTORY,
   ERROR_403,
   MAIN,
+  RESOLUTION_LIST,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -77,6 +78,7 @@ import UploadLogBoard from "./ksis/pages/log/UploadLogBoard.jsx";
 import ActivityLogBoard from "./ksis/pages/log/ActivityLogBoard.jsx";
 import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
+import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 
 function App() {
   const location = useLocation();
@@ -86,7 +88,7 @@ function App() {
 
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
-  const accessToken = localStorage.getItem('accessToken');
+
   const URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -143,7 +145,7 @@ function App() {
   return (
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
-      {!isNoSidebarRoute && accessToken && <Sidebar />}
+      {!isNoSidebarRoute && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
@@ -222,6 +224,9 @@ function App() {
               element={<ActivityLogBoard />}
             />
             <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
+
+            {/* 해상도 */}
+            <Route path={RESOLUTION_LIST} element={<ResolutionList />} />
 
             {/* error */}
             <Route pate={ERROR_403} element={<Error403 />} />

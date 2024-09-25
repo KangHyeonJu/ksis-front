@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import {
-  SIGNAGE_PLAYLIST,
   SIGNAGE_PLAYLIST_DTL,
   SIGNAGE_RESOURCE,
 } from "../../../constants/api_constant";
