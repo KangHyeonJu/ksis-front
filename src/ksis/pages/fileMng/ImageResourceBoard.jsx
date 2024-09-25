@@ -222,16 +222,17 @@ const ImageResourceBoard = () => {
                             w-2/3 h-full p-3 bg-[#ffe69c]"
               >
                 {/* 제목 */}
+                <div style={{ width: "200px",}}>
                 <div className="flex items-center">
                   {editingTitleIndex === index ? (
                     <input
                       type="text"
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
-                      className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
+                      className="w-2/3 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
                     />
                   ) : (
-                    <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
+                    <h2 className="w-2/3 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
                       {post.fileTitle}
                     </h2>
                   )}
@@ -245,6 +246,7 @@ const ImageResourceBoard = () => {
                     className="ml-2 cursor-pointer text-gray-600"
                   />
                 </div>
+                </div>
 
                 {/* 등록일 */}
                 <div>
@@ -255,15 +257,17 @@ const ImageResourceBoard = () => {
 
                 {/* 이미지 */}
                 <div>
-                  <div className="w-5/6 h-5/6 overflow-hidden  mt-4 cursor-pointer mx-auto">
-                    <img
-                      src={post.filePath}
-                      //이미지 파일 깨질시 이미지 제목으로 설정
-                      alt={post.fileTitle}
-                      className="w-full h-full"
-                      //이미지 클릭하면 모달 열림
-                      onClick={() => openResourceModal(post.originalResourceId)}
-                    />
+                  <div className="w-5/6 h-5/6 overflow-hidden mt-4 cursor-pointer mx-auto flex justify-center items-center" >
+                    <div style={{ width: "100PX", height: "100px",}}>
+                      <img
+                        src={post.filePath}
+                        //이미지 파일 깨질시 이미지 제목으로 설정
+                        alt={post.fileTitle}
+                        className="w-100 h-100 overflow-hidden "
+                        //이미지 클릭하면 모달 열림
+                        onClick={() => openResourceModal(post.originalResourceId)}
+                      />
+                     </div>
                   </div>
                 </div>
 
