@@ -81,11 +81,8 @@ const AccountList = () => {
           },
         }
       );
-      console.log("Sending data:", { isActive: isActive });
-      console.log("Data type of isActive:", typeof isActive);
 
       if (response.status === 200) {
-        console.log("Account status updated successfully");
         // 로컬 상태 업데이트
         alert("비활성화 여부가 변경되었습니다.");
         await loadPage();
