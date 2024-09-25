@@ -4,6 +4,7 @@ import { RESOLUTION } from "../../../constants/api_constant";
 import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import ResolutionAddModal from "./ResolutionAddModal";
+import ResolutionUpdateModal from "./ResolutionUpdateModal";
 
 const ResolutionList = () => {
   const [resolutions, setResolutions] = useState([]);
@@ -16,6 +17,18 @@ const ResolutionList = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
+
+  const [selectUpdate, setSelectUpdate] = useState(null);
+  const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
+  const openUpdateModal = (resolutionId) => {
+    setSelectUpdate(resolutionId);
+    setUpdateModalIsOpen(true);
+  };
+
+  const closeUpdateModal = () => {
+    setUpdateModalIsOpen(false);
+    setSelectUpdate(null);
+  };
 
   const postsPerPage = 10;
 
@@ -99,6 +112,11 @@ const ResolutionList = () => {
     closeModal();
   };
 
+  const handleUpdateModalClose = async () => {
+    await loadPage();
+    closeUpdateModal();
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
@@ -166,6 +184,7 @@ const ResolutionList = () => {
             </th>
             <th className="border border-gray-300">이름</th>
             <th className="border border-gray-300">가로 X 세로(px)</th>
+            <th className="border border-gray-300"></th>
           </tr>
         </thead>
         <tbody>
@@ -184,10 +203,27 @@ const ResolutionList = () => {
               <td className="border border-gray-300 p-2">
                 {post.width} x {post.height}
               </td>
+
+              <td className="border border-gray-300 p-2">
+                <button
+                  onClick={() => openUpdateModal(post.resolutionId)}
+                  className="items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                >
+                  수정
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {selectUpdate && (
+        <ResolutionUpdateModal
+          isOpen={updateModalIsOpen}
+          onRequestClose={handleUpdateModalClose}
+          resolutionId={selectUpdate}
+        />
+      )}
 
       {filteredPosts.length > postsPerPage && (
         <ReactPaginate
