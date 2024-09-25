@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import {Routes, Route, useLocation, useNavigate} from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
 import ProtectedRoute from "./ksis/components/ProtectedRoute";
@@ -90,13 +90,14 @@ function App() {
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
   const URL = process.env.REACT_APP_API_BASE_URL;
+  const navigate = useNavigate();
 
   const logout = () => {
     alert("로그아웃 되었습니다.");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("authority");
     localStorage.removeItem("accountId");
-    window.location.href = "/downloadApp";
+    navigate('/downloadApp');
   };
 
   useEffect(() => {
