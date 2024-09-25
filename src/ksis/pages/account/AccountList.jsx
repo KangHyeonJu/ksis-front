@@ -32,6 +32,7 @@ const AccountList = () => {
     loadPage();
     const userInfo = decodeJwt();
 
+    // create 후 주석해서 아이디 등록
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자만 접근 가능합니다.");
       navigate(MAIN);
