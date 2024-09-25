@@ -88,8 +88,16 @@ function App() {
 
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
-
+  const accessToken = localStorage.getItem("accessToken");
   const URL = process.env.REACT_APP_API_BASE_URL;
+
+  const logout = () => {
+    alert("로그아웃 되었습니다.");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("authority");
+    localStorage.removeItem("accountId");
+    window.location.href = "/downloadApp";
+  };
 
   useEffect(() => {
     let eventSource = new EventSource(`${URL}${EVENT}`);
@@ -100,16 +108,7 @@ function App() {
       const currentAccountId = localStorage.getItem("accountId");
 
       if (loggedOutAccountId === currentAccountId) {
-        console.log(loggedOutAccountId, currentAccountId);
-        alert("로그아웃 되었습니다.");
-        // 로컬 스토리지에서 액세스 토큰 제거
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("authority");
-        localStorage.removeItem("accountId");
-        // 로그인 페이지로 리디렉션
-        window.location.href = "/downloadApp";
-        console.log("로그아웃 이벤트 수신:", event.data);
-        // SSE 연결 종료
+        logout();
         eventSource.close(); // 로그아웃 후 SSE 연결 종료
       }
     });
@@ -121,17 +120,7 @@ function App() {
         .post(TOKEN_CHECK)
         .then((response) => {
           if (response.data.logout) {
-            // 로그아웃 처리
-            alert("로그아웃되었습니다.");
-
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("authority");
-            localStorage.removeItem("accountId");
-
-            window.location.href = "/downloadApp";
-            console.log("로그아웃");
-          } else {
-            console.log("로그인 유지");
+            logout();
           }
         })
         .catch(() => {
@@ -145,7 +134,7 @@ function App() {
   return (
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
-      {!isNoSidebarRoute && <Sidebar />}
+      {!isNoSidebarRoute && accessToken && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />

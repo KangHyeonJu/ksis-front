@@ -13,10 +13,10 @@ import { MAIN } from "../../../constants/page_constant";
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
+  const userInfo = decodeJwt();
   const loadPage = async () => {
     try {
       const response = await fetcher.get(ACCOUNT_LIST);
-      console.log(response); // 응답 객체 확인을 위해 콘솔 출력
       if (response.data) {
         setPosts(response.data);
       } else {
@@ -24,13 +24,11 @@ const AccountList = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error); // 전체 오류 객체를 콘솔에 출력
-      alert(error.response?.data || "Unknown error occurred");
     }
   };
 
   useEffect(() => {
     loadPage();
-    const userInfo = decodeJwt();
 
     // create 후 주석해서 아이디 등록
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
@@ -64,11 +62,6 @@ const AccountList = () => {
   };
 
   const handleToggleActive = async (accountId, isActive) => {
-    console.log(
-      JSON.stringify({
-        isActive: isActive,
-      })
-    );
     try {
       const response = await fetcher.put(
         `${ACCOUNT_FORM}/${accountId}/active`,
@@ -88,11 +81,9 @@ const AccountList = () => {
         await loadPage();
       } else {
         console.error("Failed to update account status:", response.statusText);
-        console.log("Sending data:", JSON.stringify({ isActive: isActive }));
       }
     } catch (error) {
       console.error("Error:", error);
-      console.log("Sending data:", JSON.stringify({ isActive: isActive }));
     }
   };
 
