@@ -46,3 +46,6 @@ export const ERROR_403 = "/error403";
 
 //main
 export const MAIN = "/";
+
+//resolution
+export const RESOLUTION_LIST = "/resolution";

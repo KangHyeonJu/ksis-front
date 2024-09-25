@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BOARD } from "../../../constants/page_constant";
 import { API_NOTICE, API_BASIC } from "../../../constants/api_constant";
-import fetcher from "../../../fetcher";  // fetcher 가져오기
+import fetcher from "../../../fetcher"; // fetcher 가져오기
 
 const ApiForm = () => {
   const [apiName, setApiName] = useState("");
@@ -25,7 +25,9 @@ const ApiForm = () => {
           setApiName(data.apiName); // 데이터 구조에 맞게 수정
           setProvider(data.provider || ""); // 제공업체가 없을 경우 기본값 설정
           setKeyValue(data.keyValue || ""); // API Key가 없을 경우 기본값 설정
-          setExpiryDate(data.expiryDate ? data.expiryDate.substring(0, 10) : ""); // 날짜 형식 조정
+          setExpiryDate(
+            data.expiryDate ? data.expiryDate.substring(0, 10) : ""
+          ); // 날짜 형식 조정
           setPurpose(data.purpose || ""); // 사용 목적이 없을 경우 기본값 설정
         } catch (err) {
           setError(err.message);
@@ -88,7 +90,9 @@ const ApiForm = () => {
   return (
     <div className="p-6">
       <header className="mb-6">
-        <h1 className="text-2xl font-bold">{apiId ? "API 수정" : "API 등록"}</h1>
+        <h1 className="text-2xl font-bold">
+          {apiId ? "API 수정" : "API 등록"}
+        </h1>
       </header>
       <form onSubmit={handleSubmit} className="border p-4 rounded">
         <div className="mb-4">

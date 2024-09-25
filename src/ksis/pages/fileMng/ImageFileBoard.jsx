@@ -28,11 +28,9 @@ const ImageFileBoard = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
-  
   useEffect(() => {
-
-    fetcher 
-    .get(ECIMAGE_BOARD)
+    fetcher
+      .get(ECIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정

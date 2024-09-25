@@ -23,6 +23,7 @@ import {
   UPLOADLOG_INVENTORY,
   ERROR_403,
   MAIN,
+  RESOLUTION_LIST,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -77,6 +78,7 @@ import UploadLogBoard from "./ksis/pages/log/UploadLogBoard.jsx";
 import ActivityLogBoard from "./ksis/pages/log/ActivityLogBoard.jsx";
 import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
+import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 
 function App() {
   const location = useLocation();
@@ -222,6 +224,9 @@ function App() {
               element={<ActivityLogBoard />}
             />
             <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
+
+            {/* 해상도 */}
+            <Route path={RESOLUTION_LIST} element={<ResolutionList />} />
 
             {/* error */}
             <Route pate={ERROR_403} element={<Error403 />} />

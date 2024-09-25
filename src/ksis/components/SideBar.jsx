@@ -20,13 +20,14 @@ import {
   VIDEO_FILE_BOARD,
   ACCESSLOG_INVENTORY,
   MAIN,
+  RESOLUTION_LIST,
 } from "../../constants/page_constant";
 import fetcher from "../../fetcher";
 import ksisLogo from "../../img/ksis-logo.png";
 import Notification from "../pages/notification/Notification"; // 알림 모달 컴포넌트 import
 import NotificationCountComponent from "../pages/notification/NotificationCount"; // 알림 개수 컴포넌트
 import { decodeJwt } from "../../decodeJwt";
-import {ACCESS_LOG, LOG_OUT} from "../../constants/account_constant";
+import { ACCESS_LOG, LOG_OUT } from "../../constants/account_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -59,7 +60,7 @@ const Sidebar = () => {
         category: "LOGOUT",
       });
       // 로그아웃 성공 시 로컬스토리지 토큰 제거
-      alert('로그아웃되었습니다.');
+      alert("로그아웃되었습니다.");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("accountId");
       localStorage.removeItem("authority");
@@ -228,37 +229,49 @@ const Sidebar = () => {
               </div>
             )}
           </div>
-          {isAdmin && (
-            <div className="item mt-3">
-              <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                onClick={() => toggleMenu("settings")}
-              >
-                <BiCog className="mr-3" />
-                <span>기타 관리</span>
-              </div>
-              {openMenu === "settings" && (
-                <div className="submenu ml-8 mt-2">
-                  <Link
-                    to={API_BOARD}
-                    onClick={() => handleMenuClick("API")}
-                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2" />
-                    <span>API 조회</span>
-                  </Link>
-                  <Link
-                    to={FILESIZE_FORM}
-                    onClick={() => handleMenuClick("FILE_SIZE")}
-                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2" />
-                    <span>용량 관리</span>
-                  </Link>
-                </div>
-              )}
+
+          <div className="item mt-3">
+            <div
+              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+              onClick={() => toggleMenu("settings")}
+            >
+              <BiCog className="mr-3" />
+              <span>기타 관리</span>
             </div>
-          )}
+            {openMenu === "settings" && (
+              <div className="submenu ml-8 mt-2">
+                <Link
+                  to={RESOLUTION_LIST}
+                  onClick={() => handleMenuClick("RESOLUTION")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>해상도 관리</span>
+                </Link>
+                {isAdmin && (
+                  <>
+                    <Link
+                      to={API_BOARD}
+                      onClick={() => handleMenuClick("API")}
+                      className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                    >
+                      <FaRegCircle size={10} className="mr-2" />
+                      <span>API 관리</span>
+                    </Link>
+
+                    <Link
+                      to={FILESIZE_FORM}
+                      onClick={() => handleMenuClick("FILE_SIZE")}
+                      className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                    >
+                      <FaRegCircle size={10} className="mr-2" />
+                      <span>용량 관리</span>
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="mt-auto">

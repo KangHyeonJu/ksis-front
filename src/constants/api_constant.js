@@ -57,3 +57,6 @@ export const VISIT = "/total/visit";
 export const ACCESSLOG_LIST = "/log/access";
 export const ACTIVITYLOG_LIST = "/log/activity";
 export const UPLOADLOG_LIST = "/log/upload";
+
+//resolution
+export const RESOLUTION = "/resolution";

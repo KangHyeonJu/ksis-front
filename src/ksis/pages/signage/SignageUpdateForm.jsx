@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import {
+  RESOLUTION,
   SIGNAGE_ACCOUNT,
   SIGNAGE_UPDATE,
 } from "../../../constants/api_constant";
@@ -23,6 +24,7 @@ const SignageUpdateForm = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [accounts, setAccounts] = useState([]);
+  const [resolutions, setResolution] = useState([]);
 
   const loadPcDtl = async (signageId) => {
     try {
@@ -35,14 +37,6 @@ const SignageUpdateForm = () => {
         resolution,
         ...rest
       } = response.data;
-
-      const accountGet = await fetcher.get(SIGNAGE_ACCOUNT);
-      console.log(response);
-      if (accountGet.data) {
-        setAccounts(accountGet.data);
-      } else {
-        console.error("No data property in response");
-      }
 
       setResponsibles(
         accountList.map((account, index) => ({
@@ -69,6 +63,26 @@ const SignageUpdateForm = () => {
       setHeight(screen[1]);
     } catch (error) {
       console.log(error.response);
+    }
+
+    loadMsd();
+  };
+
+  const loadMsd = async () => {
+    try {
+      const [responseAccount, responseResolution] = await Promise.all([
+        fetcher.get(SIGNAGE_ACCOUNT),
+        fetcher.get(RESOLUTION),
+      ]);
+      if (responseAccount.data && responseResolution.data) {
+        setAccounts(responseAccount.data);
+        setResolution(responseResolution.data);
+      } else {
+        console.error("No data property in response");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      alert(error.response?.data || "Unknown error occurred");
     }
   };
 
@@ -393,28 +407,14 @@ const SignageUpdateForm = () => {
               className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
               <option value="">해상도 선택</option>
-              <option value="nHD(640 x 360)">nHD(640 x 360)</option>
-              <option value="qHD(960 x 540)">qHD(960 x 540)</option>
-              <option value="HD(1280 x 720)">HD(1280 x 720)</option>
-              <option value="FHD(1920 x 1080)">FHD(1920 x 1080)</option>
-              <option value="FHD+(2460 x 1080)">FHD+(2460 x 1080)</option>
-              <option value="WFHD(2560 x 1080)">WFHD(2560 x 1080)</option>
-              <option value="DFHD(3840 x 1080)">DFHD(3840 x 1080)</option>
-              <option value="WUXGA(1920 x 1200)">WUXGA(1920 x 1200)</option>
-              <option value="QHD(2560 x 1440)">QHD(2560 x 1440)</option>
-              <option value="QHD+(3200 x 1440)">QHD+(3200 x 1440)</option>
-              <option value="WQHD(3440 x 1440)">WQHD(3440 x 1440)</option>
-              <option value="DQHD(5120 x 1440)">DQHD(5120 x 1440)</option>
-              <option value="WQXGA(2560 x 1600)">WQXGA(2560 x 1600)</option>
-              <option value="WQHD+(3840 x 1600)">WQHD+(3840 x 1600)</option>
-              <option value="4K UHD(3840 x 2160)">4K UHD(3840 x 2160)</option>
-              <option value="4K DCI(4096 x 2160)">4K DCI(4096 x 2160)</option>
-              <option value="WUHD/UHD+(5120 x 2160)">
-                WUHD/UHD+(5120 x 2160)
-              </option>
-              <option value="8K UHD/FUHD(7680 x 4320)">
-                8K UHD/FUHD(7680 x 4320)
-              </option>
+              {resolutions.map((resolution) => (
+                <option
+                  value={`${resolution.name} (${resolution.width} x ${resolution.height})`}
+                  key={resolution.resolutionId}
+                >
+                  {resolution.name}({resolution.width} x {resolution.height})
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex items-center mt-5">

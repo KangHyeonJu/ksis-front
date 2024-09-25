@@ -87,29 +87,32 @@ const SignageDtl = () => {
         navigate(SIGNAGE_INVENTORY);
       }
 
-      const playlistResponse = await fetcher.get(
-        SIGNAGE_PLAYLIST + `/${signageId}`
-      );
-
-      console.log("Playlist data:", playlistResponse);
-      setPlaylists(playlistResponse.data);
-
-      const selectedPlaylist = playlistResponse.data.find(
-        (playlist) => playlist.play === true
-      );
-      if (selectedPlaylist) {
-        setRadiobox(selectedPlaylist.playlistId);
-      }
-
+      loadPlayList(signageId);
       setEnabled(response.data.isShow);
     } catch (error) {
       console.log(error.response);
     }
   };
 
+  const loadPlayList = async (signageId) => {
+    const playlistResponse = await fetcher.get(
+      SIGNAGE_PLAYLIST + `/${signageId}`
+    );
+
+    console.log("Playlist data:", playlistResponse);
+    setPlaylists(playlistResponse.data);
+
+    const selectedPlaylist = playlistResponse.data.find(
+      (playlist) => playlist.play === true
+    );
+    if (selectedPlaylist) {
+      setRadiobox(selectedPlaylist.playlistId);
+    }
+  };
+
   useEffect(() => {
     loadSignageDtl(params.id);
-  }, [params.id]);
+  }, []);
 
   // Switch 상태 변경 핸들러
   const handleToggle = async () => {
@@ -202,6 +205,20 @@ const SignageDtl = () => {
     } catch (error) {
       console.log(error.response.data);
     }
+  };
+
+  const handleModalClose = async () => {
+    await loadPlayList(data.deviceId);
+    closePlaylistAdd();
+  };
+
+  const handleUpdateMoalClose = async () => {
+    await loadPlayList(data.deviceId);
+    setPlaylistDtl([]);
+    setPlaylistTitle("");
+    setSlideTime("");
+    setPlayListId("");
+    closePlaylistUpdate();
   };
 
   return (
@@ -358,7 +375,7 @@ const SignageDtl = () => {
               </button>
               <SignagePlaylistModal
                 isOpen={playlistAddIsOpen}
-                onRequestClose={closePlaylistAdd}
+                onRequestClose={handleModalClose}
                 signageId={data.deviceId}
               />
             </div>
@@ -425,7 +442,7 @@ const SignageDtl = () => {
                 </button>
                 <PlaylistUpdateModal
                   isOpen={playlistUpdateIsOpen}
-                  onRequestClose={closePlaylistUpdate}
+                  onRequestClose={handleUpdateMoalClose}
                   signageId={data.deviceId}
                   playlistId={playListId}
                 />
