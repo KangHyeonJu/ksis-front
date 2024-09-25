@@ -12,7 +12,6 @@ const TokenCallback = () => {
       const accessToken = urlParams.get("accessToken");
 
       if (!accessToken) {
-        console.error("AccessToken 제공되지 않았습니다.");
         return;
       }
 

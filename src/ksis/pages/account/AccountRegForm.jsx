@@ -4,19 +4,21 @@ import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import {ACCOUNT_CREATE, ACCOUNT_LIST_BOARD} from "../../../constants/account_constant";
 
+const initialFormData = {
+    accountId: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+    birthDate: '',
+    businessTel: '',
+    emergencyTel: '',
+    email: '',
+    position: '',
+    gender: '',
+};
+
 const AccountRegForm = () => {
-    const [formData, setFormData] = useState({
-        accountId: '',
-        password: '',
-        confirmPassword: '',
-        name: '',
-        birthDate: '',
-        businessTel: '',
-        emergencyTel: '',
-        email: '',
-        position: '',
-        gender: '',
-    });
+    const [formData, setFormData] = useState(initialFormData);
     const [passwordMatch, setPasswordMatch] = useState(true);
     const navigate = useNavigate();
     useEffect(() => {
@@ -41,16 +43,16 @@ const AccountRegForm = () => {
     };
 
     const handlePhoneNumberChange = (e, fieldName) => {
-        let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자 이외의 문자 제거
-        if (value.length > 11) value = value.slice(0, 11); // 최대 11자리 제한
-        if (value.length <= 3) {
-            value = value;
-        } else if (value.length <= 7) {
-            value = value.slice(0, 3) + '-' + value.slice(3);
-        } else {
-            value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
-        }
-        setFormData({ ...formData, [fieldName]: value });
+        let value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11); // 숫자만 남기고 11자리 제한
+
+        const parts = [
+            value.slice(0, 3),
+            value.slice(3, 7),
+            value.slice(7)
+        ].filter(Boolean); // 빈 문자열 제외
+
+        const formattedValue = parts.join("-"); // 하이픈 추가
+        setFormData({ ...formData, [fieldName]: formattedValue });
     };
 
     const handlePasswordChange = (e) => {
@@ -79,30 +81,12 @@ const AccountRegForm = () => {
         try {
             const response = await fetcher.post(ACCOUNT_CREATE, cleanedFormData, {
             });
-            setFormData({
-                accountId: '',
-                password: '',
-                confirmPassword: '',
-                name: '',
-                birthDate: '',
-                businessTel: '',
-                emergencyTel: '',
-                email: '',
-                position: '',
-                gender: '',
-            });
-
-            console.log(cleanedFormData);
+            // setFormData(initialFormData);
             navigate(ACCOUNT_LIST_BOARD);
         } catch (error) {
-            console.error('Error creating account:', error);
-            console.log('Form Data:', JSON.stringify(cleanedFormData));
 
             // Axios 에러의 상세 정보 확인
             if (error.response) {
-                console.error('Error Response Data:', error.response.data);
-                console.error('Error Response Status:', error.response.status);
-                console.error('Error Response Headers:', error.response.headers);
                 alert(error.response.data);
             } else if (error.request) {
                 console.error('Error Request Data:', error.request);

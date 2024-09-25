@@ -32,6 +32,7 @@ const AccountList = () => {
     loadPage();
     const userInfo = decodeJwt();
 
+    // create 후 주석해서 아이디 등록
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자만 접근 가능합니다.");
       navigate(MAIN);
@@ -80,11 +81,8 @@ const AccountList = () => {
           },
         }
       );
-      console.log("Sending data:", { isActive: isActive });
-      console.log("Data type of isActive:", typeof isActive);
 
       if (response.status === 200) {
-        console.log("Account status updated successfully");
         // 로컬 상태 업데이트
         alert("비활성화 여부가 변경되었습니다.");
         await loadPage();
