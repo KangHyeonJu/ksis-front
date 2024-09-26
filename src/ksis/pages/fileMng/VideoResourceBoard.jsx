@@ -115,6 +115,7 @@ const VideoResourceBoard = () => {
       try {
         await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
         setVideos(videos.filter((video) => video.id !== id));
+        window.alert("영상을 삭제하였습니다.");
       } catch (err) {
         console.error("영상 삭제 오류:", err);
         window.alert("영상 삭제에 실패했습니다.");
@@ -264,7 +265,9 @@ const VideoResourceBoard = () => {
 
                 {/* 영상 */}
                 <div>
-                  <div className="w-5/6 h-5/6 overflow-hidden  mt-4 cursor-pointer mx-auto">
+                <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
+                <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
+                
                     <video
                       src={post.filePath}
                       //영상 파일 깨질시 영상 제목으로 설정
@@ -273,6 +276,7 @@ const VideoResourceBoard = () => {
                       //영상 클릭하면 모달 열림
                       onClick={() => openResourceModal(post.originalResourceId)}
                     />
+                  </div>
                   </div>
                 </div>
 

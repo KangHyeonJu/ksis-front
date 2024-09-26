@@ -108,6 +108,7 @@ const ImageResourceBoard = () => {
       try {
         await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
+        window.alert("이미지를 삭제하였습니다.");
       } catch (err) {
         console.error("이미지 삭제 오류:", err);
         window.alert("이미지 삭제에 실패했습니다.");
@@ -222,7 +223,7 @@ const ImageResourceBoard = () => {
                             w-2/3 h-full p-3 bg-[#ffe69c]"
               >
                 {/* 제목 */}
-                <div style={{ width: "200px",}}>
+                {/* <div style={{ width: "100%",}}> */}
                 <div className="flex items-center">
                   {editingTitleIndex === index ? (
                     <input
@@ -246,7 +247,7 @@ const ImageResourceBoard = () => {
                     className="ml-2 cursor-pointer text-gray-600"
                   />
                 </div>
-                </div>
+                {/* </div> */}
 
                 {/* 등록일 */}
                 <div>
@@ -257,8 +258,9 @@ const ImageResourceBoard = () => {
 
                 {/* 이미지 */}
                 <div>
-                  <div className="w-5/6 h-5/6 overflow-hidden mt-4 cursor-pointer mx-auto flex justify-center items-center" >
-                    <div style={{ width: "100PX", height: "100px",}}>
+                <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
+                <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
+                
                       <img
                         src={post.filePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
