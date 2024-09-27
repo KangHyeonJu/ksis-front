@@ -262,7 +262,7 @@ const ImageResourceBoard = () => {
                 <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
                 
                       <img
-                        src={post.filePath}
+                        src={post.thumbFilePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
                         alt={post.fileTitle}
                         className="w-100 h-100 overflow-hidden "

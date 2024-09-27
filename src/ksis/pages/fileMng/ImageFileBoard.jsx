@@ -237,7 +237,7 @@ const ImageFileBoard = () => {
                 <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
                 
                   <img
-                      src={post.filePath}
+                      src={post.thumbFilePath}
                       alt={post.fileTitle}
                       className="w-full h-full object-cover"
                       onClick={() => openResourceModal(post.filePath)}

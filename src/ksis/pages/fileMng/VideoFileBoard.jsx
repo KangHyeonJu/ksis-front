@@ -237,8 +237,8 @@ const VideoFileBoard = () => {
                 <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
                 <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
                 
-                    <video
-                      src={post.filePath}
+                    <img
+                      src={post.thumbFilePath}
                       alt={post.fileTitle}
                       className="w-full h-full object-cover"
                       onClick={() => openResourceModal(post.filePath)}

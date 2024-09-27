@@ -268,8 +268,8 @@ const VideoResourceBoard = () => {
                 <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
                 <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
                 
-                    <video
-                      src={post.filePath}
+                    <img
+                      src={post.thumbFilePath}
                       //영상 파일 깨질시 영상 제목으로 설정
                       alt={post.fileTitle}
                       className="w-full h-full"
