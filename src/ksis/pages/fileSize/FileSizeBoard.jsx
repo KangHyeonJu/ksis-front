@@ -1,10 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FILE_SIZE } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher"; // fetcher import
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
   const [videoMaxSize, setVideoMaxSize] = useState(500); // 기본값 설정
+  const [loading, setLoading] = useState(true); // 데이터 로딩 상태
+
+  // 파일 크기 설정을 API에서 가져오는 함수
+  const fetchFileSize = async () => {
+    try {
+      const response = await fetcher.get(FILE_SIZE); // GET 요청을 통해 데이터 조회
+      if (response.status === 200) {
+        const { imageMaxSize, videoMaxSize } = response.data;
+        setImageMaxSize(imageMaxSize); // 이미지 최대 크기 설정
+        setVideoMaxSize(videoMaxSize); // 비디오 최대 크기 설정
+      } else {
+        alert("파일 크기 설정값을 가져오는데 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Error fetching file sizes:", error);
+      alert("파일 크기 설정을 가져오는 중 오류 발생");
+    } finally {
+      setLoading(false); // 데이터 로딩 상태 해제
+    }
+  };
+
+  // 컴포넌트가 마운트될 때 파일 크기 설정을 불러옴
+  useEffect(() => {
+    fetchFileSize();
+  }, []);
 
   const handleSave = async () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
@@ -22,6 +47,10 @@ const FileSizeBoard = () => {
       alert("설정 저장 중 오류 발생");
     }
   };
+
+  if (loading) {
+    return <div>데이터를 불러오는 중입니다...</div>;
+  }
 
   return (
     <div className="p-6">
@@ -73,7 +102,7 @@ const FileSizeBoard = () => {
         </tbody>
       </table>
       <div className="flex justify-end">
-        <button
+        <button 
           onClick={handleSave}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
