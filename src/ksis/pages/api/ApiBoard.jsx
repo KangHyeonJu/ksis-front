@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
+import { API_BOARD, API_FORM } from "../../../constants/page_constant";
 import fetcher from "../../../fetcher";
 import ApiTable from "../../components/apiBoard/ApiTable";
 import ApiSearchBar from "../../components/apiBoard/ApiSearchBar";
@@ -50,7 +51,7 @@ const ApiBoard = () => {
       );
       setSelectedPosts(new Set());
       alert("선택된 게시글이 삭제되었습니다.");
-      navigate("/apiboard");
+      navigate(API_BOARD);
     } catch (err) {
       setError("게시글 삭제 중 오류가 발생했습니다.");
     }
@@ -82,7 +83,7 @@ const ApiBoard = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-4xl font-bold">API 목록</h1>
+      <h1 className="text-4xl font-bold pb-5">API 목록</h1>
       <ApiSearchBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -111,7 +112,7 @@ const ApiBoard = () => {
         isAllSelected={paginatedPosts.every((post) =>
           selectedPosts.has(post.apiId)
         )}
-        handleApiNameClick={(apiId) => navigate(`/apiform/${apiId}`)}
+        handleApiNameClick={(apiId) => navigate(API_FORM + `/${apiId}`)}
         formatDate={(dateString) => (dateString ? dateString.substring(0, 10) : "")}
       />
       <ApiPagination
@@ -123,3 +124,8 @@ const ApiBoard = () => {
 };
 
 export default ApiBoard;
+
+
+
+
+
