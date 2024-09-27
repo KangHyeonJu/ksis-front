@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation, useNavigate} from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
 import ProtectedRoute from "./ksis/components/ProtectedRoute";
@@ -81,7 +81,7 @@ import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
-import {EventSourcePolyfill} from "event-source-polyfill";
+import { EventSourcePolyfill } from "event-source-polyfill";
 
 function App() {
   const location = useLocation();
@@ -95,10 +95,10 @@ function App() {
   const URL = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
 
-  window.addEventListener('storage', (event) => {
-    if (event.key === 'accessToken' && event.newValue === null) {
+  window.addEventListener("storage", (event) => {
+    if (event.key === "accessToken" && event.newValue === null) {
       // 로그아웃 처리
-      window.location.href = '/downloadApp';
+      window.location.href = "/downloadApp";
     }
   });
 
@@ -107,7 +107,7 @@ function App() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("authority");
     localStorage.removeItem("accountId");
-    navigate('/downloadApp');
+    navigate("/downloadApp");
   };
 
   useEffect(() => {
