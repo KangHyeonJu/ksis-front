@@ -38,10 +38,10 @@ const NotificationCountComponent = () => {
       fetchUnreadCount(); // 알림 개수 다시 가져오기
     };
 
-    eventSource.onerror = (error) => {
-      console.error("EventSource failed:", error);
-      eventSource.close(); // 에러 시 이벤트 소스 닫기
-    };
+    // eventSource.onerror = (error) => {
+    //   console.error("EventSource failed:", error);
+    //   eventSource.close(); // 에러 시 이벤트 소스 닫기
+    // };
 
     // 컴포넌트가 언마운트될 때 이벤트 소스 닫기
     return () => {
