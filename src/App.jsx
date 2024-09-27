@@ -24,6 +24,7 @@ import {
   ERROR_403,
   MAIN,
   RESOLUTION_LIST,
+  SIGNAGE_PLAY_PAGE,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -79,12 +80,13 @@ import ActivityLogBoard from "./ksis/pages/log/ActivityLogBoard.jsx";
 import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
+import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
 
 function App() {
   const location = useLocation();
 
   // 사이드바를 숨기고 싶은 경로들
-  const noSidebarRoutes = ["/downloadApp"];
+  const noSidebarRoutes = ["/downloadApp", "/signageplay"];
 
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
@@ -231,6 +233,9 @@ function App() {
             {/* error */}
             <Route pate={ERROR_403} element={<Error403 />} />
           </Route>
+
+          {/* 재생 */}
+          <Route path={SIGNAGE_PLAY_PAGE} element={<SignagePlayKeyPage />} />
         </Routes>
       </div>
     </div>
