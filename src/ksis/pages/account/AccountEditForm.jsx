@@ -24,10 +24,9 @@ const AccountEditForm = () => {
   });
   const [passwordMatch, setPasswordMatch] = useState(true);
   const navigate = useNavigate();
+  const userInfo = decodeJwt();
 
   useEffect(() => {
-    const userInfo = decodeJwt();
-
     if (
       userInfo.accountId !== accountId &&
       !userInfo.roles.includes("ROLE_ADMIN")
@@ -119,10 +118,9 @@ const AccountEditForm = () => {
         `${ACCOUNT_FORM}/${accountId}`,
         cleanedFormData
       );
-      console.log(response);
       if (response.status === 200) {
         alert("계정 정보가 성공적으로 업데이트되었습니다.");
-        if (localStorage.getItem("authority") === "ROLE_ADMIN") {
+        if (userInfo.roles.includes("ROLE_ADMIN")) {
           navigate(ACCOUNT_LIST_BOARD);
         } else {
           navigate(MAIN);
@@ -347,7 +345,7 @@ const AccountEditForm = () => {
             </button>
             <Link
               to={
-                localStorage.getItem("authority") === "ROLE_ADMIN"
+                userInfo.roles.includes("ROLE_ADMIN")
                   ? ACCOUNT_LIST_BOARD
                   : MAIN
               }

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate} from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
 import ProtectedRoute from "./ksis/components/ProtectedRoute";
@@ -24,6 +24,7 @@ import {
   ERROR_403,
   MAIN,
   RESOLUTION_LIST,
+  SIGNAGE_PLAY_PAGE,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -79,20 +80,43 @@ import ActivityLogBoard from "./ksis/pages/log/ActivityLogBoard.jsx";
 import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
+import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
+import {EventSourcePolyfill} from "event-source-polyfill";
 
 function App() {
   const location = useLocation();
 
   // 사이드바를 숨기고 싶은 경로들
-  const noSidebarRoutes = ["/downloadApp"];
+  const noSidebarRoutes = ["/downloadApp", "/signageplay"];
 
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
-
+  const accessToken = localStorage.getItem("accessToken");
   const URL = process.env.REACT_APP_API_BASE_URL;
+  const navigate = useNavigate();
+
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'accessToken' && event.newValue === null) {
+      // 로그아웃 처리
+      window.location.href = '/downloadApp';
+    }
+  });
+
+  const logout = () => {
+    alert("로그아웃 되었습니다.");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("authority");
+    localStorage.removeItem("accountId");
+    navigate('/downloadApp');
+  };
 
   useEffect(() => {
-    let eventSource = new EventSource(`${URL}${EVENT}`);
+    const accessToken = localStorage.getItem("accessToken");
+    let eventSource = new EventSourcePolyfill(`${URL}${EVENT}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 추가
+      },
+    });
     // let eventSource = new EventSource("${URL}/api/events");
 
     eventSource.addEventListener("logout", (event) => {
@@ -100,38 +124,17 @@ function App() {
       const currentAccountId = localStorage.getItem("accountId");
 
       if (loggedOutAccountId === currentAccountId) {
-        console.log(loggedOutAccountId, currentAccountId);
-        alert("로그아웃 되었습니다.");
-        // 로컬 스토리지에서 액세스 토큰 제거
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("authority");
-        localStorage.removeItem("accountId");
-        // 로그인 페이지로 리디렉션
-        window.location.href = "/downloadApp";
-        console.log("로그아웃 이벤트 수신:", event.data);
-        // SSE 연결 종료
+        logout();
         eventSource.close(); // 로그아웃 후 SSE 연결 종료
       }
     });
-
-    const accessToken = localStorage.getItem("accessToken");
 
     if (accessToken) {
       fetcher
         .post(TOKEN_CHECK)
         .then((response) => {
           if (response.data.logout) {
-            // 로그아웃 처리
-            alert("로그아웃되었습니다.");
-
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("authority");
-            localStorage.removeItem("accountId");
-
-            window.location.href = "/downloadApp";
-            console.log("로그아웃");
-          } else {
-            console.log("로그인 유지");
+            logout();
           }
         })
         .catch(() => {
@@ -145,7 +148,7 @@ function App() {
   return (
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
-      {!isNoSidebarRoute && <Sidebar />}
+      {!isNoSidebarRoute && accessToken && <Sidebar />}
       <div className="content flex-1 p-4">
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
@@ -231,6 +234,9 @@ function App() {
             {/* error */}
             <Route pate={ERROR_403} element={<Error403 />} />
           </Route>
+
+          {/* 재생 */}
+          <Route path={SIGNAGE_PLAY_PAGE} element={<SignagePlayKeyPage />} />
         </Routes>
       </div>
     </div>

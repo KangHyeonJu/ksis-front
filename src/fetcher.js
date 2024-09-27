@@ -11,7 +11,6 @@ const fetcher = axios.create({
 // 요청 인터셉터 설정
 fetcher.interceptors.request.use(
   (config) => {
-    console.log(API_BASE_URL);
     const token = localStorage.getItem("accessToken"); // 로컬스토리지에서 액세스 토큰 가져오기
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // 요청 헤더에 토큰 추가
@@ -27,12 +26,7 @@ fetcher.interceptors.response.use(
   async (error) => {
     if (error.response.status === 403) {
       console.log("에러났습니다. 왜냐하면 액세스 토큰이 만료됐거든요.");
-
-      const { data } = error.response;
-      console.log("received data :", data);
-
       const accessToken = localStorage.getItem("accessToken"); // 만료된 액세스 토큰 담기
-      console.log("accessToken : ", accessToken);
       if (accessToken) {
         // 만료된 액세스 토큰 갱신 요청
         const response = await fetcher.post(`${TOKEN_CALLBACK}`, null, {

@@ -90,6 +90,7 @@ const ImageFileBoard = () => {
       try {
         await fetcher.delete(FILE_ENCODED_BASIC + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
+        window.alert("이미지를 삭제하였습니다.");
       } catch (err) {
         console.error("이미지 삭제 오류:", err);
         window.alert("이미지 삭제에 실패했습니다.");
@@ -232,13 +233,16 @@ const ImageFileBoard = () => {
 
                 {/* 이미지 */}
                 <div>
-                  <div className="w-5/6 h-5/6 overflow-hidden mb-4 mt-4 cursor-pointer mx-auto">
-                    <img
+                <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
+                <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
+                
+                  <img
                       src={post.filePath}
                       alt={post.fileTitle}
                       className="w-full h-full object-cover"
                       onClick={() => openResourceModal(post.filePath)}
                     />
+                  </div>
                   </div>
                 </div>
 

@@ -10,6 +10,7 @@ export const SIGNAGE_FORM = "/signageform";
 export const SIGNAGE_DTL = "/signagedtl";
 export const SIGNAGE_GRID = "/signagegrid";
 export const SIGNAGE_UPDATE_FORM = "/signageupdate";
+export const SIGNAGE_PLAY_PAGE = "/signageplay";
 
 //api
 export const API_BOARD = "/apiboard";
