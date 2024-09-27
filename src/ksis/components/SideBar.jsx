@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Link 컴포넌트 import
+import {Link, useNavigate} from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
@@ -33,6 +33,7 @@ const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
   const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userInfo = decodeJwt();
@@ -64,7 +65,8 @@ const Sidebar = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("accountId");
       localStorage.removeItem("authority");
-      window.location.href = "/downloadApp";
+      // window.location.href = "/downloadApp";
+      navigate('/downloadApp');
     } catch (error) {
       console.error("로그아웃 실패: ", error);
     }

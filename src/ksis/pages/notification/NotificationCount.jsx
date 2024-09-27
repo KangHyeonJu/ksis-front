@@ -24,8 +24,8 @@ const NotificationCountComponent = () => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken"); // 로컬 스토리지에서 토큰 가져오기
     const eventSource = new EventSourcePolyfill(
-      // "http://localhost:8080/sse/notifications",
-      API_BASE_URL + "/sse/notifications",
+      // "http://localhost:8080/sse/events",
+      API_BASE_URL + "/sse/events",
       {
         headers: {
           Authorization: `Bearer ${token}`, // 토큰을 헤더에 추가
@@ -38,10 +38,10 @@ const NotificationCountComponent = () => {
       fetchUnreadCount(); // 알림 개수 다시 가져오기
     };
 
-    eventSource.onerror = (error) => {
-      console.error("EventSource failed:", error);
-      eventSource.close(); // 에러 시 이벤트 소스 닫기
-    };
+    // eventSource.onerror = (error) => {
+    //   console.error("EventSource failed:", error);
+    //   eventSource.close(); // 에러 시 이벤트 소스 닫기
+    // };
 
     // 컴포넌트가 언마운트될 때 이벤트 소스 닫기
     return () => {

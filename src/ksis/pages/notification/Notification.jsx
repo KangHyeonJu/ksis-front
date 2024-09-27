@@ -75,36 +75,37 @@ const Notification = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫히지 않게
       >
         <h2 className="text-xl font-semibold mb-4">알림</h2>
-
-        {/* 알림 목록을 테이블로 표시 */}
-        <table className="w-full table-auto">
-          <tbody>
-            {notifications === 0 ? (
-              <tr>
-                <td className="py-2 px-4 text-center" colSpan="2">
-                  데이터가 없습니다
-                </td>
-              </tr>
-            ) : (
-              notifications.map((notification, index) => (
-                <tr
-                  key={index}
-                  className={`border-2 border-gray-200 
+        <div className="overflow-auto">
+          {/* 알림 목록을 테이블로 표시 */}
+          <table className="w-full table-auto">
+            <tbody>
+              {notifications === 0 ? (
+                <tr>
+                  <td className="py-2 px-4 text-center" colSpan="2">
+                    데이터가 없습니다
+                  </td>
+                </tr>
+              ) : (
+                notifications.map((notification, index) => (
+                  <tr
+                    key={index}
+                    className={`border-2 border-gray-200 
                     ${
                       notification.isRead ? "bg-white" : "bg-orange-100"
                     } hover:bg-gray-100`}
-                  onMouseEnter={() =>
-                    handleMouseOver(index, notification.notificationId)
-                  }
-                  onClick={() => handleNavigate(notification.resourceType)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <td className="py-2 px-4">{notification.message}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    onMouseEnter={() =>
+                      handleMouseOver(index, notification.notificationId)
+                    }
+                    onClick={() => handleNavigate(notification.resourceType)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <td className="py-2 px-4">{notification.message}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
         <br />
         <Stack spacing={2}>
           <Pagination
