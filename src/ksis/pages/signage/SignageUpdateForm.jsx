@@ -17,7 +17,6 @@ const SignageUpdateForm = () => {
   const loginAccountId = localStorage.getItem("accountId");
   const navigate = useNavigate();
 
-  //불러오기
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
@@ -25,18 +24,19 @@ const SignageUpdateForm = () => {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [accounts, setAccounts] = useState([]);
   const [resolutions, setResolution] = useState([]);
+  const [error, setError] = useState("");
+  const [address, setAddress] = useState("");
 
+  //가로세로크기
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+
+  //불러오기
   const loadPcDtl = async (signageId) => {
     try {
       const response = await fetcher.get(SIGNAGE_UPDATE + `/${signageId}`);
-      const {
-        accountList,
-        location,
-        macAddress,
-        screenSize,
-        resolution,
-        ...rest
-      } = response.data;
+      const { accountList, location, screenSize, resolution, ...rest } =
+        response.data;
 
       setResponsibles(
         accountList.map((account, index) => ({
@@ -55,7 +55,6 @@ const SignageUpdateForm = () => {
 
       setData(rest);
       setAddress(location);
-      setMacAddress(macAddress);
       setSelectedValue(resolution);
 
       const screen = screenSize.split(" x ");
@@ -96,27 +95,7 @@ const SignageUpdateForm = () => {
     setSelectedValue(e.target.value);
   };
 
-  //mac 주소 검증
-  const [macAddress, setMacAddress] = useState("");
-  const [error, setError] = useState("");
-
-  const handleMacAddressChange = (e) => {
-    let value = e.target.value;
-
-    value = value.replace(/:/g, "");
-
-    if (value.length > 12) {
-      value = value.slice(0, 12);
-    }
-
-    value = value.match(/.{1,2}/g)?.join(":") || "";
-
-    setMacAddress(value);
-  };
-
   //주소불러오기
-  const [address, setAddress] = useState("");
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -161,20 +140,15 @@ const SignageUpdateForm = () => {
     navigate(-1);
   };
 
-  //가로세로크기
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
-
   //patch
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
-      macAddress: macAddress,
       location: address,
       resolution: selectedValue,
       screenSize: width + " x " + height,
     }));
-  }, [macAddress, address, selectedValue, width, height]);
+  }, [address, selectedValue, width, height]);
 
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
@@ -188,11 +162,14 @@ const SignageUpdateForm = () => {
       setIsDisabled(false);
       setIsReadOnly(false);
 
-      const macRegex = /^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$/;
+      const ipRegex =
+        /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
-      if (macAddress === "" || !macRegex.test(macAddress)) {
-        setError("유효한 mac주소를 입력하세요.");
-        document.getElementById("macAddress").focus();
+      if (data.ipAddress === "" || !ipRegex.test(data.ipAddress)) {
+        setError("유효한 IP주소를 입력하세요.");
+        console.log(data.ipAddress);
+        document.getElementById("ipAddress").focus();
+        console.log("error", error);
         return false;
       }
 
@@ -227,8 +204,8 @@ const SignageUpdateForm = () => {
         setIsReadOnly(true);
 
         navigate(SIGNAGE_DTL + `/${data.deviceId}`);
-      } else if (response.status === 202) {
-        alert("이미 등록된 MAC주소입니다.");
+      } else {
+        alert("재생장치 등록을 실패했습니다.");
         return;
       }
     } catch (error) {
@@ -374,22 +351,23 @@ const SignageUpdateForm = () => {
           </div>
           <div className="flex items-center mt-5">
             <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              Mac주소
+              IP주소
             </label>
 
             {authority === "ROLE_ADMIN" ? (
               <input
-                id="macAddress"
+                id="ipAddress"
                 required
-                onChange={handleMacAddressChange}
-                value={macAddress}
+                onChange={onChangeHandler}
+                value={data.ipAddress}
                 type="text"
+                name="ipAddress"
                 className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
               />
             ) : (
               <input
                 readOnly={isReadOnly}
-                value={macAddress}
+                value={data.ipAddress}
                 type="text"
                 className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#e7d8ac]"
               />

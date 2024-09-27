@@ -20,29 +20,12 @@ const SignageForm = () => {
   const [addressError, setAddressError] = useState("");
   const navigate = useNavigate();
   const authority = localStorage.getItem("authority");
+  const [error, setError] = useState("");
 
   //해상도
   const [selectedValue, setSelectedValue] = useState();
   const handleChange = (e) => {
     setSelectedValue(e.currentTarget.value);
-  };
-
-  //mac 주소 검증
-  const [macAddress, setMacAddress] = useState("");
-  const [error, setError] = useState("");
-
-  const handleMacAddressChange = (e) => {
-    let value = e.target.value;
-
-    value = value.replace(/:/g, "");
-
-    if (value.length > 12) {
-      value = value.slice(0, 12);
-    }
-
-    value = value.match(/.{1,2}/g)?.join(":") || "";
-
-    setMacAddress(value);
   };
 
   //주소불러오기
@@ -119,7 +102,7 @@ const SignageForm = () => {
 
   //post
   const [data, setData] = useState({
-    macAddress: "",
+    ipAddress: "",
     deviceName: "",
     location: "",
     detailAddress: "",
@@ -131,12 +114,11 @@ const SignageForm = () => {
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
-      macAddress,
       location: address,
       resolution: selectedValue,
       screenSize: width + " x " + height,
     }));
-  }, [macAddress, address, selectedValue, width, height]);
+  }, [address, selectedValue, width, height]);
 
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
@@ -153,11 +135,12 @@ const SignageForm = () => {
         return false;
       }
 
-      const macRegex = /^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$/;
+      const ipRegex =
+        /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
-      if (macAddress === "" || !macRegex.test(macAddress)) {
-        setError("유효한 mac주소를 입력하세요.");
-        document.getElementById("macAddress").focus();
+      if (data.ipAddress === "" || !ipRegex.test(data.ipAddress)) {
+        setError("유효한 IP주소를 입력하세요.");
+        document.getElementById("ipAddress").focus();
         return false;
       }
 
@@ -189,8 +172,8 @@ const SignageForm = () => {
       if (response.status === 200) {
         alert("재생장치가 정상적으로 등록되었습니다.");
         navigate(SIGNAGE_INVENTORY);
-      } else if (response.status === 202) {
-        alert("이미 등록된 MAC주소입니다.");
+      } else {
+        alert("재생장치 등록을 실패했습니다.");
         return;
       }
     } catch (error) {
@@ -319,14 +302,15 @@ const SignageForm = () => {
           </div>
           <div className="flex items-center mt-5">
             <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              Mac주소
+              IP주소
             </label>
             <input
               required
-              id="macAddress"
-              onChange={handleMacAddressChange}
-              value={macAddress}
+              id="ipAddress"
+              onChange={onChangeHandler}
+              value={data.ipAddress}
               type="text"
+              name="ipAddress"
               className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
             />
             {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
