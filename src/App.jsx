@@ -79,6 +79,7 @@ import ActivityLogBoard from "./ksis/pages/log/ActivityLogBoard.jsx";
 import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
+import {EventSourcePolyfill} from "event-source-polyfill";
 
 function App() {
   const location = useLocation();
@@ -92,6 +93,13 @@ function App() {
   const URL = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
 
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'accessToken' && event.newValue === null) {
+      // 로그아웃 처리
+      window.location.href = '/downloadApp';
+    }
+  });
+
   const logout = () => {
     alert("로그아웃 되었습니다.");
     localStorage.removeItem("accessToken");
@@ -101,7 +109,12 @@ function App() {
   };
 
   useEffect(() => {
-    let eventSource = new EventSource(`${URL}${EVENT}`);
+    const accessToken = localStorage.getItem("accessToken");
+    let eventSource = new EventSourcePolyfill(`${URL}${EVENT}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 추가
+      },
+    });
     // let eventSource = new EventSource("${URL}/api/events");
 
     eventSource.addEventListener("logout", (event) => {
@@ -113,8 +126,6 @@ function App() {
         eventSource.close(); // 로그아웃 후 SSE 연결 종료
       }
     });
-
-    const accessToken = localStorage.getItem("accessToken");
 
     if (accessToken) {
       fetcher
