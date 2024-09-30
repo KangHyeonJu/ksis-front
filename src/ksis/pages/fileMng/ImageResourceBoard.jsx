@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaEdit } from "react-icons/fa";
+import { FaSearch, FaEdit, FaCheck  } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
@@ -102,6 +102,14 @@ const ImageResourceBoard = () => {
       console.error("제목 수정 중 오류 발생:", error);
     }
   };
+
+  // 엔터 키로 제목 저장
+const handleKeyDown = (e, id) => {
+  if (e.key === "Enter") {
+    handleSaveClick(id);
+  }
+};
+
 
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
@@ -224,29 +232,37 @@ const ImageResourceBoard = () => {
               >
                 {/* 제목 */}
                 {/* <div style={{ width: "100%",}}> */}
-                <div className="flex items-center">
-                  {editingTitleIndex === index ? (
-                    <input
-                      type="text"
-                      value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
-                      className="w-2/3 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
-                    />
-                  ) : (
-                    <h2 className="w-2/3 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
-                      {post.fileTitle}
-                    </h2>
-                  )}
-
-                  <FaEdit
-                    onClick={() =>
-                      editingTitleIndex === index
-                        ? handleSaveClick(post.originalResourceId)
-                        : handleEditClick(index, post.fileTitle)
-                    }
-                    className="ml-2 cursor-pointer text-gray-600"
-                  />
-                </div>
+                {editingTitleIndex === index ? (
+  <div className="flex items-center">
+    <input
+      type="text"
+      value={newTitle}
+      onChange={(e) => setNewTitle(e.target.value)}
+      onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
+      className="w-2/3 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
+    />
+    <button
+      onClick={() => handleSaveClick(post.originalResourceId)} // 직접 저장 버튼 클릭
+      className="ml-2 mr-2"
+    >
+       <FaCheck className="text-green-600" /> {/* 체크 아이콘 추가 */}
+    </button>
+  </div>
+) : (
+  <div className="flex items-center">
+    <h2 className="w-2/3 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
+      {post.fileTitle}
+    </h2>
+    <FaEdit
+      onClick={() =>
+        editingTitleIndex === index
+          ? handleSaveClick(post.originalResourceId)
+          : handleEditClick(index, post.fileTitle)
+      }
+      className="ml-2 cursor-pointer text-gray-600"
+    />
+  </div>
+)}
                 {/* </div> */}
 
                 {/* 등록일 */}
@@ -262,7 +278,7 @@ const ImageResourceBoard = () => {
                 <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
                 
                       <img
-                        src={post.filePath}
+                        src={post.thumbFilePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
                         alt={post.fileTitle}
                         className="w-100 h-100 overflow-hidden "
