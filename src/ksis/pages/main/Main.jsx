@@ -306,7 +306,9 @@ const Main = () => {
         );
         chart.render();
       }
+    }
 
+    if (visitCount) {
       if (
         document.getElementById("bar-chart") &&
         typeof ApexCharts !== "undefined"
@@ -318,7 +320,7 @@ const Main = () => {
         chart.render();
       }
     }
-  }, [fileSize]);
+  }, [fileSize, visitCount]);
   return (
     <div className="flex rounded-lg border-2 border-[#fcc310] p-10 w-auto h-4/6">
       <div class=" w-auto bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
