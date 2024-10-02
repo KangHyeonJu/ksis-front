@@ -1,8 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { ACTIVITYLOG_LIST } from "../../../constants/api_constant";
 import { FaSearch } from "react-icons/fa";
-import ReactPaginate from "react-paginate";
 import {
   ACCESSLOG_INVENTORY,
   ACTIVITYLOG_INVENTORY,
@@ -11,9 +10,18 @@ import {
 } from "../../../constants/page_constant";
 import { useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const ActivityLogBoard = () => {
-  const [logList, setLogList] = useState([]);
+  const [logList, setLogList] = useState([]); // 현재 페이지 데이터
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
+  const [searchCategory, setSearchCategory] = useState("account"); // 검색 카테고리
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const postsPerPage = 10; // 한 페이지 10개 데이터
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,10 +35,19 @@ const ActivityLogBoard = () => {
     }
 
     try {
-      const response = await fetcher.get(ACTIVITYLOG_LIST);
-      console.log(response);
+      const response = await fetcher.get(ACTIVITYLOG_LIST, {
+        params: {
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+          startTime,
+          endTime,
+        },
+      });
       if (response.data) {
-        setLogList(response.data);
+        setLogList(response.data.content);
+        setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
       }
@@ -41,30 +58,29 @@ const ActivityLogBoard = () => {
 
   useEffect(() => {
     loadPage();
-  }, []);
+  }, [currentPage, searchTerm, startTime, endTime]);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("dateTime");
-  const [currentPage, setCurrentPage] = useState(0);
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
 
-  const postsPerPage = 10;
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+  };
 
-  const filteredPosts = useMemo(
-    () =>
-      logList.filter((log) => {
-        const value = log[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [logList, searchTerm, searchCategory]
-  );
+  // 검색 시작기간 핸들러
+  const handleStartTime = (e) => {
+    setStartTime(e.target.value);
+    setCurrentPage(1);
+  };
 
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  // 검색 종료기간 핸들러
+  const handleEndTime = (e) => {
+    setEndTime(e.target.value);
+    setCurrentPage(1);
   };
 
   const handleSelectChange = (event) => {
@@ -101,15 +117,27 @@ const ActivityLogBoard = () => {
           onChange={(e) => setSearchCategory(e.target.value)}
           className="mr-1 p-2 border border-gray-300 rounded-md"
         >
-          <option value="dateTime">접근일시</option>
           <option value="account">아이디</option>
           <option value="detail">내용</option>
         </select>
+        <div className="flex items-center space-x-2 mx-2">
+          <input
+            type="date"
+            onChange={handleStartTime}
+            className="p-2 border border-gray-300 rounded-md"
+          />
+          <spna>~</spna>
+          <input
+            type="date"
+            onChange={handleEndTime}
+            className="p-2 border border-gray-300 rounded-md"
+          />
+        </div>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -137,10 +165,10 @@ const ActivityLogBoard = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedPosts.map((log) => (
+          {logList.map((log) => (
             <tr key={log.logId}>
               <td className="border border-gray-300 p-2">
-                {format(log.dateTime, "yyyy-MM-dd HH:mm:ss")}
+                {format(new Date(log.dateTime), "yyyy-MM-dd HH:mm:ss")}
               </td>
               <td className="border border-gray-300 p-2">
                 {log.account.name}({log.account.accountId})
@@ -151,35 +179,14 @@ const ActivityLogBoard = () => {
         </tbody>
       </table>
 
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2}>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
     </div>
   );
 };
