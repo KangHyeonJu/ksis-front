@@ -484,8 +484,16 @@ const SignageDtl = () => {
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                  <div className="text-gray-700 text-center w-full p-1 bg-white">
-                    {resource.fileTitle}
+                  <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
+                    <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                      {resource.fileTitle}
+                    </p>
+
+                    {resource.fileTitle.length > 20 && (
+                      <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        {resource.fileTitle}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
