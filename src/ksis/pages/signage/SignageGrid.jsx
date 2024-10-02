@@ -9,15 +9,22 @@ import {
   SIGNAGE_FORM,
   SIGNAGE_INVENTORY,
 } from "../../../constants/page_constant";
+import { decodeJwt } from "../../../decodeJwt";
 
 const SignageGrid = () => {
-  const authority = localStorage.getItem("authority");
+  const userInfo = decodeJwt();
   const [signages, setSignages] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState("deviceName");
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const postsPerPage = 4;
 
   const loadPage = async () => {
     try {
       const response = await fetcher.get(SIGNAGE_LIST + `/grid`, {
-        params: { role: authority },
+        params: { role: userInfo.roles },
       });
       console.log(response);
       if (response.data) {
@@ -33,12 +40,6 @@ const SignageGrid = () => {
   useEffect(() => {
     loadPage();
   }, []);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("deviceName");
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const postsPerPage = 4;
 
   const filteredPosts = useMemo(
     () =>
@@ -89,7 +90,7 @@ const SignageGrid = () => {
           <Link to={SIGNAGE_INVENTORY}>테이블로 보기</Link>
         </button>
       </div>
-      {authority === "ROLE_ADMIN" ? (
+      {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 mb-4">
           <button
             type="button"

@@ -10,16 +10,17 @@ import {
   SIGNAGE_FORM,
   SIGNAGE_GRID,
 } from "../../../constants/page_constant";
+import { decodeJwt } from "../../../decodeJwt";
 
 const SignageList = () => {
-  const authority = localStorage.getItem("authority");
+  const userInfo = decodeJwt();
 
   const [signages, setSignages] = useState([]);
 
   const loadPage = async () => {
     try {
       const response = await fetcher.get(SIGNAGE_LIST, {
-        params: { role: authority },
+        params: { role: userInfo.roles },
       });
       console.log(response);
       if (response.data) {
@@ -142,7 +143,7 @@ const SignageList = () => {
           <Link to={SIGNAGE_GRID}>그리드로 보기</Link>
         </button>
       </div>
-      {authority === "ROLE_ADMIN" ? (
+      {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 mb-4">
           <button
             type="button"

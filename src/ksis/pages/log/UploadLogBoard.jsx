@@ -11,17 +11,18 @@ import {
 } from "../../../constants/page_constant";
 import { useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
+import { decodeJwt } from "../../../decodeJwt";
 
 const UploadLogBoard = () => {
   const [logList, setLogList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  const userInfo = decodeJwt();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const authority = localStorage.getItem("authority");
-
   const loadPage = async () => {
-    if (authority !== "ROLE_ADMIN") {
+    if (userInfo.roles !== "ROLE_ADMIN") {
       alert("접근권한이 없습니다.");
       navigate(MAIN);
     }
@@ -34,6 +35,8 @@ const UploadLogBoard = () => {
       } else {
         console.error("No data property in response");
       }
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -88,6 +91,10 @@ const UploadLogBoard = () => {
       return "upload";
     }
   };
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

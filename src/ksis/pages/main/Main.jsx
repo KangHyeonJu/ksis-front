@@ -44,6 +44,7 @@ const Main = () => {
         chart: {
           type: "donut",
           height: "450px",
+          width: "100%",
         },
         dataLabels: {
           enabled: true,
@@ -60,10 +61,34 @@ const Main = () => {
                   show: true,
                   label: "Total",
                   formatter: function (w) {
-                    return w.globals.series.reduce((a, b) => a + b, 0);
+                    return w.globals.series
+                      .filter((val) => val !== undefined && val !== null) // 필터링
+                      .reduce((a, b) => a + b, 0);
                   },
                 },
               },
+            },
+          },
+        },
+        legend: {
+          show: true,
+          formatter: function (seriesName, opts) {
+            // 안전하게 series 값을 참조
+            const seriesValue = opts.w.globals.series[opts.seriesIndex];
+
+            // 값이 없을 경우 0으로 처리
+            return `${seriesName}: ${
+              seriesValue !== undefined && seriesValue !== null
+                ? seriesValue.toString()
+                : 0
+            }`;
+          },
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              // undefined나 null인 경우에 대해 안전하게 처리
+              return val !== undefined && val !== null ? val.toString() : "0";
             },
           },
         },
@@ -71,319 +96,327 @@ const Main = () => {
     : {};
 
   //업로드 이미지 용량
-  const optionsImage = {
-    series: [
-      {
-        name: ["원본 이미지", "인코딩 이미지"],
-        data: [
+  const optionsImage = fileSize.totalImageSize
+    ? {
+        series: [
           {
-            x: "원본 이미지",
-            y: Math.round(fileSize.totalImageSize * 10 ** -6 * 100) / 100,
-            fillColor: "#f9c74f",
-          },
-          {
-            x: "인코딩 이미지",
-            y:
-              Math.round(fileSize.totalEncodedImageSize * 10 ** -6 * 100) / 100,
-            fillColor: "#90be6d",
+            name: ["원본 이미지", "인코딩 이미지"],
+            data: [
+              {
+                x: "원본 이미지",
+                y: Math.round(fileSize.totalImageSize * 10 ** -6 * 100) / 100,
+                fillColor: "#f9c74f",
+              },
+              {
+                x: "인코딩 이미지",
+                y:
+                  Math.round(fileSize.totalEncodedImageSize * 10 ** -6 * 100) /
+                  100,
+                fillColor: "#90be6d",
+              },
+            ],
           },
         ],
-      },
-    ],
-    chart: {
-      type: "bar",
-      height: 225,
-      toolbar: {
-        show: false,
-      },
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shade: "light",
-        type: "horizontal",
-        shadeIntensity: 0.25,
-        gradientToColors: undefined,
-        inverseColors: true,
-        opacityFrom: 0.85,
-        opacityTo: 0.95,
-        stops: [50, 100],
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-        borderRadius: 6,
-        columnWidth: "80%",
-      },
-    },
-    legend: {
-      show: false,
-    },
-    dataLabels: {
-      enabled: true,
-      formatter: function (val) {
-        return `${val} GB`;
-      },
-      style: {
-        fontFamily: "Inter, sans-serif",
-        fontWeight: "bold",
-        colors: ["#333"],
-      },
-    },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      y: {
-        formatter: function (value) {
-          return `${value} MB`;
+        chart: {
+          type: "bar",
+          height: 225,
+          toolbar: {
+            show: false,
+          },
         },
-      },
-    },
-    xaxis: {
-      labels: {
-        style: {
-          fontFamily: "Inter, sans-serif",
-          fontSize: "12px",
-          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+        fill: {
+          type: "gradient",
+          gradient: {
+            shade: "light",
+            type: "horizontal",
+            shadeIntensity: 0.25,
+            gradientToColors: undefined,
+            inverseColors: true,
+            opacityFrom: 0.85,
+            opacityTo: 0.95,
+            stops: [50, 100],
+          },
         },
-      },
-      categories: ["원본 이미지(GB)", "인코딩 이미지(GB)"],
-      axisTicks: {
-        show: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-    },
-    yaxis: {
-      labels: {
-        style: {
-          fontFamily: "Inter, sans-serif",
-          fontSize: "12px",
-          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            borderRadius: 6,
+            columnWidth: "80%",
+          },
         },
-      },
-    },
-    grid: {
-      show: true,
-      strokeDashArray: 3,
-      padding: {
-        left: 10,
-        right: 10,
-      },
-    },
-  };
+        legend: {
+          show: false,
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val) {
+            return `${val} GB`;
+          },
+          style: {
+            fontFamily: "Inter, sans-serif",
+            fontWeight: "bold",
+            colors: ["#333"],
+          },
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: function (value) {
+              return `${value} MB`;
+            },
+          },
+        },
+        xaxis: {
+          labels: {
+            style: {
+              fontFamily: "Inter, sans-serif",
+              fontSize: "12px",
+              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+            },
+          },
+          categories: ["원본 이미지(GB)", "인코딩 이미지(GB)"],
+          axisTicks: {
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              fontFamily: "Inter, sans-serif",
+              fontSize: "12px",
+              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+            },
+          },
+        },
+        grid: {
+          show: true,
+          strokeDashArray: 3,
+          padding: {
+            left: 10,
+            right: 10,
+          },
+        },
+      }
+    : {};
 
   //업로드 영상 용량
-  const optionsVideo = {
-    series: [
-      {
-        name: ["원본 영상", "인코딩 영상"],
-        data: [
+  const optionsVideo = fileSize.totalVideoSize
+    ? {
+        series: [
           {
-            x: "원본 영상",
-            y: Math.round(fileSize.totalVideoSize * 10 ** -6 * 100) / 100,
-            fillColor: "#f9c74f",
-          },
-          {
-            x: "인코딩 영상",
-            y:
-              Math.round(fileSize.totalEncodedVideoSize * 10 ** -6 * 100) / 100,
-            fillColor: "#90be6d",
+            name: ["원본 영상", "인코딩 영상"],
+            data: [
+              {
+                x: "원본 영상",
+                y: Math.round(fileSize.totalVideoSize * 10 ** -6 * 100) / 100,
+                fillColor: "#f9c74f",
+              },
+              {
+                x: "인코딩 영상",
+                y:
+                  Math.round(fileSize.totalEncodedVideoSize * 10 ** -6 * 100) /
+                  100,
+                fillColor: "#90be6d",
+              },
+            ],
           },
         ],
-      },
-    ],
-    chart: {
-      type: "bar",
-      height: 225,
-      toolbar: {
-        show: false,
-      },
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shade: "light",
-        type: "horizontal",
-        shadeIntensity: 0.25,
-        gradientToColors: undefined,
-        inverseColors: true,
-        opacityFrom: 0.85,
-        opacityTo: 0.95,
-        stops: [50, 100],
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-        borderRadius: 6,
-        columnWidth: "80%",
-      },
-    },
-    legend: {
-      show: false,
-    },
-    dataLabels: {
-      enabled: true,
-      formatter: function (val) {
-        return `${val} GB`;
-      },
-      style: {
-        fontFamily: "Inter, sans-serif",
-        fontWeight: "bold",
-        colors: ["#333"],
-      },
-    },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      y: {
-        formatter: function (value) {
-          return `${value} MB`;
+        chart: {
+          type: "bar",
+          height: 225,
+          toolbar: {
+            show: false,
+          },
         },
-      },
-    },
-    xaxis: {
-      labels: {
-        style: {
-          fontFamily: "Inter, sans-serif",
-          fontSize: "12px",
-          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+        fill: {
+          type: "gradient",
+          gradient: {
+            shade: "light",
+            type: "horizontal",
+            shadeIntensity: 0.25,
+            gradientToColors: undefined,
+            inverseColors: true,
+            opacityFrom: 0.85,
+            opacityTo: 0.95,
+            stops: [50, 100],
+          },
         },
-      },
-      categories: ["원본 영상(GB)", "인코딩 영상(GB)"],
-      axisTicks: {
-        show: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-    },
-    yaxis: {
-      labels: {
-        style: {
-          fontFamily: "Inter, sans-serif",
-          fontSize: "12px",
-          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            borderRadius: 6,
+            columnWidth: "80%",
+          },
         },
-      },
-    },
-    grid: {
-      show: true,
-      strokeDashArray: 3,
-      padding: {
-        left: 10,
-        right: 10,
-      },
-    },
-  };
+        legend: {
+          show: false,
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val) {
+            return `${val} GB`;
+          },
+          style: {
+            fontFamily: "Inter, sans-serif",
+            fontWeight: "bold",
+            colors: ["#333"],
+          },
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: function (value) {
+              return `${value} MB`;
+            },
+          },
+        },
+        xaxis: {
+          labels: {
+            style: {
+              fontFamily: "Inter, sans-serif",
+              fontSize: "12px",
+              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+            },
+          },
+          categories: ["원본 영상(GB)", "인코딩 영상(GB)"],
+          axisTicks: {
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              fontFamily: "Inter, sans-serif",
+              fontSize: "12px",
+              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+            },
+          },
+        },
+        grid: {
+          show: true,
+          strokeDashArray: 3,
+          padding: {
+            left: 10,
+            right: 10,
+          },
+        },
+      }
+    : {};
 
   //방문자
-  const optionsVisit = {
-    colors: ["#00cadc"],
-    series: [
-      {
-        name: "방문자 수",
-        color: "#00cadc",
-        data: visitCount,
-      },
-    ],
-    chart: {
-      type: "line",
-      height: "450px",
-      fontFamily: "Inter, sans-serif",
-      toolbar: {
-        show: false,
-      },
-      animations: {
-        enabled: true,
-        easing: "easeinout",
-        speed: 800,
-      },
-    },
-    stroke: {
-      show: true,
-      width: 3,
-      colors: ["#00cadc"],
-      curve: "smooth",
-    },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      x: {
-        format: "dd MMM", // 날짜 포맷 설정 가능
-      },
-      y: {
-        formatter: function (val) {
-          return val + "명";
-        },
-      },
-      style: {
-        fontFamily: "Inter, sans-serif",
-      },
-    },
-    states: {
-      hover: {
-        filter: {
-          type: "darken",
-          value: 1,
-        },
-      },
-    },
-    grid: {
-      show: true,
-      borderColor: "#e7e7e7",
-      strokeDashArray: 4,
-      padding: {
-        left: 10,
-        right: 10,
-      },
-    },
-    xaxis: {
-      floating: false,
-      labels: {
-        show: true,
-        rotate: -45, // X축 레이블 비스듬히 표시
-        style: {
+  const optionsVisit = visitCount.length
+    ? {
+        colors: ["#00cadc"],
+        series: [
+          {
+            name: "방문자 수",
+            color: "#00cadc",
+            data: visitCount,
+          },
+        ],
+        chart: {
+          type: "line",
+          height: "450px",
           fontFamily: "Inter, sans-serif",
-          fontSize: "12px",
-          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+          toolbar: {
+            show: false,
+          },
+          animations: {
+            enabled: true,
+            easing: "easeinout",
+            speed: 800,
+          },
         },
-      },
-      axisBorder: {
-        show: true,
-        color: "#e7e7e7",
-      },
-      axisTicks: {
-        show: true,
-        color: "#e7e7e7",
-      },
-    },
-    yaxis: {
-      show: true,
-      labels: {
-        formatter: function (val) {
-          return val.toFixed(0) + "명";
+        stroke: {
+          show: true,
+          width: 3,
+          colors: ["#00cadc"],
+          curve: "smooth",
         },
-        style: {
-          fontFamily: "Inter, sans-serif",
-          fontSize: "12px",
-          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+        tooltip: {
+          shared: true,
+          intersect: false,
+          x: {
+            format: "dd MMM", // 날짜 포맷 설정 가능
+          },
+          y: {
+            formatter: function (val) {
+              return val + "명";
+            },
+          },
+          style: {
+            fontFamily: "Inter, sans-serif",
+          },
         },
-      },
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-    },
-    fill: {
-      opacity: 1,
-    },
-  };
+        states: {
+          hover: {
+            filter: {
+              type: "darken",
+              value: 1,
+            },
+          },
+        },
+        grid: {
+          show: true,
+          borderColor: "#e7e7e7",
+          strokeDashArray: 4,
+          padding: {
+            left: 10,
+            right: 10,
+          },
+        },
+        xaxis: {
+          floating: false,
+          labels: {
+            show: true,
+            rotate: -45, // X축 레이블 비스듬히 표시
+            style: {
+              fontFamily: "Inter, sans-serif",
+              fontSize: "12px",
+              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+            },
+          },
+          axisBorder: {
+            show: true,
+            color: "#e7e7e7",
+          },
+          axisTicks: {
+            show: true,
+            color: "#e7e7e7",
+          },
+        },
+        yaxis: {
+          show: true,
+          labels: {
+            formatter: function (val) {
+              return val.toFixed(0) + "명";
+            },
+            style: {
+              fontFamily: "Inter, sans-serif",
+              fontSize: "12px",
+              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
+            },
+          },
+          axisBorder: {
+            show: false,
+          },
+          axisTicks: {
+            show: false,
+          },
+        },
+        fill: {
+          opacity: 1,
+        },
+      }
+    : {};
 
   useEffect(() => {
     if (
