@@ -24,6 +24,7 @@ const NoticeForm = () => {
 
   useEffect(() => {
     const fetchDevices = async () => {
+      //이거 없애고 principal로 해야함
       const authority = localStorage.getItem("authority");
       setRole(authority); // 역할 상태 설정
       console.log("noticeForm 역할 :", authority);
@@ -202,12 +203,14 @@ const NoticeForm = () => {
                 <div>
                   {formData.deviceIds.map((deviceId, index) => (
                     <div key={index} className="flex items-center mb-2">
+                      
                       <select
                         value={deviceId}
                         onChange={(e) => handleDeviceChange(index, e.target.value)}
                         className="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       >
                         <option value="">재생장치를 선택하세요</option>
+                        
                         {deviceOptions.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label}

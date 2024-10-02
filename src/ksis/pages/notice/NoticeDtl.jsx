@@ -21,9 +21,10 @@ const NoticeDetail = () => {
         setNotice(response.data);
 
         // 사용자 권한 정보를 localStorage에서 가져옴
-        const storedUserRole = localStorage.getItem("authority");
+        /* const storedUserRole = localStorage.getItem("authority");
         setUserRole(storedUserRole); // 사용자 role을 상태에 저장
-        console.log("현재 role :", storedUserRole);
+        console.log("현재 role :", storedUserRole); */
+
       } catch (err) {
         setError("공지사항 정보를 가져오는 데 실패했습니다.");
       } finally {
@@ -33,6 +34,7 @@ const NoticeDetail = () => {
 
     fetchNotice();
   }, [noticeId]);
+
 
 
   if (loading) {
