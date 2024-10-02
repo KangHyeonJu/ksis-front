@@ -101,6 +101,7 @@ const Main = () => {
         series: [
           {
             name: ["원본 이미지", "인코딩 이미지"],
+            color: "#f9c74f",
             data: [
               {
                 x: "원본 이미지",
@@ -209,6 +210,7 @@ const Main = () => {
         series: [
           {
             name: ["원본 영상", "인코딩 영상"],
+            color: "#90be6d",
             data: [
               {
                 x: "원본 영상",

@@ -173,7 +173,7 @@ const PcList = () => {
         </thead>
         <tbody>
           {paginatedPosts.map((post) => (
-            <tr key={post.deviceId}>
+            <tr key={post.deviceId} className="hover:bg-gray-100">
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
@@ -182,7 +182,7 @@ const PcList = () => {
                 />
               </td>
 
-              <td className="border border-gray-300 p-2">
+              <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
                 <Link to={PC_DTL + `/${post.deviceId}`}>{post.deviceName}</Link>
               </td>
 

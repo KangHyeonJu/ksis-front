@@ -10,6 +10,7 @@ import {
   SIGNAGE_INVENTORY,
 } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
+import { ToggleSwitch } from "../../css/switch";
 
 const SignageGrid = () => {
   const userInfo = decodeJwt();
@@ -85,22 +86,22 @@ const SignageGrid = () => {
           <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
       </div>
-      <div className="flex justify-end space-x-2 mb-4">
-        <button>
-          <Link to={SIGNAGE_INVENTORY}>테이블로 보기</Link>
-        </button>
-      </div>
-      {userInfo.roles === "ROLE_ADMIN" ? (
-        <div className="flex justify-end space-x-2 mb-4">
-          <button
-            type="button"
-            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
-            <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
-          </button>
-        </div>
-      ) : null}
 
+      <div className="flex justify-between">
+        <div>
+          <ToggleSwitch />
+        </div>
+        {userInfo.roles === "ROLE_ADMIN" ? (
+          <div className="flex justify-end space-x-2 mb-4">
+            <button
+              type="button"
+              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            >
+              <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
+            </button>
+          </div>
+        ) : null}
+      </div>
       <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
         {paginatedPosts.map((signage) => (
           <div
