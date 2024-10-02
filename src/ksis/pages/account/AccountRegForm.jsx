@@ -3,6 +3,8 @@ import {Link, useNavigate} from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import {ACCOUNT_CREATE, ACCOUNT_LIST_BOARD} from "../../../constants/account_constant";
+import {MAIN} from "../../../constants/page_constant";
+import {decodeJwt} from "../../../decodeJwt";
 
 const initialFormData = {
     accountId: '',
@@ -21,12 +23,21 @@ const AccountRegForm = () => {
     const [formData, setFormData] = useState(initialFormData);
     const [passwordMatch, setPasswordMatch] = useState(true);
     const navigate = useNavigate();
+    const userInfo = decodeJwt();
+
     useEffect(() => {
         // 비밀번호와 비밀번호 확인이 일치하는지 확인
         if (formData.password && formData.confirmPassword) {
             setPasswordMatch(formData.password === formData.confirmPassword);
         }
     }, [formData.password, formData.confirmPassword]);
+
+    useEffect(() => {
+        if (!userInfo.roles.includes("ROLE_ADMIN")) {
+            alert("관리자만 접근 가능합니다.");
+            navigate(MAIN);
+        }
+    },[navigate, userInfo.roles]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
