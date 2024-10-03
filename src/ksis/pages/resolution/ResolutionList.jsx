@@ -189,7 +189,7 @@ const ResolutionList = () => {
         </thead>
         <tbody>
           {paginatedPosts.map((post) => (
-            <tr key={post.resolutionId}>
+            <tr key={post.resolutionId} className="hover:bg-gray-100">
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"

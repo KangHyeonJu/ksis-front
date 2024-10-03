@@ -6,6 +6,7 @@ import { PC_DELETE, PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
+import { decodeJwt } from "../../../decodeJwt";
 
 const PcList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,16 +14,16 @@ const PcList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [checkedRowId, setCheckedRowId] = useState([]);
+  const userInfo = decodeJwt();
 
   const postsPerPage = 5;
 
   const [posts, setPosts] = useState([]);
-  const authority = localStorage.getItem("authority");
 
   const loadPage = async () => {
     try {
       const response = await fetcher.get(PC_LIST, {
-        params: { role: authority },
+        params: { role: userInfo.roles },
       });
       console.log(response);
       if (response.data) {
@@ -131,7 +132,7 @@ const PcList = () => {
         </div>
       </div>
 
-      {authority === "ROLE_ADMIN" ? (
+      {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 mb-4">
           <button
             type="button"
@@ -172,7 +173,7 @@ const PcList = () => {
         </thead>
         <tbody>
           {paginatedPosts.map((post) => (
-            <tr key={post.deviceId}>
+            <tr key={post.deviceId} className="hover:bg-gray-100">
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
@@ -181,7 +182,7 @@ const PcList = () => {
                 />
               </td>
 
-              <td className="border border-gray-300 p-2">
+              <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
                 <Link to={PC_DTL + `/${post.deviceId}`}>{post.deviceName}</Link>
               </td>
 

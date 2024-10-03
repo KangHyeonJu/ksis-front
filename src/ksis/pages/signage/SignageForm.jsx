@@ -7,7 +7,8 @@ import {
   SIGNAGE_ACCOUNT,
   RESOLUTION,
 } from "../../../constants/api_constant";
-import { SIGNAGE_INVENTORY, MAIN } from "../../../constants/page_constant";
+import { SIGNAGE_INVENTORY } from "../../../constants/page_constant";
+import { decodeJwt } from "../../../decodeJwt";
 
 const SignageForm = () => {
   //가로세로크기
@@ -19,7 +20,8 @@ const SignageForm = () => {
   const [address, setAddress] = useState("");
   const [addressError, setAddressError] = useState("");
   const navigate = useNavigate();
-  const authority = localStorage.getItem("authority");
+  const userInfo = decodeJwt();
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   //해상도
@@ -71,9 +73,9 @@ const SignageForm = () => {
   //전체 user불러오기, 해상도 불러오기
   const loadPage = async () => {
     try {
-      if (authority !== "ROLE_ADMIN") {
+      if (userInfo.roles !== "ROLE_ADMIN") {
         alert("접근권한이 없습니다.");
-        navigate(MAIN);
+        navigate(SIGNAGE_INVENTORY);
       }
       const [responseAccount, responseResolution] = await Promise.all([
         fetcher.get(SIGNAGE_ACCOUNT),
@@ -85,6 +87,8 @@ const SignageForm = () => {
       } else {
         console.error("No data property in response");
       }
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       alert(error.response?.data || "Unknown error occurred");
@@ -203,6 +207,10 @@ const SignageForm = () => {
     newResponsibles[index].accountId = value;
     setResponsibles(newResponsibles);
   };
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

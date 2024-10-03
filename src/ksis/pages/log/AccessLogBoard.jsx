@@ -11,17 +11,18 @@ import {
   UPLOADLOG_INVENTORY,
 } from "../../../constants/page_constant";
 import { format } from "date-fns";
+import { decodeJwt } from "../../../decodeJwt";
 
 const AccessLogBoard = () => {
   const [logList, setLogList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  const userInfo = decodeJwt();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const authority = localStorage.getItem("authority");
-
   const loadPage = async () => {
-    if (authority !== "ROLE_ADMIN") {
+    if (userInfo.roles !== "ROLE_ADMIN") {
       alert("접근권한이 없습니다.");
       navigate(MAIN);
     }
@@ -34,6 +35,8 @@ const AccessLogBoard = () => {
       } else {
         console.error("No data property in response");
       }
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -88,6 +91,11 @@ const AccessLogBoard = () => {
       return "upload";
     }
   };
+
+  if (loading) {
+    return <div></div>;
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">

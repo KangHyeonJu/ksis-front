@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MAIN } from "../../../constants/page_constant";
 const TokenCallback = () => {
-  const [message, setMessage] = useState("로그인 동기화 중입니다...");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,8 +13,6 @@ const TokenCallback = () => {
       if (!accessToken) {
         return;
       }
-
-      // accessToken을 로컬 스토리지에 저장
       localStorage.setItem("accessToken", accessToken);
       navigate(MAIN);
 

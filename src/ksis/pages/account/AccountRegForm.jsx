@@ -79,9 +79,8 @@ const AccountRegForm = () => {
         };
 
         try {
-            const response = await fetcher.post(ACCOUNT_CREATE, cleanedFormData, {
+            await fetcher.post(ACCOUNT_CREATE, cleanedFormData, {
             });
-            // setFormData(initialFormData);
             navigate(ACCOUNT_LIST_BOARD);
         } catch (error) {
 

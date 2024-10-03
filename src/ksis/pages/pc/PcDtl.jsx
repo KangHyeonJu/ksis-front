@@ -4,15 +4,15 @@ import fetcher from "../../../fetcher";
 import { PC_LIST } from "../../../constants/api_constant";
 import { PC_UPDATE_FORM, PC_INVENTORY } from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
+import { decodeJwt } from "../../../decodeJwt";
 
 const PcDtl = () => {
-  const authority = localStorage.getItem("authority");
-  const loginAccountId = localStorage.getItem("accountId");
-
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
+  const userInfo = decodeJwt();
+  const [loading, setLoading] = useState(true);
 
   const loadPcDtl = async (pcId) => {
     try {
@@ -20,8 +20,10 @@ const PcDtl = () => {
       const { accountList, ...rest } = response.data;
 
       if (
-        authority !== "ROLE_ADMIN" &&
-        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+        userInfo.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === userInfo.accountId
+        )
       ) {
         alert("접근권한이 없습니다.");
         navigate(PC_INVENTORY);
@@ -36,6 +38,8 @@ const PcDtl = () => {
           accountName: account.name,
         }))
       );
+
+      setLoading(false);
     } catch (error) {
       console.log(error.response);
     }
@@ -57,6 +61,10 @@ const PcDtl = () => {
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

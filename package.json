@@ -1,4 +1,4 @@
-{"proxy": "http://localhost:8080",
+{
   "name": "ksis-front",
   "version": "0.1.0",
   "private": true,
@@ -11,7 +11,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "apexcharts": "^3.53.0",
+    "apexcharts": "^3.44.0",
     "axios": "^1.7.3",
     "date-fns": "^3.6.0",
     "event-source-polyfill": "^1.0.31",

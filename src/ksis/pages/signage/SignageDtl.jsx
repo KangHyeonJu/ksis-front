@@ -18,10 +18,11 @@ import SignageResourceModal from "./SignageResourceModal";
 import SignagePlaylistModal from "./SignagePlaylistModal";
 import PlaylistUpdateModal from "./PlaylistUpdateModal";
 import SignagePlay from "./SignagePlay";
+import { decodeJwt } from "../../../decodeJwt";
 
 const SignageDtl = () => {
-  const authority = localStorage.getItem("authority");
-  const loginAccountId = localStorage.getItem("accountId");
+  const userInfo = decodeJwt();
+  const [loading, setLoading] = useState(true);
 
   const [enabled, setEnabled] = useState(false);
   const [radiobox, setRadiobox] = useState(null);
@@ -80,8 +81,10 @@ const SignageDtl = () => {
       setData(response.data);
 
       if (
-        authority !== "ROLE_ADMIN" &&
-        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+        userInfo.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === userInfo.accountId
+        )
       ) {
         alert("접근권한이 없습니다.");
         navigate(SIGNAGE_INVENTORY);
@@ -89,6 +92,8 @@ const SignageDtl = () => {
 
       loadPlayList(signageId);
       setEnabled(response.data.isShow);
+
+      setLoading(false);
     } catch (error) {
       console.log(error.response);
     }
@@ -220,6 +225,10 @@ const SignageDtl = () => {
     setPlayListId("");
     closePlaylistUpdate();
   };
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -475,8 +484,16 @@ const SignageDtl = () => {
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                  <div className="text-gray-700 text-center w-full p-1 bg-white">
-                    {resource.fileTitle}
+                  <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
+                    <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                      {resource.fileTitle}
+                    </p>
+
+                    {resource.fileTitle.length > 20 && (
+                      <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        {resource.fileTitle}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
