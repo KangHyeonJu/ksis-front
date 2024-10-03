@@ -33,10 +33,9 @@ const NoticeForm = () => {
           params: { role: authority },
         });
         setDeviceOptions(
-          response.data.map((device) => ({
-            value: device.deviceId,
-            label: device.deviceName,
-            
+          response.map((deviceIds, index) => ({
+            id: index,
+            deviceId: deviceIds.deviceId,
           }))
         );
       } catch (error) {
@@ -199,21 +198,26 @@ const NoticeForm = () => {
               />
             </div>
             {role !== 'ROLE_ADMIN' && (
+
+
               <>
+              {isEditing ? 
                 <div>
-                  {formData.deviceIds.map((deviceId, index) => (
-                    <div key={index} className="flex items-center mb-2">
+                  {deviceOptions.map((deviceIds, index) => (
+                    <div key={deviceIds.id} className="flex items-center mb-2">
                       
                       <select
-                        value={deviceId}
-                        onChange={(e) => handleDeviceChange(index, e.target.value)}
-                        className="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        value={deviceIds.deviceId}
+                        id={'formData-${formData.id}'}
+                        onChange={(e) => handleDeviceChange(e, index)}
+                        className="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md shadow-sm 
+                        focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       >
                         <option value="">재생장치를 선택하세요</option>
                         
-                        {deviceOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
+                        {deviceOptions.map((deviceIds) => (
+                          <option key={deviceIds.deviceId} value={deviceIds.deviceId}>
+                            {deviceIds.deviceName}
                           </option>
                         ))}
                       </select>
@@ -240,6 +244,49 @@ const NoticeForm = () => {
                     </div>
                   ))}
                 </div>
+: <div>
+{formData.deviceIds.map((deviceId, index) => (
+  <div key={index} className="flex items-center mb-2">
+    
+    <select
+      value={deviceId}
+      onChange={(e) => handleDeviceChange(index, e.target.value)}
+      className="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+    >
+      <option value="">재생장치를 선택하세요</option>
+      
+      {deviceOptions.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+    <div className="ml-2 flex items-center">
+      <button
+        type="button"
+        onClick={addDevice}
+        className="flex items-center text-blue-500"
+      >
+        <AiFillPlusCircle size={25} color="#f25165" />
+      </button>
+    </div>
+    {formData.deviceIds.length > 1 && (
+      <div className="ml-2 flex items-center">
+        <button
+          type="button"
+          onClick={() => removeDevice(index)}
+          className="flex items-center"
+        >
+          <AiFillMinusCircle size={25} color="#717273" />
+        </button>
+      </div>
+    )}
+  </div>
+))}
+</div> }
+
+
+
                 <div className="rounded-lg p-2 shadow-sm bg-white">
                   <div className="flex items-center space-x-4 mb-4">
                     <div className="flex-1 flex items-center">
