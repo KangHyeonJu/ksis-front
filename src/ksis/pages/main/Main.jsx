@@ -32,287 +32,277 @@ const Main = () => {
   }, []);
 
   //업로드 개수
-  const optionsFileCount = fileCount.countImage
-    ? {
-        series: [
-          fileCount.countImage || 0,
-          fileCount.countEncodedImage || 0,
-          fileCount.countVideo || 0,
-          fileCount.countEncodedVideo || 0,
-        ],
-        labels: ["원본 이미지", "인코딩 이미지", "원본 영상", "인코딩 영상"],
-        chart: {
-          type: "donut",
-          height: "450px",
-          width: "100%",
-        },
-        dataLabels: {
-          enabled: true,
-          formatter: function (val) {
-            return Math.round(val) + "%";
-          },
-        },
-        plotOptions: {
-          pie: {
-            donut: {
-              labels: {
-                show: true,
-                total: {
-                  show: true,
-                  label: "Total",
-                  formatter: function (w) {
-                    return w.globals.series
-                      .filter((val) => val !== undefined && val !== null) // 필터링
-                      .reduce((a, b) => a + b, 0);
-                  },
-                },
+  const optionsFileCount = {
+    series: [
+      fileCount.countImage,
+      fileCount.countEncodedImage,
+      fileCount.countVideo,
+      fileCount.countEncodedVideo,
+    ],
+    labels: ["원본 이미지", "인코딩 이미지", "원본 영상", "인코딩 영상"],
+    chart: {
+      type: "donut",
+      height: "450px",
+      width: "100%",
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return Math.round(val) + "%";
+      },
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          labels: {
+            show: true,
+            total: {
+              show: true,
+              label: "Total",
+              formatter: function (w) {
+                return w.globals.series
+                  .filter((val) => val !== undefined && val !== null) // 필터링
+                  .reduce((a, b) => a + b, 0);
               },
             },
           },
         },
-        legend: {
-          show: true,
-          formatter: function (seriesName, opts) {
-            // 안전하게 series 값을 참조
-            const seriesValue = opts.w.globals.series[opts.seriesIndex];
+      },
+    },
+    legend: {
+      show: true,
+      formatter: function (seriesName, opts) {
+        // 안전하게 series 값을 참조
+        const seriesValue = opts.w.globals.series[opts.seriesIndex];
 
-            // 값이 없을 경우 0으로 처리
-            return `${seriesName}: ${
-              seriesValue !== undefined && seriesValue !== null
-                ? seriesValue.toString()
-                : 0
-            }`;
-          },
+        // 값이 없을 경우 0으로 처리
+        return `${seriesName}: ${
+          seriesValue !== undefined && seriesValue !== null
+            ? seriesValue.toString()
+            : 0
+        }`;
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          // undefined나 null인 경우에 대해 안전하게 처리
+          return val !== undefined && val !== null ? val.toString() : "0";
         },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              // undefined나 null인 경우에 대해 안전하게 처리
-              return val !== undefined && val !== null ? val.toString() : "0";
-            },
-          },
-        },
-      }
-    : {};
+      },
+    },
+  };
 
   //업로드 이미지 용량
-  const optionsImage = fileSize.totalImageSize
-    ? {
-        series: [
+  const optionsImage = {
+    series: [
+      {
+        name: ["원본 이미지", "인코딩 이미지"],
+        color: "#f9c74f",
+        data: [
           {
-            name: ["원본 이미지", "인코딩 이미지"],
-            color: "#f9c74f",
-            data: [
-              {
-                x: "원본 이미지",
-                y: Math.round(fileSize.totalImageSize * 10 ** -6 * 100) / 100,
-                fillColor: "#f9c74f",
-              },
-              {
-                x: "인코딩 이미지",
-                y:
-                  Math.round(fileSize.totalEncodedImageSize * 10 ** -6 * 100) /
-                  100,
-                fillColor: "#90be6d",
-              },
-            ],
+            x: "원본 이미지",
+            y: Math.round(fileSize.totalImageSize * 10 ** -6 * 100) / 100,
+            fillColor: "#f9c74f",
+          },
+          {
+            x: "인코딩 이미지",
+            y:
+              Math.round(fileSize.totalEncodedImageSize * 10 ** -6 * 100) / 100,
+            fillColor: "#90be6d",
           },
         ],
-        chart: {
-          type: "bar",
-          height: 225,
-          toolbar: {
-            show: false,
-          },
+      },
+    ],
+    chart: {
+      type: "bar",
+      height: 225,
+      toolbar: {
+        show: false,
+      },
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shade: "light",
+        type: "horizontal",
+        shadeIntensity: 0.25,
+        gradientToColors: undefined,
+        inverseColors: true,
+        opacityFrom: 0.85,
+        opacityTo: 0.95,
+        stops: [50, 100],
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        borderRadius: 6,
+        columnWidth: "80%",
+      },
+    },
+    legend: {
+      show: false,
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return `${val} MB`;
+      },
+      style: {
+        fontFamily: "Inter, sans-serif",
+        fontWeight: "bold",
+        colors: ["#333"],
+      },
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: function (value) {
+          return `${value} MB`;
         },
-        fill: {
-          type: "gradient",
-          gradient: {
-            shade: "light",
-            type: "horizontal",
-            shadeIntensity: 0.25,
-            gradientToColors: undefined,
-            inverseColors: true,
-            opacityFrom: 0.85,
-            opacityTo: 0.95,
-            stops: [50, 100],
-          },
+      },
+    },
+    xaxis: {
+      labels: {
+        style: {
+          fontFamily: "Inter, sans-serif",
+          fontSize: "12px",
+          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
         },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            borderRadius: 6,
-            columnWidth: "80%",
-          },
+      },
+      categories: ["원본 이미지(MB)", "인코딩 이미지(MB)"],
+      axisTicks: {
+        show: false,
+      },
+      axisBorder: {
+        show: false,
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          fontFamily: "Inter, sans-serif",
+          fontSize: "12px",
+          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
         },
-        legend: {
-          show: false,
-        },
-        dataLabels: {
-          enabled: true,
-          formatter: function (val) {
-            return `${val} MB`;
-          },
-          style: {
-            fontFamily: "Inter, sans-serif",
-            fontWeight: "bold",
-            colors: ["#333"],
-          },
-        },
-        tooltip: {
-          shared: true,
-          intersect: false,
-          y: {
-            formatter: function (value) {
-              return `${value} MB`;
-            },
-          },
-        },
-        xaxis: {
-          labels: {
-            style: {
-              fontFamily: "Inter, sans-serif",
-              fontSize: "12px",
-              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
-            },
-          },
-          categories: ["원본 이미지(MB)", "인코딩 이미지(MB)"],
-          axisTicks: {
-            show: false,
-          },
-          axisBorder: {
-            show: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            style: {
-              fontFamily: "Inter, sans-serif",
-              fontSize: "12px",
-              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
-            },
-          },
-        },
-        grid: {
-          show: true,
-          strokeDashArray: 3,
-          padding: {
-            left: 10,
-            right: 10,
-          },
-        },
-      }
-    : {};
-
+      },
+    },
+    grid: {
+      show: true,
+      strokeDashArray: 3,
+      padding: {
+        left: 10,
+        right: 10,
+      },
+    },
+  };
   //업로드 영상 용량
-  const optionsVideo = fileSize.totalVideoSize
-    ? {
-        series: [
+  const optionsVideo = {
+    series: [
+      {
+        name: ["원본 영상", "인코딩 영상"],
+        color: "#90be6d",
+        data: [
           {
-            name: ["원본 영상", "인코딩 영상"],
-            color: "#90be6d",
-            data: [
-              {
-                x: "원본 영상",
-                y: Math.round(fileSize.totalVideoSize * 10 ** -9 * 100) / 100,
-                fillColor: "#f9c74f",
-              },
-              {
-                x: "인코딩 영상",
-                y:
-                  Math.round(fileSize.totalEncodedVideoSize * 10 ** -9 * 100) /
-                  100,
-                fillColor: "#90be6d",
-              },
-            ],
+            x: "원본 영상",
+            y: Math.round(fileSize.totalVideoSize * 10 ** -9 * 100) / 100,
+            fillColor: "#f9c74f",
+          },
+          {
+            x: "인코딩 영상",
+            y:
+              Math.round(fileSize.totalEncodedVideoSize * 10 ** -9 * 100) / 100,
+            fillColor: "#90be6d",
           },
         ],
-        chart: {
-          type: "bar",
-          height: 225,
-          toolbar: {
-            show: false,
-          },
+      },
+    ],
+    chart: {
+      type: "bar",
+      height: 225,
+      toolbar: {
+        show: false,
+      },
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shade: "light",
+        type: "horizontal",
+        shadeIntensity: 0.25,
+        gradientToColors: undefined,
+        inverseColors: true,
+        opacityFrom: 0.85,
+        opacityTo: 0.95,
+        stops: [50, 100],
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        borderRadius: 6,
+        columnWidth: "80%",
+      },
+    },
+    legend: {
+      show: false,
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return `${val} GB`;
+      },
+      style: {
+        fontFamily: "Inter, sans-serif",
+        fontWeight: "bold",
+        colors: ["#333"],
+      },
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: function (value) {
+          return `${value} GB`;
         },
-        fill: {
-          type: "gradient",
-          gradient: {
-            shade: "light",
-            type: "horizontal",
-            shadeIntensity: 0.25,
-            gradientToColors: undefined,
-            inverseColors: true,
-            opacityFrom: 0.85,
-            opacityTo: 0.95,
-            stops: [50, 100],
-          },
+      },
+    },
+    xaxis: {
+      labels: {
+        style: {
+          fontFamily: "Inter, sans-serif",
+          fontSize: "12px",
+          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
         },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            borderRadius: 6,
-            columnWidth: "80%",
-          },
+      },
+      categories: ["원본 영상(GB)", "인코딩 영상(GB)"],
+      axisTicks: {
+        show: false,
+      },
+      axisBorder: {
+        show: false,
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          fontFamily: "Inter, sans-serif",
+          fontSize: "12px",
+          cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
         },
-        legend: {
-          show: false,
-        },
-        dataLabels: {
-          enabled: true,
-          formatter: function (val) {
-            return `${val} GB`;
-          },
-          style: {
-            fontFamily: "Inter, sans-serif",
-            fontWeight: "bold",
-            colors: ["#333"],
-          },
-        },
-        tooltip: {
-          shared: true,
-          intersect: false,
-          y: {
-            formatter: function (value) {
-              return `${value} GB`;
-            },
-          },
-        },
-        xaxis: {
-          labels: {
-            style: {
-              fontFamily: "Inter, sans-serif",
-              fontSize: "12px",
-              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
-            },
-          },
-          categories: ["원본 영상(GB)", "인코딩 영상(GB)"],
-          axisTicks: {
-            show: false,
-          },
-          axisBorder: {
-            show: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            style: {
-              fontFamily: "Inter, sans-serif",
-              fontSize: "12px",
-              cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
-            },
-          },
-        },
-        grid: {
-          show: true,
-          strokeDashArray: 3,
-          padding: {
-            left: 10,
-            right: 10,
-          },
-        },
-      }
-    : {};
-
+      },
+    },
+    grid: {
+      show: true,
+      strokeDashArray: 3,
+      padding: {
+        left: 10,
+        right: 10,
+      },
+    },
+  };
   //방문자
   const optionsVisit = visitCount.length
     ? {
@@ -422,10 +412,10 @@ const Main = () => {
 
   useEffect(() => {
     if (
-      fileCount.countImage &&
-      fileCount.countVideo &&
-      fileCount.countEncodedImage &&
-      fileCount.countEncodedVideo
+      fileCount.countImage >= 0 &&
+      fileCount.countVideo >= 0 &&
+      fileCount.countEncodedImage >= 0 &&
+      fileCount.countEncodedVideo >= 0
     ) {
       if (
         document.getElementById("count-chart") &&
@@ -452,7 +442,7 @@ const Main = () => {
       }
     }
 
-    if (fileSize.totalImageSize && fileSize.totalEncodedImageSize) {
+    if (fileSize.totalImageSize >= 0 && fileSize.totalEncodedImageSize >= 0) {
       if (
         document.getElementById("image-chart") &&
         typeof ApexCharts !== "undefined"
@@ -465,7 +455,7 @@ const Main = () => {
       }
     }
 
-    if (fileSize.totalVideoSize && fileSize.totalEncodedVideoSize) {
+    if (fileSize.totalVideoSize >= 0 && fileSize.totalEncodedVideoSize >= 0) {
       if (
         document.getElementById("video-chart") &&
         typeof ApexCharts !== "undefined"
