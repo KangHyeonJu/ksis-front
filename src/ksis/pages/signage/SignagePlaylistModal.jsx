@@ -3,10 +3,14 @@ import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import {
   SIGNAGE_PLAYLIST,
-  SIGNAGE_RESOURCE,
+  SIGNAGE_RESOURCE_PAGE,
 } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { FaSearch } from "react-icons/fa";
+
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   const [data, setData] = useState({
@@ -18,24 +22,60 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   const [resourceSequence, setResourceSequence] = useState([]);
   const [resourceAdds, setResourceAdds] = useState([]);
 
-  //재생장치의 인코딩리소스 불러오기
-  const loadModal = useCallback(async () => {
-    try {
-      const response = await fetcher.get(SIGNAGE_RESOURCE + `/${signageId}`);
-      setResources(response.data);
+  const [searchCategory, setSearchCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const postsPerPage = 8; // 한 페이지 10개 데이터
 
+  //재생장치의 인코딩리소스 불러오기
+  const loadModal = async () => {
+    try {
+      const response = await fetcher.get(
+        SIGNAGE_RESOURCE_PAGE + `/${signageId}`,
+        {
+          params: {
+            page: currentPage - 1,
+            size: postsPerPage,
+            searchTerm,
+            searchCategory,
+          },
+        }
+      );
+
+      if (response.data) {
+        setResources(response.data.content);
+        setTotalPages(response.data.totalPages);
+      } else {
+        console.error("No data property in response");
+      }
       console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [signageId]);
+  };
 
   useEffect(() => {
     if (isOpen && signageId) {
       loadModal();
       setResourceAdds([]);
     }
-  }, [isOpen, signageId, loadModal]);
+  }, [isOpen, signageId]);
+
+  useEffect(() => {
+    loadModal();
+  }, [currentPage, searchTerm, searchCategory]);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+  };
 
   //이미지 클릭 시 재생목록 추가 및 삭제
   const addList = (resource) => {
@@ -101,6 +141,9 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
       if (data.slideTime === null || data.slideTime === "") {
         alert("Slide Time을 입력하세요.");
         return;
+      } else if (data.slideTime <= 0) {
+        alert("Slide Time은 0보다 커야합니다");
+        return;
       }
 
       if (resourceAdds.length === 0) {
@@ -156,12 +199,34 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                 <DialogBody>
                   <div className="mb-4 flex items-center">
                     <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                      <div className="mb-4 flex items-center">
+                        <select
+                          value={searchCategory}
+                          onChange={(e) => setSearchCategory(e.target.value)}
+                          className="mr-1 p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">전체</option>
+                          <option value="image">이미지</option>
+                          <option value="video">영상</option>
+                        </select>
+                        <div className="relative flex-grow">
+                          <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            placeholder="검색어를 입력하세요"
+                            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+                          />
+                          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
+                        </div>
+                      </div>
+
                       <div className="space-y-2">
-                        <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4">
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-4">
                           {resources.map((resource) => (
                             <div
                               key={resource.encodedResourceId}
-                              className="group relative border border-gray-900 mb-5 cursor-pointer"
+                              className="group relative border border-gray-900 cursor-pointer"
                               onClick={() => addList(resource)}
                             >
                               <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
@@ -199,6 +264,14 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                           ))}
                         </div>
                       </div>
+                      <Stack spacing={2} className="mt-3">
+                        <Pagination
+                          count={totalPages}
+                          page={currentPage}
+                          onChange={handlePageChange}
+                          color={"primary"}
+                        />
+                      </Stack>
                     </div>
                   </div>
                 </DialogBody>

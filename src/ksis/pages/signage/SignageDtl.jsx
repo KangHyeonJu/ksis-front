@@ -243,7 +243,7 @@ const SignageDtl = () => {
             maxLength="50"
             name="deviceName"
             type="text"
-            className="bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center h-10"
+            className="rounded-md bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center h-10"
           />
 
           <div className="relative group flex-auto">
@@ -251,7 +251,7 @@ const SignageDtl = () => {
               type="text"
               value={`${data.location} (${data.detailAddress})`}
               readOnly
-              className="ml-2 bg-[#ffe374] block w-full px-4 py-1.5 text-gray-900 text-center h-10"
+              className="rounded-md ml-2 bg-[#ffe374] block w-full px-4 py-1.5 text-gray-900 text-center h-10"
             />
             {data.location.length + data.detailAddress.length > 57 && (
               <span className="absolute left-2 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -308,19 +308,19 @@ const SignageDtl = () => {
             type="text"
             value={formattedDate}
             readOnly
-            className="flex-none bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center h-10"
+            className="rounded-md flex-none bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center h-10"
           />
 
           <input
             value={data.ipAddress}
             type="text"
-            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
+            className="rounded-md flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
           />
 
           <input
             value={data.deviceKey}
             type="text"
-            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
+            className="rounded-md flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
           />
 
           <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
@@ -337,13 +337,13 @@ const SignageDtl = () => {
           <input
             value={data.screenSize}
             type="text"
-            className="flex-none h-10 bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center"
+            className="rounded-md flex-none h-10 bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center"
           />
 
           <input
             value={data.resolution}
             type="text"
-            className="flex-1 h-10 bg-[#ffe374] block ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="rounded-md flex-1 h-10 bg-[#ffe374] block ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
 
           <input
@@ -355,7 +355,7 @@ const SignageDtl = () => {
                 .join(", ")
             }
             readOnly
-            className="flex-auto h-10 bg-[#ffe374] block w-96 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="rounded-md flex-auto h-10 bg-[#ffe374] block w-96 ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
         </div>
 
