@@ -23,7 +23,7 @@ const SignagePlayKeyPage = () => {
 
   const loadPage = async () => {
     // ip & key 검증
-    const response = await axios.get(SIGNAGE_PLAY, {
+    const response = await axios.get(API_BASE_URL + SIGNAGE_PLAY, {
       params: { key: keyValue },
     });
     if (response.status === 200 && response.data !== null) {

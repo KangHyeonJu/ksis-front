@@ -151,7 +151,7 @@ const Main = () => {
         dataLabels: {
           enabled: true,
           formatter: function (val) {
-            return `${val} GB`;
+            return `${val} MB`;
           },
           style: {
             fontFamily: "Inter, sans-serif",
@@ -176,7 +176,7 @@ const Main = () => {
               cssClass: "text-xs font-normal fill-gray-500 dark:fill-gray-400",
             },
           },
-          categories: ["원본 이미지(GB)", "인코딩 이미지(GB)"],
+          categories: ["원본 이미지(MB)", "인코딩 이미지(MB)"],
           axisTicks: {
             show: false,
           },
@@ -214,13 +214,13 @@ const Main = () => {
             data: [
               {
                 x: "원본 영상",
-                y: Math.round(fileSize.totalVideoSize * 10 ** -6 * 100) / 100,
+                y: Math.round(fileSize.totalVideoSize * 10 ** -9 * 100) / 100,
                 fillColor: "#f9c74f",
               },
               {
                 x: "인코딩 영상",
                 y:
-                  Math.round(fileSize.totalEncodedVideoSize * 10 ** -6 * 100) /
+                  Math.round(fileSize.totalEncodedVideoSize * 10 ** -9 * 100) /
                   100,
                 fillColor: "#90be6d",
               },
@@ -273,7 +273,7 @@ const Main = () => {
           intersect: false,
           y: {
             formatter: function (value) {
-              return `${value} MB`;
+              return `${value} GB`;
             },
           },
         },
