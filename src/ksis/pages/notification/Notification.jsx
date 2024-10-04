@@ -7,6 +7,12 @@ import {
 import fetcher from "../../../fetcher";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import {
+  IMAGE_FILE_BOARD,
+  IMAGE_RESOURCE_BOARD,
+  VIDEO_FILE_BOARD,
+  VIDEO_RESOURCE_BOARD,
+} from "../../../constants/page_constant";
 
 const Notification = ({ onClose }) => {
   const [notifications, setNotifications] = useState([]); // 알림 데이터
@@ -33,12 +39,21 @@ const Notification = ({ onClose }) => {
   }, [page]); // 페이지 변경 시 데이터 다시 요청
 
   // 알림 눌렀을때 타입에 따라 페이지 이동 메서드
-  const handleNavigate = (resourceType) => {
+  const handleNavigate = (resourceType, message) => {
     if (resourceType === "IMAGE") {
-      navigate("/imagefileboard");
+      if (message.includes("인코딩")) {
+        navigate(IMAGE_FILE_BOARD);
+      } else {
+        navigate(IMAGE_RESOURCE_BOARD);
+      }
+
       onClose();
     } else if (resourceType === "VIDEO") {
-      navigate("/videofileboard");
+      if (message.includes("인코딩")) {
+        navigate(VIDEO_FILE_BOARD);
+      } else {
+        navigate(VIDEO_RESOURCE_BOARD);
+      }
       onClose();
     }
   };
@@ -96,7 +111,12 @@ const Notification = ({ onClose }) => {
                     onMouseEnter={() =>
                       handleMouseOver(index, notification.notificationId)
                     }
-                    onClick={() => handleNavigate(notification.resourceType)}
+                    onClick={() =>
+                      handleNavigate(
+                        notification.resourceType,
+                        notification.message
+                      )
+                    }
                     style={{ cursor: "pointer" }}
                   >
                     <td className="py-2 px-4">{notification.message}</td>

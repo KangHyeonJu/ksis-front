@@ -10,6 +10,7 @@ const SignagePlayKeyPage = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const keyValue = searchParam.get("key");
   const [verification, setVerification] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [resources, setResources] = useState([]);
   const [notices, setNotices] = useState([]);
@@ -30,6 +31,7 @@ const SignagePlayKeyPage = () => {
       setVerification(true);
 
       loadPlayData(response.data);
+      setLoading(false);
     } else {
       console.log("IP와 KEY 검증 실패");
       setVerification(false);
@@ -180,6 +182,10 @@ const SignagePlayKeyPage = () => {
       console.error(err);
     }
   };
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <div>
