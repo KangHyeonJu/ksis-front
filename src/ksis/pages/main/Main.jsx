@@ -32,7 +32,7 @@ const Main = () => {
   }, []);
 
   //업로드 개수
-  const optionsFileCount = fileCount.countImage
+  const optionsFileCount = fileCount
     ? {
         series: [
           fileCount.countImage || 0,
