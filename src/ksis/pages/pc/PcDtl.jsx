@@ -4,15 +4,15 @@ import fetcher from "../../../fetcher";
 import { PC_LIST } from "../../../constants/api_constant";
 import { PC_UPDATE_FORM, PC_INVENTORY } from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
+import { decodeJwt } from "../../../decodeJwt";
 
 const PcDtl = () => {
-  const authority = localStorage.getItem("authority");
-  const loginAccountId = localStorage.getItem("accountId");
-
   //불러오기
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
+  const userInfo = decodeJwt();
+  const [loading, setLoading] = useState(true);
 
   const loadPcDtl = async (pcId) => {
     try {
@@ -20,8 +20,10 @@ const PcDtl = () => {
       const { accountList, ...rest } = response.data;
 
       if (
-        authority !== "ROLE_ADMIN" &&
-        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+        userInfo.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === userInfo.accountId
+        )
       ) {
         alert("접근권한이 없습니다.");
         navigate(PC_INVENTORY);
@@ -36,6 +38,8 @@ const PcDtl = () => {
           accountName: account.name,
         }))
       );
+
+      setLoading(false);
     } catch (error) {
       console.log(error.response);
     }
@@ -57,6 +61,10 @@ const PcDtl = () => {
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -135,12 +143,14 @@ const PcDtl = () => {
         </div>
       </div>
       <div className="mt-2 flex justify-end">
-        <button
-          type="button"
-          className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>수정하기</Link>
-        </button>
+        <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>
+          <button
+            type="button"
+            className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            수정하기
+          </button>
+        </Link>
         <button
           type="button"
           className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"

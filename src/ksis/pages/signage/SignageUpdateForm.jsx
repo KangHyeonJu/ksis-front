@@ -11,10 +11,11 @@ import {
   SIGNAGE_INVENTORY,
   SIGNAGE_DTL,
 } from "../../../constants/page_constant";
+import { decodeJwt } from "../../../decodeJwt";
 
 const SignageUpdateForm = () => {
-  const authority = localStorage.getItem("authority");
-  const loginAccountId = localStorage.getItem("accountId");
+  const userInfo = decodeJwt();
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const [data, setData] = useState({});
@@ -46,8 +47,10 @@ const SignageUpdateForm = () => {
       );
 
       if (
-        authority !== "ROLE_ADMIN" &&
-        !response.data.accountList.some((i) => i.accountId === loginAccountId)
+        userInfo.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === userInfo.accountId
+        )
       ) {
         alert("접근권한이 없습니다.");
         navigate(SIGNAGE_INVENTORY);
@@ -263,7 +266,7 @@ const SignageUpdateForm = () => {
               <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
                 담당자
               </label>
-              {authority === "ROLE_ADMIN" ? (
+              {userInfo.roles === "ROLE_ADMIN" ? (
                 <>
                   <select
                     required
@@ -354,7 +357,7 @@ const SignageUpdateForm = () => {
               IP주소
             </label>
 
-            {authority === "ROLE_ADMIN" ? (
+            {userInfo.roles === "ROLE_ADMIN" ? (
               <input
                 id="ipAddress"
                 required

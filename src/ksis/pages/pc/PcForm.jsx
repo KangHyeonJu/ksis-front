@@ -3,12 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import { PC_ADD, PC_ACCOUNT } from "../../../constants/api_constant";
-import { PC_INVENTORY, MAIN } from "../../../constants/page_constant";
+import { PC_INVENTORY } from "../../../constants/page_constant";
+import { decodeJwt } from "../../../decodeJwt";
 
 const PcForm = () => {
+  const [data, setData] = useState({
+    macAddress: "",
+    deviceName: "",
+    location: "",
+    detailAddress: "",
+    deviceType: "PC",
+  });
+  const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
+  const [address, setAddress] = useState("");
+  const [accounts, setAccounts] = useState([]);
   const navigate = useNavigate();
-
-  const authority = localStorage.getItem("authority");
+  const userInfo = decodeJwt();
+  const [loading, setLoading] = useState(true);
 
   //mac 주소 검증
   const [macAddress, setMacAddress] = useState("");
@@ -25,22 +36,10 @@ const PcForm = () => {
     }
 
     value = value.match(/.{1,2}/g)?.join(":") || "";
-
-    // const macRegex = /^([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}$/;
-
-    // if (value.length > 0 && macRegex.test(value)) {
-    //   setMacAddress(value);
-    //   setError("");
-    // } else {
-    //   setError("유효한 MAC 주소를 입력하세요.");
-    // }
-
     setMacAddress(value);
   };
 
   //주소불러오기
-  const [address, setAddress] = useState("");
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -81,22 +80,22 @@ const PcForm = () => {
   };
 
   //전체 user불러오기
-  const [accounts, setAccounts] = useState([]);
-
   const accountGet = async () => {
     try {
-      if (authority !== "ROLE_ADMIN") {
+      if (userInfo.roles !== "ROLE_ADMIN") {
         alert("접근권한이 없습니다.");
-        navigate(MAIN);
+        navigate(PC_INVENTORY);
       }
 
       const response = await fetcher.get(PC_ACCOUNT);
-      console.log(response);
+
       if (response.data) {
         setAccounts(response.data);
       } else {
         console.error("No data property in response");
       }
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       alert(error.response?.data || "Unknown error occurred");
@@ -113,14 +112,6 @@ const PcForm = () => {
   };
 
   //post
-  const [data, setData] = useState({
-    macAddress: "",
-    deviceName: "",
-    location: "",
-    detailAddress: "",
-    deviceType: "PC",
-  });
-
   useEffect(() => {
     setData((prevData) => ({
       ...prevData,
@@ -190,8 +181,6 @@ const PcForm = () => {
   };
 
   //담당자 +, - 버튼
-  const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
-
   const addResponsible = () => {
     setResponsibles((prev) => [
       ...prev,
@@ -211,6 +200,10 @@ const PcForm = () => {
     newResponsibles[index].accountId = value;
     setResponsibles(newResponsibles);
   };
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

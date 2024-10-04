@@ -10,16 +10,18 @@ import {
   SIGNAGE_FORM,
   SIGNAGE_GRID,
 } from "../../../constants/page_constant";
+import { decodeJwt } from "../../../decodeJwt";
+import { ToggleSwitch } from "../../css/switch";
 
 const SignageList = () => {
-  const authority = localStorage.getItem("authority");
+  const userInfo = decodeJwt();
 
   const [signages, setSignages] = useState([]);
 
   const loadPage = async () => {
     try {
       const response = await fetcher.get(SIGNAGE_LIST, {
-        params: { role: authority },
+        params: { role: userInfo.roles },
       });
       console.log(response);
       if (response.data) {
@@ -137,29 +139,30 @@ const SignageList = () => {
           <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
       </div>
-      <div className="flex justify-end space-x-2 mb-4">
-        <button>
-          <Link to={SIGNAGE_GRID}>그리드로 보기</Link>
-        </button>
-      </div>
-      {authority === "ROLE_ADMIN" ? (
-        <div className="flex justify-end space-x-2 mb-4">
-          <button
-            type="button"
-            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
-            <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
-          </button>
-          <button
-            onClick={deleteSignage}
-            type="button"
-            className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            삭제
-          </button>
+      <div className="flex justify-between">
+        <div>
+          <ToggleSwitch />
         </div>
-      ) : null}
-
+        {userInfo.roles === "ROLE_ADMIN" ? (
+          <div className="flex justify-end space-x-2 mb-4">
+            <Link to={SIGNAGE_FORM}>
+              <button
+                type="button"
+                className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              >
+                재생장치 등록
+              </button>
+            </Link>
+            <button
+              onClick={deleteSignage}
+              type="button"
+              className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            >
+              삭제
+            </button>
+          </div>
+        ) : null}
+      </div>
       <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
         <thead>
           <tr>
@@ -183,7 +186,7 @@ const SignageList = () => {
         </thead>
         <tbody>
           {paginatedPosts.map((signage) => (
-            <tr key={signage.deviceId}>
+            <tr key={signage.deviceId} className="hover:bg-gray-100">
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
@@ -192,7 +195,7 @@ const SignageList = () => {
                 />
               </td>
 
-              <td className="border border-gray-300 p-2">
+              <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
                 <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
                   {signage.deviceName}
                 </Link>

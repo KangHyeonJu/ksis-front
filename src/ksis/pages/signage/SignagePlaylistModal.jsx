@@ -144,7 +144,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-140">
+        <div className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160">
           <div className="h-full">
             <div className="items-center justify-center">
               <DialogTitle className="leading-6 text-gray-900 text-center">
@@ -155,7 +155,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="w-9/12 pr-4">
                 <DialogBody>
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-96 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
                       <div className="space-y-2">
                         <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4">
                           {resources.map((resource) => (
@@ -184,8 +184,16 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                   ) + 1}
                                 </div>
                               )}
-                              <div className="text-gray-700 text-center w-full p-1">
-                                {resource.fileTitle}
+                              <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
+                                <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                                  {resource.fileTitle}
+                                </p>
+
+                                {resource.fileTitle.length > 20 && (
+                                  <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    {resource.fileTitle}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           ))}
@@ -198,7 +206,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="w-3/12">
                 <DialogBody className="mt-2">
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-96 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-1">
                           {(provided) => (
