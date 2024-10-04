@@ -1,10 +1,10 @@
 import { useSearchParams } from "react-router-dom";
-import fetcher from "../../../fetcher";
 import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
 } from "../../../constants/api_constant";
 import { useEffect, useState, useRef, useCallback } from "react";
+import axios from "axios";
 
 const SignagePlayKeyPage = () => {
   const [searchParam, setSearchParam] = useSearchParams();
@@ -17,17 +17,16 @@ const SignagePlayKeyPage = () => {
   const timeoutIdRef = useRef(null);
   const [date, setDate] = useState(() => new Date());
   const [weather, setWeather] = useState({});
-  const [signageId, setSignageId] = useState("");
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const scrollRef = useRef(null);
 
   const loadPage = async () => {
     // ip & key 검증
-    const response = await fetcher.get(SIGNAGE_PLAY, {
+    const response = await axios.get(SIGNAGE_PLAY, {
       params: { key: keyValue },
     });
     if (response.status === 200 && response.data !== null) {
-      // setSignageId(response.data);
       setVerification(true);
 
       loadPlayData(response.data);
@@ -40,8 +39,8 @@ const SignagePlayKeyPage = () => {
   const loadPlayData = async (signageId) => {
     try {
       const [responseResource, responseNotice] = await Promise.all([
-        fetcher.get(SIGNAGE_PLAY + `/${signageId}`),
-        fetcher.get(SIGNAGE_PLAY_NOTICE + `/${signageId}`),
+        axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
+        axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
       ]);
       setResources(responseResource.data);
       console.log(responseResource);
@@ -163,6 +162,8 @@ const SignagePlayKeyPage = () => {
       ).then((response) => {
         return response.json();
       });
+
+      console.log("res: ", res);
 
       // 날씨 아이콘 가져오기
       const weatherIcon = res.weather[0].icon;

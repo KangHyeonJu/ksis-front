@@ -93,12 +93,14 @@ const SignageGrid = () => {
         </div>
         {userInfo.roles === "ROLE_ADMIN" ? (
           <div className="flex justify-end space-x-2 mb-4">
-            <button
-              type="button"
-              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-            >
-              <Link to={SIGNAGE_FORM}>재생장치 등록</Link>
-            </button>
+            <Link to={SIGNAGE_FORM}>
+              <button
+                type="button"
+                className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              >
+                재생장치 등록
+              </button>
+            </Link>
           </div>
         ) : null}
       </div>
@@ -118,12 +120,14 @@ const SignageGrid = () => {
             <div className="mt-2 text-gray-700 text-center w-full border-2 border-[#fcc310] rounded-md p-1">
               재생장치 : {signage.deviceName}
             </div>
-            <button
-              type="button"
-              className="mt-2 bg-[#fad96e] w-full rounded-md p-1"
-            >
-              <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>상세보기</Link>
-            </button>
+            <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
+              <button
+                type="button"
+                className="mt-2 bg-[#fad96e] w-full rounded-md p-1"
+              >
+                상세보기
+              </button>
+            </Link>
           </div>
         ))}
       </div>

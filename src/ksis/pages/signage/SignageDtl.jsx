@@ -245,20 +245,35 @@ const SignageDtl = () => {
             type="text"
             className="bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center h-10"
           />
+
+          <div className="relative group flex-auto">
+            <input
+              type="text"
+              value={`${data.location} (${data.detailAddress})`}
+              readOnly
+              className="ml-2 bg-[#ffe374] block w-full px-4 py-1.5 text-gray-900 text-center h-10"
+            />
+            {data.location.length + data.detailAddress.length > 57 && (
+              <span className="absolute left-2 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                {data.location} ({data.detailAddress})
+              </span>
+            )}
+          </div>
+
           <button
-            onClick={openNoticeModal}
+            onClick={openModal}
             type="button"
-            className="ml-2 h-10 relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            className="relative h-10 inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
-            공지조회
+            위치 보기
           </button>
-          <NoticeModal
-            isOpen={noticeModalIsOpen}
-            onRequestClose={closeNoticeModal}
-            signageId={data.deviceId}
+          <LocationModal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            address={data.location}
           />
 
-          <div className="ml-auto">공지 표시</div>
+          <div className="ml-2">공지 표시</div>
           <Switch
             checked={enabled}
             onChange={handleToggle}
@@ -291,43 +306,31 @@ const SignageDtl = () => {
         <div className="flex items-center mt-5">
           <input
             type="text"
-            value={data.location}
-            readOnly
-            className="flex-auto bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center h-10"
-          />
-          <button
-            onClick={openModal}
-            type="button"
-            className="relative h-10 inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
-            위치 보기
-          </button>
-          <LocationModal
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            address={data.location}
-          />
-
-          <input
-            type="text"
             value={formattedDate}
             readOnly
-            className="flex-none bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
+            className="flex-none bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center h-10"
           />
 
           <input
-            value={data.macAddress}
+            value={data.ipAddress}
             type="text"
             className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
           />
-          <button
-            type="button"
-            className="ml-2 h-10 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
+
+          <input
+            value={data.deviceKey}
+            type="text"
+            className="flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
+          />
+
+          <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
+            <button
+              type="button"
+              className="ml-2 h-10 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
               정보 수정
-            </Link>
-          </button>
+            </button>
+          </Link>
         </div>
 
         <div className="flex items-center mt-5">
@@ -340,7 +343,7 @@ const SignageDtl = () => {
           <input
             value={data.resolution}
             type="text"
-            className="flex-1 h-10 bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-1 h-10 bg-[#ffe374] block ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
 
           <input
@@ -352,11 +355,11 @@ const SignageDtl = () => {
                 .join(", ")
             }
             readOnly
-            className="flex-auto h-10 bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center"
+            className="flex-auto h-10 bg-[#ffe374] block w-96 ml-2 px-4 py-1.5 text-gray-900 text-center"
           />
         </div>
 
-        <div className="flex items-center mt-5">
+        <div className="flex items-center mt-5 justify-between">
           <button
             onClick={openResourceModal}
             type="button"
@@ -367,6 +370,19 @@ const SignageDtl = () => {
           <SignageResourceModal
             isOpen={resourceModalIsOpen}
             onRequestClose={closeResourceModal}
+            signageId={data.deviceId}
+          />
+
+          <button
+            onClick={openNoticeModal}
+            type="button"
+            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          >
+            공지조회
+          </button>
+          <NoticeModal
+            isOpen={noticeModalIsOpen}
+            onRequestClose={closeNoticeModal}
             signageId={data.deviceId}
           />
         </div>
@@ -502,13 +518,14 @@ const SignageDtl = () => {
         </div>
 
         <div className="flex items-center mt-5 justify-between">
-          <button
-            type="button"
-            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            onClick={onCancel}
-          >
-            뒤로가기
-          </button>
+          <Link to={SIGNAGE_INVENTORY}>
+            <button
+              type="button"
+              className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            >
+              뒤로가기
+            </button>
+          </Link>
           <button
             type="button"
             className="rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"

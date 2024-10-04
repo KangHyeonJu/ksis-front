@@ -143,12 +143,14 @@ const PcDtl = () => {
         </div>
       </div>
       <div className="mt-2 flex justify-end">
-        <button
-          type="button"
-          className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>수정하기</Link>
-        </button>
+        <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>
+          <button
+            type="button"
+            className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            수정하기
+          </button>
+        </Link>
         <button
           type="button"
           className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"

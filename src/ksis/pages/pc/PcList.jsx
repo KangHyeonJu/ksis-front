@@ -134,12 +134,14 @@ const PcList = () => {
 
       {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 mb-4">
-          <button
-            type="button"
-            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
-            <Link to={PC_FORM}>일반 PC 등록</Link>
-          </button>
+          <Link to={PC_FORM}>
+            <button
+              type="button"
+              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            >
+              일반 PC 등록
+            </button>
+          </Link>
           <button
             onClick={deletePc}
             type="button"
