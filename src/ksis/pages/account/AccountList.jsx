@@ -117,12 +117,14 @@ const AccountList = () => {
       </div>
 
       <div className="flex justify-end space-x-2 mb-4">
-        <button
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to={ACCOUNT_FORM}>계정 등록</Link>
-        </button>
+        <Link to={ACCOUNT_FORM}>
+          <button
+            type="button"
+            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          >
+            계정 등록
+          </button>
+        </Link>
       </div>
 
       <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">

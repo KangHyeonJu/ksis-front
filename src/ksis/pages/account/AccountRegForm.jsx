@@ -292,12 +292,16 @@ const AccountRegForm = () => {
                         >
                             등록
                         </button>
-                        <button
-                            type="button"
-                            className="bg-[#ff0000] text-white rounded-full px-4 py-2 font-semibold hover:bg-red-700"
-                        >
-                            <Link to={ACCOUNT_LIST_BOARD}>취소</Link>
-                        </button>
+                        <div>
+                            <Link to={ACCOUNT_LIST_BOARD}>
+                                <button
+                                    type="button"
+                                    className="bg-[#ff0000] text-white rounded-full px-4 py-2 font-semibold hover:bg-red-700"
+                                >
+                                    취소
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </form>
             </div>
