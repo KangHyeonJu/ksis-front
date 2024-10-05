@@ -465,7 +465,7 @@ const SignageDtl = () => {
               </div>
             </div>
 
-            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3">
+            <div className="mt-2 grid gap-x-4 gap-y-4 md:grid-cols-3">
               {playlistDtl.map((resource) => (
                 <div
                   key={resource.encodedResourceId}
