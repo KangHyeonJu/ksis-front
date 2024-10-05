@@ -122,7 +122,7 @@ const ImageFileBoard = () => {
     <div className="flex items-center justify-between mb-4">
       
         {/* 파일등록 버튼 */}
-      <div className="flex justify-start space-x-2 mb-4">
+      <div className="flex justify-start space-x-2 mb-4 ">
         <button
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
@@ -156,7 +156,7 @@ const ImageFileBoard = () => {
       </div>
 
       {/* 토글 버튼 */}
-      <div className="flex justify-end space-x-2 mb-4">
+      <div className="flex justify-end space-x-2 mb-4 ">
         <button
           type="button"
           onClick={handleToggle}
@@ -191,20 +191,20 @@ const ImageFileBoard = () => {
           currentPosts.map((post, index) => (
             <div key={index} className="p-2">
               {/* 카드 */}
-              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full">
-               
+              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
+  
                 {/* 이미지 */}
-                <div className="w-32 h-32 overflow-hidden">
+                <div className="w-60 h-60 m-2 mb-3 overflow-hidden">
                   <img
                     src={post.thumbFilePath}
                     alt={post.fileTitle}
-                    className="w-full h-full cursor-pointer object-cover object-center p-2"
+                    className="w-full h-full cursor-pointer object-cover object-center"
                     onClick={() => openResourceModal(post.filePath)}
                   />
                 </div>
                 
                  {/* 제목 및 아이콘 래퍼 */}
-                <div className="flex items-center justify-between w-full mb-2">
+                <div className="flex justify-between w-full">
                   {editingTitleIndex === index ? (
                     <input
                       type="text"
@@ -232,8 +232,9 @@ const ImageFileBoard = () => {
                 </div>
 
                 {/* 등록일 */}
+                <div className="">
                 <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
-
+                </div>
 
                 {/* 삭제 버튼 */}
                 <button
