@@ -110,19 +110,34 @@ const ImageFileBoard = () => {
   );
 
   return (
-    <div className="p-6">
-      <header className="mb-6">
+    <div className="p-10 mt-16">
+      {/* <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           이미지 인코딩 페이지
         </h1>
-      </header>
+      </header> */}
+
+
+
+    <div className="flex items-center justify-between mb-4">
+      
+        {/* 파일등록 버튼 */}
+      <div className="flex justify-start space-x-2 mb-4">
+        <button
+          type="button"
+          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        >
+          <Link to="ksis://open">파일 등록</Link>
+        </button>
+      </div>
+
 
       {/* 검색바 입력창 */}
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center space-x-2 relative flex-grow mx-4">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 rounded-md bg-[#f39704] text-white"
         >
           <option value="total">전체</option>
           <option value="title">제목</option>
@@ -141,7 +156,7 @@ const ImageFileBoard = () => {
       </div>
 
       {/* 토글 버튼 */}
-      <div className="flex justify-start space-x-2 mb-4">
+      <div className="flex justify-end space-x-2 mb-4">
         <button
           type="button"
           onClick={handleToggle}
@@ -168,13 +183,6 @@ const ImageFileBoard = () => {
         </button>
       </div>
 
-      <div className="flex justify-end space-x-2 mb-4">
-        <button
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
-        </button>
       </div>
 
       {/* 그리드 시작 */}
@@ -183,49 +191,54 @@ const ImageFileBoard = () => {
           currentPosts.map((post, index) => (
             <div key={index} className="p-2">
               {/* 카드 */}
-              <div className="rounded-lg bg-[#ffe69c] p-4 text-center flex flex-col items-center h-full">
-                {/* 제목 */}
-                <div className="relative group mb-2 w-full overflow-hidden">
+              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full">
+               
+                {/* 이미지 */}
+                <div className="w-32 h-32 overflow-hidden">
+                  <img
+                    src={post.thumbFilePath}
+                    alt={post.fileTitle}
+                    className="w-full h-full cursor-pointer object-cover object-center p-2"
+                    onClick={() => openResourceModal(post.filePath)}
+                  />
+                </div>
+                
+                 {/* 제목 및 아이콘 래퍼 */}
+                <div className="flex items-center justify-between w-full mb-2">
                   {editingTitleIndex === index ? (
                     <input
                       type="text"
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
-                      className="w-full text-xl font-bold mb-2 border-b border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
-                      placeholder="Enter new title"
+                      className="w-full text-xl font-midium mb-2 border-b 
+                      border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                      placeholder="제목을 입력해주세요."
                     />
                   ) : (
-                    <h2 className="text-xl font-bold truncate max-w-full" title={post.fileTitle}>
+                    <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
                       {post.fileTitle}
                     </h2>
                   )}
+                  <div>
                   <FaEdit
                     onClick={() =>
                       editingTitleIndex === index
                         ? handleSaveClick(post.encodedResourceId)
                         : handleEditClick(index, post.fileTitle)
                     }
-                    className="ml-2 cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
-                  />
+                    className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+                />
+                </div>
                 </div>
 
                 {/* 등록일 */}
-                <p className="text-gray-700 mb-4">등록일: {formatDate(post.regTime)}</p>
+                <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
 
-                {/* 이미지 */}
-                <div className="w-32 h-32 overflow-hidden mb-4">
-                  <img
-                    src={post.thumbFilePath}
-                    alt={post.fileTitle}
-                    className="w-full h-full object-contain cursor-pointer"
-                    onClick={() => openResourceModal(post.filePath)}
-                  />
-                </div>
 
                 {/* 삭제 버튼 */}
                 <button
                   type="button"
-                  className="mt-auto rounded-md bg-[#ff8f8f] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+                  className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                   onClick={() => handleDelete(post.encodedResourceId)}
                 >
                   삭제
