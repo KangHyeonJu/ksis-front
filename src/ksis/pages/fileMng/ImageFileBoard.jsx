@@ -2,39 +2,34 @@ import React, { useState, useEffect } from "react";
 import { format, parseISO } from "date-fns";
 import { FaSearch, FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
+import ReactPaginate from "react-paginate";
 import {
   IMAGE_RESOURCE_BOARD,
   IMAGE_FILE_BOARD,
 } from "../../../constants/page_constant";
-import {
-  ECIMAGE_BOARD,
-  FILE_ENCODED_BASIC,
-} from "../../../constants/api_constant";
+import { ECIMAGE_BOARD, FILE_ENCODED_BASIC } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 
 const ImageFileBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("total");
-  const [isOriginal, setIsOriginal] = useState(false); // 토글 상태 관리
+  const [isOriginal, setIsOriginal] = useState(false);
   const [images, setImages] = useState([]);
-  // 페이지네이션 관련 상태
   const [currentPage, setCurrentPage] = useState(0);
-  const postsPerPage = 10; // 페이지당 게시물 수
-  const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
+  const postsPerPage = 10;
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetcher
       .get(ECIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
-        setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
-        console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
+        setFilteredPosts(response.data);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -49,18 +44,13 @@ const ImageFileBoard = () => {
   const handleSaveClick = async (id) => {
     try {
       await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
-        fileTitle: newTitle, 
+        fileTitle: newTitle,
       });
 
-      // 제목이 변경된 후 images 상태를 업데이트
       const updatedImages = images.map((image) =>
-        image.encodedResourceId === id
-          ? { ...image, fileTitle: newTitle }
-          : image
+        image.encodedResourceId === id ? { ...image, fileTitle: newTitle } : image
       );
       setImages(updatedImages);
-
-      // 변경된 images를 기반으로 filteredPosts 상태도 업데이트
       setFilteredPosts(updatedImages);
 
       setEditingTitleIndex(null);
@@ -74,11 +64,7 @@ const ImageFileBoard = () => {
   const handleToggle = () => {
     const newIsOriginal = !isOriginal;
     setIsOriginal(newIsOriginal);
-    if (newIsOriginal) {
-      navigate(IMAGE_RESOURCE_BOARD); // 원본 페이지로 이동
-    } else {
-      navigate(IMAGE_FILE_BOARD); // 인코딩 페이지로 이동 (replace with the actual path)
-    }
+    navigate(newIsOriginal ? IMAGE_RESOURCE_BOARD : IMAGE_FILE_BOARD);
   };
 
   const handlePageChange = ({ selected }) => {
@@ -88,8 +74,8 @@ const ImageFileBoard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
       try {
-        await fetcher.delete(FILE_ENCODED_BASIC + `/${id}`);
-        setImages(images.filter((image) => image.id !== id));
+        await fetcher.delete(`${FILE_ENCODED_BASIC}/${id}`);
+        setImages(images.filter((image) => image.encodedResourceId !== id));
         window.alert("이미지를 삭제하였습니다.");
       } catch (err) {
         console.error("이미지 삭제 오류:", err);
@@ -195,110 +181,80 @@ const ImageFileBoard = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
-            <div key={index} className="grid p-1">
-              {/* 네모틀 */}
-              <div className="items-center text-center rounded-lg w-2/3 h-full p-3 bg-[#ffe69c]">
+            <div key={index} className="p-2">
+              {/* 카드 */}
+              <div className="rounded-lg bg-[#ffe69c] p-4 text-center flex flex-col items-center h-full">
                 {/* 제목 */}
-                <div>
-                  <div className="flex items-center">
-                    {editingTitleIndex === index ? (
-                      <input
-                        type="text"
-                        value={newTitle}
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
-                      />
-                    ) : (
-                      <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
-                        {post.fileTitle}
-                      </h2>
-                    )}
-                    <FaEdit
-                      onClick={() =>
-                        editingTitleIndex === index
-                          ? handleSaveClick(post.encodedResourceId)
-                          : handleEditClick(index, post.fileTitle)
-                      }
-                      className="ml-2 cursor-pointer text-gray-600"
+                <div className="relative group mb-2 w-full overflow-hidden">
+                  {editingTitleIndex === index ? (
+                    <input
+                      type="text"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      className="w-full text-xl font-bold mb-2 border-b border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                      placeholder="Enter new title"
                     />
-                  </div>
+                  ) : (
+                    <h2 className="text-xl font-bold truncate max-w-full" title={post.fileTitle}>
+                      {post.fileTitle}
+                    </h2>
+                  )}
+                  <FaEdit
+                    onClick={() =>
+                      editingTitleIndex === index
+                        ? handleSaveClick(post.encodedResourceId)
+                        : handleEditClick(index, post.fileTitle)
+                    }
+                    className="ml-2 cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+                  />
                 </div>
 
                 {/* 등록일 */}
-                <div>
-                  <p className="text-gray-700 ">
-                    등록일: {formatDate(post.regTime)}
-                  </p>
-                </div>
+                <p className="text-gray-700 mb-4">등록일: {formatDate(post.regTime)}</p>
 
                 {/* 이미지 */}
-                <div>
-                <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
-                <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
-                
+                <div className="w-32 h-32 overflow-hidden mb-4">
                   <img
-                      src={post.thumbFilePath}
-                      alt={post.fileTitle}
-                      className="w-full h-full object-cover"
-                      onClick={() => openResourceModal(post.filePath)}
-                    />
-                  </div>
-                  </div>
+                    src={post.thumbFilePath}
+                    alt={post.fileTitle}
+                    className="w-full h-full object-contain cursor-pointer"
+                    onClick={() => openResourceModal(post.filePath)}
+                  />
                 </div>
 
                 {/* 삭제 버튼 */}
-                <div>
-                  <div className="items-center text-center row mx-auto">
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(post.encodedResourceId)}
-                      className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm
-                                    hover:bg-red-400 focus-visible:outline-red-600"
-                    >
-                      삭제
-                    </button>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  className="mt-auto rounded-md bg-[#ff8f8f] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+                  onClick={() => handleDelete(post.encodedResourceId)}
+                >
+                  삭제
+                </button>
               </div>
             </div>
           ))
         ) : (
-          <div className="w-screen">
-            <p className="text-center text-gray-600 w-4/5">파일이 없습니다.</p>
+          <div className="col-span-full text-center text-gray-500">
+            게시된 파일이 없습니다.
           </div>
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {filteredPosts.length > postsPerPage && (
+      {/* Pagination */}
+      <div className="mt-6">
         <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
           pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
           onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+          containerClassName={"pagination flex justify-center items-center space-x-2"}
+          previousLinkClassName={"px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400"}
+          nextLinkClassName={"px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400"}
+          activeClassName={"px-3 py-1 bg-blue-500 text-white rounded-md"}
+          pageClassName={"px-3 py-1 hover:bg-gray-200"}
+          disabledClassName={"text-gray-400 cursor-not-allowed"}
         />
-      )}
+      </div>
 
       {/* 모달창 */}
       {isOpen && (
