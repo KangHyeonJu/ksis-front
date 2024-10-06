@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
+  SSE_CONNECT,
 } from "../../../constants/api_constant";
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
@@ -38,6 +39,11 @@ const SignagePlayKeyPage = () => {
     }
   };
 
+  useEffect(() => {
+    //페이지 로드
+    loadPage();
+  }, []);
+
   const loadPlayData = async (signageId) => {
     try {
       const [responseResource, responseNotice] = await Promise.all([
@@ -54,9 +60,19 @@ const SignagePlayKeyPage = () => {
     }
   };
 
+  //sse
   useEffect(() => {
-    //페이지 로드
-    loadPage();
+    const eventSource = new EventSource(API_BASE_URL + SSE_CONNECT);
+
+    eventSource.onmessage = (event) => {
+      console.log("메세지 수신: ", event.data);
+
+      loadPlayData();
+    };
+
+    return () => {
+      eventSource.close();
+    };
   }, []);
 
   useEffect(() => {
