@@ -151,26 +151,39 @@ const handleKeyDown = (e, id) => {
   );
 
   return (
-    <div className="p-6">
+    <div className="p-10">
       <header className="mb-6">
-        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           이미지 원본 페이지
         </h1>
-      </header>
+      </header> 
 
-      {/* 검색창 */}
-      {/* 검색창 선택 */}
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center justify-between mb-4">
+      
+        {/* 파일등록 버튼 */}
+      <div className="flex justify-start space-x-2 mb-4 ">
+        <button
+          type="button"
+          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
+          font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        >
+          <Link to="ksis://open">파일 등록</Link>
+        </button>
+      </div>
+
+
+       {/* 검색바 입력창 */}
+       <div className="flex items-center space-x-2 relative flex-grow mx-4">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 rounded-md bg-[#f39704] text-white"
         >
           <option value="total">전체</option>
           <option value="title">제목</option>
           <option value="regDate">등록일</option>
         </select>
-        {/* 검색어 작성 */}
         <div className="relative flex-grow">
           <input
             type="text"
@@ -210,84 +223,77 @@ const handleKeyDown = (e, id) => {
           </span>
         </button>
       </div>
+    </div>
 
-      {/* 파일등록 버튼 */}
-      <div className="flex justify-end space-x-2 mb-4">
-        <button
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
-        </button>
-      </div>
 
+ {/* 그리드 시작 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
-            <div key={index} className="grid p-1">
-              {/* 네모틀 */}
-              <div
-                className="items-center text-center rounded-lg 
-                            w-2/3 h-full p-3 bg-[#ffe69c]"
-              >
-                {/* 제목 */}
-                {/* <div style={{ width: "100%",}}> */}
-                {editingTitleIndex === index ? (
-  <div className="flex items-center">
-    <input
-      type="text"
-      value={newTitle}
-      onChange={(e) => setNewTitle(e.target.value)}
-      onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
-      className="w-2/3 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
-    />
-    <button
-      onClick={() => handleSaveClick(post.originalResourceId)} // 직접 저장 버튼 클릭
-      className="ml-2 mr-2"
-    >
-       <FaCheck className="text-green-600" /> {/* 체크 아이콘 추가 */}
-    </button>
-  </div>
-) : (
-  <div className="flex items-center">
-    <h2 className="w-2/3 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
-      {post.fileTitle}
-    </h2>
-    <FaEdit
-      onClick={() =>
-        editingTitleIndex === index
-          ? handleSaveClick(post.originalResourceId)
-          : handleEditClick(index, post.fileTitle)
-      }
-      className="ml-2 cursor-pointer text-gray-600"
-    />
-  </div>
-)}
-                {/* </div> */}
+            <div key={index} className="p-2">
+              {/* 카드 */}
+              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
 
-                {/* 등록일 */}
-                <div>
-                  <p className="text-gray-700 ">
-                    등록일: {formatDate(post.regTime)}
-                  </p>
-                </div>
-
-                {/* 이미지 */}
-                <div>
-                <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
+              {/* 이미지 */}
+              <div>
+              <div className="w-60 h-60 m-2 mb-3 overflow-hidden">
                 <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
                 
                       <img
                         src={post.thumbFilePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
                         alt={post.fileTitle}
-                        className="w-100 h-100 overflow-hidden "
+                        className="w-full h-full cursor-pointer object-cover object-center"
                         //이미지 클릭하면 모달 열림
                         onClick={() => openResourceModal(post.originalResourceId)}
                       />
                      </div>
                   </div>
                 </div>
+
+                {/* 제목 */}
+                <div className="flex justify-between w-full">
+                {editingTitleIndex === index ? (
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
+                  className="w-full text-xl font-midium mb-2 border-b 
+                      border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                      placeholder="제목을 입력해주세요."
+                />
+                <button
+                  onClick={() => handleSaveClick(post.originalResourceId)} // 직접 저장 버튼 클릭
+                  className="ml-2 mr-2"
+                >
+                  <FaCheck className="text-green-600" /> {/* 체크 아이콘 추가 */}
+                </button>
+              </div>
+            ) :  (
+              <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
+                {post.fileTitle}
+              </h2>
+            )}
+            <div>
+            <FaEdit
+              onClick={() =>
+                editingTitleIndex === index
+                  ? handleSaveClick(post.encodedResourceId)
+                  : handleEditClick(index, post.fileTitle)
+              }
+              className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+          />
+          </div>
+          </div>
+
+               {/* 등록일 */}
+               <div className="">
+                <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
+                </div>
+
+                
 
                 {/* 인코딩, 삭제 버튼 */}
 

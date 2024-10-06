@@ -15,7 +15,7 @@ const NoticeForm = () => {
     startDate: "",
     endDate: "",
     deviceIds: [""],
-    role:"",
+    role: "",
   });
 
   const [deviceOptions, setDeviceOptions] = useState([]);
@@ -26,21 +26,18 @@ const NoticeForm = () => {
 
   useEffect(() => {
     const fetchDevices = async () => {
-
       const authority = decodeJwt().roles;
       setRole(authority); // 역할 상태 설정
-      
+
       console.log("noticeForm 역할 :", authority);
       try {
         const response = await fetcher.get(SIGNAGE_LIST, {
           params: { role: authority },
         });
         setDeviceOptions(
-
           response.data.map((device) => ({
             value: device.deviceId,
             label: device.deviceName,
-            
           }))
         );
       } catch (error) {
@@ -58,9 +55,6 @@ const NoticeForm = () => {
       const fetchNotice = async () => {
         try {
           const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
-          console.log("공지글 데이터 :", response.data); // 데이터 확인
-          console.log(response.data.deviceList);
-
           const {
             accountId,
             title,
@@ -70,20 +64,22 @@ const NoticeForm = () => {
             deviceList = [],
           } = response.data;
           
-          // deviceIds가 존재하면 해당 값을 설정합니다.
-        setFormData({
-          accountId,
-          title,
-          content,
-          startDate,
-          endDate,
-          deviceIds: deviceList.length ? deviceList : [""],
-        });
-      } catch (error) {
-        console.error("공지글을 불러오는 중 오류 발생:", error);
-        alert("공지글을 불러오는 중 오류가 발생했습니다.");
-      }
-    };
+          // deviceList에서 deviceId만 추출하여 deviceIds에 설정
+          const selectedDeviceIds = deviceList.map((device) => device.deviceId);
+  
+          setFormData({
+            accountId,
+            title,
+            content,
+            startDate,
+            endDate,
+            deviceIds: selectedDeviceIds.length ? selectedDeviceIds : [""],
+          });
+        } catch (error) {
+          console.error("공지글을 불러오는 중 오류 발생:", error);
+          alert("공지글을 불러오는 중 오류가 발생했습니다.");
+        }
+      };
       fetchNotice();
     }
   }, [noticeId]);
@@ -93,20 +89,17 @@ const NoticeForm = () => {
 
     const { accountId, title, content, startDate, endDate, deviceIds } = formData;
 
-   // 관리자가 아닌 경우에만 노출 시작일과 종료일을 필수로 체크
-  if (!title.trim() || !content.trim() || (role !== 'ROLE_ADMIN' && (!startDate || !endDate))) {
-    console.log(role);
-    alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
-    return;
-  }
-console.log("이거:",deviceIds);
-  // 관리자가 아닌 경우에만 재생장치 선택 검사
-  if (role !== 'ROLE_ADMIN' && deviceIds.some((deviceId) => !deviceId.trim())) {
-    alert("모든 재생장치를 선택해야 합니다.");
-    return;
-  }
+    // 관리자가 아닌 경우에만 노출 시작일과 종료일을 필수로 체크
+    if (!title.trim() || !content.trim() || (role !== "ROLE_ADMIN" && (!startDate || !endDate))) {
+      alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
+      return;
+    }
 
-  console.log("여기");
+    // 관리자가 아닌 경우에만 재생장치 선택 검사
+    if (role !== "ROLE_ADMIN" && deviceIds.some((device) => !device)) {
+      alert("모든 재생장치를 선택해야 합니다.");
+      return;
+    }
 
     try {
       const noticeData = {
@@ -115,11 +108,9 @@ console.log("이거:",deviceIds);
         content,
         startDate,
         endDate,
-        deviceIds: deviceIds.filter((deviceId) => deviceId.trim()),
-        
+        deviceIds: deviceIds.filter((device) => device),
       };
-      console.log("여기2");
-      
+
       const response = isEditing
         ? await fetcher.put(NOTICE_LIST + `/${noticeId}`, noticeData)
         : await fetcher.post(NOTICE_LIST, noticeData);
@@ -169,7 +160,6 @@ console.log("이거:",deviceIds);
       const date = parseISO(dateString);
       return format(date, "yyyy-MM-dd");
     } catch (error) {
-      console.error("Invalid date format:", dateString);
       return "Invalid date";
     }
   };
@@ -206,29 +196,24 @@ console.log("이거:",deviceIds);
                 rows="4"
               />
             </div>
-            {role !== 'ROLE_ADMIN' && (
+            {role !== "ROLE_ADMIN" && (
               <>
-
-
                 <div>
-
-
                   {formData.deviceIds.map((device, index) => (
                     <div key={index} className="flex items-center mb-2">
                       <select
-                        value={device.deviceId}
+                        value={device}
                         onChange={(e) => handleDeviceChange(index, e.target.value)}
                         className="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       >
                         <option value="">재생장치를 선택하세요</option>
-                        
+
                         {deviceOptions.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label}
                           </option>
                         ))}
                       </select>
-
 
                       <div className="ml-2 flex items-center">
                         <button
@@ -252,9 +237,6 @@ console.log("이거:",deviceIds);
                       )}
                     </div>
                   ))}
-
-
-
                 </div>
                 <div className="rounded-lg p-2 shadow-sm bg-white">
                   <div className="flex items-center space-x-4 mb-4">
@@ -274,13 +256,13 @@ console.log("이거:",deviceIds);
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
                     </div>
-                    <span className="text-lg font-semibold">~</span>
+                    <span className="text-sm text-gray-500">-</span>
                     <div className="flex-1 flex items-center">
                       <label
                         htmlFor="endDate"
-                        className="w-1/4 block text-sm font-semibold leading-6 text-gray-900"
+                        className="w-2/4 block text-sm font-semibold leading-6 text-gray-900"
                       >
-                        종료일
+                        노출 종료일
                       </label>
                       <input
                         id="endDate"
@@ -295,8 +277,7 @@ console.log("이거:",deviceIds);
                 </div>
               </>
             )}
-          </div>
-          <div className="flex justify-end space-x-4">
+            <div className="flex justify-end space-x-4">
           <button
               type="submit"
               className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
@@ -310,6 +291,7 @@ console.log("이거:",deviceIds);
             >
               취소
             </button>
+          </div>
           </div>
         </form>
       </div>

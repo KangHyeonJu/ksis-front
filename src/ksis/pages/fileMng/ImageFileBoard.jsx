@@ -71,6 +71,13 @@ const ImageFileBoard = () => {
     setCurrentPage(selected);
   };
 
+    // 엔터 키로 제목 저장
+const handleKeyDown = (e, id) => {
+  if (e.key === "Enter") {
+    handleSaveClick(id);
+  }
+};
+
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
       try {
@@ -110,12 +117,12 @@ const ImageFileBoard = () => {
   );
 
   return (
-    <div className="p-10 mt-16">
-      {/* <header className="mb-6">
+    <div className="p-10">
+       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           이미지 인코딩 페이지
         </h1>
-      </header> */}
+      </header> 
 
 
 
@@ -125,7 +132,9 @@ const ImageFileBoard = () => {
       <div className="flex justify-start space-x-2 mb-4 ">
         <button
           type="button"
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
+          font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
           <Link to="ksis://open">파일 등록</Link>
         </button>
@@ -182,8 +191,9 @@ const ImageFileBoard = () => {
           </span>
         </button>
       </div>
-
       </div>
+
+      
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -210,6 +220,7 @@ const ImageFileBoard = () => {
                       type="text"
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
                       className="w-full text-xl font-midium mb-2 border-b 
                       border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
                       placeholder="제목을 입력해주세요."
