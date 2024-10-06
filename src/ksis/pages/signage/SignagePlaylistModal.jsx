@@ -77,6 +77,12 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
+  // 검색어 변경 핸들러
+  const handleCategory = (e) => {
+    setSearchCategory(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+  };
+
   //이미지 클릭 시 재생목록 추가 및 삭제
   const addList = (resource) => {
     if (
@@ -173,6 +179,8 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
 
       alert("재생목록이 정상적으로 등록되었습니다.");
       setData({ fileTitle: "", slideTime: "" });
+      setSearchCategory("");
+      setSearchTerm("");
       onRequestClose();
     } catch (error) {
       console.log(error.response.data);
@@ -181,6 +189,8 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
 
   const onCloseHandler = async () => {
     setData({ fileTitle: "", slideTime: "" });
+    setSearchCategory("");
+    setSearchTerm("");
     onRequestClose();
   };
 
@@ -202,7 +212,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                       <div className="mb-4 flex items-center">
                         <select
                           value={searchCategory}
-                          onChange={(e) => setSearchCategory(e.target.value)}
+                          onChange={handleCategory}
                           className="mr-1 p-2 border border-gray-300 rounded-md"
                         >
                           <option value="">전체</option>
@@ -255,7 +265,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                 </p>
 
                                 {resource.fileTitle.length > 20 && (
-                                  <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                  <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                     {resource.fileTitle}
                                   </span>
                                 )}
@@ -299,9 +309,16 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      className="relative rounded-full bg-[#fad96e] h-10 text-center pt-1.5"
+                                      className="group relative rounded-md bg-[#fad96e] h-10 text-center pt-1.5"
                                     >
-                                      {resourceAdd.fileTitle}
+                                      <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                                        {resourceAdd.fileTitle}
+                                      </p>
+                                      {resourceAdd.fileTitle.length > 20 && (
+                                        <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
+                                          {resourceAdd.fileTitle}
+                                        </span>
+                                      )}
                                       <ImCross
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer"
                                         onClick={() => removeList(resourceAdd)}

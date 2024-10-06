@@ -481,11 +481,11 @@ const SignageDtl = () => {
               </div>
             </div>
 
-            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3">
+            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3">
               {playlistDtl.map((resource) => (
                 <div
                   key={resource.encodedResourceId}
-                  className="group relative border border-gray-900 mb-5"
+                  className="group relative border border-gray-900"
                 >
                   <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
                     {resource.sequence}
