@@ -57,6 +57,14 @@ const VideoFileBoard = () => {
     setNewTitle(title);
   };
 
+  // 엔터 키로 제목 저장
+  const handleKeyDown = (e, id) => {
+    if (e.key === "Enter") {
+      handleSaveClick(id);
+    }
+  };
+  
+  // 제목 수정
   const handleSaveClick = async (id) => {
     try {
       await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
@@ -207,6 +215,7 @@ const VideoFileBoard = () => {
               {/* 카드 */}
               <div  className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
                    {/* 영상 */}
+                   <div>
                    <div className="w-full h-full mb-3 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
@@ -214,6 +223,7 @@ const VideoFileBoard = () => {
                       className="w-60 h-60 cursor-pointer object-cover object-center"
                       onClick={() => openResourceModal(post.filePath)}
                     />
+                    </div>
                     </div>
 
                 {/* 제목 */}
@@ -223,6 +233,7 @@ const VideoFileBoard = () => {
                         type="text"
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, post.encodedResourceId)} // 엔터 키 이벤트 추가
                         className="w-full text-xl font-midium mb-2 border-b 
                     border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
                     placeholder="제목을 입력해주세요." />

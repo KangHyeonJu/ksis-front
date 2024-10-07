@@ -205,13 +205,15 @@ const handleKeyDown = (e, id) => {
               <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
   
                 {/* 이미지 */}
-                <div className="w-full h-full mb-3 overflow-hidden">
-                  <img
-                    src={post.thumbFilePath}
-                    alt={post.fileTitle}
-                    className="w-60 h-60 cursor-pointer object-cover object-center"
-                    onClick={() => openResourceModal(post.filePath)}
-                  />
+                <div>
+                  <div className="w-full h-full mb-3 overflow-hidden">
+                    <img
+                      src={post.thumbFilePath}
+                      alt={post.fileTitle}
+                      className="w-60 h-60 cursor-pointer object-cover object-center"
+                      onClick={() => openResourceModal(post.filePath)}
+                    />
+                  </div>
                 </div>
                 
                  {/* 제목 및 아이콘 래퍼 */}
@@ -221,7 +223,7 @@ const handleKeyDown = (e, id) => {
                       type="text"
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
+                      onKeyDown={(e) => handleKeyDown(e, post.encodedResourceId)} // 엔터 키 이벤트 추가
                       className="w-full text-xl font-midium mb-2 border-b 
                     border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
                     placeholder="제목을 입력해주세요." />

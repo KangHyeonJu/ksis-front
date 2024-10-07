@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaEdit, FaCheck  } from "react-icons/fa";
+import { FaSearch, FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
@@ -79,22 +79,26 @@ const ImageResourceBoard = () => {
     setNewTitle(title);
   };
 
+   // 엔터 키로 제목 저장
+   const handleKeyDown = (e, id) => {
+    if (e.key === "Enter") {
+      handleSaveClick(id);
+    }
+  };
+
   //제목 수정
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetcher.put(FILE_ORIGINAL_BASIC + `/${id}`, null, {
-        params: { newTitle },
-      });
-      images.forEach((img) => {
-        if (img.originalResourceId === id) {
-          img.fileTitle = newTitle;
-        }
+      await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
+        fileTitle: newTitle,
       });
 
       const updatedImages = images.map((image) =>
-        image.id === id ? { ...image, title: response.data.title } : image
+        image.originalResourceId === id ? { ...image, fileTitle: newTitle } : image
       );
       setImages(updatedImages);
+      setFilteredPosts(updatedImages);
+
       setEditingTitleIndex(null);
       setNewTitle("");
     } catch (error) {
@@ -102,13 +106,6 @@ const ImageResourceBoard = () => {
       console.error("제목 수정 중 오류 발생:", error);
     }
   };
-
-  // 엔터 키로 제목 저장
-const handleKeyDown = (e, id) => {
-  if (e.key === "Enter") {
-    handleSaveClick(id);
-  }
-};
 
 
   const handleDelete = async (id) => {
@@ -247,40 +244,35 @@ const handleKeyDown = (e, id) => {
                      </div>
                 </div>
 
-                {/* 제목 */}
-                
-                {editingTitleIndex === index ? (
-               <div className="flex justify-between w-full">
-                  <input
-                    type="text"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
-                    className="w-full text-xl font-midium mb-2 border-b 
+                {/* 제목 및 아이콘 래퍼 */}
+                <div className="flex justify-between w-full">
+                  {editingTitleIndex === index ? (
+                    <input
+                      type="text"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
+                      className="w-full text-xl font-midium mb-2 border-b 
                     border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
                     placeholder="제목을 입력해주세요." />
-                  <button
-                    onClick={() => handleSaveClick(post.originalResourceId)} // 직접 저장 버튼 클릭
-                    className="ml-2 mr-2"
-                  >
-                    <FaCheck className="text-green-600" /> {/* 체크 아이콘 추가 */}
-                  </button>
-                </div>
-              ) : (
-                <div className="flex justify-between w-full">
-                  <h2 className="w-2/3 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
-                    {post.fileTitle}
-                  </h2>
+                    
+                  ) : (
+
+                    <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
+                      {post.fileTitle}
+                    </h2>
+                  )}
+                  <div>
                   <FaEdit
                     onClick={() =>
                       editingTitleIndex === index
                         ? handleSaveClick(post.originalResourceId)
                         : handleEditClick(index, post.fileTitle)
                     }
-                    className="ml-2 cursor-pointer text-gray-600"
-                  />
+                    className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+                />
                 </div>
-              )}
+                </div>
 
                  {/* 등록일 */}
                  <div className="">
