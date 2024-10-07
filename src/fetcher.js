@@ -25,7 +25,6 @@ fetcher.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response.status === 403) {
-      console.log("에러났습니다. 왜냐하면 액세스 토큰이 만료됐거든요.");
       const accessToken = localStorage.getItem("accessToken"); // 만료된 액세스 토큰 담기
       if (accessToken) {
         // 만료된 액세스 토큰 갱신 요청
@@ -34,13 +33,10 @@ fetcher.interceptors.response.use(
             Authorization: `Bearer ${accessToken}`, // 토큰을 Authorization 헤더에 담기
           },
         });
-        console.log("received response :", response);
 
         // 리프레시 토큰이 만료된 경우
         if (!response.data) {
-          console.log("에러났습니다. 리프레시토큰도 만료됐거든요");
           localStorage.removeItem("accessToken");
-          // 일렉트론 앱이 다운로드 되어있어야 함
           alert("재로그인이 필요합니다.");
           window.location.href = "ksis://open";
           return Promise.resolve();

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import fetcher from "../../../fetcher";
 import {ACCOUNT_CREATE, ACCOUNT_LIST_BOARD} from "../../../constants/account_constant";
 import {MAIN} from "../../../constants/page_constant";

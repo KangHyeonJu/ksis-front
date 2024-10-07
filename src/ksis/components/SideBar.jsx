@@ -65,7 +65,6 @@ const Sidebar = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("accountId");
       localStorage.removeItem("authority");
-      // window.location.href = "/downloadApp";
       navigate('/downloadApp');
     } catch (error) {
       console.error("로그아웃 실패: ", error);
