@@ -38,6 +38,7 @@ fetcher.interceptors.response.use(
         if (!response.data) {
           localStorage.removeItem("accessToken");
           alert("재로그인이 필요합니다.");
+          window.location.href("/downloadApp");
           window.location.href = "ksis://open";
           return Promise.resolve();
         }
