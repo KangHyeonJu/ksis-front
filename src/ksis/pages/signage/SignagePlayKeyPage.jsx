@@ -19,6 +19,9 @@ const SignagePlayKeyPage = () => {
   const timeoutIdRef = useRef(null);
   const [date, setDate] = useState(() => new Date());
   const [weather, setWeather] = useState({});
+
+  const [deviceId, setDeviceId] = useState("");
+
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const scrollRef = useRef(null);
@@ -32,6 +35,7 @@ const SignagePlayKeyPage = () => {
       setVerification(true);
 
       loadPlayData(response.data);
+      setDeviceId(response.data);
       setLoading(false);
     } else {
       console.log("IP와 KEY 검증 실패");
@@ -70,7 +74,7 @@ const SignagePlayKeyPage = () => {
 
     eventSource.onmessage = (event) => {
       console.log("메세지 수신: ", event.data);
-      loadPlayData();
+      loadPlayData(deviceId);
     };
 
     eventSource.onerror = (error) => {
