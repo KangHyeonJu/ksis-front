@@ -151,12 +151,12 @@ const handleKeyDown = (e, id) => {
   );
 
   return (
-    <div className="p-10">
+    <div className="p-6">
       <header className="mb-6">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           이미지 원본 페이지
         </h1>
-      </header> 
+      </header>
 
       <div className="flex items-center justify-between mb-4">
       
@@ -173,8 +173,8 @@ const handleKeyDown = (e, id) => {
       </div>
 
 
-       {/* 검색바 입력창 */}
-       <div className="flex items-center space-x-2 relative flex-grow mx-4">
+      {/* 검색바 입력창 */}
+      <div className="flex items-center space-x-2 relative flex-grow mx-4">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
@@ -223,80 +223,73 @@ const handleKeyDown = (e, id) => {
           </span>
         </button>
       </div>
-    </div>
 
+      </div>
 
- {/* 그리드 시작 */}
+      {/* 그리드 시작 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
-            <div key={index} className="p-2">
-              {/* 카드 */}
-              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
-
-              {/* 이미지 */}
-              <div>
-              <div className="w-60 h-60 m-2 mb-3 overflow-hidden">
-                <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
-                
+            <div key={index} className="grid p-1">
+             {/* 카드 */}
+             <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
+             {/* 이미지 */}
+             <div>
+             <div className="w-full h-full mb-3 overflow-hidden">
                       <img
                         src={post.thumbFilePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
                         alt={post.fileTitle}
-                        className="w-full h-full cursor-pointer object-cover object-center"
+                        className="w-60 h-60 cursor-pointer object-cover object-center"
                         //이미지 클릭하면 모달 열림
                         onClick={() => openResourceModal(post.originalResourceId)}
                       />
                      </div>
-                  </div>
                 </div>
 
                 {/* 제목 */}
-                <div className="flex justify-between w-full">
+                
                 {editingTitleIndex === index ? (
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
-                  className="w-full text-xl font-midium mb-2 border-b 
-                      border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
-                      placeholder="제목을 입력해주세요."
-                />
-                <button
-                  onClick={() => handleSaveClick(post.originalResourceId)} // 직접 저장 버튼 클릭
-                  className="ml-2 mr-2"
-                >
-                  <FaCheck className="text-green-600" /> {/* 체크 아이콘 추가 */}
-                </button>
-              </div>
-            ) :  (
-              <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
-                {post.fileTitle}
-              </h2>
-            )}
-            <div>
-            <FaEdit
-              onClick={() =>
-                editingTitleIndex === index
-                  ? handleSaveClick(post.encodedResourceId)
-                  : handleEditClick(index, post.fileTitle)
-              }
-              className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
-          />
-          </div>
-          </div>
+               <div className="flex justify-between w-full">
+                  <input
+                    type="text"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
+                    className="w-full text-xl font-midium mb-2 border-b 
+                    border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                    placeholder="제목을 입력해주세요." />
+                  <button
+                    onClick={() => handleSaveClick(post.originalResourceId)} // 직접 저장 버튼 클릭
+                    className="ml-2 mr-2"
+                  >
+                    <FaCheck className="text-green-600" /> {/* 체크 아이콘 추가 */}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex justify-between w-full">
+                  <h2 className="w-2/3 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
+                    {post.fileTitle}
+                  </h2>
+                  <FaEdit
+                    onClick={() =>
+                      editingTitleIndex === index
+                        ? handleSaveClick(post.originalResourceId)
+                        : handleEditClick(index, post.fileTitle)
+                    }
+                    className="ml-2 cursor-pointer text-gray-600"
+                  />
+                </div>
+              )}
 
-               {/* 등록일 */}
-               <div className="">
+                 {/* 등록일 */}
+                 <div className="">
                 <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
                 </div>
 
                 
 
                 {/* 인코딩, 삭제 버튼 */}
-
                 <div className="items-center text-center row mx-auto p-2">
                   <button
                     className="mr-2 mt-2 rounded-md bg-[#6dd7e5]
@@ -320,8 +313,8 @@ const handleKeyDown = (e, id) => {
             </div>
           ))
         ) : (
-          <div className="w-screen">
-            <p className="text-center text-gray-600 w-4/5">파일이 없습니다.</p>
+          <div className="col-span-full text-center text-gray-500">
+            게시된 파일이 없습니다.
           </div>
         )}
       </div>

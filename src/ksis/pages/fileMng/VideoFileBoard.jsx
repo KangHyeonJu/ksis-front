@@ -132,12 +132,27 @@ const VideoFileBoard = () => {
         </h1>
       </header>
 
+      <div className="flex items-center justify-between mb-4">
+      
+        {/* 파일등록 버튼 */}
+      <div className="flex justify-start space-x-2 mb-4 ">
+        <button
+          type="button"
+          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
+          font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        >
+          <Link to="ksis://open">파일 등록</Link>
+        </button>
+      </div>
+
+
       {/* 검색바 입력창 */}
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center space-x-2 relative flex-grow mx-4">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 rounded-md bg-[#f39704] text-white"
         >
           <option value="total">전체</option>
           <option value="title">제목</option>
@@ -156,7 +171,7 @@ const VideoFileBoard = () => {
       </div>
 
       {/* 토글 버튼 */}
-      <div className="flex justify-start space-x-2 mb-4">
+      <div className="flex justify-end space-x-2 mb-4 ">
         <button
           type="button"
           onClick={handleToggle}
@@ -182,14 +197,6 @@ const VideoFileBoard = () => {
           </span>
         </button>
       </div>
-
-      <div className="flex justify-end space-x-2 mb-4">
-        <button
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
-        </button>
       </div>
 
       {/* 그리드 시작 */}
@@ -197,55 +204,52 @@ const VideoFileBoard = () => {
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
             <div key={index} className="grid p-1">
-              {/* 네모틀 */}
-              <div className="items-center text-center rounded-lg w-2/3 h-full p-3 bg-[#ffe69c]">
+              {/* 카드 */}
+              <div  className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
+                   {/* 영상 */}
+                   <div className="w-full h-full mb-3 overflow-hidden">
+                    <img
+                      src={post.thumbFilePath}
+                      alt={post.fileTitle}
+                      className="w-60 h-60 cursor-pointer object-cover object-center"
+                      onClick={() => openResourceModal(post.filePath)}
+                    />
+                    </div>
+
                 {/* 제목 */}
-                <div>
-                  <div className="flex items-center">
+                <div className="flex justify-between w-full">
                     {editingTitleIndex === index ? (
                       <input
                         type="text"
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
-                        className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
-                      />
+                        className="w-full text-xl font-midium mb-2 border-b 
+                    border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                    placeholder="제목을 입력해주세요." />
+                    
                     ) : (
-                      <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
-                        {post.fileTitle}
-                      </h2>
-                    )}
-                    <FaEdit
-                      onClick={() =>
-                        editingTitleIndex === index
-                          ? handleSaveClick(post.encodedResourceId)
-                          : handleEditClick(index, post.fileTitle)
-                      }
-                      className="ml-2 cursor-pointer text-gray-600"
+                      <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
+                      {post.fileTitle}
+                    </h2>
+                      )}
+                      <div>
+                      <FaEdit
+                        onClick={() =>
+                          editingTitleIndex === index
+                            ? handleSaveClick(post.encodedResourceId)
+                            : handleEditClick(index, post.fileTitle)
+                        }
+                        className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
                     />
-                  </div>
-                </div>
+                    </div>
+                   </div>
 
                 {/* 등록일 */}
-                <div>
-                  <p className="text-gray-700 ">
-                    등록일: {formatDate(post.regTime)}
-                  </p>
+                <div className="">
+                    <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
                 </div>
 
-                {/* 영상 */}
-                <div>
-                <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
-                <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
-                
-                    <img
-                      src={post.thumbFilePath}
-                      alt={post.fileTitle}
-                      className="w-full h-full object-cover"
-                      onClick={() => openResourceModal(post.filePath)}
-                    />
-                  </div>
-                </div>
-                </div>
+             
 
                 {/* 삭제 버튼 */}
                 <div>
@@ -264,8 +268,8 @@ const VideoFileBoard = () => {
             </div>
           ))
         ) : (
-          <div className="w-screen">
-            <p className="text-center text-gray-600 w-4/5">파일이 없습니다.</p>
+          <div className="col-span-full text-center text-gray-500">
+            게시된 파일이 없습니다.
           </div>
         )}
       </div>

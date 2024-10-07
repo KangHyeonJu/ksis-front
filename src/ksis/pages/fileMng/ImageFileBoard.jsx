@@ -30,6 +30,7 @@ const ImageFileBoard = () => {
       .then((response) => {
         setImages(response.data);
         setFilteredPosts(response.data);
+        console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -117,12 +118,12 @@ const handleKeyDown = (e, id) => {
   );
 
   return (
-    <div className="p-10">
-       <header className="mb-6">
+    <div className="p-6">
+      <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           이미지 인코딩 페이지
         </h1>
-      </header> 
+      </header>
 
 
 
@@ -199,16 +200,16 @@ const handleKeyDown = (e, id) => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
-            <div key={index} className="p-2">
+            <div key={index} className="grid p-1">
               {/* 카드 */}
               <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
   
                 {/* 이미지 */}
-                <div className="w-60 h-60 m-2 mb-3 overflow-hidden">
+                <div className="w-full h-full mb-3 overflow-hidden">
                   <img
                     src={post.thumbFilePath}
                     alt={post.fileTitle}
-                    className="w-full h-full cursor-pointer object-cover object-center"
+                    className="w-60 h-60 cursor-pointer object-cover object-center"
                     onClick={() => openResourceModal(post.filePath)}
                   />
                 </div>
@@ -222,10 +223,11 @@ const handleKeyDown = (e, id) => {
                       onChange={(e) => setNewTitle(e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
                       className="w-full text-xl font-midium mb-2 border-b 
-                      border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
-                      placeholder="제목을 입력해주세요."
-                    />
+                    border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                    placeholder="제목을 입력해주세요." />
+                    
                   ) : (
+
                     <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
                       {post.fileTitle}
                     </h2>
@@ -265,21 +267,36 @@ const handleKeyDown = (e, id) => {
         )}
       </div>
 
-      {/* Pagination */}
-      <div className="mt-6">
-        <ReactPaginate
-          previousLabel={"Previous"}
-          nextLabel={"Next"}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          onPageChange={handlePageChange}
-          containerClassName={"pagination flex justify-center items-center space-x-2"}
-          previousLinkClassName={"px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400"}
-          nextLinkClassName={"px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400"}
-          activeClassName={"px-3 py-1 bg-blue-500 text-white rounded-md"}
-          pageClassName={"px-3 py-1 hover:bg-gray-200"}
-          disabledClassName={"text-gray-400 cursor-not-allowed"}
-        />
-      </div>
+        {/* 페이지네이션 */}
+        {filteredPosts.length > postsPerPage && (
+              <ReactPaginate
+                previousLabel={"이전"}
+                nextLabel={"다음"}
+                breakLabel={"..."}
+                pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageChange}
+                containerClassName={"flex justify-center mt-4"}
+                pageClassName={"mx-1"}
+                pageLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+                }
+                previousClassName={"mx-1"}
+                previousLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+                }
+                nextClassName={"mx-1"}
+                nextLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+                }
+                breakClassName={"mx-1"}
+                breakLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
+                }
+                activeClassName={"bg-blue-500 text-white"}
+              />
+            )}
 
       {/* 모달창 */}
       {isOpen && (
