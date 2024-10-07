@@ -24,6 +24,7 @@ const AccountRegForm = () => {
     const [passwordMatch, setPasswordMatch] = useState(true);
     const navigate = useNavigate();
     const userInfo = decodeJwt();
+    const [hasPermission, setHasPermission] = useState(false);
 
     useEffect(() => {
         // 비밀번호와 비밀번호 확인이 일치하는지 확인
@@ -33,11 +34,18 @@ const AccountRegForm = () => {
     }, [formData.password, formData.confirmPassword]);
 
     useEffect(() => {
-        if (!userInfo.roles.includes("ROLE_ADMIN")) {
+        // 사용자 권한 확인
+        if (userInfo && userInfo.roles.includes("ROLE_ADMIN")) {
+            setHasPermission(true); // 권한이 있는 경우
+        } else {
             alert("관리자만 접근 가능합니다.");
             navigate(MAIN);
         }
-    },[navigate, userInfo.roles]);
+    }, [navigate, userInfo]);
+
+    if (!hasPermission) {
+        return null; // 또는 로딩 스피너 등을 추가할 수 있음
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;

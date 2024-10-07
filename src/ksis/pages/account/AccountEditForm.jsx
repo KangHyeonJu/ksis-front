@@ -23,17 +23,21 @@ const AccountEditForm = () => {
     gender: "",
   });
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [hasPermission, setHasPermission] = useState(false);
   const navigate = useNavigate();
   const userInfo = decodeJwt();
 
   useEffect(() => {
+    // 사용자 권한 확인
     if (
-      userInfo.accountId !== accountId &&
-      !userInfo.roles.includes("ROLE_ADMIN")
+        userInfo.accountId !== accountId &&
+        !userInfo.roles.includes("ROLE_ADMIN")
     ) {
       alert("본인 계정이거나 관리자만 접근 가능합니다.");
       navigate(MAIN);
       return;
+    } else {
+      setHasPermission(true); // 권한이 있는 경우
     }
 
     // 계정 데이터를 가져와서 폼에 설정합니다.
@@ -132,6 +136,10 @@ const AccountEditForm = () => {
       console.error("계정 업데이트 중 오류 발생:", error);
     }
   };
+
+  if (!hasPermission) {
+    return null; // 또는 로딩 스피너 등을 추가할 수 있음
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">

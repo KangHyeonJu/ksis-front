@@ -12,6 +12,7 @@ import { MAIN } from "../../../constants/page_constant";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userInfo = decodeJwt();
   const loadPage = async () => {
@@ -23,19 +24,21 @@ const AccountList = () => {
         console.error("No data property in response");
       }
     } catch (error) {
-      console.error("Error fetching data:", error); // 전체 오류 객체를 콘솔에 출력
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // 데이터 로딩 후 로딩 상태 해제
     }
   };
 
   useEffect(() => {
-    loadPage();
-
-    // create 후 주석해서 아이디 등록
+    // 관리자가 아닌 경우 접근 차단
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자만 접근 가능합니다.");
       navigate(MAIN);
+    } else {
+      loadPage();
     }
-  }, []);
+  }, [navigate, userInfo.roles]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("accountId"); // 검색 필터 상태
@@ -86,6 +89,10 @@ const AccountList = () => {
       console.error("Error:", error);
     }
   };
+
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
