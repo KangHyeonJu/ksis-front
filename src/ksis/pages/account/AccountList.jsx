@@ -151,7 +151,7 @@ const AccountList = () => {
               <td className="border border-gray-300 p-2">{post.name}</td>
               <td className="border border-gray-300 p-2">{post.businessTel}</td>
               <td className="border border-gray-300 p-2">
-                {post.isActive ? "T" : "F"}
+                {post.isActive ? "True" : "False"}
               </td>
               <td className="border border-gray-300 p-2 flex justify-center">
                 <Link

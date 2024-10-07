@@ -150,53 +150,53 @@ const AccountEditForm = () => {
         <form onSubmit={handleSubmit}>
           <div className="flex items-center mt-2">
             <label
-              htmlFor="accountId"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                htmlFor="accountId"
+                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
-              아이디*
+              아이디<span className="text-red-500">*</span>
             </label>
             <input
-              id="accountId"
+                id="accountId"
               name="accountId"
               type="text"
               value={formData.accountId}
               readOnly
-              className="bg-gray-200 block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-gray-200 block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
             <label
-              htmlFor="password"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                htmlFor="password"
+                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
-              비밀번호*
+              비밀번호<span className="text-red-500">*</span>
             </label>
             <input
-              id="password"
+                id="password"
               name="password"
               type="password"
               minLength={8}
               maxLength={20}
               value={formData.password}
               onChange={handlePasswordChange}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
             <label
-              htmlFor="confirmPassword"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                htmlFor="confirmPassword"
+                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
-              비밀번호 확인*
+              비밀번호 확인<span className="text-red-500">*</span>
             </label>
             <input
-              id="confirmPassword"
+                id="confirmPassword"
               name="confirmPassword"
               type="password"
               maxLength={20}
               value={formData.confirmPassword}
               onChange={handlePasswordChange}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           {formData.confirmPassword && (
@@ -212,25 +212,25 @@ const AccountEditForm = () => {
           )}
           <div className="flex items-center mt-2">
             <label
-              htmlFor="name"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                htmlFor="name"
+                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
-              이름*
+              이름<span className="text-red-500">*</span>
             </label>
             <input
-              id="name"
+                id="name"
               name="name"
               type="text"
               value={formData.name}
               onChange={handleChange}
               required
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
             <label
               htmlFor="birthDate"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
               생년월일
             </label>
@@ -241,31 +241,31 @@ const AccountEditForm = () => {
               value={formData.birthDate}
               max={new Date().toISOString().split("T")[0]}
               onChange={handleChange}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
             <label
-              htmlFor="businessTel"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+                htmlFor="businessTel"
+                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
-              업무 전화번호*
+              업무 전화번호<span className="text-red-500">*</span>
             </label>
             <input
-              id="businessTel"
+                id="businessTel"
               name="businessTel"
               type="tel"
               value={formData.businessTel}
               onChange={handleChange}
               required
               pattern="\d{3}-\d{4}-\d{4}"
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
             <label
               htmlFor="emergencyTel"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
               긴급 연락처
             </label>
@@ -276,13 +276,13 @@ const AccountEditForm = () => {
               value={formData.emergencyTel}
               onChange={handleChange}
               pattern="\d{3}-\d{4}-\d{4}"
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
             <label
               htmlFor="email"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
               이메일
             </label>
@@ -293,13 +293,13 @@ const AccountEditForm = () => {
               maxLength={50}
               value={formData.email}
               onChange={handleChange}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
             <label
               htmlFor="position"
-              className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900"
+              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
             >
               직위
             </label>
@@ -310,14 +310,14 @@ const AccountEditForm = () => {
               maxLength={20}
               value={formData.position}
               onChange={handleChange}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
             />
           </div>
           <div className="flex items-center mt-2">
-            <label className="w-28 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
+            <label className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900">
               성별
             </label>
-            <div className="flex gap-4 ml-2">
+            <div className="flex gap-4 ml-4">
               <div>
                 <input
                   type="radio"
