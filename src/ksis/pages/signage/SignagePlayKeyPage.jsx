@@ -64,10 +64,17 @@ const SignagePlayKeyPage = () => {
   useEffect(() => {
     const eventSource = new EventSource(API_BASE_URL + SSE_CONNECT);
 
+    eventSource.onopen = () => {
+      console.log("SSE 연결 성공");
+    };
+
     eventSource.onmessage = (event) => {
       console.log("메세지 수신: ", event.data);
-
       loadPlayData();
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("SSE 연결 오류: ", error);
     };
 
     return () => {
