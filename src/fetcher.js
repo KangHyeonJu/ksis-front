@@ -42,7 +42,6 @@ fetcher.interceptors.response.use(
         // 리프레시 토큰이 만료된 경우
         if (!response.data) {
           localStorage.removeItem("accessToken");
-          alert("재로그인이 필요합니다.");
           window.location.href("/downloadApp");
           window.location.href = "ksis://open";
           return Promise.resolve();
