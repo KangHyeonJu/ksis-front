@@ -55,6 +55,7 @@ fetcher.interceptors.response.use(
         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
         return axios(error.config);
       }
+      return Promise.resolve();
     }
     return Promise.reject(error);
   }
