@@ -26,6 +26,7 @@ fetcher.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response.status === 403) {
+      if (token) {
         // 만료된 액세스 토큰 갱신 요청
           let response;
           try {
@@ -55,6 +56,8 @@ fetcher.interceptors.response.use(
         // 갱신된 액세스 토큰으로 재요청
         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
         return axios(error.config);
+      }
+      return Promise.resolve();
     }
     return Promise.reject(error);
   }
