@@ -12,7 +12,6 @@ export const decodeJwt = () => {
                 roles: decodedToken.auth,    // 토큰에서 권한 정보 가져오기
             };
         } catch (error) {
-            console.error("Failed to decode token", error);
             return null;
         }
     }

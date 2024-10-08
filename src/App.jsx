@@ -82,6 +82,7 @@ import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
 import { EventSourcePolyfill } from "event-source-polyfill";
+import {decodeJwt} from "./decodeJwt";
 
 function App() {
   const location = useLocation();
@@ -94,6 +95,7 @@ function App() {
   const accessToken = localStorage.getItem("accessToken");
   const URL = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
+  const userInfo = decodeJwt();
 
   window.addEventListener("storage", (event) => {
     if (event.key === "accessToken" && event.newValue === null) {
@@ -121,7 +123,7 @@ function App() {
 
     eventSource.addEventListener("logout", (event) => {
       const loggedOutAccountId = event.data;
-      const currentAccountId = localStorage.getItem("accountId");
+      const currentAccountId = userInfo.accountId;
 
       if (loggedOutAccountId === currentAccountId) {
         logout();
