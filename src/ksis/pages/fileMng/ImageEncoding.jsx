@@ -90,11 +90,11 @@ const ImageEncoding = () => {
         </h1>
 
         <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg">
-          <div className="w-1/2 flex-shrink-0">
+          <div className="w-full h-auto flex items-center justify-center">
             <img
               src={image.filePath}
               alt={image.fileTitle}
-              className="object-contain max-w-full max-h-full"
+              className="object-contain max-w-full max-h-full p-10"
             />
           </div>
 
@@ -163,9 +163,9 @@ const ImageEncoding = () => {
             type="button"
             onClick={handleCancel}
             className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
-          >
-            취소
-          </button>
+            >
+              취소
+            </button>
         </div>
       </div>
     </div>

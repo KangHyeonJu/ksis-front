@@ -229,9 +229,14 @@ const ImageResourceBoard = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
+
+            
             <div key={index} className="grid p-1">
              {/* 카드 */}
-             <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
+             <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center 
+             h-full overflow-hidden">
+
+
              {/* 이미지 */}
              <div>
              <div className="w-full h-full mb-3 overflow-hidden">
@@ -294,14 +299,14 @@ const ImageResourceBoard = () => {
                       인코딩
                     </Link>
                   </button>
+
                   <button
-                    type="button"
-                    onClick={() => handleDelete(post.originalResourceId)}
-                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm
-                                        hover:bg-red-400 focus-visible:outline-red-600"
-                  >
-                    삭제
-                  </button>
+                  type="button"
+                  className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  onClick={() => handleDelete(post.originalResourceId)}
+                >
+                  삭제
+                </button>
                 </div>
               </div>
             </div>

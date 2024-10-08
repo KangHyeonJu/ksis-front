@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { format, parseISO } from "date-fns";
 import { FaSearch, FaEdit } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import ReactPaginate from "react-paginate";
 import {
@@ -204,7 +205,8 @@ const handleKeyDown = (e, id) => {
           currentPosts.map((post, index) => (
             <div key={index} className="grid p-1">
               {/* 카드 */}
-              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
+              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center 
+             h-full overflow-hidden">
   
                 {/* 이미지 */}
                 <div>
@@ -254,6 +256,7 @@ const handleKeyDown = (e, id) => {
                 </div>
 
                 {/* 삭제 버튼 */}
+                <div className="items-center text-center row mx-auto p-2">
                 <button
                   type="button"
                   className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
@@ -262,6 +265,7 @@ const handleKeyDown = (e, id) => {
                   삭제
                 </button>
               </div>
+            </div>
             </div>
           ))
         ) : (
@@ -305,20 +309,20 @@ const handleKeyDown = (e, id) => {
       {/* 모달창 */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="relative w-1/3 h 1/3">
+          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
             <img
               src={selectedImage}
               alt="Selected"
-              className="w-full max-h-screen"
+              className="w-full max-h-screen bg-white"
             />
-            <button
-              className="absolute text-center top-0 right-0 m-4 text-gray-600 text-xl rounded-full hover:bg-red-200 
-                focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 w-7 h-7 
-                font-bold"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
+                  {/* 닫기 버튼 */}
+          
+           <ImCross
+           className="absolute -top-2 -right-2 text-white cursor-pointer bg-red-500 rounded-full 
+           size-6 hover:scale-110"
+           onClick={closeModal}
+          />
+
           </div>
         </div>
       )}

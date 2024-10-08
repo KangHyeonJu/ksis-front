@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
 import { FaSearch, FaEdit } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
 import {
@@ -318,21 +319,21 @@ const VideoFileBoard = () => {
       {/* 모달창 */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="relative w-1/3 h 1/3">
+          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
             <video
               src={selectedVideo}
               alt="Selected"
-              className="w-full max-h-screen"
+              className="w-full max-h-screen bg-white"
               controls // 비디오 컨트롤러 추가
             />
-            <button
-              className="absolute text-center top-0 right-0 m-4 text-gray-600 text-xl rounded-full hover:bg-red-200 
-                focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 w-7 h-7 
-                font-bold"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
+                {/* 닫기 버튼 */}
+          
+                <ImCross
+           className="absolute -top-2 -right-2 text-white cursor-pointer bg-red-500 rounded-full 
+           size-6 hover:scale-110"
+           onClick={closeModal}
+          />
+
           </div>
         </div>
       )}
