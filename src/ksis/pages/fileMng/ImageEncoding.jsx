@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   ENCODING_RESOURCE_FILE,
   ENCODED_IMG,
+  RESOLUTION,
 } from "../../../constants/api_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ const ImageEncoding = () => {
       console.error("Error fetching image:", error);
     }
   };
+  
 
   useEffect(() => {
     fetchImageData(params.originalResourceId);
