@@ -143,12 +143,20 @@ const SignagePlayKeyPage = () => {
         if (resource.resourceType === "IMAGE") {
           newElement = document.createElement("img");
           newElement.alt = "이미지 로딩 오류";
+          newElement.src = resource.filePath;
         } else if (resource.resourceType === "VIDEO") {
           newElement = document.createElement("video");
           newElement.autoplay = true;
-          // newElement.muted = true;
+          newElement.muted = true;
+          newElement.src = resource.filePath;
+
+          // 동영상이 로드된 후에 재생을 시도합니다.
+          newElement.onloadeddata = () => {
+            newElement.play().catch((error) => {
+              console.error("동영상 재생 오류:", error);
+            });
+          };
         }
-        newElement.src = resource.filePath;
         newElement.style.width = "100%";
         newElement.style.height = "100%";
         // 기존 요소가 있으면 교체, 없으면 추가
@@ -232,10 +240,14 @@ const SignagePlayKeyPage = () => {
           ></div>
 
           <div className="h-1/12 w-full bg-gray-800/30 flex items-center fixed left-0 bottom-0">
-            <div className="flex-auto text-center h-full w-1/12 text-3xl font-bold text-black">
+            <div className="flex-auto text-center w-1/12">
               <div className="flex">
-                <img src={weather.icon} alt="이미지를 불러올 수 없습니다." />
-                <div className="items-center flex justify-center">
+                <img
+                  className="m-auto"
+                  src={weather.icon}
+                  alt="이미지를 불러올 수 없습니다."
+                />
+                <div className="m-auto text-4xl font-bold text-black">
                   {weather.temp}℃
                 </div>
               </div>
