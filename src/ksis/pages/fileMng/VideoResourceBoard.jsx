@@ -48,20 +48,19 @@ const VideoResourceBoard = () => {
       });
   }, []);
 
-  // 검색어와 카테고리에 따라 영상 필터링
   useEffect(() => {
     let filtered = videos;
 
     if (searchTerm) {
       if (searchCategory === "title") {
-        filtered = videos.filter((video) => video.title.includes(searchTerm));
+        filtered = videos.filter((video) => video.fileTitle.includes(searchTerm)); // title -> fileTitle로 수정
       } else if (searchCategory === "regDate") {
-        filtered = videos.filter((video) => video.regDate.includes(searchTerm));
+        filtered = videos.filter((video) => formatDate(video.regTime).includes(searchTerm)); // 등록일 포맷팅 적용
       } else {
         filtered = videos.filter(
           (video) =>
-            video.title.includes(searchTerm) ||
-            video.regDate.includes(searchTerm)
+            video.fileTitle.includes(searchTerm) ||
+            formatDate(video.regTime).includes(searchTerm) // 등록일 포맷팅 적용
         );
       }
     }
@@ -79,28 +78,36 @@ const VideoResourceBoard = () => {
     setCurrentPage(selected);
   };
 
-  // 제목 수정 핸들러
   const handleEditClick = (index, title) => {
     setEditingTitleIndex(index);
     setNewTitle(title);
   };
 
-  //제목 수정
+  // 엔터 키로 제목 저장
+  const handleKeyDown = (e, id) => {
+    if (e.key === "Enter") {
+      handleSaveClick(id);
+    }
+  };
+  
+  // 제목 수정
   const handleSaveClick = async (id) => {
     try {
-      const response = await fetcher.put(FILE_ORIGINAL_BASIC + `/${id}`, null, {
-        params: { newTitle },
-      });
-      videos.forEach((vdo) => {
-        if (vdo.originalResourceId === id) {
-          vdo.fileTitle = newTitle;
-        }
+      await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
+        fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
       });
 
+      // 제목이 변경된 후 videos 상태를 업데이트
       const updatedVideos = videos.map((video) =>
-        video.id === id ? { ...video, title: response.data.title } : video
+        video.originalResourceId === id
+          ? { ...video, fileTitle: newTitle }
+          : video
       );
       setVideos(updatedVideos);
+
+      // 변경된 videos를 기반으로 filteredPosts 상태도 업데이트
+      setFilteredPosts(updatedVideos);
+
       setEditingTitleIndex(null);
       setNewTitle("");
     } catch (error) {
@@ -108,6 +115,7 @@ const VideoResourceBoard = () => {
       console.error("제목 수정 중 오류 발생:", error);
     }
   };
+
 
   // 삭제 핸들러
   const handleDelete = async (id) => {
@@ -158,19 +166,18 @@ const VideoResourceBoard = () => {
           영상 원본 페이지
         </h1>
       </header>
-      {/* 검색창 */}
-      {/* 검색창 선택 */}
-      <div className="mb-4 flex items-center">
+
+      {/* 검색바 입력창 */}
+      <div className="flex items-center relative flex-grow mb-4">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
         >
           <option value="total">전체</option>
           <option value="title">제목</option>
           <option value="regDate">등록일</option>
         </select>
-        {/* 검색어 작성 */}
         <div className="relative flex-grow">
           <input
             type="text"
@@ -182,9 +189,24 @@ const VideoResourceBoard = () => {
           <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
       </div>
+      
+      <div className="flex items-center justify-between mb-4">
+      
+        {/* 파일등록 버튼 */}
+      <div className="flex justify-start space-x-2">
+        <button
+          type="button"
+          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
+          font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        >
+          <Link to="ksis://open">파일 등록</Link>
+        </button>
+      </div>
+
 
       {/* 원본, 인코딩 페이지 선택 토글버튼 */}
-      <div className="flex justify-start space-x-2 mb-4">
+      <div className="flex justify-start space-x-2">
         <button
           type="button"
           onClick={handleToggle}
@@ -211,74 +233,68 @@ const VideoResourceBoard = () => {
         </button>
       </div>
 
-      {/* 파일등록 버튼 */}
-      <div className="flex justify-end space-x-2 mb-4">
-        <button
-          type="button"
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
-        </button>
       </div>
 
-      {/* 영상 리스트 */}
+      {/* 그리드 시작 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
             <div key={index} className="grid p-1">
               {/* 네모틀 */}
               <div
-                className="items-center text-center rounded-lg 
-                            w-2/3 h-full p-3 bg-[#ffe69c]"
-              >
-                {/* 제목 */}
-                <div className="flex items-center">
-                  {editingTitleIndex === index ? (
-                    <input
-                      type="text"
-                      value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
-                      className="w-5/6 text-xl font-bold mb-2 border-b border-gray-400 mx-auto"
-                    />
-                  ) : (
-                    <h2 className="w-5/6 text-xl font-bold mb-2 mx-auto max-w-[4/6] flex-grow overflow-hidden text-ellipsis whitespace-nowrap">
-                      {post.fileTitle}
-                    </h2>
-                  )}
+                className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
 
-                  <FaEdit
-                    onClick={() =>
-                      editingTitleIndex === index
-                        ? handleSaveClick(post.originalResourceId)
-                        : handleEditClick(index, post.fileTitle)
-                    }
-                    className="ml-2 cursor-pointer text-gray-600"
-                  />
-                </div>
-
-                {/* 등록일 */}
+                  {/* 영상 */}
                 <div>
-                  <p className="text-gray-700 ">
-                    등록일: {formatDate(post.regTime)}
-                  </p>
-                </div>
-
-                {/* 영상 */}
-                <div>
-                <div className="w-5/6 h-5/6 overflow-hidden mt-4 mb-4 cursor-pointer mx-auto flex justify-center items-center" >
-                <div style={{ width: "100PX", height: "100px", align: "center", background: "white",}}>
+                <div className="w-full h-full mb-3 overflow-hidden">
                 
-                    <video
-                      src={post.filePath}
+                    <img
+                      src={post.thumbFilePath}
                       //영상 파일 깨질시 영상 제목으로 설정
                       alt={post.fileTitle}
-                      className="w-full h-full"
+                      className="w-60 h-60 cursor-pointer object-cover object-center"
                       //영상 클릭하면 모달 열림
                       onClick={() => openResourceModal(post.originalResourceId)}
                     />
                   </div>
-                  </div>
                 </div>
+
+                {/* 제목 */}
+                <div className="flex justify-between w-full">
+                    {editingTitleIndex === index ? (
+                      <input
+                        type="text"
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
+                        className="w-full text-xl font-midium mb-2 border-b 
+                    border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                    placeholder="제목을 입력해주세요." />
+                    
+                    ) : (
+                      <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
+                      {post.fileTitle}
+                    </h2>
+                      )}
+                      <div>
+                      <FaEdit
+                        onClick={() =>
+                          editingTitleIndex === index
+                            ? handleSaveClick(post.originalResourceId)
+                            : handleEditClick(index, post.fileTitle)
+                        }
+                        className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+                    />
+                    </div>
+                   </div>
+
+                
+                 {/* 등록일 */}
+                 <div className="">
+                <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
+                </div>
+
+                
 
                 {/* 인코딩, 삭제 버튼 */}
 
@@ -305,8 +321,8 @@ const VideoResourceBoard = () => {
             </div>
           ))
         ) : (
-          <div className="w-screen">
-            <p className="text-center text-gray-600 w-4/5">파일이 없습니다.</p>
+          <div className="col-span-full text-center text-gray-500">
+            게시된 파일이 없습니다.
           </div>
         )}
       </div>
