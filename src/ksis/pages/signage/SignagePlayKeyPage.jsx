@@ -21,6 +21,7 @@ const SignagePlayKeyPage = () => {
   const [weather, setWeather] = useState({});
 
   const [deviceId, setDeviceId] = useState("");
+  const deviceIdRef = useRef(null);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -44,14 +45,16 @@ const SignagePlayKeyPage = () => {
   };
 
   useEffect(() => {
+    deviceIdRef.current = deviceId; // deviceId가 변경될 때마다 ref에 저장
+  }, [deviceId]);
+
+  useEffect(() => {
     //페이지 로드
     loadPage();
   }, []);
 
   const loadPlayData = async (signageId) => {
     try {
-      setResources([]);
-
       const [responseResource, responseNotice] = await Promise.all([
         axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
         axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
@@ -77,8 +80,8 @@ const SignagePlayKeyPage = () => {
     eventSource.onmessage = (event) => {
       console.log("메세지 수신: ", event.data);
 
-      if (deviceId !== null && deviceId !== "") {
-        loadPlayData(deviceId);
+      if (deviceIdRef.current) {
+        loadPlayData(deviceIdRef.current);
       }
     };
 
