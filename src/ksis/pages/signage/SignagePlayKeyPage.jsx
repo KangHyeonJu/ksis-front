@@ -50,6 +50,8 @@ const SignagePlayKeyPage = () => {
 
   const loadPlayData = async (signageId) => {
     try {
+      setResources([]);
+
       const [responseResource, responseNotice] = await Promise.all([
         axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
         axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
@@ -74,7 +76,10 @@ const SignagePlayKeyPage = () => {
 
     eventSource.onmessage = (event) => {
       console.log("메세지 수신: ", event.data);
-      loadPlayData(deviceId);
+
+      if (deviceId !== null && deviceId !== "") {
+        loadPlayData(deviceId);
+      }
     };
 
     eventSource.onerror = (error) => {
@@ -218,16 +223,19 @@ const SignagePlayKeyPage = () => {
     <div>
       {verification === true ? (
         <div>
-          <div id="container" className="h-full w-full absolute"></div>
+          <div
+            id="container"
+            className="h-full w-full fixed left-0 top-0"
+          ></div>
 
-          <div className="h-1/12 w-full bg-gray-800/10 flex items-center fixed bottom-0">
-            <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
-              <img
-                src={weather.icon}
-                alt="이미지를 불러올 수 없습니다."
-                className="inline-flex "
-              />
-              <div className="inline-flex ">{weather.temp}℃</div>
+          <div className="h-1/12 w-full bg-gray-800/30 flex items-center fixed left-0 bottom-0">
+            <div className="flex-auto text-center h-full w-1/12 text-3xl font-bold text-black">
+              <div className="flex">
+                <img src={weather.icon} alt="이미지를 불러올 수 없습니다." />
+                <div className="items-center flex justify-center">
+                  {weather.temp}℃
+                </div>
+              </div>
             </div>
 
             <div className="overflow-hidden flex-auto w-10/12">
