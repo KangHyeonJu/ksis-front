@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
+  SSE_CONNECT,
 } from "../../../constants/api_constant";
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
@@ -10,6 +11,7 @@ const SignagePlayKeyPage = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const keyValue = searchParam.get("key");
   const [verification, setVerification] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [resources, setResources] = useState([]);
   const [notices, setNotices] = useState([]);
@@ -17,27 +19,39 @@ const SignagePlayKeyPage = () => {
   const timeoutIdRef = useRef(null);
   const [date, setDate] = useState(() => new Date());
   const [weather, setWeather] = useState({});
+
+  const [deviceId, setDeviceId] = useState("");
+
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const scrollRef = useRef(null);
 
   const loadPage = async () => {
     // ip & key 검증
-    const response = await axios.get(SIGNAGE_PLAY, {
+    const response = await axios.get(API_BASE_URL + SIGNAGE_PLAY, {
       params: { key: keyValue },
     });
     if (response.status === 200 && response.data !== null) {
       setVerification(true);
 
       loadPlayData(response.data);
+      setDeviceId(response.data);
+      setLoading(false);
     } else {
       console.log("IP와 KEY 검증 실패");
       setVerification(false);
     }
   };
 
+  useEffect(() => {
+    //페이지 로드
+    loadPage();
+  }, []);
+
   const loadPlayData = async (signageId) => {
     try {
+      setResources([]);
+
       const [responseResource, responseNotice] = await Promise.all([
         axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
         axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
@@ -52,9 +66,29 @@ const SignagePlayKeyPage = () => {
     }
   };
 
+  //sse
   useEffect(() => {
-    //페이지 로드
-    loadPage();
+    const eventSource = new EventSource(API_BASE_URL + SSE_CONNECT);
+
+    eventSource.onopen = () => {
+      console.log("SSE 연결 성공");
+    };
+
+    eventSource.onmessage = (event) => {
+      console.log("메세지 수신: ", event.data);
+
+      if (deviceId !== null && deviceId !== "") {
+        loadPlayData(deviceId);
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("SSE 연결 오류: ", error);
+    };
+
+    return () => {
+      eventSource.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -181,20 +215,27 @@ const SignagePlayKeyPage = () => {
     }
   };
 
+  if (loading) {
+    return <div></div>;
+  }
+
   return (
     <div>
       {verification === true ? (
         <div>
-          <div id="container" className="h-full w-full absolute"></div>
+          <div
+            id="container"
+            className="h-full w-full fixed left-0 top-0"
+          ></div>
 
-          <div className="h-1/12 w-full bg-gray-800/10 flex items-center fixed bottom-0">
-            <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
-              <img
-                src={weather.icon}
-                alt="이미지를 불러올 수 없습니다."
-                className="inline-flex "
-              />
-              <div className="inline-flex ">{weather.temp}℃</div>
+          <div className="h-1/12 w-full bg-gray-800/30 flex items-center fixed left-0 bottom-0">
+            <div className="flex-auto text-center h-full w-1/12 text-3xl font-bold text-black">
+              <div className="flex">
+                <img src={weather.icon} alt="이미지를 불러올 수 없습니다." />
+                <div className="items-center flex justify-center">
+                  {weather.temp}℃
+                </div>
+              </div>
             </div>
 
             <div className="overflow-hidden flex-auto w-10/12">

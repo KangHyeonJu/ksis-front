@@ -11,6 +11,7 @@ export const SIGNAGE_ADD = "/admin/signage/new";
 export const SIGNAGE_UPDATE = "/signage/update";
 export const SIGNAGE_NOTICE = "/signage/notice";
 export const SIGNAGE_RESOURCE = "/signage/resource";
+export const SIGNAGE_RESOURCE_PAGE = "/signage/resourcepage";
 export const SIGNAGE_PLAYLIST = "/signage/playlist";
 export const SIGNAGE_PLAYLIST_DTL = "/signage/playlistDtl";
 export const SIGNAGE_PLAY = "/signage/play";
@@ -61,3 +62,6 @@ export const UPLOADLOG_LIST = "/log/upload";
 
 //resolution
 export const RESOLUTION = "/resolution";
+
+//sse
+export const SSE_CONNECT = "/sse/connect";
