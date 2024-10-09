@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // React Router의 useNavigate 가져오기
 import { FILE_SIZE } from "../../../constants/api_constant";
-import fetcher from "../../../fetcher"; // fetcher import
+import { MAIN } from "../../../constants/page_constant";
+import fetcher from "../../../fetcher";
+import { decodeJwt } from "../../../decodeJwt";
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
   const [videoMaxSize, setVideoMaxSize] = useState(500); // 기본값 설정
   const [loading, setLoading] = useState(true); // 데이터 로딩 상태
+  const navigate = useNavigate(); // navigate 함수 정의
 
   // 파일 크기 설정을 API에서 가져오는 함수
   const fetchFileSize = async () => {
@@ -26,10 +30,21 @@ const FileSizeBoard = () => {
     }
   };
 
-  // 컴포넌트가 마운트될 때 파일 크기 설정을 불러옴
+  // 컴포넌트가 마운트될 때 유저 권한을 체크하고 파일 크기 설정을 불러옴
   useEffect(() => {
+    const userInfo = decodeJwt();
+
+    // 관리자 권한 체크
+    if (!userInfo.roles.includes("ROLE_ADMIN")) {
+      alert("관리자 계정만 접근 가능합니다.");
+      
+      navigate(MAIN); // MAIN으로 이동
+      return;
+    }
+
+    // 파일 크기 설정값 불러오기
     fetchFileSize();
-  }, []);
+  }, [navigate]); // navigate 의존성 추가
 
   const handleSave = async () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };

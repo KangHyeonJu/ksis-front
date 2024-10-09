@@ -207,13 +207,14 @@ const Main = () => {
         data: [
           {
             x: "원본 영상",
-            y: Math.round(fileSize.totalVideoSize * 10 ** -9 * 100) / 100,
+            y: Math.round(fileSize.totalVideoSize * 10 ** -9 * 1000) / 1000,
             fillColor: "#f9c74f",
           },
           {
             x: "인코딩 영상",
             y:
-              Math.round(fileSize.totalEncodedVideoSize * 10 ** -9 * 100) / 100,
+              Math.round(fileSize.totalEncodedVideoSize * 10 ** -9 * 1000) /
+              1000,
             fillColor: "#90be6d",
           },
         ],

@@ -88,7 +88,7 @@ const VideoEncoding = () => {
         </h1>
 
         <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg">
-          <div className="w-1/2 flex-shrink-0">
+          <div className="w-full h-auto flex items-center justify-center">
             <video
               src={video.filePath}
               alt={video.fileTitle}

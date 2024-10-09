@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BOARD } from "../../../constants/page_constant";
+import { API_BOARD, MAIN } from "../../../constants/page_constant"; // MAIN 상수 추가
 import { API_NOTICE, API_BASIC } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher"; // fetcher 가져오기
+import { decodeJwt } from "../../../decodeJwt";
 
 const ApiForm = () => {
   const [apiName, setApiName] = useState("");
@@ -16,6 +17,14 @@ const ApiForm = () => {
   const { apiId } = useParams(); // apiId를 URL에서 가져오기
 
   useEffect(() => {
+    const userInfo = decodeJwt();
+
+    if (!userInfo.roles.includes("ROLE_ADMIN")) {
+      alert("관리자 계정만 접근 가능합니다.");
+      navigate(MAIN); // MAIN으로 이동
+      return;
+    }
+
     if (apiId) {
       const fetchApiData = async () => {
         try {
@@ -39,7 +48,7 @@ const ApiForm = () => {
     } else {
       setLoading(false); // 새로운 API 등록의 경우 로딩 완료
     }
-  }, [apiId]);
+  }, [apiId, navigate]);
 
   const validateDate = (date) => {
     const regex = /^\d{4}-\d{2}-\d{2}$/;

@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
+  SSE_CONNECT,
 } from "../../../constants/api_constant";
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
@@ -10,6 +11,7 @@ const SignagePlayKeyPage = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const keyValue = searchParam.get("key");
   const [verification, setVerification] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [resources, setResources] = useState([]);
   const [notices, setNotices] = useState([]);
@@ -17,6 +19,10 @@ const SignagePlayKeyPage = () => {
   const timeoutIdRef = useRef(null);
   const [date, setDate] = useState(() => new Date());
   const [weather, setWeather] = useState({});
+
+  const [deviceId, setDeviceId] = useState("");
+  const deviceIdRef = useRef(null);
+
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const scrollRef = useRef(null);
@@ -30,11 +36,22 @@ const SignagePlayKeyPage = () => {
       setVerification(true);
 
       loadPlayData(response.data);
+      setDeviceId(response.data);
+      setLoading(false);
     } else {
       console.log("IP와 KEY 검증 실패");
       setVerification(false);
     }
   };
+
+  useEffect(() => {
+    deviceIdRef.current = deviceId; // deviceId가 변경될 때마다 ref에 저장
+  }, [deviceId]);
+
+  useEffect(() => {
+    //페이지 로드
+    loadPage();
+  }, []);
 
   const loadPlayData = async (signageId) => {
     try {
@@ -52,9 +69,29 @@ const SignagePlayKeyPage = () => {
     }
   };
 
+  //sse
   useEffect(() => {
-    //페이지 로드
-    loadPage();
+    const eventSource = new EventSource(API_BASE_URL + SSE_CONNECT);
+
+    eventSource.onopen = () => {
+      console.log("SSE 연결 성공");
+    };
+
+    eventSource.onmessage = (event) => {
+      console.log("메세지 수신: ", event.data);
+
+      if (deviceIdRef.current) {
+        loadPlayData(deviceIdRef.current);
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("SSE 연결 오류: ", error);
+    };
+
+    return () => {
+      eventSource.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -106,12 +143,20 @@ const SignagePlayKeyPage = () => {
         if (resource.resourceType === "IMAGE") {
           newElement = document.createElement("img");
           newElement.alt = "이미지 로딩 오류";
+          newElement.src = resource.filePath;
         } else if (resource.resourceType === "VIDEO") {
           newElement = document.createElement("video");
           newElement.autoplay = true;
-          // newElement.muted = true;
+          newElement.muted = true;
+          newElement.src = resource.filePath;
+
+          // 동영상이 로드된 후에 재생을 시도합니다.
+          newElement.onloadeddata = () => {
+            newElement.play().catch((error) => {
+              console.error("동영상 재생 오류:", error);
+            });
+          };
         }
-        newElement.src = resource.filePath;
         newElement.style.width = "100%";
         newElement.style.height = "100%";
         // 기존 요소가 있으면 교체, 없으면 추가
@@ -181,20 +226,31 @@ const SignagePlayKeyPage = () => {
     }
   };
 
+  if (loading) {
+    return <div></div>;
+  }
+
   return (
     <div>
       {verification === true ? (
         <div>
-          <div id="container" className="h-full w-full absolute"></div>
+          <div
+            id="container"
+            className="h-full w-full fixed left-0 top-0"
+          ></div>
 
-          <div className="h-1/12 w-full bg-gray-800/10 flex items-center fixed bottom-0">
-            <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
-              <img
-                src={weather.icon}
-                alt="이미지를 불러올 수 없습니다."
-                className="inline-flex "
-              />
-              <div className="inline-flex ">{weather.temp}℃</div>
+          <div className="h-1/12 w-full bg-gray-800/30 flex items-center fixed left-0 bottom-0">
+            <div className="flex-auto text-center w-1/12">
+              <div className="flex">
+                <img
+                  className="m-auto"
+                  src={weather.icon}
+                  alt="이미지를 불러올 수 없습니다."
+                />
+                <div className="m-auto text-4xl font-bold text-black">
+                  {weather.temp}℃
+                </div>
+              </div>
             </div>
 
             <div className="overflow-hidden flex-auto w-10/12">
