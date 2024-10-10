@@ -322,8 +322,8 @@ const VideoFileBoard = () => {
           <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
             <video
               src={selectedVideo}
-              alt="Selected"
-              className="w-full max-h-screen bg-white"
+             alt="파일이 없습니다."
+              className="w-full max-h-screen bg-white text-center text-gray-500"
               controls // 비디오 컨트롤러 추가
             />
                 {/* 닫기 버튼 */}

@@ -203,6 +203,7 @@ const handleKeyDown = (e, id) => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
+
             <div key={index} className="grid p-1">
               {/* 카드 */}
               <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center 
@@ -312,8 +313,8 @@ const handleKeyDown = (e, id) => {
           <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
             <img
               src={selectedImage}
-              alt="Selected"
-              className="w-full max-h-screen bg-white"
+              alt="파일이 없습니다."
+              className="w-full max-h-screen bg-white text-center text-gray-500"
             />
                   {/* 닫기 버튼 */}
           

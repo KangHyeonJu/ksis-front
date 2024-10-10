@@ -84,21 +84,21 @@ const ImageEncoding = () => {
 
   return (
     <div className="flex justify-center items-center p-6">
-      <div className="bg-[#ffe69c] p-6 rounded-lg relative">
-        <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white">
+      <div className="bg-[#ffe69c] p-6 rounded-lg relative max-w-4xl w-full h-auto max-h-[80vh]">
+        <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white p-2">
           {image.fileTitle || "파일 제목"}
         </h1>
 
         <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg">
-          <div className="w-full h-auto flex items-center justify-center">
+          <div className="w-full h-full flex items-center justify-center">
             <img
               src={image.filePath}
               alt={image.fileTitle}
-              className="object-contain max-w-full max-h-full p-10"
+              className="object-contain w-full h-full"
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col m-10">
             {encodingOptions.map((option, idx) => (
               <div key={idx} className="flex items-center mb-4">
                 <select
