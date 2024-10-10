@@ -22,7 +22,7 @@ const VideoFileBoard = () => {
   // 페이지네이션 관련 상태
   const [currentPage, setCurrentPage] = useState(0);
 
-  const postsPerPage = 10; // 페이지당 게시물 수
+  const postsPerPage = 16; // 페이지당 게시물 수
   const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
@@ -168,14 +168,15 @@ const VideoFileBoard = () => {
       
         {/* 파일등록 버튼 */}
       <div className="flex justify-start space-x-2 ">
+      <Link to="ksis://open">
         <button
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
           font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
-          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600">
+         파일 등록
         </button>
+        </Link>
       </div>
 
       {/* 토글 버튼 */}
@@ -218,7 +219,7 @@ const VideoFileBoard = () => {
               h-full overflow-hidden max-w-xs"> {/* max-w-xs로 카드 너비 제한 */}
                    {/* 영상 */}
                    <div>
-                   <div className="w-full h-full mb-3 overflow-hidden">
+                   <div className="w-full h-full mb-1 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
@@ -270,7 +271,7 @@ const VideoFileBoard = () => {
                 <div className="items-center text-center row mx-auto p-2">
                   <button
                   type="button"
-                  className="mr-2 mt-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+                  className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                   onClick={() => handleDelete(post.encodedResourceId)}
                 >
                   삭제

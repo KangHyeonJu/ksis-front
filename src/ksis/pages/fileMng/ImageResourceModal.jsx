@@ -106,7 +106,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                       {currentItems.map((post, index) => (
                         <tr key={index}>
                          <td
-                            className="p-2border border-black bg-white overflow-hidden text-ellipsis whitespace-nowrap"
+                            className="p-2 border border-black bg-white overflow-hidden text-ellipsis whitespace-nowrap"
                             title={post.fileTitle}
                             style={{ maxWidth: '150px' }} // 제목 셀의 최대 너비 설정
                           >

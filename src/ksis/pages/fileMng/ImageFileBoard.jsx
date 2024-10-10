@@ -17,7 +17,7 @@ const ImageFileBoard = () => {
   const [isOriginal, setIsOriginal] = useState(false);
   const [images, setImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const postsPerPage = 10;
+  const postsPerPage = 16;
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
@@ -153,16 +153,17 @@ const handleKeyDown = (e, id) => {
 
     <div className="flex items-center justify-between mb-4">
       
-        {/* 파일등록 버튼 */}
-      <div className="flex justify-start space-x-2">
+  {/* 파일등록 버튼 */}
+  <div className="flex justify-start space-x-2 ">
+      <Link to="ksis://open">
         <button
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
           font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
-          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600">
+         파일 등록
         </button>
+        </Link>
       </div>
 
 
@@ -212,7 +213,7 @@ const handleKeyDown = (e, id) => {
 
                 {/* 이미지 */}
                 <div>
-                <div className="w-full h-full mb-3 overflow-hidden">
+                <div className="w-full h-full mb-1 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
@@ -264,7 +265,7 @@ const handleKeyDown = (e, id) => {
                 <div className="items-center text-center row mx-auto p-2">
                   <button
                   type="button"
-                  className="mr-2 mt-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+                  className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                   onClick={() => handleDelete(post.encodedResourceId)}
                 >
                   삭제

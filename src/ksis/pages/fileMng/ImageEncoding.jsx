@@ -130,19 +130,23 @@ const ImageEncoding = () => {
                   <option value="4k">4K</option>
                 </select>
 
+                {/* + 버튼 */}
                 <button
                   type="button"
                   onClick={handleAddOption}
                   className="ml-4 text-blue-500"
+                  style={{ minWidth: '30px', textAlign: 'center' }} 
                 >
                   <AiFillPlusCircle size={25} color="#f25165" />
                 </button>
 
+                {/* - 버튼 */}
                 {encodingOptions.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveOption(idx)}
                     className="ml-2 text-gray-600"
+                    style={{ minWidth: '30px', textAlign: 'center' }} 
                   >
                     <AiFillMinusCircle size={25} color="#717273" />
                   </button>

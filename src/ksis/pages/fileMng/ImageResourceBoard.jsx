@@ -21,7 +21,7 @@ const ImageResourceBoard = () => {
   const [searchCategory, setSearchCategory] = useState("total");
   const [isOriginal, setIsOriginal] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const postsPerPage = 10;
+  const postsPerPage = 16;
   const [images, setImages] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
@@ -180,16 +180,17 @@ const ImageResourceBoard = () => {
 
       <div className="flex items-center justify-between mb-4">
       
-        {/* 파일등록 버튼 */}
-      <div className="flex justify-start space-x-2">
+  {/* 파일등록 버튼 */}
+  <div className="flex justify-start space-x-2 ">
+      <Link to="ksis://open">
         <button
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
           font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
-          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600">
+         파일 등록
         </button>
+        </Link>
       </div>
 
 
@@ -239,7 +240,7 @@ const ImageResourceBoard = () => {
 
              {/* 이미지 */}
              <div>
-             <div className="w-full h-full mb-3 overflow-hidden">
+             <div className="w-full h-full mb-1 overflow-hidden">
                       <img
                         src={post.thumbFilePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
@@ -292,21 +293,21 @@ const ImageResourceBoard = () => {
 
                 {/* 인코딩, 삭제 버튼 */}
                 <div className="items-center text-center row mx-auto p-2">
+                <Link to={`${IMAGE_ENCODING}/${post.originalResourceId}`}>
                 <button
-                    className="mr-2 mt-2 rounded-md bg-[#6dd7e5]
+                    className="mr-2 rounded-md bg-[#6dd7e5]
                                         px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
                                          focus-visible:outline-blue-600"
                   >
-                    <Link to={`${IMAGE_ENCODING}/${post.originalResourceId}`}>
                       인코딩
-                    </Link>
                   </button>
+                  </Link>
 
                   
                 <button
                   type="button"
                   onClick={() => handleDelete(post.originalResourceId)}
-                  className="mr-2 mt-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+                  className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                 >
                   삭제
                 </button>
