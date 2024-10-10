@@ -235,14 +235,17 @@ const VideoResourceBoard = () => {
 
       </div>
 
-      {/* 그리드 시작 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+   {/* 그리드 시작 */}
+   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post, index) => (
+
+            
             <div key={index} className="grid p-1">
-              {/* 네모틀 */}
-              <div
-                className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center h-full overflow-hidden">
+
+             {/* 카드 */}
+             <div className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
+             h-full overflow-hidden">
 
                   {/* 영상 */}
                 <div>
@@ -252,7 +255,7 @@ const VideoResourceBoard = () => {
                       src={post.thumbFilePath}
                       //영상 파일 깨질시 영상 제목으로 설정
                       alt={post.fileTitle}
-                      className="w-60 h-60 cursor-pointer object-cover object-center"
+                       className="w-60 h-60 cursor-pointer object-cover object-center"
                       //영상 클릭하면 모달 열림
                       onClick={() => openResourceModal(post.originalResourceId)}
                     />
@@ -267,12 +270,13 @@ const VideoResourceBoard = () => {
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
-                        className="w-full text-xl font-midium mb-2 border-b 
-                    border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                        className="w-full text-m font-midium border-b text-center
+                        border-gray-400 outline-none transition-colors duration-200 
+                        focus:border-gray-600 max-w-full mx-auto justify-start"
                     placeholder="제목을 입력해주세요." />
                     
                     ) : (
-                      <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
+                      <h2 className="text-m font-bold truncate max-w-full mx-auto justify-start" title={post.fileTitle}>
                       {post.fileTitle}
                     </h2>
                       )}
@@ -283,14 +287,15 @@ const VideoResourceBoard = () => {
                             ? handleSaveClick(post.originalResourceId)
                             : handleEditClick(index, post.fileTitle)
                         }
-                        className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+                        className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
+                    transform hover:scale-110 hover:text-gray-800 m-1 "
                     />
                     </div>
                    </div>
 
                 
-                 {/* 등록일 */}
-                 <div className="">
+               {/* 등록일 */}
+               <div className="">
                 <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
                 </div>
 
@@ -311,8 +316,7 @@ const VideoResourceBoard = () => {
                   <button
                     type="button"
                     onClick={() => handleDelete(post.originalResourceId)}
-                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm
-                                        hover:bg-red-400 focus-visible:outline-red-600"
+                    className="mr-2 mt-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                   >
                     삭제
                   </button>

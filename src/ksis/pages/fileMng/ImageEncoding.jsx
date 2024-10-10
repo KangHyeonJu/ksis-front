@@ -152,17 +152,17 @@ const ImageEncoding = () => {
           </div>
         </div>
 
-        <div className="mt-2 bottom-2 flex justify-end">
+        <div className="items-center text-center row mx-auto p-2">
           <button
             onClick={handleEncoding}
-            className="mr-2 rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
+            className="mr-2 rounded-md bg-[#6dd7e5] px-3 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
           >
             인코딩
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+            className="rounded-md bg-[#f48f8f] px-3 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
             >
               취소
             </button>

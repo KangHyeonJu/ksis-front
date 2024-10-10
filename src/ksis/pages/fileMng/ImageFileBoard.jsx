@@ -206,12 +206,12 @@ const handleKeyDown = (e, id) => {
 
             <div key={index} className="grid p-1">
               {/* 카드 */}
-              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center 
+              <div className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
              h-full overflow-hidden">
   
                 {/* 이미지 */}
                 <div>
-                  <div className="w-full h-full mb-3 overflow-hidden">
+                <div className="w-full h-full mb-3 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
@@ -229,15 +229,16 @@ const handleKeyDown = (e, id) => {
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, post.encodedResourceId)} // 엔터 키 이벤트 추가
-                      className="w-full text-xl font-midium mb-2 border-b 
-                    border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                      className="w-full text-m font-midium border-b text-center
+                      border-gray-400 outline-none transition-colors duration-200 
+                      focus:border-gray-600 max-w-full mx-auto justify-start"
                     placeholder="제목을 입력해주세요." />
                     
                   ) : (
 
-                    <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
-                      {post.fileTitle}
-                    </h2>
+                    <h2 className="text-m font-bold truncate max-w-full mx-auto justify-start" title={post.fileTitle}>
+                    {post.fileTitle}
+                  </h2>
                   )}
                   <div>
                   <FaEdit
@@ -246,7 +247,8 @@ const handleKeyDown = (e, id) => {
                         ? handleSaveClick(post.encodedResourceId)
                         : handleEditClick(index, post.fileTitle)
                     }
-                    className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+                    className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
+                    transform hover:scale-110 hover:text-gray-800 m-1 "
                 />
                 </div>
                 </div>
@@ -260,7 +262,9 @@ const handleKeyDown = (e, id) => {
                 <div className="items-center text-center row mx-auto p-2">
                 <button
                   type="button"
-                  className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold
+                   text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 
+                   focus-visible:outline-offset-2 focus-visible:outline-red-600"
                   onClick={() => handleDelete(post.encodedResourceId)}
                 >
                   삭제
