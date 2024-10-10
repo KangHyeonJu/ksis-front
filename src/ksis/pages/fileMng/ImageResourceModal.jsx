@@ -74,6 +74,8 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
             />
 
             {/* 모달 내용 */}
+
+            {modals.length > 0 ? (
             <div className="text-center items-center p-2">
               {/* 첫 번째 이미지만 렌더링 */}
               {modals.length > 0 && (
@@ -104,7 +106,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                       {currentItems.map((post, index) => (
                         <tr key={index}>
                          <td
-                            className="p-2border border-black bg-white overflow-hidden text-ellipsis whitespace-nowrap"
+                            className="p-2 border border-black bg-white overflow-hidden text-ellipsis whitespace-nowrap"
                             title={post.fileTitle}
                             style={{ maxWidth: '150px' }} // 제목 셀의 최대 너비 설정
                           >
@@ -143,6 +145,11 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                 </div>
               )}
             </div>
+          ) : (
+              <div className="col-span-full text-center text-gray-500">
+                파일이 없습니다.
+              </div>
+            )}
           </div>
         </div>
       </div>
