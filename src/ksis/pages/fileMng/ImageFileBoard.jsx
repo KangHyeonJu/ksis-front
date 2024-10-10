@@ -199,16 +199,17 @@ const handleKeyDown = (e, id) => {
 
       
 
-      {/* 그리드 시작 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {currentPosts.length > 0 ? (
-          currentPosts.map((post, index) => (
+            {/* 그리드 시작 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
+            {currentPosts.length > 0 ? (
+              currentPosts.map((post, index) => (
 
             <div key={index} className="grid p-1">
+
               {/* 카드 */}
-              <div className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
-             h-full overflow-hidden">
-  
+            <div className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
+              h-full overflow-hidden max-w-xs"> {/* max-w-xs로 카드 너비 제한 */}
+
                 {/* 이미지 */}
                 <div>
                 <div className="w-full h-full mb-3 overflow-hidden">
@@ -229,14 +230,14 @@ const handleKeyDown = (e, id) => {
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, post.encodedResourceId)} // 엔터 키 이벤트 추가
-                      className="w-full text-m font-midium border-b text-center
+                      className="w-full text-xl font-midium border-b text-center
                       border-gray-400 outline-none transition-colors duration-200 
                       focus:border-gray-600 max-w-full mx-auto justify-start"
                     placeholder="제목을 입력해주세요." />
                     
                   ) : (
 
-                    <h2 className="text-m font-bold truncate max-w-full mx-auto justify-start" title={post.fileTitle}>
+                    <h2 className="text-xl font-bold truncate max-w-full mx-auto justify-start" title={post.fileTitle}>
                     {post.fileTitle}
                   </h2>
                   )}
@@ -259,18 +260,18 @@ const handleKeyDown = (e, id) => {
                 </div>
 
                 {/* 삭제 버튼 */}
+                <div>
                 <div className="items-center text-center row mx-auto p-2">
-                <button
+                  <button
                   type="button"
-                  className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold
-                   text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 
-                   focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  className="mr-2 mt-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                   onClick={() => handleDelete(post.encodedResourceId)}
                 >
                   삭제
                 </button>
+                  </div>
+                </div>
               </div>
-            </div>
             </div>
           ))
         ) : (
