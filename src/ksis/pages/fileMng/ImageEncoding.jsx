@@ -89,7 +89,7 @@ const ImageEncoding = () => {
           {image.fileTitle || "파일 제목"}
         </h1>
 
-        <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg">
+        <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg mb-3">
           <div className="w-full h-full flex items-center justify-center">
             <img
               src={image.filePath}
@@ -155,14 +155,14 @@ const ImageEncoding = () => {
         <div className="items-center text-center row mx-auto p-2">
           <button
             onClick={handleEncoding}
-            className="mr-2 rounded-md bg-[#6dd7e5] px-3 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
+            className="mr-2 rounded-md bg-[#6dd7e5] p-3 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
           >
             인코딩
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-md bg-[#f48f8f] px-3 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+            className="rounded-md bg-[#f48f8f] p-3 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
             >
               취소
             </button>
