@@ -17,7 +17,7 @@ const ImageFileBoard = () => {
   const [isOriginal, setIsOriginal] = useState(false);
   const [images, setImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const postsPerPage = 10;
+  const postsPerPage = 16;
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
@@ -153,16 +153,17 @@ const handleKeyDown = (e, id) => {
 
     <div className="flex items-center justify-between mb-4">
       
-        {/* 파일등록 버튼 */}
-      <div className="flex justify-start space-x-2">
+  {/* 파일등록 버튼 */}
+  <div className="flex justify-start space-x-2 ">
+      <Link to="ksis://open">
         <button
           type="button"
           className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
           font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
-          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          <Link to="ksis://open">파일 등록</Link>
+          focus-visible:outline-offset-2 focus-visible:outline-orange-600">
+         파일 등록
         </button>
+        </Link>
       </div>
 
 
@@ -199,18 +200,20 @@ const handleKeyDown = (e, id) => {
 
       
 
-      {/* 그리드 시작 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {currentPosts.length > 0 ? (
-          currentPosts.map((post, index) => (
+            {/* 그리드 시작 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
+            {currentPosts.length > 0 ? (
+              currentPosts.map((post, index) => (
+
             <div key={index} className="grid p-1">
+
               {/* 카드 */}
-              <div className="rounded-lg bg-[#ffe69c] p-3 flex flex-col items-center 
-             h-full overflow-hidden">
-  
+            <div className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
+              h-full overflow-hidden max-w-xs"> {/* max-w-xs로 카드 너비 제한 */}
+
                 {/* 이미지 */}
                 <div>
-                  <div className="w-full h-full mb-3 overflow-hidden">
+                <div className="w-full h-full mb-1 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
@@ -228,15 +231,16 @@ const handleKeyDown = (e, id) => {
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, post.encodedResourceId)} // 엔터 키 이벤트 추가
-                      className="w-full text-xl font-midium mb-2 border-b 
-                    border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600"
+                      className="w-full text-xl font-midium border-b text-center
+                      border-gray-400 outline-none transition-colors duration-200 
+                      focus:border-gray-600 max-w-full mx-auto justify-start"
                     placeholder="제목을 입력해주세요." />
                     
                   ) : (
 
-                    <h2 className="text-m font-bold truncate max-w-full" title={post.fileTitle}>
-                      {post.fileTitle}
-                    </h2>
+                    <h2 className="text-xl font-bold truncate max-w-full mx-auto justify-start" title={post.fileTitle}>
+                    {post.fileTitle}
+                  </h2>
                   )}
                   <div>
                   <FaEdit
@@ -245,7 +249,8 @@ const handleKeyDown = (e, id) => {
                         ? handleSaveClick(post.encodedResourceId)
                         : handleEditClick(index, post.fileTitle)
                     }
-                    className="ml-2 text-l cursor-pointer text-gray-600 transition-transform duration-200 transform hover:scale-110 hover:text-gray-800"
+                    className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
+                    transform hover:scale-110 hover:text-gray-800 m-1 "
                 />
                 </div>
                 </div>
@@ -256,16 +261,18 @@ const handleKeyDown = (e, id) => {
                 </div>
 
                 {/* 삭제 버튼 */}
+                <div>
                 <div className="items-center text-center row mx-auto p-2">
-                <button
+                  <button
                   type="button"
-                  className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                   onClick={() => handleDelete(post.encodedResourceId)}
                 >
                   삭제
                 </button>
+                  </div>
+                </div>
               </div>
-            </div>
             </div>
           ))
         ) : (
@@ -312,8 +319,8 @@ const handleKeyDown = (e, id) => {
           <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
             <img
               src={selectedImage}
-              alt="Selected"
-              className="w-full max-h-screen bg-white"
+              alt="파일이 없습니다."
+              className="w-full max-h-screen bg-white text-center text-gray-500"
             />
                   {/* 닫기 버튼 */}
           
