@@ -196,7 +196,7 @@ const NoticeDetail = () => {
             </div>
             <div className="flex gap-2 items-center">
               {/* notice 작성자가 admin인 경우 숨기기 */}
-              {notice.role === "ADMIN" ? null : (
+             
                 <>
                   <button
                     type="button"
@@ -213,7 +213,7 @@ const NoticeDetail = () => {
                     삭제하기
                   </button>
                 </>
-              )}
+             
             </div>
           </div>
         </form>
