@@ -321,6 +321,7 @@ const handleKeyDown = (e, id) => {
           
           
           <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
+          onClick={(event) => {event.stopPropagation();}}
           >
           
             <img

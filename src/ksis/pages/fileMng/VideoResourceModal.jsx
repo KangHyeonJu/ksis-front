@@ -66,7 +66,9 @@ const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {
         onClick={onRequestClose}>
       <div className="fixed inset-0 flex items-center justify-center">
         {/* 네모틀 */}
-        <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]">
+        <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]"
+        onClick={(event) => {event.stopPropagation();}}
+        >
              
             {/* 닫기 버튼 */}
             <ImCross
