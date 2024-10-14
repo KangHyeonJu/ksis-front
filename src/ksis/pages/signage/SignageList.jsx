@@ -223,7 +223,7 @@ const SignageList = () => {
         </tbody>
       </table>
 
-      <Stack spacing={2}>
+      <Stack spacing={2} className="mt-5">
         <Pagination
           count={totalPages}
           page={currentPage}

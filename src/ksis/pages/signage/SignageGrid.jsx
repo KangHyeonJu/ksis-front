@@ -12,24 +12,34 @@ import {
 import { decodeJwt } from "../../../decodeJwt";
 import { ToggleSwitch } from "../../css/switch";
 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
 const SignageGrid = () => {
   const userInfo = decodeJwt();
   const [signages, setSignages] = useState([]);
 
-  const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("deviceName");
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const postsPerPage = 4;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const postsPerPage = 8; // 한 페이지 8개 데이터
 
   const loadPage = async () => {
     try {
       const response = await fetcher.get(SIGNAGE_LIST + `/grid`, {
-        params: { role: userInfo.roles },
+        params: {
+          role: userInfo.roles,
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
       });
       console.log(response);
       if (response.data) {
-        setSignages(response.data);
+        setSignages(response.data.content);
+        setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
       }
@@ -40,24 +50,17 @@ const SignageGrid = () => {
 
   useEffect(() => {
     loadPage();
-  }, []);
+  }, [currentPage, searchTerm]);
 
-  const filteredPosts = useMemo(
-    () =>
-      signages.filter((signage) => {
-        const value = signage[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [signages, searchTerm, searchCategory]
-  );
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
 
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   return (
@@ -73,13 +76,16 @@ const SignageGrid = () => {
           className="mr-1 p-2 border border-gray-300 rounded-md"
         >
           <option value="deviceName">재생장치명</option>
-          <option value="account">담당자</option>
+
+          {userInfo.roles === "ROLE_ADMIN" ? (
+            <option value="account">담당자</option>
+          ) : null}
         </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -105,7 +111,7 @@ const SignageGrid = () => {
         ) : null}
       </div>
       <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
-        {paginatedPosts.map((signage) => (
+        {signages.map((signage) => (
           <div
             key={signage.deviceId}
             className="group relative border-2 border-[#fcc310] rounded-md p-3"
@@ -132,35 +138,14 @@ const SignageGrid = () => {
         ))}
       </div>
 
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2} className="mt-5">
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
     </div>
   );
 };
