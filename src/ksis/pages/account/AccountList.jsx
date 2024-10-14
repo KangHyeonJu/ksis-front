@@ -76,7 +76,7 @@ const AccountList = () => {
       if (response.status === 200) {
         // 로컬 상태 업데이트
         alert("비활성화 여부가 변경되었습니다.");
-        await loadPage();
+        await loadPage(currentPage);
       } else {
         console.error("Failed to update account status:", response.statusText);
       }
@@ -151,7 +151,7 @@ const AccountList = () => {
               <td className="border border-gray-300 p-2">{post.name}</td>
               <td className="border border-gray-300 p-2">{post.businessTel}</td>
               <td className="border border-gray-300 p-2">
-                {post.isActive ? "True" : "False"}
+                {post.isActive ? "O" : "X"}
               </td>
               <td className="border border-gray-300 p-2 flex justify-center">
                 <Link
