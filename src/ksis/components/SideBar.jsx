@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Link, useNavigate} from "react-router-dom"; // Link 컴포넌트 import
+import { Link, useNavigate } from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
@@ -65,7 +65,7 @@ const Sidebar = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("accountId");
       localStorage.removeItem("authority");
-      navigate('/downloadApp');
+      navigate("/downloadApp");
     } catch (error) {
       console.error("로그아웃 실패: ", error);
     }
@@ -111,9 +111,9 @@ const Sidebar = () => {
         </div>
         <div className="flex space-x-2 mb-4">
           <Link
-              to={`/account/${userInfo.accountId}`}
-              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
-              onClick={() => handleMenuClick("ACCOUNT_INFO")}
+            to={`/account/${userInfo.accountId}`}
+            className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+            onClick={() => handleMenuClick("ACCOUNT_INFO")}
           >
             <BiUser className="mr-1" />
             계정정보
@@ -129,157 +129,157 @@ const Sidebar = () => {
         <hr className="border-black border-1 border-dashed" />
         <div className="menu--list">
           {isAdmin && (
-              <div className="item mt-3">
-                <div
-                    className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                    onClick={() => toggleMenu("account")}
-                >
-                  <MdManageAccounts className="mr-3"/>
-                  <span>계정관리</span>
-                </div>
-                {openMenu === "account" && (
-                    <div className="submenu ml-8 mt-2">
-                      <Link
-                          to="/accountList"
-                          className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                          onClick={() => handleMenuClick("ACCOUNT_LIST")}
-                      >
-                        <FaRegCircle size={10} className="mr-2"/>
-                        <span>계정목록 조회</span>
-                      </Link>
-                      <Link
-                          to={ACCESSLOG_INVENTORY}
-                          onClick={() => handleMenuClick("LOG")}
-                          className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                      >
-                        <FaRegCircle size={10} className="mr-2"/>
-                        <span>로그 기록</span>
-                      </Link>
-                    </div>
-                )}
+            <div className="item mt-3">
+              <div
+                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                onClick={() => toggleMenu("account")}
+              >
+                <MdManageAccounts className="mr-3" />
+                <span>계정관리</span>
               </div>
+              {openMenu === "account" && (
+                <div className="submenu ml-8 mt-2">
+                  <Link
+                    to="/accountList"
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                    onClick={() => handleMenuClick("ACCOUNT_LIST")}
+                  >
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>계정목록 조회</span>
+                  </Link>
+                  <Link
+                    to={ACCESSLOG_INVENTORY}
+                    onClick={() => handleMenuClick("LOG")}
+                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                  >
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>로그 기록</span>
+                  </Link>
+                </div>
+              )}
+            </div>
           )}
           <div className="item mt-3">
             <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                onClick={() => toggleMenu("profile")}
+              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+              onClick={() => toggleMenu("profile")}
             >
-              <MdOutlinePermMedia className="mr-3"/>
+              <MdOutlinePermMedia className="mr-3" />
               <span>미디어 관리</span>
             </div>
             {openMenu === "profile" && (
-                <div className="submenu ml-8 mt-2">
-                  <Link
-                      to={IMAGE_FILE_BOARD}
-                      onClick={() => handleMenuClick("IMAGE")}
-                      className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2"/>
-                    이미지 관리
-                  </Link>
-                  <Link
-                      to={VIDEO_FILE_BOARD}
-                      onClick={() => handleMenuClick("VIDEO")}
-                      className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2"/>
-                    영상 관리
-                  </Link>
-                </div>
+              <div className="submenu ml-8 mt-2">
+                <Link
+                  to={IMAGE_FILE_BOARD}
+                  onClick={() => handleMenuClick("IMAGE")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  이미지 관리
+                </Link>
+                <Link
+                  to={VIDEO_FILE_BOARD}
+                  onClick={() => handleMenuClick("VIDEO")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  영상 관리
+                </Link>
+              </div>
             )}
           </div>
           <div className="item mt-3">
             <Link
-                to={NOTICE_BOARD}
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                onClick={() => handleMenuClick("NOTICE")}
+              to={NOTICE_BOARD}
+              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+              onClick={() => handleMenuClick("NOTICE")}
             >
-              <MdChat className="mr-3"/>
+              <MdChat className="mr-3" />
               <span>공지글 관리</span>
             </Link>
           </div>
 
           <div className="item mt-3">
             <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                onClick={() => toggleMenu("device")}
+              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+              onClick={() => toggleMenu("device")}
             >
-              <MdDevices className="mr-3"/>
+              <MdDevices className="mr-3" />
               <span>디바이스 관리</span>
             </div>
             {openMenu === "device" && (
-                <div className="submenu ml-8 mt-2">
-                  <Link
-                      to={SIGNAGE_INVENTORY}
-                      onClick={() => handleMenuClick("SIGNAGE")}
-                      className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2"/>
-                    <span>재생장치 관리</span>
-                  </Link>
-                  <Link
-                      to={PC_INVENTORY}
-                      onClick={() => handleMenuClick("PC")}
-                      className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2"/>
-                    <span>일반 PC 관리</span>
-                  </Link>
-                </div>
+              <div className="submenu ml-8 mt-2">
+                <Link
+                  to={SIGNAGE_INVENTORY}
+                  onClick={() => handleMenuClick("SIGNAGE")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>재생장치 관리</span>
+                </Link>
+                <Link
+                  to={PC_INVENTORY}
+                  onClick={() => handleMenuClick("PC")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>일반 PC 관리</span>
+                </Link>
+              </div>
             )}
           </div>
 
           <div className="item mt-3">
             <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                onClick={() => toggleMenu("settings")}
+              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+              onClick={() => toggleMenu("settings")}
             >
-              <BiCog className="mr-3"/>
+              <BiCog className="mr-3" />
               <span>기타 관리</span>
             </div>
             {openMenu === "settings" && (
-                <div className="submenu ml-8 mt-2">
-                  <Link
-                      to={RESOLUTION_LIST}
-                      onClick={() => handleMenuClick("RESOLUTION")}
+              <div className="submenu ml-8 mt-2">
+                <Link
+                  to={RESOLUTION_LIST}
+                  onClick={() => handleMenuClick("RESOLUTION")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>해상도 관리</span>
+                </Link>
+                {isAdmin && (
+                  <>
+                    <Link
+                      to={API_BOARD}
+                      onClick={() => handleMenuClick("API")}
                       className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2"/>
-                    <span>해상도 관리</span>
-                  </Link>
-                  {isAdmin && (
-                      <>
-                        <Link
-                            to={API_BOARD}
-                            onClick={() => handleMenuClick("API")}
-                            className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                        >
-                          <FaRegCircle size={10} className="mr-2"/>
-                          <span>API 관리</span>
-                        </Link>
+                    >
+                      <FaRegCircle size={10} className="mr-2" />
+                      <span>API 관리</span>
+                    </Link>
 
-                        <Link
-                            to={FILESIZE_FORM}
-                            onClick={() => handleMenuClick("FILE_SIZE")}
-                            className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                        >
-                          <FaRegCircle size={10} className="mr-2"/>
-                          <span>용량 관리</span>
-                        </Link>
-                      </>
-                  )}
-                </div>
+                    <Link
+                      to={FILESIZE_FORM}
+                      onClick={() => handleMenuClick("FILE_SIZE")}
+                      className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                    >
+                      <FaRegCircle size={10} className="mr-2" />
+                      <span>용량 관리</span>
+                    </Link>
+                  </>
+                )}
+              </div>
             )}
           </div>
         </div>
       </div>
       <div className="mt-auto">
         <button
-            onClick={() => {
-              handleMenuClick("LOGOUT");
-              handleLogout();
-            }}
-            className="w-full text-left flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+          onClick={() => {
+            handleMenuClick("LOGOUT");
+            handleLogout();
+          }}
+          className="w-full text-left flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
         >
           <RiLogoutBoxRLine className="mr-2" />
           <span>로그아웃</span>
