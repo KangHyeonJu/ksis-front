@@ -12,8 +12,10 @@ const ImageEncoding = () => {
   const params = useParams();
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
+  const [resolutions, setResolution] = useState([]);
+  const [selectedValue, setSelectedValue] = useState();
   const [encodingOptions, setEncodingOptions] = useState([
-    { format: "png", resolution: "360p" },
+    { format: "png" },
   ]);
 
   const fetchImageData = async (originalResourceId) => {
@@ -27,16 +29,28 @@ const ImageEncoding = () => {
       console.error("Error fetching image:", error);
     }
   };
+  const fetchResolutionData = async() =>{
+    try{
+      const responseResolution = await fetcher.get(RESOLUTION);
+      setResolution(responseResolution.data);
+      setSelectedValue(resolutions[0].width+"x"+resolutions[0].height);
+      console.log("해상도 데이터: ", responseResolution.data);
+    }
+    catch(error){
+      console.error("Error fetching resolution:", error);
+    }
+  }
   
 
   useEffect(() => {
     fetchImageData(params.originalResourceId);
+    fetchResolutionData();
   }, [params.originalResourceId]);
 
   const handleAddOption = () => {
     setEncodingOptions([
       ...encodingOptions,
-      { format: "png", resolution: "360p" },
+      { format: "png", resolution: resolutions[0].width+"x"+resolutions[0].height },
     ]);
   };
 
@@ -49,6 +63,8 @@ const ImageEncoding = () => {
     navigate(-1);
   };
 
+
+  
   const handleEncoding = async () => {
     try {
       for (const option of encodingOptions) {
@@ -58,7 +74,7 @@ const ImageEncoding = () => {
           filePath: image.filePath,
           fileRegTime: image.regTime,
           format: option.format,
-          resolution: option.resolution,
+          resolution: selectedValue,
         };
         console.log("리퀘스트 데이터 : ", requestData);
         console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
@@ -126,10 +142,14 @@ const ImageEncoding = () => {
                   }}
                   className="ml-4 p-2 border border-gray-300 rounded-md"
                 >
-                  <option value="360p">360p</option>
-                  <option value="720p">720p</option>
-                  <option value="1080p">1080p</option>
-                  <option value="4k">4K</option>
+                {resolutions.map((resolution) => (
+                <option
+                  value={`${resolution.width}x${resolution.height}`}
+                  key={resolution.resolutionId}
+                >
+                  {resolution.width} x {resolution.height}
+                </option>
+              ))}
                 </select>
 
                 {/* + 버튼 */}
