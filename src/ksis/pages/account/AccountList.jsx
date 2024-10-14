@@ -66,16 +66,23 @@ const AccountList = () => {
 
   const handleToggleActive = async (accountId, isActive) => {
     try {
+      const action = isActive ? "활성화" : "비활성화";
+      const confirmation = window.confirm(`계정을 ${action}하시겠습니까?`);
+
+      if (!confirmation) {
+        return;
+      }
+
       const response = await fetcher.put(
-        `${ACCOUNT_FORM}/${accountId}/active`,
-        JSON.stringify({
-          isActive: isActive,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+          `${ACCOUNT_FORM}/${accountId}/active`,
+          JSON.stringify({
+            isActive: isActive,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
       );
 
       if (response.status === 200) {

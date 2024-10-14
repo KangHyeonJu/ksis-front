@@ -109,7 +109,7 @@ function App() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("authority");
     localStorage.removeItem("accountId");
-    navigate("/downloadApp");
+    window.location.href = "/downloadApp";
   };
 
   useEffect(() => {
