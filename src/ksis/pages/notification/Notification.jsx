@@ -94,7 +94,7 @@ const Notification = ({ onClose }) => {
       onClick={onClose} // 모달 바깥 클릭 시 모달 닫기
     >
       <div
-        className="bg-white p-6 rounded shadow-lg w-1/3"
+        className="bg-white p-6 rounded shadow-lg max-w-full w-[700px]"
         onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫히지 않게
       >
         <h2 className="text-xl font-semibold mb-4">알림</h2>
