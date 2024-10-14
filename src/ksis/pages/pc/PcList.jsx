@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
-import ReactPaginate from "react-paginate";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
 import { PC_DELETE, PC_LIST } from "../../../constants/api_constant";
@@ -8,26 +7,37 @@ import { Link } from "react-router-dom";
 import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
 const PcList = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("deviceName");
-  const [currentPage, setCurrentPage] = useState(0);
   const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [checkedRowId, setCheckedRowId] = useState([]);
   const userInfo = decodeJwt();
 
-  const postsPerPage = 5;
+  const [searchCategory, setSearchCategory] = useState("deviceName");
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const postsPerPage = 10; // 한 페이지 10개 데이터
 
   const [posts, setPosts] = useState([]);
 
   const loadPage = async () => {
     try {
       const response = await fetcher.get(PC_LIST, {
-        params: { role: userInfo.roles },
+        params: {
+          role: userInfo.roles,
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
       });
       console.log(response);
       if (response.data) {
-        setPosts(response.data);
+        setPosts(response.data.content);
+        setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
       }
@@ -39,7 +49,18 @@ const PcList = () => {
 
   useEffect(() => {
     loadPage();
-  }, []);
+  }, [currentPage, searchTerm]);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+  };
 
   const handleCheckboxChange = (postId) => {
     setSelectedPosts((prevSelectedPosts) => {
@@ -56,10 +77,6 @@ const PcList = () => {
       return newSelectedPosts;
     });
   };
-
-  useEffect(() => {
-    console.log(checkedRowId);
-  }, [checkedRowId]);
 
   //pc 삭제
   const deletePc = async (e) => {
@@ -86,24 +103,6 @@ const PcList = () => {
     }
   };
 
-  const filteredPosts = useMemo(
-    () =>
-      posts.filter((post) => {
-        const value = post[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [posts, searchTerm, searchCategory]
-  );
-
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
-
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
@@ -117,14 +116,16 @@ const PcList = () => {
           className="mr-1 p-2 border border-gray-300 rounded-md"
         >
           <option value="deviceName">PC명</option>
-          <option value="account">담당자</option>
-          <option value="regDate">등록일</option>
+
+          {userInfo.roles === "ROLE_ADMIN" ? (
+            <option value="account">담당자</option>
+          ) : null}
         </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -162,7 +163,7 @@ const PcList = () => {
                   const isChecked = e.target.checked;
                   setSelectedPosts(
                     isChecked
-                      ? new Set(filteredPosts.map((post) => post.deviceId))
+                      ? new Set(posts.map((post) => post.deviceId))
                       : new Set()
                   );
                 }}
@@ -174,7 +175,7 @@ const PcList = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedPosts.map((post) => (
+          {posts.map((post) => (
             <tr key={post.deviceId} className="hover:bg-gray-100">
               <td className="border border-gray-300 p-2 text-center">
                 <input
@@ -201,35 +202,14 @@ const PcList = () => {
         </tbody>
       </table>
 
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2}>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
     </div>
   );
 };
