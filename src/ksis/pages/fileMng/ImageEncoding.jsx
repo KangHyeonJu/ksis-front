@@ -53,6 +53,7 @@ const ImageEncoding = () => {
     try {
       for (const option of encodingOptions) {
         const requestData = {
+          originalResourceId: image.originalResourceId,
           fileTitle: image.fileTitle,
           filePath: image.filePath,
           fileRegTime: image.regTime,
@@ -67,6 +68,7 @@ const ImageEncoding = () => {
         );
 
         if (response.status === 200) {
+          alert("인코딩을 시작했습니다.");
           console.log("인코딩 요청에 성공했습니다. ");
         } else {
           alert("인코딩 요청에 실패했습니다.");

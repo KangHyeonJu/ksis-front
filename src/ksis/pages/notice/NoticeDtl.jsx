@@ -11,10 +11,14 @@ const NoticeDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { noticeId } = useParams();
+  const [role, setRole] = useState(""); // 역할 상태 추가
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotice = async () => {
+      const authority = decodeJwt().roles;
+      setRole(authority); // 역할 상태 설정
+
       try {
         const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
         console.log("데이터 : ", response.data);
@@ -196,7 +200,7 @@ const NoticeDetail = () => {
             </div>
             <div className="flex gap-2 items-center">
               {/* notice 작성자가 admin인 경우 숨기기 */}
-              {notice.role === "ADMIN" ? null : (
+              {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
                 <>
                   <button
                     type="button"

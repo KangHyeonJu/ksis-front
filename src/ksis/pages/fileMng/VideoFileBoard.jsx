@@ -321,8 +321,12 @@ const VideoFileBoard = () => {
 
       {/* 모달창 */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+        onClick={closeModal}
+        >
+          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
+          onClick={(event) => {event.stopPropagation();}}
+          >
             <video
               src={selectedVideo}
              alt="파일이 없습니다."

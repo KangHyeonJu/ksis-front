@@ -315,8 +315,15 @@ const handleKeyDown = (e, id) => {
 
       {/* 모달창 */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
+      
+        <div onClick={closeModal}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          
+          
+          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
+          onClick={(event) => {event.stopPropagation();}}
+          >
+          
             <img
               src={selectedImage}
               alt="파일이 없습니다."
@@ -329,9 +336,9 @@ const handleKeyDown = (e, id) => {
            size-6 hover:scale-110"
            onClick={closeModal}
           />
-
+            </div>
           </div>
-        </div>
+       
       )}
     </div>
   );
