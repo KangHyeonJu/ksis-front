@@ -15,16 +15,24 @@ const AccountList = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userInfo = decodeJwt();
-  const loadPage = async () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState("accountId");
+
+  const postsPerPage = 8;
+
+  const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(ACCOUNT_LIST);
+      const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
       if (response.data) {
-        setPosts(response.data);
+        setPosts(response.data.content  || []);
+        setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+
     } finally {
       setLoading(false); // 데이터 로딩 후 로딩 상태 해제
     }
@@ -40,29 +48,9 @@ const AccountList = () => {
     }
   }, [navigate, userInfo.roles]);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("accountId"); // 검색 필터 상태
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const postsPerPage = 5;
-
-  const filteredPosts = useMemo(
-    () =>
-      posts.filter((post) => {
-        const value = post[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [posts, searchTerm, searchCategory]
-  );
-
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
+  useEffect(() => {
+    loadPage(currentPage);
+  }, [currentPage, searchTerm, searchCategory]);
 
   const handleToggleActive = async (accountId, isActive) => {
     try {
@@ -97,6 +85,11 @@ const AccountList = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value); // 검색어를 업데이트
+    setCurrentPage(0); // 검색할 때 페이지를 0으로 초기화
+  };
+
   if (loading) {
     return <div>로딩 중...</div>;
   }
@@ -122,7 +115,7 @@ const AccountList = () => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -152,7 +145,7 @@ const AccountList = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedPosts.map((post) => (
+          {posts.map((post) => (
             <tr key={post.accountId}>
               <td className="border border-gray-300 p-2">{post.accountId}</td>
               <td className="border border-gray-300 p-2">{post.name}</td>
@@ -185,15 +178,15 @@ const AccountList = () => {
         </tbody>
       </table>
 
-      {filteredPosts.length > postsPerPage && (
+      {totalPages > 0 && (
         <ReactPaginate
           previousLabel={"이전"}
           nextLabel={"다음"}
           breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
+          pageCount={totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
+          onPageChange={(selected) => setCurrentPage(selected.selected)}
           containerClassName={"flex justify-center mt-4"}
           pageClassName={"mx-1"}
           pageLinkClassName={
