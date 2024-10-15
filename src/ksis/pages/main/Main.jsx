@@ -9,6 +9,8 @@ import {
 import fetcher from "../../../fetcher";
 
 const Main = () => {
+  const API_WS_URL = process.env.REACT_APP_API_WS_URL;
+
   const [fileSize, setFileSize] = useState({});
   const [fileCount, setFileCount] = useState({});
   const [visitCount, setVisitCount] = useState([]);
@@ -16,17 +18,30 @@ const Main = () => {
 
   const loadPage = async () => {
     try {
-      const [responseFile, responseCount, responseVisit, responseDevice] =
-        await Promise.all([
-          fetcher.get(TOTAL_FILE_SIZE),
-          fetcher.get(FILE_COUNT),
-          fetcher.get(VISIT),
-          fetcher.get(SIGNAGE_STATUS),
-        ]);
+      const [responseFile, responseCount, responseVisit] = await Promise.all([
+        fetcher.get(TOTAL_FILE_SIZE),
+        fetcher.get(FILE_COUNT),
+        fetcher.get(VISIT),
+      ]);
       setFileSize(responseFile.data);
       setFileCount(responseCount.data);
       setVisitCount(responseVisit.data);
-      setDevices(responseDevice.data);
+
+      loadDevice();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const loadDevice = async () => {
+    try {
+      const response = await fetcher.get(SIGNAGE_STATUS);
+
+      if (response.data) {
+        setDevices(response.data);
+      } else {
+        console.error("No data property in response");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -34,6 +49,32 @@ const Main = () => {
 
   useEffect(() => {
     loadPage();
+  }, []);
+
+  useEffect(() => {
+    const socket = new WebSocket(API_WS_URL + `/ws/main`);
+
+    socket.onmessage = (event) => {
+      if (event.data === "statusUpdate") {
+        loadDevice();
+      }
+    };
+
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    socket.onerror = (e) => {
+      console.log(e);
+    };
+
+    return () => {
+      socket.close();
+    };
   }, []);
 
   //업로드 개수

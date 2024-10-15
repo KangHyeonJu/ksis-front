@@ -109,9 +109,11 @@ const SignagePlayKeyPage = () => {
     socket.onclose = () => {
       console.log("WebSocket disconnected");
     };
+
     socket.onerror = (e) => {
       console.log(e);
     };
+
     window.onbeforeunload = () => {
       socket.close(); // 페이지를 떠날 때 WebSocket 종료
     };
