@@ -97,7 +97,14 @@ const AccountRegForm = () => {
     };
 
     try {
+      const confirmation = window.confirm("계정을 등록하시겠습니까?");
+
+      if (!confirmation) {
+        return;
+      }
+
       await fetcher.post(ACCOUNT_CREATE, cleanedFormData, {});
+      alert("계정이 등록되었습니다.");
       navigate(ACCOUNT_LIST_BOARD);
     } catch (error) {
       // Axios 에러의 상세 정보 확인

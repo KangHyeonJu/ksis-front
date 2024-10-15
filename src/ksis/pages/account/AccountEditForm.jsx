@@ -118,6 +118,12 @@ const AccountEditForm = () => {
     };
 
     try {
+      const confirmation = window.confirm("계정 정보를 수정하시겠습니까?");
+
+      if (!confirmation) {
+        return;
+      }
+
       const response = await fetcher.put(
         `${ACCOUNT_FORM}/${accountId}`,
         cleanedFormData

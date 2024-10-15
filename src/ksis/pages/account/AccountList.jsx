@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import fetcher from "../../../fetcher";
 import {
   ACCOUNT_FORM,
@@ -15,16 +15,24 @@ const AccountList = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userInfo = decodeJwt();
-  const loadPage = async () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState("accountId");
+
+  const postsPerPage = 8;
+
+  const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(ACCOUNT_LIST);
+      const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
       if (response.data) {
-        setPosts(response.data);
+        setPosts(response.data.content  || []);
+        setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+
     } finally {
       setLoading(false); // 데이터 로딩 후 로딩 상태 해제
     }
@@ -36,36 +44,23 @@ const AccountList = () => {
       alert("관리자만 접근 가능합니다.");
       navigate(MAIN);
     } else {
-      loadPage();
+      loadPage(currentPage);
     }
   }, [navigate, userInfo.roles]);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("accountId"); // 검색 필터 상태
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const postsPerPage = 5;
-
-  const filteredPosts = useMemo(
-    () =>
-      posts.filter((post) => {
-        const value = post[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [posts, searchTerm, searchCategory]
-  );
-
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
+  useEffect(() => {
+    loadPage(currentPage);
+  }, [currentPage, searchTerm, searchCategory]);
 
   const handleToggleActive = async (accountId, isActive) => {
     try {
+      const action = isActive ? "활성화" : "비활성화";
+      const confirmation = window.confirm(`계정을 ${action}하시겠습니까?`);
+
+      if (!confirmation) {
+        return;
+      }
+
       const response = await fetcher.put(
         `${ACCOUNT_FORM}/${accountId}/active`,
         JSON.stringify({
@@ -81,13 +76,18 @@ const AccountList = () => {
       if (response.status === 200) {
         // 로컬 상태 업데이트
         alert("비활성화 여부가 변경되었습니다.");
-        await loadPage();
+        await loadPage(currentPage);
       } else {
         console.error("Failed to update account status:", response.statusText);
       }
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value); // 검색어를 업데이트
+    setCurrentPage(0); // 검색할 때 페이지를 0으로 초기화
   };
 
   if (loading) {
@@ -102,32 +102,45 @@ const AccountList = () => {
 
       <div className="mb-4 flex items-center">
         <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 border border-gray-300 rounded-md"
+            value={searchCategory}
+            onChange={(e) => setSearchCategory(e.target.value)}
+            className="mr-1 p-2 border border-gray-300 rounded-md"
         >
           <option value="accountId">계정 아이디</option>
           <option value="name">이름</option>
           <option value="businessTel">업무 연락처</option>
           <option value="isActive">비활성화 여부</option>
         </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
-          />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
-        </div>
+
+        {searchCategory === "isActive" ? (
+            <select
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="ml-2 p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">전체</option>
+              <option value="true">활성화</option>
+              <option value="false">비활성화</option>
+            </select>
+        ) : (
+            <div className="relative flex-grow">
+              <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="검색어를 입력하세요"
+                  className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+              />
+              <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"/>
+            </div>
+        )}
       </div>
 
       <div className="flex justify-end space-x-2 mb-4">
         <Link to={ACCOUNT_FORM}>
           <button
-            type="button"
-            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              type="button"
+              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             계정 등록
           </button>
@@ -136,16 +149,16 @@ const AccountList = () => {
 
       <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
         <thead>
-          <tr>
-            <th className="border border-gray-300">계정 아이디</th>
-            <th className="border border-gray-300">이름</th>
-            <th className="border border-gray-300">업무 전화번호</th>
-            <th className="border border-gray-300">비활성화 여부</th>
-            <th className="border border-gray-300">수정/비활성화</th>
-          </tr>
+        <tr>
+          <th className="border border-gray-300">계정 아이디</th>
+          <th className="border border-gray-300">이름</th>
+          <th className="border border-gray-300">업무 전화번호</th>
+          <th className="border border-gray-300">비활성화 여부</th>
+          <th className="border border-gray-300">수정/비활성화</th>
+        </tr>
         </thead>
         <tbody>
-          {paginatedPosts.map((post) => (
+        {posts.map((post) => (
             <tr key={post.accountId}>
               <td className="border border-gray-300 p-2">{post.accountId}</td>
               <td className="border border-gray-300 p-2">{post.name}</td>
@@ -178,15 +191,15 @@ const AccountList = () => {
         </tbody>
       </table>
 
-      {filteredPosts.length > postsPerPage && (
+      {totalPages > 0 && (
         <ReactPaginate
           previousLabel={"이전"}
           nextLabel={"다음"}
           breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
+          pageCount={totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
+          onPageChange={(selected) => setCurrentPage(selected.selected)}
           containerClassName={"flex justify-center mt-4"}
           pageClassName={"mx-1"}
           pageLinkClassName={
