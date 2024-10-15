@@ -31,7 +31,6 @@ const ImageFileBoard = () => {
       .then((response) => {
         setImages(response.data);
         setFilteredPosts(response.data);
-        console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
       })
       .catch((error) => {
         console.error("Error fetching images:", error);

@@ -18,6 +18,7 @@ const NoticeBoard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    
     setLoading(true);
     fetcher
       .get(NOTICE_ALL)
