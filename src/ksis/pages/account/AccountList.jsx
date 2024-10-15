@@ -44,7 +44,7 @@ const AccountList = () => {
       alert("관리자만 접근 가능합니다.");
       navigate(MAIN);
     } else {
-      loadPage();
+      loadPage(currentPage);
     }
   }, [navigate, userInfo.roles]);
 
