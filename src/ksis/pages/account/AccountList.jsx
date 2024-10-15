@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import fetcher from "../../../fetcher";
 import {
   ACCOUNT_FORM,
@@ -102,32 +102,45 @@ const AccountList = () => {
 
       <div className="mb-4 flex items-center">
         <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 border border-gray-300 rounded-md"
+            value={searchCategory}
+            onChange={(e) => setSearchCategory(e.target.value)}
+            className="mr-1 p-2 border border-gray-300 rounded-md"
         >
           <option value="accountId">계정 아이디</option>
           <option value="name">이름</option>
           <option value="businessTel">업무 연락처</option>
           <option value="isActive">비활성화 여부</option>
         </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
-          />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
-        </div>
+
+        {searchCategory === "isActive" ? (
+            <select
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="ml-2 p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">전체</option>
+              <option value="true">활성화</option>
+              <option value="false">비활성화</option>
+            </select>
+        ) : (
+            <div className="relative flex-grow">
+              <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="검색어를 입력하세요"
+                  className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+              />
+              <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"/>
+            </div>
+        )}
       </div>
 
       <div className="flex justify-end space-x-2 mb-4">
         <Link to={ACCOUNT_FORM}>
           <button
-            type="button"
-            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              type="button"
+              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
           >
             계정 등록
           </button>
@@ -136,16 +149,16 @@ const AccountList = () => {
 
       <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
         <thead>
-          <tr>
-            <th className="border border-gray-300">계정 아이디</th>
-            <th className="border border-gray-300">이름</th>
-            <th className="border border-gray-300">업무 전화번호</th>
-            <th className="border border-gray-300">비활성화 여부</th>
-            <th className="border border-gray-300">수정/비활성화</th>
-          </tr>
+        <tr>
+          <th className="border border-gray-300">계정 아이디</th>
+          <th className="border border-gray-300">이름</th>
+          <th className="border border-gray-300">업무 전화번호</th>
+          <th className="border border-gray-300">비활성화 여부</th>
+          <th className="border border-gray-300">수정/비활성화</th>
+        </tr>
         </thead>
         <tbody>
-          {posts.map((post) => (
+        {posts.map((post) => (
             <tr key={post.accountId}>
               <td className="border border-gray-300 p-2">{post.accountId}</td>
               <td className="border border-gray-300 p-2">{post.name}</td>
