@@ -539,22 +539,22 @@ const Main = () => {
           <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
             <thead>
               <tr>
-                <th className="border border-gray-300">재생장치 이름</th>
-                <th className="border border-gray-300">연결 상태</th>
+                <th className="border border-gray-300 p-1">재생장치 이름</th>
+                <th className="border border-gray-300 p-1">연결 상태</th>
               </tr>
             </thead>
             <tbody>
               {devices.map((device) => (
                 <tr>
-                  <td className="border border-gray-300 text-center">
+                  <td className="border border-gray-300 text-center p-2">
                     {device.deviceName}
                   </td>
 
-                  <td className="border border-gray-300 text-center">
+                  <td className="border border-gray-300 text-center p-2">
                     {device.isConnect ? (
-                      <div className="w-4 h-4 rounded-full bg-green-500 inline-block"></div>
+                      <div className="w-5 h-5 rounded-full bg-green-500 inline-block"></div>
                     ) : (
-                      <div className="w-4 h-4 rounded-full bg-red-500 inline-block"></div>
+                      <div className="w-5 h-5 rounded-full bg-red-500 inline-block"></div>
                     )}
                   </td>
                 </tr>
