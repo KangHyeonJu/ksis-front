@@ -41,7 +41,6 @@ const VideoResourceBoard = () => {
       .get(RSVIDEO_BOARD)
       .then((response) => {
         setVideos(response.data); // 영상 데이터를 설정
-        console.log("영상 데이터 : ", response.data);
       })
       .catch((error) => {
         console.error("Error fetching video:", error);

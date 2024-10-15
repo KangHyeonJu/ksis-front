@@ -29,7 +29,6 @@ const NoticeForm = () => {
       const authority = decodeJwt().roles;
       setRole(authority); // 역할 상태 설정
 
-      console.log("noticeForm 역할 :", authority);
       try {
         const response = await fetcher.get(SIGNAGE_LIST, {
           params: { role: authority },
@@ -42,7 +41,7 @@ const NoticeForm = () => {
         );
       } catch (error) {
         console.error("디바이스 목록을 불러오는 중 오류 발생:", error);
-        alert("디바이스 목록을 불러오는 중 오류가 발생했습니다.");
+        alert("디바이스 목록을 불러오는 중 오류가 발생했습니다.", error);
       }
     };
 

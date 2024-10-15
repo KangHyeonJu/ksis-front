@@ -15,10 +15,9 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
       .get(IMG_ORIGINAL_BASIC + `/${originalResourceId}`)
       .then((response) => {
         setModal(response.data); // 이미지를 상태에 저장합니다.
-        console.log("여기냐 : ", response.data); // 이미지 데이터를 콘솔에 출력합니다.
       })
       .catch((error) => {
-        console.error(":", error); // 에러 발생 시 콘솔에 출력합니다.
+        console.error("fetching Error :", error); // 에러 발생 시 콘솔에 출력합니다.
       });
   }, [originalResourceId]); // originalResourceId가 변경될 때마다 함수를 재생성합니다.
 

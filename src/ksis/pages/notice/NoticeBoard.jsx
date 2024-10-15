@@ -18,12 +18,12 @@ const NoticeBoard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    
     setLoading(true);
     fetcher
       .get(NOTICE_ALL)
       .then((response) => {
         setNotices(response.data);
-        console.log("공지 전체 조회 데이터 : ", response.data);
       })
       .catch((err) => {
         setError("데이터를 가져오는 데 실패했습니다.");

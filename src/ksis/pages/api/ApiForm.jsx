@@ -30,7 +30,6 @@ const ApiForm = () => {
         try {
           const response = await fetcher.get(API_NOTICE + `/${apiId}`); // fetcher로 데이터 가져오기
           const data = response.data;
-          console.log(data); // API 응답 데이터 출력
           setApiName(data.apiName); // 데이터 구조에 맞게 수정
           setProvider(data.provider || ""); // 제공업체가 없을 경우 기본값 설정
           setKeyValue(data.keyValue || ""); // API Key가 없을 경우 기본값 설정
