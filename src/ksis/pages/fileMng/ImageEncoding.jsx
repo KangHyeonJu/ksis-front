@@ -76,6 +76,7 @@ const ImageEncoding = () => {
       if (!confirmEncoding) {
         return; // 사용자가 취소하면 함수 종료
       }
+      
 
     try {
       let allSuccessful = true; // 인코딩 성공 여부 추적
@@ -95,24 +96,35 @@ const ImageEncoding = () => {
         };
         const response = await fetcher.post(
           `${ENCODED_IMG}/${params.originalResourceId}`,
+         
           requestData
         );
 
         if (response.status !== 200) {
           allSuccessful = false; // 실패한 요청이 있을 경우 false로 변경
         }
-      }
+
+        if (response.status === 202) {
+         alert("동일한 해상도와 포멧이 존재합니다.");
+         return;
+        }
+
+    
+      } 
+      alert("인코딩을 시작했습니다.");
+      navigate(-1);
+     
   
       // 모든 요청이 끝난 후에 알림 한 번만 띄우기
       if (allSuccessful) {
-        alert("인코딩을 시작했습니다.");
-        navigate(-1);
+       
       } else {
         alert("일부 인코딩 요청에 실패했습니다.");
       }
     } catch (error) {
+      // 서버에서 반환된 에러 메시지를 확인하고 alert 창 띄우기
       console.error("인코딩 요청 중 오류 발생:", error);
-      alert("인코딩 중 오류가 발생했습니다.");
+      alert(`${error.response?.data || error.message}`);
     }
   };
 
