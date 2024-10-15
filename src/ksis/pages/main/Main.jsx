@@ -4,6 +4,7 @@ import {
   TOTAL_FILE_SIZE,
   VISIT,
   FILE_COUNT,
+  SIGNAGE_STATUS,
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 
@@ -11,17 +12,21 @@ const Main = () => {
   const [fileSize, setFileSize] = useState({});
   const [fileCount, setFileCount] = useState({});
   const [visitCount, setVisitCount] = useState([]);
+  const [devices, setDevices] = useState([]);
 
   const loadPage = async () => {
     try {
-      const [responseFile, responseCount, responseVisit] = await Promise.all([
-        fetcher.get(TOTAL_FILE_SIZE),
-        fetcher.get(FILE_COUNT),
-        fetcher.get(VISIT),
-      ]);
+      const [responseFile, responseCount, responseVisit, responseDevice] =
+        await Promise.all([
+          fetcher.get(TOTAL_FILE_SIZE),
+          fetcher.get(FILE_COUNT),
+          fetcher.get(VISIT),
+          fetcher.get(SIGNAGE_STATUS),
+        ]);
       setFileSize(responseFile.data);
       setFileCount(responseCount.data);
       setVisitCount(responseVisit.data);
+      setDevices(responseDevice.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -498,10 +503,21 @@ const Main = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border border-gray-300 text-center">test</td>
-                <td className="border border-gray-300 text-center">연결O</td>
-              </tr>
+              {devices.map((device) => (
+                <tr>
+                  <td className="border border-gray-300 text-center">
+                    {device.deviceName}
+                  </td>
+
+                  <td className="border border-gray-300 text-center">
+                    {device.isConnect ? (
+                      <div className="w-4 h-4 rounded-full bg-green-500 inline-block"></div>
+                    ) : (
+                      <div className="w-4 h-4 rounded-full bg-red-500 inline-block"></div>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
