@@ -65,8 +65,5 @@ export const UPLOADLOG_LIST = "/log/upload";
 //resolution
 export const RESOLUTION = "/resolution";
 
-//sse
-export const SSE_CONNECT = "/sse/connect";
-
 //websocket
 export const WEBSOCKET_NOTIFICATION = "/ws/notifications";

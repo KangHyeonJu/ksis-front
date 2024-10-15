@@ -2,7 +2,6 @@ import { useSearchParams } from "react-router-dom";
 import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
-  SSE_CONNECT,
 } from "../../../constants/api_constant";
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
