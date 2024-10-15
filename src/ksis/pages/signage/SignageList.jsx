@@ -30,7 +30,7 @@ const SignageList = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_LIST, {
+      const response = await fetcher.get(SIGNAGE_LIST + "/all", {
         params: {
           role: userInfo.roles,
           page: currentPage - 1,
@@ -223,7 +223,7 @@ const SignageList = () => {
         </tbody>
       </table>
 
-      <Stack spacing={2} className="mt-5">
+      <Stack spacing={2}>
         <Pagination
           count={totalPages}
           page={currentPage}

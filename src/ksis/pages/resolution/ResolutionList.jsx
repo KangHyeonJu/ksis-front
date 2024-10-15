@@ -37,7 +37,7 @@ const ResolutionList = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(RESOLUTION, {
+      const response = await fetcher.get(RESOLUTION + "/all", {
         params: {
           page: currentPage - 1,
           size: postsPerPage,

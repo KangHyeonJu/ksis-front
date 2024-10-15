@@ -36,7 +36,6 @@ const VideoFileBoard = () => {
       .then((response) => {
         setVideos(response.data);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
-        console.log("인코딩 영상 데이터 : ", response.data); //영상 데이터 확인
       })
       .catch((error) => {
         console.error("Error fetching videos:", error);

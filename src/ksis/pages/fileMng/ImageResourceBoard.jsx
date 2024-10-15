@@ -40,7 +40,6 @@ const ImageResourceBoard = () => {
       .get(RSIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
-        console.log("원본 이미지 데이터 : ", response.data); //이미지 데이터 확인
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
