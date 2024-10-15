@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ApexCharts from "apexcharts";
 import {
   TOTAL_FILE_SIZE,
@@ -10,6 +10,10 @@ import fetcher from "../../../fetcher";
 
 const Main = () => {
   const API_WS_URL = process.env.REACT_APP_API_WS_URL;
+
+  const MAX_RETRIES = 5;
+  let retryCount = 0;
+  const socketRef = useRef(null);
 
   const [fileSize, setFileSize] = useState({});
   const [fileCount, setFileCount] = useState({});
@@ -51,8 +55,9 @@ const Main = () => {
     loadPage();
   }, []);
 
-  useEffect(() => {
+  const connectWebSocket = () => {
     const socket = new WebSocket(API_WS_URL + `/ws/main`);
+    socketRef.current = socket;
 
     socket.onmessage = (event) => {
       if (event.data === "statusUpdate") {
@@ -62,18 +67,36 @@ const Main = () => {
 
     socket.onopen = () => {
       console.log("WebSocket connected");
+      retryCount = 0;
     };
 
     socket.onclose = () => {
-      console.log("WebSocket disconnected");
+      if (retryCount < MAX_RETRIES) {
+        const retryTimeout = Math.pow(2, retryCount) * 1000; // 지수 백오프 적용
+        console.log(
+          `WebSocket disconnected. Reconnecting in ${
+            retryTimeout / 1000
+          } seconds...`
+        );
+        retryCount++;
+        setTimeout(connectWebSocket, retryTimeout); // 재연결 시도
+      } else {
+        console.log("Max retries reached. No further reconnection attempts.");
+      }
     };
 
-    socket.onerror = (e) => {
-      console.log(e);
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
     };
+  };
+
+  useEffect(() => {
+    connectWebSocket();
 
     return () => {
-      socket.close();
+      if (socketRef.current) {
+        socketRef.current.close(); // 컴포넌트 언마운트 시 WebSocket 종료
+      }
     };
   }, []);
 

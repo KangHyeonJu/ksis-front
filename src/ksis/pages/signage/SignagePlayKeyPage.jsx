@@ -26,6 +26,10 @@ const SignagePlayKeyPage = () => {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const API_WS_URL = process.env.REACT_APP_API_WS_URL;
 
+  const MAX_RETRIES = 5;
+  let retryCount = 0;
+  const socketRef = useRef(null);
+
   const scrollRef = useRef(null);
 
   const loadPage = async () => {
@@ -70,56 +74,49 @@ const SignagePlayKeyPage = () => {
     }
   };
 
-  //sse
-  // useEffect(() => {
-  //   const eventSource = new EventSource(API_BASE_URL + SSE_CONNECT);
-
-  //   eventSource.onopen = () => {
-  //     console.log("SSE 연결 성공");
-  //   };
-
-  //   eventSource.onmessage = (event) => {
-  //     console.log("메세지 수신: ", event.data);
-
-  //     if (deviceIdRef.current) {
-  //       loadPlayData(deviceIdRef.current);
-  //     }
-  //   };
-
-  //   eventSource.onerror = (error) => {
-  //     console.error("SSE 연결 오류: ", error);
-  //   };
-
-  //   return () => {
-  //     eventSource.close();
-  //   };
-  // }, []);
-
-  //webSocket
-  useEffect(() => {
-    console.log(deviceIdRef.current);
+  const connectWebSocket = () => {
     const socket = new WebSocket(
       API_WS_URL + `/ws/device?deviceId=${deviceIdRef.current}`
     );
 
+    socketRef.current = socket;
+
     socket.onopen = () => {
       console.log("WebSocket connected");
+      retryCount = 0;
     };
 
     socket.onclose = () => {
-      console.log("WebSocket disconnected");
+      if (retryCount < MAX_RETRIES) {
+        const retryTimeout = Math.pow(2, retryCount) * 1000; // 지수 백오프 적용
+        console.log(
+          `WebSocket disconnected. Reconnecting in ${
+            retryTimeout / 1000
+          } seconds...`
+        );
+        retryCount++;
+        setTimeout(connectWebSocket, retryTimeout); // 재연결 시도
+      } else {
+        console.log("Max retries reached. No further reconnection attempts.");
+      }
     };
 
     socket.onerror = (e) => {
-      console.log(e);
+      console.log("WebSocket error:", e);
     };
 
     window.onbeforeunload = () => {
-      socket.close(); // 페이지를 떠날 때 WebSocket 종료
+      socket.close();
     };
+  };
+
+  useEffect(() => {
+    connectWebSocket();
 
     return () => {
-      socket.close(); // 컴포넌트가 언마운트될 때 WebSocket 종료
+      if (socketRef.current) {
+        socketRef.current.close(); // 컴포넌트 언마운트 시 WebSocket 종료
+      }
     };
   }, [deviceIdRef.current]);
 
