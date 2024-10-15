@@ -39,7 +39,9 @@ const SignagePlayKeyPage = () => {
     if (response.status === 200 && response.data !== null) {
       setVerification(true);
 
-      loadPlayData(response.data);
+      loadResource(response.data);
+      loadNotice(response.data);
+
       setDeviceId(response.data);
       setLoading(false);
     } else {
@@ -57,20 +59,44 @@ const SignagePlayKeyPage = () => {
     loadPage();
   }, []);
 
-  const loadPlayData = async (signageId) => {
-    try {
-      const [responseResource, responseNotice] = await Promise.all([
-        axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
-        axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
-      ]);
-      setResources(responseResource.data);
-      console.log(responseResource);
+  // const loadPlayData = async (signageId) => {
+  //   try {
+  //     const [responseResource, responseNotice] = await Promise.all([
+  //       axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
+  //       axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
+  //     ]);
+  //     setResources(responseResource.data);
+  //     console.log(responseResource);
 
-      setNotices(responseNotice.data);
-      console.log(responseNotice);
+  //     setNotices(responseNotice.data);
+  //     console.log(responseNotice);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
+  const loadResource = async (signageId) => {
+    try {
+      const response = await axios.get(
+        API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`
+      );
+
+      if (response.data) {
+        setResources(response.data);
+        console.log(response);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const loadNotice = async (signageId) => {
+    const response = await axios.get(
+      API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`
+    );
+
+    setNotices(response.data);
+    console.log("Notices", response);
   };
 
   const connectWebSocket = () => {
@@ -83,7 +109,10 @@ const SignagePlayKeyPage = () => {
     socket.onmessage = (event) => {
       if (event.data === "playlistUpdate") {
         console.log("playlistUpdate");
-        loadPlayData(deviceIdRef.current);
+        loadResource(deviceIdRef.current);
+      } else if (event.data === "noticeUpdate") {
+        console.log("noticeUpdate");
+        loadNotice(deviceIdRef.current);
       }
     };
 
