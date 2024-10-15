@@ -62,12 +62,13 @@ const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {
   return (
 
     <Dialog open={isOpen} onClose={onRequestClose}> {/* 모달이 열렸을 때 렌더링됩니다. */}
-      
     <div className="items-center text-center"
         onClick={onRequestClose}>
       <div className="fixed inset-0 flex items-center justify-center">
         {/* 네모틀 */}
-        <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]">
+        <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]"
+        onClick={(event) => {event.stopPropagation();}}
+        >
              
             {/* 닫기 버튼 */}
             <ImCross
@@ -76,6 +77,9 @@ const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {
             />
 
             {/* 모달 내용 */}
+
+            {modals.length > 0 ? (
+
             <div className="text-center items-center p-2">
               {/* 첫 번째 이미지만 렌더링 */}
               {modals.length > 0 && (
@@ -146,6 +150,11 @@ const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                 </div>
               )}
             </div>
+            ) : (
+              <div className="col-span-full text-center text-gray-500">
+                파일이 없습니다.
+              </div>
+            )}
           </div>
         </div>
       </div>

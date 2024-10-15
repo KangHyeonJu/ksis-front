@@ -53,6 +53,7 @@ const ImageEncoding = () => {
     try {
       for (const option of encodingOptions) {
         const requestData = {
+          originalResourceId: image.originalResourceId,
           fileTitle: image.fileTitle,
           filePath: image.filePath,
           fileRegTime: image.regTime,
@@ -67,6 +68,7 @@ const ImageEncoding = () => {
         );
 
         if (response.status === 200) {
+          alert("인코딩을 시작했습니다.");
           console.log("인코딩 요청에 성공했습니다. ");
         } else {
           alert("인코딩 요청에 실패했습니다.");
@@ -84,21 +86,21 @@ const ImageEncoding = () => {
 
   return (
     <div className="flex justify-center items-center p-6">
-      <div className="bg-[#ffe69c] p-6 rounded-lg relative">
-        <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white">
+      <div className="bg-[#ffe69c] p-6 rounded-lg relative max-w-4xl w-full h-auto max-h-[80vh]">
+        <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white p-2">
           {image.fileTitle || "파일 제목"}
         </h1>
 
-        <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg">
-          <div className="w-full h-auto flex items-center justify-center">
+        <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg mb-3">
+          <div className="w-full h-full flex items-center justify-center">
             <img
               src={image.filePath}
               alt={image.fileTitle}
-              className="object-contain max-w-full max-h-full p-10"
+              className="object-contain w-full h-full"
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col m-10">
             {encodingOptions.map((option, idx) => (
               <div key={idx} className="flex items-center mb-4">
                 <select
@@ -130,19 +132,23 @@ const ImageEncoding = () => {
                   <option value="4k">4K</option>
                 </select>
 
+                {/* + 버튼 */}
                 <button
                   type="button"
                   onClick={handleAddOption}
                   className="ml-4 text-blue-500"
+                  style={{ minWidth: '30px', textAlign: 'center' }} 
                 >
                   <AiFillPlusCircle size={25} color="#f25165" />
                 </button>
 
+                {/* - 버튼 */}
                 {encodingOptions.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveOption(idx)}
                     className="ml-2 text-gray-600"
+                    style={{ minWidth: '30px', textAlign: 'center' }} 
                   >
                     <AiFillMinusCircle size={25} color="#717273" />
                   </button>
@@ -152,17 +158,17 @@ const ImageEncoding = () => {
           </div>
         </div>
 
-        <div className="mt-2 bottom-2 flex justify-end">
+        <div className="items-center text-center row mx-auto p-2">
           <button
             onClick={handleEncoding}
-            className="mr-2 rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
+            className="mr-2 rounded-md bg-[#6dd7e5] p-3 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
           >
             인코딩
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+            className="rounded-md bg-[#f48f8f] p-3 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
             >
               취소
             </button>

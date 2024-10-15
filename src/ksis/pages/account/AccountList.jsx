@@ -62,15 +62,15 @@ const AccountList = () => {
       }
 
       const response = await fetcher.put(
-          `${ACCOUNT_FORM}/${accountId}/active`,
-          JSON.stringify({
-            isActive: isActive,
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+        `${ACCOUNT_FORM}/${accountId}/active`,
+        JSON.stringify({
+          isActive: isActive,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (response.status === 200) {

@@ -27,16 +27,16 @@ fetcher.interceptors.response.use(
     if (error.response.status === 403) {
       if (token) {
         // 만료된 액세스 토큰 갱신 요청
-          let response;
-          try {
-              response = await fetcher.post(`${TOKEN_CALLBACK}`, null, {
-                  headers: {
-                      Authorization: `Bearer ${token}`, // 토큰을 Authorization 헤더에 담기
-                  },
-              });
-          }catch(err){
-              return Promise.resolve();
-          }
+        let response;
+        try {
+          response = await fetcher.post(`${TOKEN_CALLBACK}`, null, {
+            headers: {
+              Authorization: `Bearer ${token}`, // 토큰을 Authorization 헤더에 담기
+            },
+          });
+        } catch (err) {
+          return Promise.resolve();
+        }
         // 리프레시 토큰이 만료된 경우
         if (!response.data) {
           localStorage.removeItem("accessToken");

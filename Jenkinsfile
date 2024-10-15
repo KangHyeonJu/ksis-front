@@ -68,6 +68,7 @@ pipeline {
                         docker run \
                           --name=fe_ksis \
                           -p 80:80 \
+                          -p 443:443 \
                           -v /docker_projects/fe_ksis/volumes/gen:/gen \
                           --restart unless-stopped \
                           --network app \
