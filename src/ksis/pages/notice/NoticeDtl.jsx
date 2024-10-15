@@ -21,14 +21,6 @@ const NoticeDetail = () => {
 
       try {
         const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
-        
-        // 공지가 비활성화 상태인지 확인
-        if (!response.data.active) {
-          alert("해당 공지는 비활성화된 상태입니다.");
-          navigate(NOTICE_BOARD);
-          return; // 비활성화된 공지일 경우 더 이상 진행하지 않음
-        }
-        
         setNotice(response.data);
       } catch (err) {
         setError("공지사항 정보를 가져오는 데 실패했습니다.");
@@ -48,9 +40,9 @@ const NoticeDetail = () => {
     return <p>오류 발생: {error}</p>;
   }
 
-/*    if (!notice) {
+    if (!notice) {
     return <p className="text-center text-gray-600 mt-10 w-full">해당 공지는 비활성화된 상태입니다.</p>;
-  }  */
+  }  
 
   const handleDeActive = async () => {
     if (window.confirm("정말로 이 공지를 비활성화하시겠습니까?")) {
