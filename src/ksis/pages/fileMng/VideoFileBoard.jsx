@@ -36,7 +36,6 @@ const VideoFileBoard = () => {
       .then((response) => {
         setVideos(response.data);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
-        console.log("인코딩 영상 데이터 : ", response.data); //영상 데이터 확인
       })
       .catch((error) => {
         console.error("Error fetching videos:", error);
@@ -321,8 +320,12 @@ const VideoFileBoard = () => {
 
       {/* 모달창 */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+        onClick={closeModal}
+        >
+          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
+          onClick={(event) => {event.stopPropagation();}}
+          >
             <video
               src={selectedVideo}
              alt="파일이 없습니다."

@@ -15,10 +15,9 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
       .get(IMG_ORIGINAL_BASIC + `/${originalResourceId}`)
       .then((response) => {
         setModal(response.data); // 이미지를 상태에 저장합니다.
-        console.log("여기냐 : ", response.data); // 이미지 데이터를 콘솔에 출력합니다.
       })
       .catch((error) => {
-        console.error(":", error); // 에러 발생 시 콘솔에 출력합니다.
+        console.error("fetching Error :", error); // 에러 발생 시 콘솔에 출력합니다.
       });
   }, [originalResourceId]); // originalResourceId가 변경될 때마다 함수를 재생성합니다.
 
@@ -65,7 +64,8 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
           onClick={onRequestClose}>
         <div className="fixed inset-0 flex items-center justify-center">
           {/* 네모틀 */}
-          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]">
+          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]"
+          onClick={(event) => {event.stopPropagation();}}>
             
             {/* 닫기 버튼 */}
             <ImCross

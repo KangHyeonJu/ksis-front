@@ -24,6 +24,7 @@ const SignagePlayKeyPage = () => {
   const deviceIdRef = useRef(null);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const API_WS_URL = process.env.REACT_APP_API_WS_URL;
 
   const scrollRef = useRef(null);
 
@@ -70,29 +71,57 @@ const SignagePlayKeyPage = () => {
   };
 
   //sse
+  // useEffect(() => {
+  //   const eventSource = new EventSource(API_BASE_URL + SSE_CONNECT);
+
+  //   eventSource.onopen = () => {
+  //     console.log("SSE 연결 성공");
+  //   };
+
+  //   eventSource.onmessage = (event) => {
+  //     console.log("메세지 수신: ", event.data);
+
+  //     if (deviceIdRef.current) {
+  //       loadPlayData(deviceIdRef.current);
+  //     }
+  //   };
+
+  //   eventSource.onerror = (error) => {
+  //     console.error("SSE 연결 오류: ", error);
+  //   };
+
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // }, []);
+
+  //webSocket
   useEffect(() => {
-    const eventSource = new EventSource(API_BASE_URL + SSE_CONNECT);
+    console.log(deviceIdRef.current);
+    const socket = new WebSocket(
+      API_WS_URL + `/ws/device?deviceId=${deviceIdRef.current}`
+    );
 
-    eventSource.onopen = () => {
-      console.log("SSE 연결 성공");
+    socket.onopen = () => {
+      console.log("WebSocket connected");
     };
 
-    eventSource.onmessage = (event) => {
-      console.log("메세지 수신: ", event.data);
-
-      if (deviceIdRef.current) {
-        loadPlayData(deviceIdRef.current);
-      }
+    socket.onclose = () => {
+      console.log("WebSocket disconnected");
     };
 
-    eventSource.onerror = (error) => {
-      console.error("SSE 연결 오류: ", error);
+    socket.onerror = (e) => {
+      console.log(e);
+    };
+
+    window.onbeforeunload = () => {
+      socket.close(); // 페이지를 떠날 때 WebSocket 종료
     };
 
     return () => {
-      eventSource.close();
+      socket.close(); // 컴포넌트가 언마운트될 때 WebSocket 종료
     };
-  }, []);
+  }, [deviceIdRef.current]);
 
   useEffect(() => {
     //위치 정보를 이용해 날씨 정보 받아오기

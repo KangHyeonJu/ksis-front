@@ -15,10 +15,9 @@ const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {
     .get(VIDEO_ORIGINAL_BASIC + `/${originalResourceId}`)
     .then(response => {
       setModal(response.data); // 영상을 상태에 저장합니다.
-      console.log("영상 모달 데이터 : ", response.data); // 영상 데이터를 콘솔에 출력합니다.
     })
     .catch(error => {
-      console.error(':', error); // 에러 발생 시 콘솔에 출력합니다.
+      console.error('Error fetching:', error); // 에러 발생 시 콘솔에 출력합니다.
     });
   }, [originalResourceId]); // originalResourceId가 변경될 때마다 함수를 재생성합니다.
 
@@ -66,7 +65,9 @@ const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {
         onClick={onRequestClose}>
       <div className="fixed inset-0 flex items-center justify-center">
         {/* 네모틀 */}
-        <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]">
+        <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh] p-6 bg-[#ffe69c]"
+        onClick={(event) => {event.stopPropagation();}}
+        >
              
             {/* 닫기 버튼 */}
             <ImCross

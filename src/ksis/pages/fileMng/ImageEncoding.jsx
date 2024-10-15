@@ -12,8 +12,9 @@ const ImageEncoding = () => {
   const params = useParams();
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
+  const [resolutions, setResolution] = useState([]);
   const [encodingOptions, setEncodingOptions] = useState([
-    { format: "png", resolution: "360p" },
+    { format: "png", resolution: "" },
   ]);
 
   const fetchImageData = async (originalResourceId) => {
@@ -22,21 +23,38 @@ const ImageEncoding = () => {
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
       setImage(response.data);
-      console.log("원본 이미지 인코딩 페이지 데이터: ", response.data);
     } catch (error) {
       console.error("Error fetching image:", error);
+    }
+  };
+  
+  const fetchResolutionData = async () => {
+    try {
+      const responseResolution = await fetcher.get(RESOLUTION);
+      setResolution(responseResolution.data);
+
+      // 처음 옵션 추가 시 기본 해상도 설정
+      setEncodingOptions((prevOptions) =>
+        prevOptions.map((option) => ({
+          ...option,
+          resolution: `${responseResolution.data[0].width}x${responseResolution.data[0].height}`,
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching resolution:", error);
     }
   };
   
 
   useEffect(() => {
     fetchImageData(params.originalResourceId);
+    fetchResolutionData();
   }, [params.originalResourceId]);
 
   const handleAddOption = () => {
     setEncodingOptions([
       ...encodingOptions,
-      { format: "png", resolution: "360p" },
+      { format: "png", resolution: `${resolutions[0]?.width}x${resolutions[0]?.height}` }, // 새로운 옵션에 기본 해상도 추가
     ]);
   };
 
@@ -49,28 +67,48 @@ const ImageEncoding = () => {
     navigate(-1);
   };
 
+
+  //post
   const handleEncoding = async () => {
+      // 인코딩 시작 전 확인 창
+      const confirmEncoding = window.confirm("정말 인코딩을 시작하겠습니까?");
+        
+      if (!confirmEncoding) {
+        return; // 사용자가 취소하면 함수 종료
+      }
+
     try {
+      let allSuccessful = true; // 인코딩 성공 여부 추적
+
       for (const option of encodingOptions) {
+
+        // 해상도가 없을 경우 기본 해상도 설정
+      const resolutionToUse = option.resolution || `${resolutions[0].width}x${resolutions[0].height}`;
+
         const requestData = {
+          originalResourceId: image.originalResourceId,
           fileTitle: image.fileTitle,
           filePath: image.filePath,
           fileRegTime: image.regTime,
           format: option.format,
-          resolution: option.resolution,
+          resolution: resolutionToUse,
         };
-        console.log("리퀘스트 데이터 : ", requestData);
-        console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
         const response = await fetcher.post(
           `${ENCODED_IMG}/${params.originalResourceId}`,
           requestData
         );
 
-        if (response.status === 200) {
-          console.log("인코딩 요청에 성공했습니다. ");
-        } else {
-          alert("인코딩 요청에 실패했습니다.");
+        if (response.status !== 200) {
+          allSuccessful = false; // 실패한 요청이 있을 경우 false로 변경
         }
+      }
+  
+      // 모든 요청이 끝난 후에 알림 한 번만 띄우기
+      if (allSuccessful) {
+        alert("인코딩을 시작했습니다.");
+        navigate(-1);
+      } else {
+        alert("일부 인코딩 요청에 실패했습니다.");
       }
     } catch (error) {
       console.error("인코딩 요청 중 오류 발생:", error);
@@ -124,10 +162,14 @@ const ImageEncoding = () => {
                   }}
                   className="ml-4 p-2 border border-gray-300 rounded-md"
                 >
-                  <option value="360p">360p</option>
-                  <option value="720p">720p</option>
-                  <option value="1080p">1080p</option>
-                  <option value="4k">4K</option>
+                  {resolutions.map((resolution) => (
+                    <option
+                      value={`${resolution.width}x${resolution.height}`}
+                      key={resolution.resolutionId}
+                    >
+                      {resolution.width} x {resolution.height}
+                    </option>
+                  ))}
                 </select>
 
                 {/* + 버튼 */}

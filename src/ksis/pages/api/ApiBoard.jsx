@@ -32,7 +32,6 @@ const ApiBoard = () => {
     const fetchPosts = async () => {
       try {
         const response = await fetcher.get(API_LIST);
-        console.log("Fetched data:", response.data);
         setPosts(response.data);
       } catch (err) {
         setError(err.message || "데이터를 가져오는 중 오류가 발생했습니다.");
@@ -69,8 +68,14 @@ const ApiBoard = () => {
       alert("삭제할 게시글을 선택해주세요.");
       return;
     }
+    // 삭제 확인 창 추가
+  const confirmMessage = "선택한 게시글을 삭제하시겠습니까?";
+  const isConfirmed = window.confirm(confirmMessage);
+
+  if (!isConfirmed) {
+    return; // 사용자가 취소한 경우 함수 종료
+  }
     try {
-      console.log("Selected posts before delete:", [...selectedPosts]);
       const deletePromises = [...selectedPosts].map((id) =>
         fetcher(API_NOTICE + `/${id}`, {
           method: "DELETE",

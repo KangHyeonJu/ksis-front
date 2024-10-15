@@ -1,16 +1,19 @@
 import { useState, useEffect, useMemo } from "react";
 import fetcher from "../../../fetcher";
 import { RESOLUTION } from "../../../constants/api_constant";
-import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import ResolutionAddModal from "./ResolutionAddModal";
 import ResolutionUpdateModal from "./ResolutionUpdateModal";
+
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const ResolutionList = () => {
   const [resolutions, setResolutions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("name");
-  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [checkedRowId, setCheckedRowId] = useState([]);
 
@@ -34,9 +37,17 @@ const ResolutionList = () => {
 
   const loadPage = async () => {
     try {
-      const response = await fetcher.get(RESOLUTION);
-      if (response.data) {
-        setResolutions(response.data);
+      const response = await fetcher.get(RESOLUTION + "/all", {
+        params: {
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
+      });
+      if (response.data.content) {
+        setResolutions(response.data.content);
+        setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
       }
@@ -47,7 +58,7 @@ const ResolutionList = () => {
 
   useEffect(() => {
     loadPage();
-  }, []);
+  }, [currentPage, searchTerm]);
 
   const handleCheckboxChange = (postId) => {
     setSelectedPosts((prevSelectedPosts) => {
@@ -65,22 +76,15 @@ const ResolutionList = () => {
     });
   };
 
-  const filteredPosts = useMemo(
-    () =>
-      resolutions.filter((resolution) => {
-        const value = resolution[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [resolutions, searchTerm, searchCategory]
-  );
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
 
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const deleteResolution = async (e) => {
@@ -137,7 +141,7 @@ const ResolutionList = () => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -176,7 +180,7 @@ const ResolutionList = () => {
                   const isChecked = e.target.checked;
                   setSelectedPosts(
                     isChecked
-                      ? new Set(filteredPosts.map((post) => post.deviceId))
+                      ? new Set(resolutions.map((post) => post.deviceId))
                       : new Set()
                   );
                 }}
@@ -188,7 +192,7 @@ const ResolutionList = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedPosts.map((post) => (
+          {resolutions.map((post) => (
             <tr key={post.resolutionId} className="hover:bg-gray-100">
               <td className="border border-gray-300 p-2 text-center">
                 <input
@@ -225,35 +229,14 @@ const ResolutionList = () => {
         />
       )}
 
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2}>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
     </div>
   );
 };

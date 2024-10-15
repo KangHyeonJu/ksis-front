@@ -4,13 +4,17 @@ import {
   TOTAL_FILE_SIZE,
   VISIT,
   FILE_COUNT,
+  SIGNAGE_STATUS,
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 
 const Main = () => {
+  const API_WS_URL = process.env.REACT_APP_API_WS_URL;
+
   const [fileSize, setFileSize] = useState({});
   const [fileCount, setFileCount] = useState({});
   const [visitCount, setVisitCount] = useState([]);
+  const [devices, setDevices] = useState([]);
 
   const loadPage = async () => {
     try {
@@ -22,6 +26,22 @@ const Main = () => {
       setFileSize(responseFile.data);
       setFileCount(responseCount.data);
       setVisitCount(responseVisit.data);
+
+      loadDevice();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const loadDevice = async () => {
+    try {
+      const response = await fetcher.get(SIGNAGE_STATUS);
+
+      if (response.data) {
+        setDevices(response.data);
+      } else {
+        console.error("No data property in response");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -29,6 +49,32 @@ const Main = () => {
 
   useEffect(() => {
     loadPage();
+  }, []);
+
+  useEffect(() => {
+    const socket = new WebSocket(API_WS_URL + `/ws/main`);
+
+    socket.onmessage = (event) => {
+      if (event.data === "statusUpdate") {
+        loadDevice();
+      }
+    };
+
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    socket.onerror = (e) => {
+      console.log(e);
+    };
+
+    return () => {
+      socket.close();
+    };
   }, []);
 
   //업로드 개수
@@ -493,15 +539,26 @@ const Main = () => {
           <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
             <thead>
               <tr>
-                <th className="border border-gray-300">재생장치 이름</th>
-                <th className="border border-gray-300">연결 상태</th>
+                <th className="border border-gray-300 p-1">재생장치 이름</th>
+                <th className="border border-gray-300 p-1">연결 상태</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border border-gray-300 text-center">test</td>
-                <td className="border border-gray-300 text-center">연결O</td>
-              </tr>
+              {devices.map((device) => (
+                <tr>
+                  <td className="border border-gray-300 text-center p-2">
+                    {device.deviceName}
+                  </td>
+
+                  <td className="border border-gray-300 text-center p-2">
+                    {device.isConnect ? (
+                      <div className="w-5 h-5 rounded-full bg-green-500 inline-block"></div>
+                    ) : (
+                      <div className="w-5 h-5 rounded-full bg-red-500 inline-block"></div>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { NOTICE_BOARD, NOTICE_FORM } from "../../../constants/page_constant";
-import { NOTICE_LIST } from "../../../constants/api_constant";
+import { NOTICE_LIST, DEACTIVE_NOTICE } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
@@ -11,13 +11,16 @@ const NoticeDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { noticeId } = useParams();
+  const [role, setRole] = useState(""); // 역할 상태 추가
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotice = async () => {
+      const authority = decodeJwt().roles;
+      setRole(authority); // 역할 상태 설정
+
       try {
         const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
-        console.log("데이터 : ", response.data);
         setNotice(response.data);
       } catch (err) {
         setError("공지사항 정보를 가져오는 데 실패했습니다.");
@@ -30,24 +33,24 @@ const NoticeDetail = () => {
   }, [noticeId]);
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <p></p>;
   }
 
   if (error) {
     return <p>오류 발생: {error}</p>;
   }
 
-  if (!notice) {
-    return <p>공지사항이 존재하지 않습니다.</p>;
-  }
+    if (!notice) {
+    return <p className="text-center text-gray-600 mt-10 w-full">해당 공지는 비활성화된 상태입니다.</p>;
+  }  
 
-  const handleDelete = async () => {
-    if (window.confirm("정말로 이 공지사항을 삭제하시겠습니까?")) {
+  const handleDeActive = async () => {
+    if (window.confirm("정말로 이 공지를 비활성화하시겠습니까?")) {
       try {
-        await fetcher.delete(`${NOTICE_LIST}/${noticeId}`);
+        await fetcher.post(`${DEACTIVE_NOTICE}/${noticeId}`);
         navigate(NOTICE_BOARD);
       } catch (err) {
-        setError("공지사항 삭제에 실패했습니다.");
+        setError("공지 비활성화에 실패했습니다.");
       }
     }
   };
@@ -196,7 +199,7 @@ const NoticeDetail = () => {
             </div>
             <div className="flex gap-2 items-center">
               {/* notice 작성자가 admin인 경우 숨기기 */}
-              {notice.role === "ADMIN" ? null : (
+              {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
                 <>
                   <button
                     type="button"
@@ -207,10 +210,10 @@ const NoticeDetail = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={handleDelete}
+                    onClick={handleDeActive}
                     className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                   >
-                    삭제하기
+                    비활성화
                   </button>
                 </>
               )}

@@ -31,7 +31,6 @@ const ImageFileBoard = () => {
       .then((response) => {
         setImages(response.data);
         setFilteredPosts(response.data);
-        console.log("인코딩 이미지 데이터 : ", response.data); //이미지 데이터 확인
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -315,8 +314,15 @@ const handleKeyDown = (e, id) => {
 
       {/* 모달창 */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]">
+      
+        <div onClick={closeModal}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          
+          
+          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
+          onClick={(event) => {event.stopPropagation();}}
+          >
+          
             <img
               src={selectedImage}
               alt="파일이 없습니다."
@@ -329,9 +335,9 @@ const handleKeyDown = (e, id) => {
            size-6 hover:scale-110"
            onClick={closeModal}
           />
-
+            </div>
           </div>
-        </div>
+       
       )}
     </div>
   );
