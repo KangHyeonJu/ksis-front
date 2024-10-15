@@ -13,6 +13,14 @@ import {
   VIDEO_FILE_BOARD,
   VIDEO_RESOURCE_BOARD,
 } from "../../../constants/page_constant";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../css/table";
 
 const Notification = ({ onClose }) => {
   const [notifications, setNotifications] = useState([]); // 알림 데이터
@@ -86,28 +94,33 @@ const Notification = ({ onClose }) => {
       onClick={onClose} // 모달 바깥 클릭 시 모달 닫기
     >
       <div
-        className="bg-white p-6 rounded shadow-lg w-1/3"
+        className="bg-white p-6 rounded shadow-lg max-w-full w-[700px]"
         onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫히지 않게
       >
         <h2 className="text-xl font-semibold mb-4">알림</h2>
         <div className="overflow-auto">
           {/* 알림 목록을 테이블로 표시 */}
-          <table className="w-full table-auto">
-            <tbody>
-              {notifications === 0 ? (
-                <tr>
-                  <td className="py-2 px-4 text-center" colSpan="2">
+          <Table bleed compact>
+            <TableHead>
+              <TableRow>
+                <TableHeader>알림 메시지</TableHeader>
+                <TableHeader>시간</TableHeader>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {notifications.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan="2" className="py-2 px-4 text-center">
                     데이터가 없습니다
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 notifications.map((notification, index) => (
-                  <tr
+                  <TableRow
                     key={index}
-                    className={`border-2 border-gray-200 
-                    ${
+                    className={`${
                       notification.isRead ? "bg-white" : "bg-orange-100"
-                    } hover:bg-gray-100`}
+                    } hover:bg-gray-100 cursor-pointer`}
                     onMouseEnter={() =>
                       handleMouseOver(index, notification.notificationId)
                     }
@@ -117,14 +130,23 @@ const Notification = ({ onClose }) => {
                         notification.message
                       )
                     }
-                    style={{ cursor: "pointer" }}
                   >
-                    <td className="py-2 px-4">{notification.message}</td>
-                  </tr>
+                    <TableCell>{notification.message}</TableCell>
+                    <TableCell>
+                      {new Date(notification.regTime).toLocaleString("ko-KR", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })}
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
         <br />
         <Stack spacing={2}>

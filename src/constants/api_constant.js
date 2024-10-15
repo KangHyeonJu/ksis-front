@@ -55,6 +55,7 @@ export const ENCODING_RESOURCE_FILE = "/resourceList/files";
 export const TOTAL_FILE_SIZE = "/total/filesize";
 export const VISIT = "/total/visit";
 export const FILE_COUNT = "/total/filecount";
+export const SIGNAGE_STATUS = "/total/device";
 
 //log
 export const ACCESSLOG_LIST = "/log/access";
