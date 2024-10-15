@@ -23,7 +23,6 @@ const VideoEncoding = () => {
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
       setVideo(response.data);
-      console.log("원본 이미지 인코딩 페이지 데이터: ", response.data);
     } catch (error) {
       console.error("Error fetching image:", error);
     }
@@ -91,8 +90,6 @@ const VideoEncoding = () => {
           format: option.format,
           resolution:resolutionToUse,
         };
-        console.log("리퀘스트 데이터 : ", requestData);
-        console.log("오리지널 리소스 아이디 : ", params.originalResourceId);
         const response = await fetcher.post(
           `${ENCODED_VIDEO}/${params.originalResourceId}`,
           requestData
@@ -106,7 +103,6 @@ const VideoEncoding = () => {
       // 모든 요청이 끝난 후에 알림 한 번만 띄우기
       if (allSuccessful) {
         alert("인코딩을 시작했습니다.");
-        console.log("인코딩 요청에 성공했습니다.");
         navigate(-1);
       } else {
         alert("일부 인코딩 요청에 실패했습니다.");

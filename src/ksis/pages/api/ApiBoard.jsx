@@ -32,7 +32,6 @@ const ApiBoard = () => {
     const fetchPosts = async () => {
       try {
         const response = await fetcher.get(API_LIST);
-        console.log("Fetched data:", response.data);
         setPosts(response.data);
       } catch (err) {
         setError(err.message || "데이터를 가져오는 중 오류가 발생했습니다.");
@@ -70,7 +69,6 @@ const ApiBoard = () => {
       return;
     }
     try {
-      console.log("Selected posts before delete:", [...selectedPosts]);
       const deletePromises = [...selectedPosts].map((id) =>
         fetcher(API_NOTICE + `/${id}`, {
           method: "DELETE",

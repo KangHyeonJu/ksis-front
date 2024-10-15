@@ -17,7 +17,7 @@ const VideoResourceModal = ({ isOpen, onRequestClose, originalResourceId }) => {
       setModal(response.data); // 영상을 상태에 저장합니다.
     })
     .catch(error => {
-      console.error(':', error); // 에러 발생 시 콘솔에 출력합니다.
+      console.error('Error fetching:', error); // 에러 발생 시 콘솔에 출력합니다.
     });
   }, [originalResourceId]); // originalResourceId가 변경될 때마다 함수를 재생성합니다.
 
