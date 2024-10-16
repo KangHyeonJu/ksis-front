@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { Link, useNavigate } from "react-router-dom"; // Link 컴포넌트 import
-import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
+import { BiUser, BiCog } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FaRegCircle } from "react-icons/fa6";
@@ -34,6 +34,9 @@ const Sidebar = () => {
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
   const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
   const navigate = useNavigate();
+  const ws = useRef(null);
+  const accessToken = localStorage.getItem("accessToken");
+  const API_WS_URL = process.env.REACT_APP_API_WS_URL;
 
   useEffect(() => {
     const userInfo = decodeJwt();
@@ -42,6 +45,29 @@ const Sidebar = () => {
       localStorage.setItem("accountId", userInfo.accountId);
       setUserInfo(userInfo);
     }
+    ws.current = new WebSocket(API_WS_URL+'/ws/login');
+
+    ws.current.onopen = () => {
+      console.log('WebSocket connection opened');
+      ws.current.send(JSON.stringify({ action: 'register', token: accessToken }));
+    };
+
+    ws.current.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.action === 'logout') {
+        console.log('Logout action received via WebSocket');
+        localStorage.removeItem("accessToken");
+        navigate('/downloadApp'); // 로그아웃 후 로그인 페이지로 이동
+      }
+    };
+
+    ws.current.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.current.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
   }, []);
 
   const toggleMenu = (menu) => {
@@ -60,6 +86,9 @@ const Sidebar = () => {
         accountId,
         category: "LOGOUT",
       });
+
+      ws.current.send(JSON.stringify({ action: "logout", token: accessToken }));
+
       // 로그아웃 성공 시 로컬스토리지 토큰 제거
       // alert("로그아웃되었습니다.");
       localStorage.removeItem("accessToken");
