@@ -5,7 +5,7 @@ import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import ReactPaginate from "react-paginate";
 import {
-  IMAGE_RESOURCE_BOARD,
+  VIDEO_FILE_BOARD,
   IMAGE_FILE_BOARD,
 } from "../../../constants/page_constant";
 import { ECIMAGE_BOARD, FILE_ENCODED_BASIC } from "../../../constants/api_constant";
@@ -66,7 +66,7 @@ const ImageFileBoard = () => {
   const handleToggle = () => {
     const newIsOriginal = !isOriginal;
     setIsOriginal(newIsOriginal);
-    navigate(newIsOriginal ? IMAGE_RESOURCE_BOARD : IMAGE_FILE_BOARD);
+    navigate(newIsOriginal ? VIDEO_FILE_BOARD : IMAGE_FILE_BOARD);
   };
 
   const handlePageChange = ({ selected }) => {
@@ -180,7 +180,7 @@ const handleKeyDown = (e, id) => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "원본" : "인코딩"}</span>
+          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -192,7 +192,7 @@ const handleKeyDown = (e, id) => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "원본" : "인코딩"}
+            {isOriginal ? "이미지" : "영상"}
           </span>
         </button>
       </div>

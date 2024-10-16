@@ -6,7 +6,7 @@ import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
 import {
-  VIDEO_RESOURCE_BOARD,
+  IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
 } from "../../../constants/page_constant";
 import {
@@ -17,7 +17,7 @@ import {
 const VideoFileBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("total");
-  const [isOriginal, setIsOriginal] = useState(false); // 토글 상태 관리
+  const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
   const [videos, setVideos] = useState([]);
   // 페이지네이션 관련 상태
   const [currentPage, setCurrentPage] = useState(0);
@@ -45,11 +45,7 @@ const VideoFileBoard = () => {
   const handleToggle = () => {
     const newIsOriginal = !isOriginal;
     setIsOriginal(newIsOriginal);
-    if (newIsOriginal) {
-      navigate(VIDEO_RESOURCE_BOARD); // 원본 페이지로 이동
-    } else {
-      navigate(VIDEO_FILE_BOARD); // 인코딩 페이지로 이동 (replace with the actual path)
-    }
+    navigate(newIsOriginal ? VIDEO_FILE_BOARD : IMAGE_FILE_BOARD);
   };
 
   const handleEditClick = (index, title) => {
@@ -190,7 +186,7 @@ const VideoFileBoard = () => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "원본" : "인코딩"}</span>
+          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -202,7 +198,7 @@ const VideoFileBoard = () => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "원본" : "인코딩"}
+            {isOriginal ? "이미지" : "영상"}
           </span>
         </button>
       </div>

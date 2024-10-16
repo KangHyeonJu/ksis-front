@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
   IMAGE_RESOURCE_BOARD,
-  IMAGE_FILE_BOARD,
   IMAGE_ENCODING,
+  VIDEO_RESOURCE_BOARD
 } from "../../../constants/page_constant";
 import {
   RSIMAGE_BOARD,
@@ -19,7 +19,7 @@ import fetcher from "../../../fetcher";
 const ImageResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("total");
-  const [isOriginal, setIsOriginal] = useState(true);
+  const [isOriginal, setIsOriginal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const postsPerPage = 16;
   const [images, setImages] = useState([]);
@@ -30,10 +30,6 @@ const ImageResourceBoard = () => {
 
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); // 선택한 이미지의 정보를 관리하는 상태값 추가
-
-  useEffect(() => {
-    navigate(isOriginal ? IMAGE_RESOURCE_BOARD : IMAGE_FILE_BOARD);
-  }, [isOriginal, navigate]);
 
   useEffect(() => {
     fetcher
@@ -66,7 +62,9 @@ const ImageResourceBoard = () => {
   }, [images, searchTerm, searchCategory]);
 
   const handleToggle = () => {
-    setIsOriginal((prevIsOriginal) => !prevIsOriginal);
+    const newIsOriginal = !isOriginal;
+    setIsOriginal(newIsOriginal);
+    navigate(newIsOriginal ? VIDEO_RESOURCE_BOARD : IMAGE_RESOURCE_BOARD);
   };
 
   const handlePageChange = ({ selected }) => {
@@ -196,8 +194,8 @@ const ImageResourceBoard = () => {
 
      
 
-      {/* 원본, 인코딩 페이지 선택 토글버튼 */}
-      <div className="flex justify-start space-x-2">
+      {/* 토글 버튼 */}
+      <div className="flex justify-end space-x-2">
         <button
           type="button"
           onClick={handleToggle}
@@ -207,7 +205,7 @@ const ImageResourceBoard = () => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "원본" : "인코딩"}</span>
+          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -219,7 +217,7 @@ const ImageResourceBoard = () => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "원본" : "인코딩"}
+            {isOriginal ? "이미지" : "영상"}
           </span>
         </button>
       </div>

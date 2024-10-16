@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
   VIDEO_RESOURCE_BOARD,
-  VIDEO_FILE_BOARD,
+  IMAGE_RESOURCE_BOARD,
   VIDEO_ENCODING,
 } from "../../../constants/page_constant";
 import {
@@ -30,10 +30,7 @@ const VideoResourceBoard = () => {
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null); // 선택한 영상의 정보를 관리하는 상태값 추가
 
-  // isOriginal 값에 따라 페이지를 이동
-  useEffect(() => {
-    navigate(isOriginal ? VIDEO_RESOURCE_BOARD : VIDEO_FILE_BOARD);
-  }, [isOriginal, navigate]);
+
 
   // 영상 목록을 가져오는 부분
   useEffect(() => {
@@ -67,10 +64,11 @@ const VideoResourceBoard = () => {
     setFilteredPosts(filtered);
   }, [videos, searchTerm, searchCategory]);
 
-  // 토글 버튼 핸들러 함수 추가
-  const handleToggle = () => {
-    setIsOriginal((prevIsOriginal) => !prevIsOriginal);
-  };
+  // 토글 버튼 핸들러 함수
+const handleToggle = () => {
+  setIsOriginal((prevIsOriginal) => !prevIsOriginal);
+  navigate(isOriginal ? IMAGE_RESOURCE_BOARD : VIDEO_RESOURCE_BOARD); // 페이지 이동
+};
 
   // 페이지 변경 핸들러
   const handlePageChange = ({ selected }) => {
@@ -217,7 +215,7 @@ const VideoResourceBoard = () => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "원본" : "인코딩"}</span>
+          <span className="sr-only">{isOriginal ? "영상" : "이미지"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -229,7 +227,7 @@ const VideoResourceBoard = () => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "원본" : "인코딩"}
+            {isOriginal ? "영상" : "이미지"}
           </span>
         </button>
       </div>
