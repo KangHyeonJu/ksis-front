@@ -4,7 +4,7 @@ import React from "react";
 const TrashVideoFileBoard = () => {
  
   return (
-    <p>ImageVideoBoard</p>
+    <p>TrashVideoFileBoard</p>
     
   );
 };
