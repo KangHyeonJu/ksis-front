@@ -21,7 +21,7 @@ import {
   ACCESSLOG_INVENTORY,
   MAIN,
   RESOLUTION_LIST,
-  TRASH_FILE,
+  TRASH_IMAGE_FILE,
   TRASH_NOTICE,
 } from "../../constants/page_constant";
 import fetcher from "../../fetcher";
@@ -284,7 +284,7 @@ const Sidebar = () => {
             {openMenu === "trash" && (
               <div className="submenu ml-8 mt-2">
                 <Link
-                  to={TRASH_FILE}
+                  to={TRASH_IMAGE_FILE}
                   onClick={() => handleMenuClick("TRASHFILE")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >

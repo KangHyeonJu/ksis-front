@@ -25,7 +25,8 @@ import {
   MAIN,
   RESOLUTION_LIST,
   SIGNAGE_PLAY_PAGE,
-  TRASH_FILE,
+  TRASH_IMAGE_FILE,
+  TRASH_VIDEO_FILE,
   TRASH_NOTICE,
 } from "./constants/page_constant";
 import {
@@ -83,7 +84,8 @@ import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
-import TrashFileBoard from "./ksis/pages/trash/TrashFileBoard.jsx";
+import TrashImageFileBoard from "./ksis/pages/trash/TrashImageFileBoard.jsx";
+import TrashVideoFileBoard from "./ksis/pages/trash/TrashVideoFileBoard.jsx";
 import TrashNoticeBoard from "./ksis/pages/trash/TrashNoticeBoard.jsx";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import {decodeJwt} from "./decodeJwt";
@@ -241,7 +243,8 @@ function App() {
             <Route pate={ERROR_403} element={<Error403 />} />
 
             {/* 휴지통 */}
-            <Route path={TRASH_FILE} element={<TrashFileBoard />} />
+            <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard />} />
+            <Route path={TRASH_VIDEO_FILE} element={<TrashVideoFileBoard />} />
             <Route path={TRASH_NOTICE} element={<TrashNoticeBoard />} />
           </Route>
 
