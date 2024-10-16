@@ -7,8 +7,10 @@ import {
   SIGNAGE_STATUS,
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
+import axios from "axios";
 
 const Main = () => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const API_WS_URL = process.env.REACT_APP_API_WS_URL;
 
   const MAX_RETRIES = 5;
@@ -39,6 +41,7 @@ const Main = () => {
 
   const loadDevice = async () => {
     try {
+      // const response = await axios.get(API_BASE_URL + SIGNAGE_STATUS);
       const response = await fetcher.get(SIGNAGE_STATUS);
 
       if (response.data) {

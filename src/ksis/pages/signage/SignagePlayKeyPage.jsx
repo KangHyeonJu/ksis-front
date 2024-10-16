@@ -218,8 +218,18 @@ const SignagePlayKeyPage = () => {
             });
           };
         }
-        newElement.style.width = "100%";
-        newElement.style.height = "100%";
+
+        if (resource.resolution) {
+          newElement.style.width = "100%";
+          newElement.style.height = "auto";
+        } else {
+          newElement.style.height = "100%";
+          newElement.style.width = "auto"; // 가로는 자동
+          // newElement.style.objectFit = "contain"; // 비율 유지
+        }
+        newElement.style.display = "block";
+        newElement.style.margin = "auto";
+
         // 기존 요소가 있으면 교체, 없으면 추가
         if (container.firstChild) {
           container.replaceChild(newElement, container.firstChild);
@@ -297,11 +307,11 @@ const SignagePlayKeyPage = () => {
         <div>
           <div
             id="container"
-            className="h-full w-full fixed left-0 top-0"
+            className="h-full w-full fixed left-0 top-0 bg-black flex items-center justify-center align-middle"
           ></div>
 
-          <div className="h-1/12 w-full bg-gray-800/30 flex items-center fixed left-0 bottom-0">
-            <div className="flex-auto text-center w-1/12">
+          <div className="h-1/12 w-full bg-gray-300/30 flex items-center fixed left-0 bottom-0">
+            <div className="flex-auto text-center w-1/12 mr-2">
               <div className="flex">
                 <img
                   className="m-auto"
