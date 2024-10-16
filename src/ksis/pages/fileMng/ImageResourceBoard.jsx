@@ -8,7 +8,7 @@ import {
   VIDEO_RESOURCE_BOARD
 } from "../../../constants/page_constant";
 import {
-  RSIMAGE_BOARD,
+  ACTIVE_RSIMAGE_BOARD,
   FILE_ORIGINAL_BASIC,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
@@ -33,7 +33,7 @@ const ImageResourceBoard = () => {
 
   useEffect(() => {
     fetcher
-      .get(RSIMAGE_BOARD)
+      .get(ACTIVE_RSIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
       })

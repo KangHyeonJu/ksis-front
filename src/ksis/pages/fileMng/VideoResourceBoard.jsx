@@ -8,7 +8,7 @@ import {
   VIDEO_ENCODING,
 } from "../../../constants/page_constant";
 import {
-  RSVIDEO_BOARD,
+  ACTIVE_RSVIDEO_BOARD,
   FILE_ORIGINAL_BASIC,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
@@ -35,7 +35,7 @@ const VideoResourceBoard = () => {
   // 영상 목록을 가져오는 부분
   useEffect(() => {
     fetcher
-      .get(RSVIDEO_BOARD)
+      .get(ACTIVE_RSVIDEO_BOARD)
       .then((response) => {
         setVideos(response.data); // 영상 데이터를 설정
       })
@@ -215,7 +215,7 @@ const handleToggle = () => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "영상" : "이미지"}</span>
+          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -227,7 +227,7 @@ const handleToggle = () => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "영상" : "이미지"}
+            {isOriginal ? "이미지" : "영상"}
           </span>
         </button>
       </div>
