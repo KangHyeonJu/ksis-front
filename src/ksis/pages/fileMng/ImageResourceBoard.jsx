@@ -87,6 +87,7 @@ const ImageResourceBoard = () => {
 
   //제목 수정
   const handleSaveClick = async (id) => {
+    if(window.confirm("정말로 파일의 제목을 변경하시겠습니까?")){
     try {
       await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
         fileTitle: newTitle,
@@ -104,18 +105,18 @@ const ImageResourceBoard = () => {
       window.confirm("수정에 실패했습니다.");
       console.error("제목 수정 중 오류 발생:", error);
     }
-  };
+  }};
 
 
   const handleDelete = async (id) => {
-    if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
+    if (window.confirm("정말로 이 이미지를 비활성화하시겠습니까?")) {
       try {
         await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
-        window.alert("이미지를 삭제하였습니다.");
+        window.alert("이미지를 비활성화하였습니다.");
       } catch (err) {
-        console.error("이미지 삭제 오류:", err);
-        window.alert("이미지 삭제에 실패했습니다.");
+        console.error("이미지 비활성화 오류:", err);
+        window.alert("이미지 비활성화에 실패했습니다.");
       }
     }
   };
@@ -308,7 +309,7 @@ const ImageResourceBoard = () => {
                   onClick={() => handleDelete(post.originalResourceId)}
                   className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                 >
-                  삭제
+                  비활성화
                 </button>
                 </div>
               </div>

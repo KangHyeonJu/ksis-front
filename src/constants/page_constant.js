@@ -50,3 +50,7 @@ export const MAIN = "/";
 
 //resolution
 export const RESOLUTION_LIST = "/resolution";
+
+//휴지통
+export const TRASH_FILE = "/trashfileboard";
+export const TRASH_NOTICE = "/trashnotice";

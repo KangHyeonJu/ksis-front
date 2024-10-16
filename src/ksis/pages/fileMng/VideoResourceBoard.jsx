@@ -91,6 +91,7 @@ const VideoResourceBoard = () => {
   
   // 제목 수정
   const handleSaveClick = async (id) => {
+    if(window.confirm("정말로 파일의 제목을 변경하시겠습니까?")){
     try {
       await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
         fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
@@ -112,7 +113,7 @@ const VideoResourceBoard = () => {
     } catch (error) {
       window.confirm("수정에 실패했습니다.");
       console.error("제목 수정 중 오류 발생:", error);
-    }
+    }}
   };
 
 

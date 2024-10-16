@@ -25,6 +25,8 @@ import {
   MAIN,
   RESOLUTION_LIST,
   SIGNAGE_PLAY_PAGE,
+  TRASH_FILE,
+  TRASH_NOTICE,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -81,6 +83,8 @@ import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
+import TrashFileBoard from "./ksis/pages/trash/TrashFileBoard.jsx";
+import TrashNoticeBoard from "./ksis/pages/trash/TrashNoticeBoard.jsx";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import {decodeJwt} from "./decodeJwt";
 
@@ -235,11 +239,17 @@ function App() {
 
             {/* error */}
             <Route pate={ERROR_403} element={<Error403 />} />
+
+            {/* 휴지통 */}
+            <Route path={TRASH_FILE} element={<TrashFileBoard />} />
+            <Route path={TRASH_NOTICE} element={<TrashNoticeBoard />} />
           </Route>
 
           {/* 재생 */}
           <Route path={SIGNAGE_PLAY_PAGE} element={<SignagePlayKeyPage />} />
         </Routes>
+
+        
       </div>
     </div>
   );

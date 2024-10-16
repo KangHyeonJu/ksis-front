@@ -4,6 +4,9 @@ import {
   ENCODED_IMG,
   RESOLUTION,
 } from "../../../constants/api_constant";
+import {
+  IMAGE_RESOURCE_BOARD,
+} from "../../../constants/page_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
@@ -64,7 +67,7 @@ const ImageEncoding = () => {
   };
 
   const handleCancel = () => {
-    navigate(-1);
+    navigate(IMAGE_RESOURCE_BOARD);
   };
 
 
