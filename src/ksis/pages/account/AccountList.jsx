@@ -6,16 +6,18 @@ import {
 } from "../../../constants/account_constant";
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import ReactPaginate from "react-paginate";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
+
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userInfo = decodeJwt();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("accountId");
@@ -26,7 +28,7 @@ const AccountList = () => {
     try {
       const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
       if (response.data) {
-        setPosts(response.data.content  || []);
+        setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
@@ -83,6 +85,10 @@ const AccountList = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
   };
 
   const handleSearchChange = (e) => {
@@ -191,36 +197,16 @@ const AccountList = () => {
         </tbody>
       </table>
 
-      {totalPages > 0 && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={totalPages}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={(selected) => setCurrentPage(selected.selected)}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2}>
+        <Pagination
+            count={totalPages - 1}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
         />
-      )}
+      </Stack>
     </div>
+
   );
 };
 
