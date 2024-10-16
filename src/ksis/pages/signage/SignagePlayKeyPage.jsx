@@ -266,7 +266,18 @@ const SignagePlayKeyPage = () => {
   });
 
   const tick = () => {
-    setDate(new Date());
+    const newDate = new Date();
+
+    // 날짜 비교
+    if (
+      date.getDate() !== newDate.getDate() ||
+      date.getMonth() !== newDate.getMonth() ||
+      date.getFullYear() !== newDate.getFullYear()
+    ) {
+      loadNotice(deviceIdRef.current);
+    }
+
+    setDate(newDate);
   };
 
   const getWeather = async (lat, lon) => {
@@ -311,7 +322,7 @@ const SignagePlayKeyPage = () => {
           ></div>
 
           <div className="h-1/12 w-full bg-gray-300/30 flex items-center fixed left-0 bottom-0">
-            <div className="flex-auto text-center w-1/12 mr-2">
+            <div className="flex-auto text-center w-1/12 mr-5">
               <div className="flex">
                 <img
                   className="m-auto"

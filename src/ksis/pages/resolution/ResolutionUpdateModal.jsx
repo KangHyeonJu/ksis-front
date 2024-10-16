@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,9 +7,29 @@ import {
 } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import { RESOLUTION } from "../../../constants/api_constant";
+import { ImCross } from "react-icons/im";
 
 const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
   const [data, setData] = useState({});
+  const modalRef = useRef(null);
+
+  const handleClickOutside = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onRequestClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const loadPage = async () => {
     const loadResponse = await fetcher.get(RESOLUTION + `/${resolutionId}`);
@@ -30,6 +50,12 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
   const updateResolution = async (e) => {
     try {
       e.preventDefault();
+
+      if (data.width % 2 !== 0 || data.height % 2 !== 0) {
+        alert("해상도는 짝수만 등록가능합니다.");
+        return;
+      }
+
       const response = await fetcher.put(RESOLUTION, data);
 
       if (response.status === 200) {
@@ -46,11 +72,19 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-3/12 sm:p-6 h-80">
+        <div
+          ref={modalRef}
+          className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-3/12 sm:p-6"
+        >
           <DialogTitle className="">
             <h1 className="text-xl font-bold text-gray-900 ml-1">
-              해상도 등록
+              해상도 수정
             </h1>
+
+            <ImCross
+              className="absolute top-5 right-5 text-red-500 cursor-pointer"
+              onClick={onRequestClose}
+            />
           </DialogTitle>
           <form onSubmit={updateResolution}>
             <DialogBody className="mt-2">
@@ -100,16 +134,10 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
                 />
               </div>
             </DialogBody>
-            <DialogActions className="mt-4">
-              <div
-                onClick={onRequestClose}
-                className="cursor-pointer inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600/70 text-base font-medium text-white shadow-sm hover:bg-red-700/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
-              >
-                닫기
-              </div>
+            <DialogActions>
               <button
                 type="submit"
-                className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
+                className="mr-3 inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
               >
                 수정
               </button>

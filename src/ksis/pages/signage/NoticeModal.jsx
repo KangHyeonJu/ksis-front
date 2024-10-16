@@ -10,6 +10,8 @@ import fetcher from "../../../fetcher";
 import { FaSearch } from "react-icons/fa";
 import { format } from "date-fns";
 import { SIGNAGE_NOTICE } from "../../../constants/api_constant";
+import { NOTICE_DTL } from "../../../constants/page_constant";
+import { Link } from "react-router-dom";
 
 const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
   const [notices, setNotices] = useState([]);
@@ -98,13 +100,15 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
               </thead>
               <tbody>
                 {paginatedPosts.map((notice) => (
-                  <tr key={notice.noticeId}>
+                  <tr key={notice.noticeId} className="hover:bg-gray-100">
                     <td className="border border-gray-300 p-2">
                       {notice.account.name}({notice.account.accountId})
                     </td>
 
-                    <td className="border border-gray-300 p-2">
-                      {notice.title}
+                    <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
+                      <Link to={NOTICE_DTL + `/${notice.noticeId}`}>
+                        {notice.title}
+                      </Link>
                     </td>
 
                     <td className="border border-gray-300 p-2">

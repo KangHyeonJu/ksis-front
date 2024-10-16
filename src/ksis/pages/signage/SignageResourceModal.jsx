@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import {
@@ -11,10 +11,30 @@ import { RxCrossCircled } from "react-icons/rx";
 import { BsXCircleFill } from "react-icons/bs";
 
 const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
+  const modalRef = useRef(null);
+
   //재생장치의 인코딩리소스 불러오기
   const [resources, setResources] = useState([]);
   const [myResources, setMyResources] = useState([]);
   const [addResources, setAddResources] = useState([]);
+
+  const handleClickOutside = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onRequestClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const loadModal = useCallback(async () => {
     try {
@@ -106,7 +126,10 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-9/12 sm:p-6">
+        <div
+          ref={modalRef}
+          className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-9/12 sm:p-6"
+        >
           <div className="flex h-160">
             <div className="w-4/6 pr-4">
               <DialogTitle className="text-lg font-medium leading-6 text-gray-900 text-center">

@@ -378,7 +378,7 @@ const PcUpdateForm = () => {
             type="submit"
             className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
-            저장하기
+            수정하기
           </button>
           <button
             type="button"
