@@ -41,8 +41,6 @@ const Sidebar = () => {
   useEffect(() => {
     const userInfo = decodeJwt();
     if (userInfo) {
-      localStorage.setItem("authority", userInfo.roles);
-      localStorage.setItem("accountId", userInfo.accountId);
       setUserInfo(userInfo);
     }
     ws.current = new WebSocket(API_WS_URL+'/ws/login');
@@ -75,8 +73,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = async () => {
-    // 로그아웃 로직을 여기에 추가하세요
-    const accountId = localStorage.getItem("accountId");
+    const accountId = userInfo.accountId;
 
     try {
       // 서버로 로그아웃 요청 전송
