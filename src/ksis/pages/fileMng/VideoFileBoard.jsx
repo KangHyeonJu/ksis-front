@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
-import { FaSearch, FaEdit } from "react-icons/fa";
+import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
 import {
-  VIDEO_RESOURCE_BOARD,
+  IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
 } from "../../../constants/page_constant";
 import {
@@ -17,7 +17,7 @@ import {
 const VideoFileBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("total");
-  const [isOriginal, setIsOriginal] = useState(false); // 토글 상태 관리
+  const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
   const [videos, setVideos] = useState([]);
   // 페이지네이션 관련 상태
   const [currentPage, setCurrentPage] = useState(0);
@@ -45,11 +45,7 @@ const VideoFileBoard = () => {
   const handleToggle = () => {
     const newIsOriginal = !isOriginal;
     setIsOriginal(newIsOriginal);
-    if (newIsOriginal) {
-      navigate(VIDEO_RESOURCE_BOARD); // 원본 페이지로 이동
-    } else {
-      navigate(VIDEO_FILE_BOARD); // 인코딩 페이지로 이동 (replace with the actual path)
-    }
+    navigate(newIsOriginal ? VIDEO_FILE_BOARD : IMAGE_FILE_BOARD);
   };
 
   const handleEditClick = (index, title) => {
@@ -66,6 +62,7 @@ const VideoFileBoard = () => {
   
   // 제목 수정
   const handleSaveClick = async (id) => {
+    if(window.confirm("정말로 파일의 제목을 변경하시겠습니까?")){
     try {
       await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
         fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
@@ -87,7 +84,7 @@ const VideoFileBoard = () => {
     } catch (error) {
       window.confirm("수정에 실패했습니다.");
       console.error("제목 수정 중 오류 발생:", error);
-    }
+    }}
   };
 
   const handlePageChange = ({ selected }) => {
@@ -189,7 +186,7 @@ const VideoFileBoard = () => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "원본" : "인코딩"}</span>
+          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -201,7 +198,7 @@ const VideoFileBoard = () => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "원본" : "인코딩"}
+            {isOriginal ? "이미지" : "영상"}
           </span>
         </button>
       </div>
@@ -218,13 +215,16 @@ const VideoFileBoard = () => {
               h-full overflow-hidden max-w-xs"> {/* max-w-xs로 카드 너비 제한 */}
                    {/* 영상 */}
                    <div>
-                   <div className="w-full h-full mb-1 overflow-hidden">
+                   <div className="relative w-full h-full mb-1 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
                      className="w-60 h-60 cursor-pointer object-cover object-center"
                       onClick={() => openResourceModal(post.filePath)}
                     />
+                    {/* 아이콘 추가 */}
+                    <FaRegPlayCircle  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85" 
+                 onClick={() => openResourceModal(post.filePath)} />
                     </div>
                     </div>
 

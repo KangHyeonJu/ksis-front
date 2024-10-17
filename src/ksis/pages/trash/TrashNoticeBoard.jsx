@@ -3,12 +3,13 @@ import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
-import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
-import { NOTICE_ALL, DEACTIVE_NOTICE } from "../../../constants/api_constant";
-import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
+import { NOTICE_DTL } from "../../../constants/page_constant";
+import { NOTICE_DEACTIVE_ALL, ACTIVE_NOTICE } from "../../../constants/api_constant";
+import { format, parseISO } from "date-fns";
 
-const NoticeBoard = () => {
+
+const TrashNoticeBoard = () => {
   const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -20,10 +21,10 @@ const NoticeBoard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    
+
     setLoading(true);
     fetcher
-      .get(NOTICE_ALL)
+      .get(NOTICE_DEACTIVE_ALL)
       .then((response) => {
         setNotices(response.data);
       })
@@ -37,15 +38,9 @@ const NoticeBoard = () => {
   }, []);
 
   const filteredNotices = useMemo(() => {
-    const filtered = notices.filter((notice) =>
+    return notices.filter((notice) =>
       notice.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    // role이 ADMIN인 공지가 먼저 오도록 정렬
-    return filtered.sort((a, b) => {
-      if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
-      if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
-      return 0;
-    });
   }, [notices, searchTerm]);
 
   const paginatedNotices = useMemo(() => {
@@ -59,10 +54,6 @@ const NoticeBoard = () => {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-  };
-
-  const handleRegisterClick = () => {
-    navigate(NOTICE_FORM); // 공지글 등록 페이지로 이동
   };
 
   if (loading) {
@@ -86,15 +77,7 @@ const NoticeBoard = () => {
     }
   };
 
-  const getDeviceNames = (deviceList) => {
-    if (!deviceList || deviceList.length === 0) {
-      return "";
-    }
-    const deviceNames = deviceList.map((device) => device.deviceName);
-    return deviceNames.join(", ");
-  };
-
-   const handleCheckboxChange = (id) => {
+const handleCheckboxChange = (id) => {
     setSelectedNotices((prevSelected) =>
       prevSelected.includes(id)
         ? prevSelected.filter((noticeId) => noticeId !== id)
@@ -110,16 +93,16 @@ const NoticeBoard = () => {
     }
   };
 
-  const handleDectivation = async () => {
-    if (window.confirm("선택한 공지를 비활성화하시겠습니까?")) {
+  const handleActivation = async () => {
+    if (window.confirm("선택한 공지를 활성화하시겠습니까?")) {
       try {
-        await Promise.all(selectedNotices.map((id) => fetcher.post(`${DEACTIVE_NOTICE}/${id}`)));
+        await Promise.all(selectedNotices.map((id) => fetcher.post(`${ACTIVE_NOTICE}/${id}`)));
         setNotices(notices.filter((notice) => !selectedNotices.includes(notice.noticeId)));
         setSelectedNotices([]);
-        window.alert("선택한 공지를 비활성화하였습니다.");
+        window.alert("선택한 공지를 활성화하였습니다.");
       } catch (err) {
-        console.error("공지 비활성화 오류:", err);
-        window.alert("공지 비활성화에 실패했습니다.");
+        console.error("공지 활성화 오류:", err);
+        window.alert("공지 활성화에 실패했습니다.");
       }
     }
   };
@@ -128,7 +111,7 @@ const NoticeBoard = () => {
     <div className="p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-          공지글 관리
+          비활성화 공지글 관리
         </h1>
       </header>
       <div className="mb-6 flex items-center">
@@ -143,21 +126,18 @@ const NoticeBoard = () => {
           <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
       </div>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end space-x-2 mb-4">
         <button
-          onClick={handleRegisterClick}
-          className="relative inline-flex items-center mx-3 rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          공지글 등록
-        </button>
-        <button
-          onClick={handleDectivation}
+          onClick={handleActivation}
           type="button"
-          className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          className="mr-2 rounded-md bg-[#6dd7e5]
+                                        px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
+                                         focus-visible:outline-blue-600"
         >
-          비활성화
+          활성화
         </button>
       </div>
+
       <div>
         {filteredNotices.length === 0 ? (
           <p className="text-center text-gray-600 mt-10 w-full">
@@ -174,19 +154,15 @@ const NoticeBoard = () => {
                     checked={selectedNotices.length === filteredNotices.length}
                   />
                 </th>
-              <th className="border border-gray-300 p-2">제목</th>
-              <th className="border border-gray-300 p-2">작성자(아이디)</th>
-              <th className="border border-gray-300 p-2">작성일</th>
-              <th className="border border-gray-300 p-2">재생장치</th>
+                <th className="border border-gray-300 p-2">제목</th>
+                <th className="border border-gray-300 p-2">작성자(아이디)</th>
+                <th className="border border-gray-300 p-2">작성일</th>
               </tr>
             </thead>
             <tbody>
               {paginatedNotices.map((notice) => (
-                <tr
-                  key={notice.noticeId}
-                  className={`${notice.role === "ADMIN" ? " font-bold" : ""}`}
-                >
-                  <td className="text-center border border-gray-300 p-2">
+                <tr key={notice.noticeId}>
+                   <td className="text-center border border-gray-300 p-2">
                     <input
                       type="checkbox"
                       checked={selectedNotices.includes(notice.noticeId)}
@@ -194,18 +170,15 @@ const NoticeBoard = () => {
                     />
                   </td>
                   <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
-                  {notice.role === "ADMIN" ? "📢 " : ""} 
-                  <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
-                  {notice.title}
-                  </Link></td>
+                    <Link to={`${NOTICE_DTL}/${notice.noticeIed}`}>
+                      {notice.title}
+                    </Link>
+                  </td>
                   <td className="border border-gray-300 p-2">
                     {notice.name}({notice.accountId})
                   </td>
                   <td className="border border-gray-300 p-2">
                     {formatDate(notice.regDate)}
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    {getDeviceNames(notice.deviceList)}
                   </td>
                 </tr>
               ))}
@@ -238,4 +211,4 @@ const NoticeBoard = () => {
   );
 };
 
-export default NoticeBoard;
+export default TrashNoticeBoard;

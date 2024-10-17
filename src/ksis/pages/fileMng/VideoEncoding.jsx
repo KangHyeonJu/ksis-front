@@ -84,6 +84,7 @@ const VideoEncoding = () => {
         const resolutionToUse = option.resolution || `${resolutions[0].width}x${resolutions[0].height}`;
 
         const requestData = {
+          originalResourceId: video.originalResourceId,
           fileTitle: video.fileTitle,
           filePath: video.filePath,
           fileRegTime: video.regTime,
@@ -98,6 +99,19 @@ const VideoEncoding = () => {
         if (response.status !== 200) {
           allSuccessful = false; // 실패한 요청이 있을 경우 false로 변경
         }
+
+        if (response.status === 202) {
+          alert("동일한 해상도와 포멧이 존재합니다.");
+          return;
+         }
+      }
+      alert("인코딩을 시작했습니다.");
+      navigate(-1);
+  
+      // 모든 요청이 끝난 후에 알림 한 번만 띄우기
+      if (allSuccessful) {
+      } else {
+        alert("일부 인코딩 요청에 실패했습니다.");
       }
   
       // 모든 요청이 끝난 후에 알림 한 번만 띄우기

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import {
@@ -18,6 +18,7 @@ const PlaylistUpdateModal = ({
   signageId,
   playlistId,
 }) => {
+  const modalRef = useRef(null);
   const [data, setData] = useState({});
 
   const [resources, setResources] = useState([]);
@@ -29,6 +30,24 @@ const PlaylistUpdateModal = ({
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 8; // 한 페이지 10개 데이터
+
+  const handleClickOutside = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onRequestClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const loadModal = async () => {
     try {
@@ -191,23 +210,26 @@ const PlaylistUpdateModal = ({
           type: "application/json",
         })
       );
-      const response = await fetcher.put(
-        SIGNAGE_PLAYLIST_DTL + `/${playlistId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
 
-      console.log(response.data);
+      if (window.confirm("수정하시겠습니까?")) {
+        const response = await fetcher.put(
+          SIGNAGE_PLAYLIST_DTL + `/${playlistId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-      alert("재생목록이 정상적으로 수정되었습니다.");
-      onRequestClose();
-      setSearchCategory("");
-      setSearchTerm("");
-      onRequestClose();
+        console.log(response.data);
+
+        alert("재생목록이 정상적으로 수정되었습니다.");
+        onRequestClose();
+        setSearchCategory("");
+        setSearchTerm("");
+        onRequestClose();
+      }
     } catch (error) {
       console.log(error.response.data);
     }
@@ -216,7 +238,10 @@ const PlaylistUpdateModal = ({
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-140">
+        <div
+          ref={modalRef}
+          className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160"
+        >
           <div className="h-full">
             <div className="items-center justify-center">
               <DialogTitle className="leading-6 text-gray-900 text-center">
@@ -227,7 +252,7 @@ const PlaylistUpdateModal = ({
               <div className="w-9/12 pr-4">
                 <DialogBody>
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-96 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
                       <div className="mb-4 flex items-center">
                         <select
                           value={searchCategory}
@@ -251,15 +276,15 @@ const PlaylistUpdateModal = ({
                       </div>
 
                       <div className="space-y-2">
-                        <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-4">
+                        <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-4">
                           {resources &&
                             resources.map((resource) => (
                               <div
                                 key={resource.encodedResourceId}
-                                className="group relative border border-gray-900 mb-5 cursor-pointer"
+                                className="group relative border border-gray-900 cursor-pointer"
                                 onClick={() => addList(resource)}
                               >
-                                <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
+                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40 ">
                                   <img
                                     src={resource.thumbFilePath}
                                     alt={resource.fileTitle}
@@ -285,11 +310,9 @@ const PlaylistUpdateModal = ({
                                     {resource.fileTitle}
                                   </p>
 
-                                  {resource.fileTitle.length > 20 && (
-                                    <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                      {resource.fileTitle}
-                                    </span>
-                                  )}
+                                  <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    {resource.fileTitle}
+                                  </span>
                                 </div>
                               </div>
                             ))}
@@ -310,7 +333,7 @@ const PlaylistUpdateModal = ({
               <div className="w-3/12">
                 <DialogBody className="mt-2">
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-96 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-1">
                           {(provided) => (
@@ -335,11 +358,11 @@ const PlaylistUpdateModal = ({
                                       <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
                                         {resourceAdd.fileTitle}
                                       </p>
-                                      {resourceAdd.fileTitle.length > 20 && (
-                                        <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
-                                          {resourceAdd.fileTitle}
-                                        </span>
-                                      )}
+
+                                      <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
+                                        {resourceAdd.fileTitle}
+                                      </span>
+
                                       <ImCross
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer"
                                         onClick={() => removeList(resourceAdd)}
@@ -375,7 +398,7 @@ const PlaylistUpdateModal = ({
                   <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
                   <input
                     className="w-20 ml-1 p-1"
-                    type="text"
+                    type="number"
                     value={data.slideTime}
                     name="slideTime"
                     onChange={onChangeHandler}

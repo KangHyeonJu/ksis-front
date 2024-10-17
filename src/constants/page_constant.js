@@ -50,3 +50,8 @@ export const MAIN = "/";
 
 //resolution
 export const RESOLUTION_LIST = "/resolution";
+
+//휴지통
+export const TRASH_IMAGE_FILE = "/trashimagefileboard";
+export const TRASH_VIDEO_FILE = "/trashvideofileboard";
+export const TRASH_NOTICE = "/trashnotice";

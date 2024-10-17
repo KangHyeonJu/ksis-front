@@ -4,7 +4,7 @@ import fetcher from "../../../fetcher";
 import { PC_DELETE, PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import { PC_DTL, PC_FORM } from "../../../constants/page_constant";
+import { PC_UPDATE_FORM, PC_FORM } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
@@ -186,7 +186,9 @@ const PcList = () => {
               </td>
 
               <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
-                <Link to={PC_DTL + `/${post.deviceId}`}>{post.deviceName}</Link>
+                <Link to={PC_UPDATE_FORM + `/${post.deviceId}`}>
+                  {post.deviceName}
+                </Link>
               </td>
 
               <td className="border border-gray-300 p-2">

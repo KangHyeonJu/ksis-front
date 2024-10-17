@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Dialog, DialogTitle, DialogBody } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import {
@@ -11,10 +11,30 @@ import { RxCrossCircled } from "react-icons/rx";
 import { BsXCircleFill } from "react-icons/bs";
 
 const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
+  const modalRef = useRef(null);
+
   //재생장치의 인코딩리소스 불러오기
   const [resources, setResources] = useState([]);
   const [myResources, setMyResources] = useState([]);
   const [addResources, setAddResources] = useState([]);
+
+  const handleClickOutside = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onRequestClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const loadModal = useCallback(async () => {
     try {
@@ -106,7 +126,10 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-9/12 sm:p-6">
+        <div
+          ref={modalRef}
+          className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-9/12 sm:p-6"
+        >
           <div className="flex h-160">
             <div className="w-4/6 pr-4">
               <DialogTitle className="text-lg font-medium leading-6 text-gray-900 text-center">
@@ -130,12 +153,10 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                             >
                               <ImCross />
                             </button>
-                            <div className="w-full overflow-hidden bg-gray-200 lg:h-60">
+                            <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-60">
                               <img
                                 src={resource.thumbFilePath}
                                 alt={resource.fileTitle}
-                                height=""
-                                width=""
                                 className="h-full w-full object-cover object-center"
                               />
                             </div>
@@ -144,11 +165,9 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                                 {resource.fileTitle}
                               </p>
 
-                              {resource.fileTitle.length > 20 && (
-                                <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                  {resource.fileTitle}
-                                </span>
-                              )}
+                              <span className="absolute left-0 w-auto p-1 z-10 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                {resource.fileTitle}
+                              </span>
                             </div>
                           </div>
                         ))}
@@ -183,26 +202,26 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                                 isInResources ? "bg-orange-200" : "bg-white"
                               }`}
                             >
-                              <div className="w-full overflow-hidden lg:h-60">
+                              <div className="w-full h-full overflow-hidden lg:h-60">
                                 <img
                                   src={resource.thumbFilePath}
                                   alt={resource.fileTitle}
-                                  height=""
-                                  width=""
                                   className="h-full w-full object-cover object-center cursor-pointer"
                                   onClick={() => addResource(resource)}
                                 />
                               </div>
-                              <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
-                                <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                              <div className="relative group text-gray-700 text-center w-full p-1">
+                                <p
+                                  className={`truncate whitespace-nowrap overflow-hidden text-ellipsis ${
+                                    isInResources ? "bg-orange-200" : "bg-white"
+                                  }`}
+                                >
                                   {resource.fileTitle}
                                 </p>
 
-                                {resource.fileTitle.length > 20 && (
-                                  <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                    {resource.fileTitle}
-                                  </span>
-                                )}
+                                <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                  {resource.fileTitle}
+                                </span>
                               </div>
                             </div>
                           );

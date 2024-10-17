@@ -168,20 +168,21 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
           type: "application/json",
         })
       );
+      if (window.confirm("등록하시겠습니까?")) {
+        const response = await fetcher.post(SIGNAGE_PLAYLIST, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-      const response = await fetcher.post(SIGNAGE_PLAYLIST, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+        console.log(response.data);
 
-      console.log(response.data);
-
-      alert("재생목록이 정상적으로 등록되었습니다.");
-      setData({ fileTitle: "", slideTime: "" });
-      setSearchCategory("");
-      setSearchTerm("");
-      onRequestClose();
+        alert("재생목록이 정상적으로 등록되었습니다.");
+        setData({ fileTitle: "", slideTime: "" });
+        setSearchCategory("");
+        setSearchTerm("");
+        onRequestClose();
+      }
     } catch (error) {
       console.log(error.response.data);
     }
@@ -239,7 +240,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                               className="group relative border border-gray-900 cursor-pointer"
                               onClick={() => addList(resource)}
                             >
-                              <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
+                              <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40 ">
                                 <img
                                   src={resource.thumbFilePath}
                                   alt={resource.fileTitle}
@@ -264,11 +265,9 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                   {resource.fileTitle}
                                 </p>
 
-                                {resource.fileTitle.length > 20 && (
-                                  <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                    {resource.fileTitle}
-                                  </span>
-                                )}
+                                <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                  {resource.fileTitle}
+                                </span>
                               </div>
                             </div>
                           ))}
@@ -314,11 +313,9 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                       <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
                                         {resourceAdd.fileTitle}
                                       </p>
-                                      {resourceAdd.fileTitle.length > 20 && (
-                                        <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
-                                          {resourceAdd.fileTitle}
-                                        </span>
-                                      )}
+                                      <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
+                                        {resourceAdd.fileTitle}
+                                      </span>
                                       <ImCross
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer"
                                         onClick={() => removeList(resourceAdd)}
