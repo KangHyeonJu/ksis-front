@@ -16,6 +16,7 @@ const ImageEncoding = () => {
   const [encodingOptions, setEncodingOptions] = useState([
     { format: "png", resolution: "" },
   ]);
+  const accountId = localStorage.getItem("accountId");
 
   const fetchImageData = async (originalResourceId) => {
     try {
@@ -27,7 +28,7 @@ const ImageEncoding = () => {
       console.error("Error fetching image:", error);
     }
   };
-  
+
   const fetchResolutionData = async () => {
     try {
       const responseResolution = await fetcher.get(RESOLUTION);
@@ -44,7 +45,6 @@ const ImageEncoding = () => {
       console.error("Error fetching resolution:", error);
     }
   };
-  
 
   useEffect(() => {
     fetchImageData(params.originalResourceId);
@@ -54,7 +54,10 @@ const ImageEncoding = () => {
   const handleAddOption = () => {
     setEncodingOptions([
       ...encodingOptions,
-      { format: "png", resolution: `${resolutions[0]?.width}x${resolutions[0]?.height}` }, // 새로운 옵션에 기본 해상도 추가
+      {
+        format: "png",
+        resolution: `${resolutions[0]?.width}x${resolutions[0]?.height}`,
+      }, // 새로운 옵션에 기본 해상도 추가
     ]);
   };
 
@@ -67,26 +70,27 @@ const ImageEncoding = () => {
     navigate(-1);
   };
 
-
   //post
   const handleEncoding = async () => {
-      // 인코딩 시작 전 확인 창
-      const confirmEncoding = window.confirm("정말 인코딩을 시작하겠습니까?");
-        
-      if (!confirmEncoding) {
-        return; // 사용자가 취소하면 함수 종료
-      }
+    // 인코딩 시작 전 확인 창
+    const confirmEncoding = window.confirm("정말 인코딩을 시작하겠습니까?");
+
+    if (!confirmEncoding) {
+      return; // 사용자가 취소하면 함수 종료
+    }
 
     try {
       let allSuccessful = true; // 인코딩 성공 여부 추적
 
       for (const option of encodingOptions) {
-
         // 해상도가 없을 경우 기본 해상도 설정
-      const resolutionToUse = option.resolution || `${resolutions[0].width}x${resolutions[0].height}`;
+        const resolutionToUse =
+          option.resolution ||
+          `${resolutions[0].width}x${resolutions[0].height}`;
 
         const requestData = {
           originalResourceId: image.originalResourceId,
+          accountId: accountId,
           fileTitle: image.fileTitle,
           filePath: image.filePath,
           fileRegTime: image.regTime,
@@ -102,7 +106,7 @@ const ImageEncoding = () => {
           allSuccessful = false; // 실패한 요청이 있을 경우 false로 변경
         }
       }
-  
+
       // 모든 요청이 끝난 후에 알림 한 번만 띄우기
       if (allSuccessful) {
         alert("인코딩을 시작했습니다.");
@@ -177,7 +181,7 @@ const ImageEncoding = () => {
                   type="button"
                   onClick={handleAddOption}
                   className="ml-4 text-blue-500"
-                  style={{ minWidth: '30px', textAlign: 'center' }} 
+                  style={{ minWidth: "30px", textAlign: "center" }}
                 >
                   <AiFillPlusCircle size={25} color="#f25165" />
                 </button>
@@ -188,7 +192,7 @@ const ImageEncoding = () => {
                     type="button"
                     onClick={() => handleRemoveOption(idx)}
                     className="ml-2 text-gray-600"
-                    style={{ minWidth: '30px', textAlign: 'center' }} 
+                    style={{ minWidth: "30px", textAlign: "center" }}
                   >
                     <AiFillMinusCircle size={25} color="#717273" />
                   </button>
@@ -209,9 +213,9 @@ const ImageEncoding = () => {
             type="button"
             onClick={handleCancel}
             className="rounded-md bg-[#f48f8f] p-3 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
-            >
-              취소
-            </button>
+          >
+            취소
+          </button>
         </div>
       </div>
     </div>
