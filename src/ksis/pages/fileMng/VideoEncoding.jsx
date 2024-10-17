@@ -113,6 +113,14 @@ const VideoEncoding = () => {
       } else {
         alert("일부 인코딩 요청에 실패했습니다.");
       }
+  
+      // 모든 요청이 끝난 후에 알림 한 번만 띄우기
+      if (allSuccessful) {
+        alert("인코딩을 시작했습니다.");
+        navigate(-1);
+      } else {
+        alert("일부 인코딩 요청에 실패했습니다.");
+      }
     } catch (error) {
       console.error("인코딩 요청 중 오류 발생:", error);
       alert("인코딩 중 오류가 발생했습니다.");

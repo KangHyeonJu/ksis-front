@@ -40,9 +40,13 @@ const NoticeDetail = () => {
     return <p>오류 발생: {error}</p>;
   }
 
-    if (!notice) {
-    return <p className="text-center text-gray-600 mt-10 w-full">해당 공지는 비활성화된 상태입니다.</p>;
-  }  
+  if (!notice) {
+    return (
+      <p className="text-center text-gray-600 mt-10 w-full">
+        해당 공지는 비활성화된 상태입니다.
+      </p>
+    );
+  }
 
   const handleDeActive = async () => {
     if (window.confirm("정말로 이 공지를 비활성화하시겠습니까?")) {

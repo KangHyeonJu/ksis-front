@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiTrash } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
@@ -36,14 +36,40 @@ const Sidebar = () => {
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
   const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
   const navigate = useNavigate();
+  const ws = useRef(null);
+  const accessToken = localStorage.getItem("accessToken");
+  const API_WS_URL = process.env.REACT_APP_API_WS_URL;
 
   useEffect(() => {
     const userInfo = decodeJwt();
     if (userInfo) {
-      localStorage.setItem("authority", userInfo.roles);
-      localStorage.setItem("accountId", userInfo.accountId);
       setUserInfo(userInfo);
     }
+    ws.current = new WebSocket(API_WS_URL + "/ws/login");
+
+    ws.current.onopen = () => {
+      console.log("WebSocket connection opened");
+      ws.current.send(
+        JSON.stringify({ action: "register", token: accessToken })
+      );
+    };
+
+    ws.current.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.action === "logout") {
+        console.log("Logout action received via WebSocket");
+        localStorage.removeItem("accessToken");
+        navigate("/downloadApp"); // 로그아웃 후 로그인 페이지로 이동
+      }
+    };
+
+    ws.current.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    ws.current.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
   }, []);
 
   const toggleMenu = (menu) => {
@@ -51,8 +77,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = async () => {
-    // 로그아웃 로직을 여기에 추가하세요
-    const accountId = localStorage.getItem("accountId");
+    const accountId = userInfo.accountId;
 
     try {
       // 서버로 로그아웃 요청 전송
@@ -62,6 +87,9 @@ const Sidebar = () => {
         accountId,
         category: "LOGOUT",
       });
+
+      ws.current.send(JSON.stringify({ action: "logout", token: accessToken }));
+
       // 로그아웃 성공 시 로컬스토리지 토큰 제거
       // alert("로그아웃되었습니다.");
       localStorage.removeItem("accessToken");
@@ -291,12 +319,12 @@ const Sidebar = () => {
                   <FaRegCircle size={10} className="mr-2" />
                   <span>이미지 및 영상</span>
                 </Link>
-               
+
                 <Link
                   to={TRASH_NOTICE}
                   onClick={() => handleMenuClick("TRASHNOTICE")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
+                >
                   <FaRegCircle size={10} className="mr-2" />
                   <span>공지글</span>
                 </Link>

@@ -6,16 +6,18 @@ import {
 } from "../../../constants/account_constant";
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import ReactPaginate from "react-paginate";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
+
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userInfo = decodeJwt();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("accountId");
@@ -24,9 +26,9 @@ const AccountList = () => {
 
   const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
+      const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page - 1}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
       if (response.data) {
-        setPosts(response.data.content  || []);
+        setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
@@ -85,6 +87,10 @@ const AccountList = () => {
     }
   };
 
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value); // 검색어를 업데이트
     setCurrentPage(0); // 검색할 때 페이지를 0으로 초기화
@@ -95,7 +101,7 @@ const AccountList = () => {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl whitespace-nowrap px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         계정목록
       </h1>
@@ -174,7 +180,7 @@ const AccountList = () => {
                   수정
                 </Link>
                 <button
-                  className={`mr-2 ${
+                  className={`mr-2 w-24 ${
                     post.isActive
                       ? "bg-green-500 hover:bg-green-700"
                       : "bg-red-500 hover:bg-red-700"
@@ -191,36 +197,16 @@ const AccountList = () => {
         </tbody>
       </table>
 
-      {totalPages > 0 && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={totalPages}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={(selected) => setCurrentPage(selected.selected)}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2}>
+        <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
         />
-      )}
+      </Stack>
     </div>
+
   );
 };
 

@@ -29,7 +29,6 @@ const ImageEncoding = () => {
       console.error("Error fetching image:", error);
     }
   };
-
   const fetchResolutionData = async () => {
     try {
       const responseResolution = await fetcher.get(RESOLUTION);

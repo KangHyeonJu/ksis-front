@@ -147,7 +147,7 @@ const SignagePlayKeyPage = () => {
         socketRef.current.close(); // 컴포넌트 언마운트 시 WebSocket 종료
       }
     };
-  }, []);
+  }, [deviceIdRef.current]);
 
   useEffect(() => {
     //위치 정보를 이용해 날씨 정보 받아오기
