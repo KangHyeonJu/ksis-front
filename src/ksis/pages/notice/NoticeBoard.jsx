@@ -6,6 +6,7 @@ import fetcher from "../../../fetcher";
 import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
 import { NOTICE_ALL } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
+import { Link } from "react-router-dom";
 
 const NoticeBoard = () => {
   const [notices, setNotices] = useState([]);
@@ -61,10 +62,6 @@ const NoticeBoard = () => {
 
   const handleRegisterClick = () => {
     navigate(NOTICE_FORM); // 공지글 등록 페이지로 이동
-  };
-
-  const handleNoticeClick = (id) => {
-    navigate(`${NOTICE_DTL}/${id}`);
   };
 
   if (loading) {
@@ -132,27 +129,29 @@ const NoticeBoard = () => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr>
-                <th className="border border-gray-300 p-2">작성일</th>
-                <th className="border border-gray-300 p-2">작성자</th>
-                <th className="border border-gray-300 p-2">제목</th>
-                <th className="border border-gray-300 p-2">재생장치</th>
+              <th className="border border-gray-300 p-2">제목</th>
+              <th className="border border-gray-300 p-2">작성자(아이디)</th>
+              <th className="border border-gray-300 p-2">작성일</th>
+              <th className="border border-gray-300 p-2">재생장치</th>
               </tr>
             </thead>
             <tbody>
               {paginatedNotices.map((notice) => (
                 <tr
                   key={notice.noticeId}
-                  onClick={() => handleNoticeClick(notice.noticeId)}
-                  className={`cursor-pointer ${notice.role === "ADMIN" ? "bg-gray-200 font-bold" : ""}`}
+                  className={`${notice.role === "ADMIN" ? " font-bold" : ""}`}
                 >
+                  <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
+                  {notice.role === "ADMIN" ? "📢 " : ""} 
+                  <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
+                  {notice.title}
+                  </Link></td>
+                  <td className="border border-gray-300 p-2">
+                    {notice.name}({notice.accountId})
+                  </td>
                   <td className="border border-gray-300 p-2">
                     {formatDate(notice.regDate)}
                   </td>
-                  <td className="border border-gray-300 p-2">
-                    {notice.name} ({notice.accountId})
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                     {notice.role === "ADMIN" ? "📢 " : ""}{notice.title}</td>
                   <td className="border border-gray-300 p-2">
                     {getDeviceNames(notice.deviceList)}
                   </td>
