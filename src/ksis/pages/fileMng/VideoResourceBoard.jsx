@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaEdit } from "react-icons/fa";
+import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
@@ -247,8 +247,8 @@ const handleToggle = () => {
 
                   {/* 영상 */}
                 <div>
-                <div className="w-full h-full mb-1 overflow-hidden">
-                
+                <div className="relative w-full h-full mb-1 overflow-hidden">
+               
                     <img
                       src={post.thumbFilePath}
                       //영상 파일 깨질시 영상 제목으로 설정
@@ -257,6 +257,10 @@ const handleToggle = () => {
                       //영상 클릭하면 모달 열림
                       onClick={() => openResourceModal(post.originalResourceId)}
                     />
+                    
+                    {/* 아이콘 추가 */}
+                <FaRegPlayCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85"
+                onClick={() => openResourceModal(post.originalResourceId)} />
                   </div>
                 </div>
 

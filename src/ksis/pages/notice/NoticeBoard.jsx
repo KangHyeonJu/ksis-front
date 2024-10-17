@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
-import { NOTICE_ALL } from "../../../constants/api_constant";
+import { NOTICE_ALL, DEACTIVE_NOTICE } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
 
@@ -14,6 +14,7 @@ const NoticeBoard = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedNotices, setSelectedNotices] = useState([]);
 
   const noticesPerPage = 5;
   const navigate = useNavigate();
@@ -93,6 +94,36 @@ const NoticeBoard = () => {
     return deviceNames.join(", ");
   };
 
+   const handleCheckboxChange = (id) => {
+    setSelectedNotices((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((noticeId) => noticeId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedNotices(filteredNotices.map((notice) => notice.noticeId));
+    } else {
+      setSelectedNotices([]);
+    }
+  };
+
+  const handleDectivation = async () => {
+    if (window.confirm("선택한 공지를 비활성화하시겠습니까?")) {
+      try {
+        await Promise.all(selectedNotices.map((id) => fetcher.post(`${DEACTIVE_NOTICE}/${id}`)));
+        setNotices(notices.filter((notice) => !selectedNotices.includes(notice.noticeId)));
+        setSelectedNotices([]);
+        window.alert("선택한 공지를 비활성화하였습니다.");
+      } catch (err) {
+        console.error("공지 비활성화 오류:", err);
+        window.alert("공지 비활성화에 실패했습니다.");
+      }
+    }
+  };
+
   return (
     <div className="p-6">
       <header className="mb-6">
@@ -115,9 +146,16 @@ const NoticeBoard = () => {
       <div className="flex justify-end mb-4">
         <button
           onClick={handleRegisterClick}
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          className="relative inline-flex items-center mx-3 rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
           공지글 등록
+        </button>
+        <button
+          onClick={handleDectivation}
+          type="button"
+          className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+        >
+          비활성화
         </button>
       </div>
       <div>
@@ -129,6 +167,13 @@ const NoticeBoard = () => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr>
+              <th className="border border-gray-300 p-2">
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={selectedNotices.length === filteredNotices.length}
+                  />
+                </th>
               <th className="border border-gray-300 p-2">제목</th>
               <th className="border border-gray-300 p-2">작성자(아이디)</th>
               <th className="border border-gray-300 p-2">작성일</th>
@@ -141,6 +186,13 @@ const NoticeBoard = () => {
                   key={notice.noticeId}
                   className={`${notice.role === "ADMIN" ? " font-bold" : ""}`}
                 >
+                  <td className="text-center border border-gray-300 p-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedNotices.includes(notice.noticeId)}
+                      onChange={() => handleCheckboxChange(notice.noticeId)}
+                    />
+                  </td>
                   <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
                   {notice.role === "ADMIN" ? "📢 " : ""} 
                   <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>

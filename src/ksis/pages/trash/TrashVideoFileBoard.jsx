@@ -1,8 +1,8 @@
  import React, { useState, useEffect } from "react";
   import fetcher from "../../../fetcher";
   import { format, parseISO } from "date-fns";
-  import { FaSearch } from "react-icons/fa";
-  import { ImCross } from "react-icons/im";
+  import { FaSearch, FaRegPlayCircle  } from "react-icons/fa";
+import { FaRegCircleXmark } from "react-icons/fa6";
   import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
   import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
   import {
@@ -111,7 +111,7 @@
       
 
       {/* 토글 버튼 */}
-      <div className="flex justify-end space-x-2">
+      <div className="flex justify-end space-x-2 mb-4">
         <button
           type="button"
           onClick={handleToggle}
@@ -148,17 +148,15 @@
             {/* 카드 */}
             <div className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
               h-full overflow-hidden max-w-xs"> {/* max-w-xs로 카드 너비 제한 */}
-                 
-                   {/* 영상 */}
-                   <div>
-                   <div className="w-full h-full mb-1 overflow-hidden">
-                    <img
-                      src={post.thumbFilePath}
-                      alt={post.fileTitle}
-                     className="w-60 h-60 cursor-pointer object-cover object-center"
-                    />
-                    </div>
-                    </div>
+                 <div className="relative w-full h-full mb-1 overflow-hidden">
+                <img
+                  src={post.thumbFilePath}
+                  alt={post.fileTitle}
+                  className="w-60 h-60 cursor-pointer object-cover object-center"
+                />
+                {/* 아이콘 추가 */}
+                <FaRegPlayCircle  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85" />
+              </div>
 
                 {/* 제목 */}
                 <div className="flex justify-between w-full">

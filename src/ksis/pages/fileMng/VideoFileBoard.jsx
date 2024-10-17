@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
-import { FaSearch, FaEdit } from "react-icons/fa";
+import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
@@ -215,13 +215,16 @@ const VideoFileBoard = () => {
               h-full overflow-hidden max-w-xs"> {/* max-w-xs로 카드 너비 제한 */}
                    {/* 영상 */}
                    <div>
-                   <div className="w-full h-full mb-1 overflow-hidden">
+                   <div className="relative w-full h-full mb-1 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
                      className="w-60 h-60 cursor-pointer object-cover object-center"
                       onClick={() => openResourceModal(post.filePath)}
                     />
+                    {/* 아이콘 추가 */}
+                    <FaRegPlayCircle  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85" 
+                 onClick={() => openResourceModal(post.filePath)} />
                     </div>
                     </div>
 
