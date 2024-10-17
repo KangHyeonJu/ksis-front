@@ -100,10 +100,10 @@ const Notification = ({ onClose }) => {
         <h2 className="text-xl font-semibold mb-4">알림</h2>
         <div className="overflow-auto">
           {/* 알림 목록을 테이블로 표시 */}
-          <Table bleed compact>
+          <Table grid>
             <TableHead>
               <TableRow>
-                <TableHeader>알림 메시지</TableHeader>
+                <TableHeader>메시지</TableHeader>
                 <TableHeader>시간</TableHeader>
               </TableRow>
             </TableHead>
@@ -131,8 +131,18 @@ const Notification = ({ onClose }) => {
                       )
                     }
                   >
-                    <TableCell>{notification.message}</TableCell>
-                    <TableCell>
+                    <TableCell
+                      className="font-bold"
+                      title={notification.message}
+                    >
+                      {notification.message.length > 30
+                        ? `${notification.message.slice(
+                            0,
+                            20
+                          )}...${notification.message.slice(-7)}`
+                        : notification.message}
+                    </TableCell>
+                    <TableCell className="font-bold">
                       {new Date(notification.regTime).toLocaleString("ko-KR", {
                         year: "numeric",
                         month: "2-digit",
