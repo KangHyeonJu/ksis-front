@@ -26,7 +26,7 @@ const AccountList = () => {
 
   const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
+      const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page - 1}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -101,7 +101,7 @@ const AccountList = () => {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl whitespace-nowrap px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         계정목록
       </h1>
@@ -180,7 +180,7 @@ const AccountList = () => {
                   수정
                 </Link>
                 <button
-                  className={`mr-2 ${
+                  className={`mr-2 w-24 ${
                     post.isActive
                       ? "bg-green-500 hover:bg-green-700"
                       : "bg-red-500 hover:bg-red-700"
@@ -199,7 +199,7 @@ const AccountList = () => {
 
       <Stack spacing={2}>
         <Pagination
-            count={totalPages - 1}
+            count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
             color={"primary"}
