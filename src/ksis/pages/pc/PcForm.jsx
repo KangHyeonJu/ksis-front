@@ -161,19 +161,21 @@ const PcForm = () => {
         new Blob([JSON.stringify(accountIds)], { type: "application/json" })
       );
 
-      const response = await fetcher.post(PC_ADD, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(response.data);
+      if (window.confirm("등록하시겠습니까?")) {
+        const response = await fetcher.post(PC_ADD, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(response.data);
 
-      if (response.status === 200) {
-        alert("PC가 정상적으로 등록되었습니다.");
-        navigate(PC_INVENTORY);
-      } else if (response.status === 202) {
-        alert("이미 등록된 MAC주소입니다.");
-        return;
+        if (response.status === 200) {
+          alert("PC가 정상적으로 등록되었습니다.");
+          navigate(PC_INVENTORY);
+        } else if (response.status === 202) {
+          alert("이미 등록된 MAC주소입니다.");
+          return;
+        }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -210,7 +212,14 @@ const PcForm = () => {
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         일반 PC 등록
       </h1>
-      <form onSubmit={handleSave}>
+      <form
+        onSubmit={handleSave}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        }}
+      >
         <div className="shadow-sm ring-1 ring-gray-900/5 text-center pt-5 pb-5">
           <div className="flex items-center">
             <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">

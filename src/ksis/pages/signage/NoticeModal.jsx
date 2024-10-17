@@ -1,11 +1,5 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogBody,
-  DialogActions,
-} from "../../css/dialog";
-import ReactPaginate from "react-paginate";
+import React, { useEffect, useState } from "react";
+import { Dialog, DialogBody, DialogActions } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import { FaSearch } from "react-icons/fa";
 import { format } from "date-fns";
@@ -13,52 +7,56 @@ import { SIGNAGE_NOTICE } from "../../../constants/api_constant";
 import { NOTICE_DTL } from "../../../constants/page_constant";
 import { Link } from "react-router-dom";
 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
 const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
   const [notices, setNotices] = useState([]);
 
-  const loadPage = useCallback(async () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState("title");
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const postsPerPage = 5; // 한 페이지 10개 데이터
+
+  const loadPage = async () => {
     try {
-      const response = await fetcher.get(SIGNAGE_NOTICE + `/${signageId}`);
+      const response = await fetcher.get(SIGNAGE_NOTICE + `/${signageId}`, {
+        params: {
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
+      });
       console.log(response);
       if (response.data) {
-        setNotices(response.data);
+        setNotices(response.data.content);
+        setTotalPages(response.data.totalPages);
       } else {
         console.error("No data property in response");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [signageId]);
+  };
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+  };
 
   useEffect(() => {
     if (signageId) {
       loadPage();
     }
-  }, [signageId, loadPage]);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("title");
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const postsPerPage = 5;
-
-  const filteredPosts = useMemo(
-    () =>
-      notices.filter((signage) => {
-        const value = signage[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [notices, searchTerm, searchCategory]
-  );
-
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
+  }, [currentPage, searchTerm]);
 
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
@@ -66,8 +64,8 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
         {/* <span className="hidden sm:inline-block sm:align-middle sm:h-screen">
           &#8203;
         </span> */}
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-7/12 sm:p-6 h-96">
-          <DialogBody className="mt-2">
+        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-5/12 sm:p-6 h-128">
+          <DialogBody className="mt-2 h-96">
             <div className="mb-4 flex items-center">
               <select
                 value={searchCategory}
@@ -76,7 +74,6 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
               >
                 <option value="title">제목</option>
                 <option value="account">작성자</option>
-                <option value="regDate">작성일</option>
               </select>
               <div className="relative flex-grow">
                 <input
@@ -99,7 +96,7 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedPosts.map((notice) => (
+                {notices.map((notice) => (
                   <tr key={notice.noticeId} className="hover:bg-gray-100">
                     <td className="border border-gray-300 p-2">
                       {notice.account.name}({notice.account.accountId})
@@ -122,6 +119,14 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
                 ))}
               </tbody>
             </table>
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color={"primary"}
+              />
+            </Stack>
           </DialogBody>
           <DialogActions className="mt-4">
             <button
@@ -133,36 +138,6 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
           </DialogActions>
         </div>
       </div>
-
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
-        />
-      )}
     </Dialog>
   );
 };

@@ -30,14 +30,16 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
         return;
       }
 
-      const response = await fetcher.post(RESOLUTION, data);
+      if (window.confirm("등록하시겠습니까?")) {
+        const response = await fetcher.post(RESOLUTION, data);
 
-      if (response.status === 200) {
-        alert("해상도가 등록되었습니다.");
-        setData({ name: "", width: "", height: "" });
-        onRequestClose();
-      } else {
-        alert("해상도 등록 중 오류가 발생했습니다.");
+        if (response.status === 200) {
+          alert("해상도가 등록되었습니다.");
+          setData({ name: "", width: "", height: "" });
+          onRequestClose();
+        } else {
+          alert("해상도 등록 중 오류가 발생했습니다.");
+        }
       }
     } catch (error) {
       console.log(error.response.data);

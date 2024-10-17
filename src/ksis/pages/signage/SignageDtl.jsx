@@ -121,16 +121,18 @@ const SignageDtl = () => {
 
   // Switch 상태 변경 핸들러
   const handleToggle = async () => {
-    const newEnabled = !enabled;
-    setEnabled(newEnabled);
+    if (window.confirm("공지 표시 여부를 변경하시겠습니까?")) {
+      const newEnabled = !enabled;
+      setEnabled(newEnabled);
 
-    try {
-      await fetcher.put(SIGNAGE_UPDATE + `/${data.deviceId}`, {
-        showNotice: newEnabled,
-      });
-      console.log("DB 상태 업데이트 성공");
-    } catch (error) {
-      console.error("DB 상태 업데이트 실패", error);
+      try {
+        await fetcher.put(SIGNAGE_UPDATE + `/${data.deviceId}`, {
+          showNotice: newEnabled,
+        });
+        console.log("DB 상태 업데이트 성공");
+      } catch (error) {
+        console.error("DB 상태 업데이트 실패", error);
+      }
     }
   };
 
@@ -140,16 +142,18 @@ const SignageDtl = () => {
 
   //재생목록 선택
   const onChangeRadio = async (e) => {
-    const selectedRadiobox = Number(e.target.value);
-    setRadiobox(selectedRadiobox);
+    if (window.confirm("재생목록을 변경하시겠습니까?")) {
+      const selectedRadiobox = Number(e.target.value);
+      setRadiobox(selectedRadiobox);
 
-    try {
-      await fetcher.put(SIGNAGE_PLAYLIST + `/${data.deviceId}`, {
-        selectedPlaylist: selectedRadiobox,
-      });
-      console.log("DB 상태 업데이트 성공");
-    } catch (error) {
-      console.error("DB 상태 업데이트 실패", error);
+      try {
+        await fetcher.put(SIGNAGE_PLAYLIST + `/${data.deviceId}`, {
+          selectedPlaylist: selectedRadiobox,
+        });
+        console.log("DB 상태 업데이트 성공");
+      } catch (error) {
+        console.error("DB 상태 업데이트 실패", error);
+      }
     }
   };
 
@@ -481,7 +485,7 @@ const SignageDtl = () => {
               </div>
             </div>
 
-            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3">
+            <div className="mt-2 grid gap-x-3 gap-y-5 md:grid-cols-3">
               {playlistDtl.map((resource) => (
                 <div
                   key={resource.encodedResourceId}
@@ -491,12 +495,10 @@ const SignageDtl = () => {
                     {resource.sequence}
                   </div>
 
-                  <div className="w-full overflow-hidden bg-gray-200 lg:h-52">
+                  <div className="w-full h-full overflow-hidden lg:h-48">
                     <img
                       src={resource.thumbFilePath}
                       alt={resource.fileTitle}
-                      height=""
-                      width=""
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
@@ -505,11 +507,9 @@ const SignageDtl = () => {
                       {resource.fileTitle}
                     </p>
 
-                    {resource.fileTitle.length > 20 && (
-                      <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                        {resource.fileTitle}
-                      </span>
-                    )}
+                    <span className="absolute left-0 w-auto p-1 z-10 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      {resource.fileTitle}
+                    </span>
                   </div>
                 </div>
               ))}

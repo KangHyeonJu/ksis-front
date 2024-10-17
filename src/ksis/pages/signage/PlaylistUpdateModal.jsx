@@ -210,23 +210,26 @@ const PlaylistUpdateModal = ({
           type: "application/json",
         })
       );
-      const response = await fetcher.put(
-        SIGNAGE_PLAYLIST_DTL + `/${playlistId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
 
-      console.log(response.data);
+      if (window.confirm("수정하시겠습니까?")) {
+        const response = await fetcher.put(
+          SIGNAGE_PLAYLIST_DTL + `/${playlistId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-      alert("재생목록이 정상적으로 수정되었습니다.");
-      onRequestClose();
-      setSearchCategory("");
-      setSearchTerm("");
-      onRequestClose();
+        console.log(response.data);
+
+        alert("재생목록이 정상적으로 수정되었습니다.");
+        onRequestClose();
+        setSearchCategory("");
+        setSearchTerm("");
+        onRequestClose();
+      }
     } catch (error) {
       console.log(error.response.data);
     }
@@ -281,7 +284,7 @@ const PlaylistUpdateModal = ({
                                 className="group relative border border-gray-900 cursor-pointer"
                                 onClick={() => addList(resource)}
                               >
-                                <div className="w-full overflow-hidden bg-gray-200 lg:h-40 ">
+                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40 ">
                                   <img
                                     src={resource.thumbFilePath}
                                     alt={resource.fileTitle}
@@ -307,11 +310,9 @@ const PlaylistUpdateModal = ({
                                     {resource.fileTitle}
                                   </p>
 
-                                  {resource.fileTitle.length > 20 && (
-                                    <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                      {resource.fileTitle}
-                                    </span>
-                                  )}
+                                  <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    {resource.fileTitle}
+                                  </span>
                                 </div>
                               </div>
                             ))}
@@ -357,11 +358,11 @@ const PlaylistUpdateModal = ({
                                       <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
                                         {resourceAdd.fileTitle}
                                       </p>
-                                      {resourceAdd.fileTitle.length > 20 && (
-                                        <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
-                                          {resourceAdd.fileTitle}
-                                        </span>
-                                      )}
+
+                                      <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
+                                        {resourceAdd.fileTitle}
+                                      </span>
+
                                       <ImCross
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer"
                                         onClick={() => removeList(resourceAdd)}

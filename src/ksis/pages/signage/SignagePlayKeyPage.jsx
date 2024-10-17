@@ -32,21 +32,25 @@ const SignagePlayKeyPage = () => {
   const scrollRef = useRef(null);
 
   const loadPage = async () => {
-    // ip & key 검증
-    const response = await axios.get(API_BASE_URL + SIGNAGE_PLAY, {
-      params: { key: keyValue },
-    });
-    if (response.status === 200 && response.data !== null) {
-      setVerification(true);
+    try {
+      // ip & key 검증
+      const response = await axios.get(API_BASE_URL + SIGNAGE_PLAY, {
+        params: { key: keyValue },
+      });
+      if (response.status === 200 && response.data !== null) {
+        setVerification(true);
 
-      loadResource(response.data);
-      loadNotice(response.data);
+        loadResource(response.data);
+        loadNotice(response.data);
 
-      setDeviceId(response.data);
-      setLoading(false);
-    } else {
-      console.log("IP와 KEY 검증 실패");
-      setVerification(false);
+        setDeviceId(response.data);
+        setLoading(false);
+      } else {
+        console.log("IP와 KEY 검증 실패");
+        setVerification(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -58,22 +62,6 @@ const SignagePlayKeyPage = () => {
     //페이지 로드
     loadPage();
   }, []);
-
-  // const loadPlayData = async (signageId) => {
-  //   try {
-  //     const [responseResource, responseNotice] = await Promise.all([
-  //       axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
-  //       axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
-  //     ]);
-  //     setResources(responseResource.data);
-  //     console.log(responseResource);
-
-  //     setNotices(responseNotice.data);
-  //     console.log(responseNotice);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
 
   const loadResource = async (signageId) => {
     try {
@@ -91,12 +79,16 @@ const SignagePlayKeyPage = () => {
   };
 
   const loadNotice = async (signageId) => {
-    const response = await axios.get(
-      API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`
-    );
+    try {
+      const response = await axios.get(
+        API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`
+      );
 
-    setNotices(response.data);
-    console.log("Notices", response);
+      setNotices(response.data);
+      console.log("Notices", response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const connectWebSocket = () => {
@@ -144,6 +136,8 @@ const SignagePlayKeyPage = () => {
       socket.close();
     };
   };
+
+  const sendMessage = () => {};
 
   useEffect(() => {
     connectWebSocket();

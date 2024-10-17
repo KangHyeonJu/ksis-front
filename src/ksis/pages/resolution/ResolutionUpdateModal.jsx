@@ -56,13 +56,15 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
         return;
       }
 
-      const response = await fetcher.put(RESOLUTION, data);
+      if (window.confirm("수정하시겠습니까?")) {
+        const response = await fetcher.put(RESOLUTION, data);
 
-      if (response.status === 200) {
-        alert("해상도가 수정되었습니다.");
-        onRequestClose();
-      } else {
-        alert("해상도 수정 중 오류가 발생했습니다.");
+        if (response.status === 200) {
+          alert("해상도가 수정되었습니다.");
+          onRequestClose();
+        } else {
+          alert("해상도 수정 중 오류가 발생했습니다.");
+        }
       }
     } catch (error) {
       console.log(error.response.data);

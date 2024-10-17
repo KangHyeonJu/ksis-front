@@ -153,12 +153,10 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                             >
                               <ImCross />
                             </button>
-                            <div className="w-full overflow-hidden bg-gray-200 lg:h-60">
+                            <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-60">
                               <img
                                 src={resource.thumbFilePath}
                                 alt={resource.fileTitle}
-                                height=""
-                                width=""
                                 className="h-full w-full object-cover object-center"
                               />
                             </div>
@@ -167,11 +165,9 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                                 {resource.fileTitle}
                               </p>
 
-                              {resource.fileTitle.length > 20 && (
-                                <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                  {resource.fileTitle}
-                                </span>
-                              )}
+                              <span className="absolute left-0 w-auto p-1 z-10 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                {resource.fileTitle}
+                              </span>
                             </div>
                           </div>
                         ))}
@@ -206,26 +202,26 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                                 isInResources ? "bg-orange-200" : "bg-white"
                               }`}
                             >
-                              <div className="w-full overflow-hidden lg:h-60">
+                              <div className="w-full h-full overflow-hidden lg:h-60">
                                 <img
                                   src={resource.thumbFilePath}
                                   alt={resource.fileTitle}
-                                  height=""
-                                  width=""
                                   className="h-full w-full object-cover object-center cursor-pointer"
                                   onClick={() => addResource(resource)}
                                 />
                               </div>
-                              <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
-                                <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                              <div className="relative group text-gray-700 text-center w-full p-1">
+                                <p
+                                  className={`truncate whitespace-nowrap overflow-hidden text-ellipsis ${
+                                    isInResources ? "bg-orange-200" : "bg-white"
+                                  }`}
+                                >
                                   {resource.fileTitle}
                                 </p>
 
-                                {resource.fileTitle.length > 20 && (
-                                  <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                    {resource.fileTitle}
-                                  </span>
-                                )}
+                                <span className="absolute left-0 w-auto p-1 bg-gray-100 text-sm z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                  {resource.fileTitle}
+                                </span>
                               </div>
                             </div>
                           );
