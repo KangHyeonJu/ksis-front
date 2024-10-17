@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaEdit } from "react-icons/fa";
+import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
   VIDEO_RESOURCE_BOARD,
-  VIDEO_FILE_BOARD,
+  IMAGE_RESOURCE_BOARD,
   VIDEO_ENCODING,
 } from "../../../constants/page_constant";
 import {
-  RSVIDEO_BOARD,
+  ACTIVE_RSVIDEO_BOARD,
   FILE_ORIGINAL_BASIC,
+  FILE_DEACTIVION,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import VideoResourceModal from "./VideoResourceModal";
@@ -30,15 +31,12 @@ const VideoResourceBoard = () => {
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null); // 선택한 영상의 정보를 관리하는 상태값 추가
 
-  // isOriginal 값에 따라 페이지를 이동
-  useEffect(() => {
-    navigate(isOriginal ? VIDEO_RESOURCE_BOARD : VIDEO_FILE_BOARD);
-  }, [isOriginal, navigate]);
+
 
   // 영상 목록을 가져오는 부분
   useEffect(() => {
     fetcher
-      .get(RSVIDEO_BOARD)
+      .get(ACTIVE_RSVIDEO_BOARD)
       .then((response) => {
         setVideos(response.data); // 영상 데이터를 설정
       })
@@ -67,10 +65,11 @@ const VideoResourceBoard = () => {
     setFilteredPosts(filtered);
   }, [videos, searchTerm, searchCategory]);
 
-  // 토글 버튼 핸들러 함수 추가
-  const handleToggle = () => {
-    setIsOriginal((prevIsOriginal) => !prevIsOriginal);
-  };
+  // 토글 버튼 핸들러 함수
+const handleToggle = () => {
+  setIsOriginal((prevIsOriginal) => !prevIsOriginal);
+  navigate(isOriginal ? IMAGE_RESOURCE_BOARD : VIDEO_RESOURCE_BOARD); // 페이지 이동
+};
 
   // 페이지 변경 핸들러
   const handlePageChange = ({ selected }) => {
@@ -91,6 +90,7 @@ const VideoResourceBoard = () => {
   
   // 제목 수정
   const handleSaveClick = async (id) => {
+    if(window.confirm("정말로 파일의 제목을 변경하시겠습니까?")){
     try {
       await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
         fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
@@ -112,20 +112,20 @@ const VideoResourceBoard = () => {
     } catch (error) {
       window.confirm("수정에 실패했습니다.");
       console.error("제목 수정 중 오류 발생:", error);
-    }
+    }}
   };
 
 
   // 삭제 핸들러
-  const handleDelete = async (id) => {
-    if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
+  const handleDeactivate= async (id) => {
+    if (window.confirm("정말로 이 영상을 비활성화하시겠습니까?")) {
       try {
-        await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
+        await fetcher.post(FILE_DEACTIVION + `/${id}`);
         setVideos(videos.filter((video) => video.id !== id));
-        window.alert("영상을 삭제하였습니다.");
+        window.alert("영상을 비활성화하였습니다.");
       } catch (err) {
-        console.error("영상 삭제 오류:", err);
-        window.alert("영상 삭제에 실패했습니다.");
+        console.error("영상 비활성화 오류:", err);
+        window.alert("영상 비활성화에 실패했습니다.");
       }
     }
   };
@@ -216,7 +216,7 @@ const VideoResourceBoard = () => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "원본" : "인코딩"}</span>
+          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -228,7 +228,7 @@ const VideoResourceBoard = () => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "원본" : "인코딩"}
+            {isOriginal ? "이미지" : "영상"}
           </span>
         </button>
       </div>
@@ -247,8 +247,8 @@ const VideoResourceBoard = () => {
 
                   {/* 영상 */}
                 <div>
-                <div className="w-full h-full mb-1 overflow-hidden">
-                
+                <div className="relative w-full h-full mb-1 overflow-hidden">
+               
                     <img
                       src={post.thumbFilePath}
                       //영상 파일 깨질시 영상 제목으로 설정
@@ -257,6 +257,10 @@ const VideoResourceBoard = () => {
                       //영상 클릭하면 모달 열림
                       onClick={() => openResourceModal(post.originalResourceId)}
                     />
+                    
+                    {/* 아이콘 추가 */}
+                <FaRegPlayCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85"
+                onClick={() => openResourceModal(post.originalResourceId)} />
                   </div>
                 </div>
 
@@ -312,10 +316,10 @@ const VideoResourceBoard = () => {
                   
                 <button
                   type="button"
-                  onClick={() => handleDelete(post.originalResourceId)}
+                  onClick={() => handleDeactivate(post.originalResourceId)}
                   className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                 >
-                  삭제
+                  비활성화
                 </button>
                 </div>
               </div>

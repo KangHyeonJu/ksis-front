@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Link 컴포넌트 import
-import { BiUser, BiCog, BiBell } from "react-icons/bi"; // 필요한 아이콘 import
+import { BiUser, BiCog, BiTrash } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FaRegCircle } from "react-icons/fa6";
@@ -16,11 +16,13 @@ import {
   API_BOARD,
   FILESIZE_FORM,
   NOTICE_BOARD,
+  IMAGE_RESOURCE_BOARD,
   IMAGE_FILE_BOARD,
-  VIDEO_FILE_BOARD,
   ACCESSLOG_INVENTORY,
   MAIN,
   RESOLUTION_LIST,
+  TRASH_IMAGE_FILE,
+  TRASH_NOTICE,
 } from "../../constants/page_constant";
 import fetcher from "../../fetcher";
 import ksisLogo from "../../img/ksis-logo.png";
@@ -162,28 +164,28 @@ const Sidebar = () => {
           <div className="item mt-3">
             <div
               className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-              onClick={() => toggleMenu("profile")}
+              onClick={() => toggleMenu("media")}
             >
               <MdOutlinePermMedia className="mr-3" />
               <span>미디어 관리</span>
             </div>
-            {openMenu === "profile" && (
+            {openMenu === "media" && (
               <div className="submenu ml-8 mt-2">
                 <Link
-                  to={IMAGE_FILE_BOARD}
-                  onClick={() => handleMenuClick("IMAGE")}
+                  to={IMAGE_RESOURCE_BOARD}
+                  onClick={() => handleMenuClick("original")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  이미지 관리
+                  원본 관리
                 </Link>
                 <Link
-                  to={VIDEO_FILE_BOARD}
-                  onClick={() => handleMenuClick("VIDEO")}
+                  to={IMAGE_FILE_BOARD}
+                  onClick={() => handleMenuClick("encoded")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  영상 관리
+                  인코딩 관리
                 </Link>
               </div>
             )}
@@ -268,6 +270,36 @@ const Sidebar = () => {
                     </Link>
                   </>
                 )}
+              </div>
+            )}
+          </div>
+          <div className="item mt-3">
+            <div
+              className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+              onClick={() => toggleMenu("trash")}
+            >
+              <BiTrash className="mr-3" />
+              <span>휴지통</span>
+            </div>
+            {openMenu === "trash" && (
+              <div className="submenu ml-8 mt-2">
+                <Link
+                  to={TRASH_IMAGE_FILE}
+                  onClick={() => handleMenuClick("TRASHIMAGEFILE")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>이미지 및 영상</span>
+                </Link>
+               
+                <Link
+                  to={TRASH_NOTICE}
+                  onClick={() => handleMenuClick("TRASHNOTICE")}
+                  className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                  >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span>공지글</span>
+                </Link>
               </div>
             )}
           </div>
