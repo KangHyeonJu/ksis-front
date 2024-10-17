@@ -10,7 +10,7 @@ import {
 import {
   ACTIVE_RSVIDEO_BOARD,
   FILE_ORIGINAL_BASIC,
-  FILE_DEACTIVE,
+  FILE_DEACTIVION,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import VideoResourceModal from "./VideoResourceModal";
@@ -117,15 +117,15 @@ const handleToggle = () => {
 
 
   // 삭제 핸들러
-  const handleDelete = async (id) => {
-    if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
+  const handleDeactivate= async (id) => {
+    if (window.confirm("정말로 이 영상을 비활성화하시겠습니까?")) {
       try {
-        await fetcher.post(FILE_DEACTIVE + `/${id}`);
+        await fetcher.post(FILE_DEACTIVION + `/${id}`);
         setVideos(videos.filter((video) => video.id !== id));
-        window.alert("영상을 삭제하였습니다.");
+        window.alert("영상을 비활성화하였습니다.");
       } catch (err) {
-        console.error("영상 삭제 오류:", err);
-        window.alert("영상 삭제에 실패했습니다.");
+        console.error("영상 비활성화 오류:", err);
+        window.alert("영상 비활성화에 실패했습니다.");
       }
     }
   };
@@ -312,10 +312,10 @@ const handleToggle = () => {
                   
                 <button
                   type="button"
-                  onClick={() => handleDelete(post.originalResourceId)}
+                  onClick={() => handleDeactivate(post.originalResourceId)}
                   className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                 >
-                  삭제
+                  비활성화
                 </button>
                 </div>
               </div>

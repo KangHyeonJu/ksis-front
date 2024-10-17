@@ -10,7 +10,7 @@ import {
 import {
   ACTIVE_RSIMAGE_BOARD,
   FILE_ORIGINAL_BASIC,
-  FILE_DEACTIVE,
+  FILE_DEACTIVION,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import ImageResourceModal from "./ImageResourceModal";
@@ -107,10 +107,10 @@ const ImageResourceBoard = () => {
   }};
 
 
-  const handleDelete = async (id) => {
+  const handleDeactivate = async (id) => {
     if (window.confirm("정말로 이 이미지를 비활성화하시겠습니까?")) {
       try {
-        await fetcher.post(FILE_DEACTIVE + `/${id}`);
+        await fetcher.post(FILE_DEACTIVION + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
         window.alert("이미지를 비활성화하였습니다.");
       } catch (err) {
@@ -305,7 +305,7 @@ const ImageResourceBoard = () => {
                   
                 <button
                   type="button"
-                  onClick={() => handleDelete(post.originalResourceId)}
+                  onClick={() => handleDeactivate(post.originalResourceId)}
                   className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                 >
                   비활성화
