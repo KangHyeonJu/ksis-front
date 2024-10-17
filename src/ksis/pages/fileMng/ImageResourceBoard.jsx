@@ -10,6 +10,7 @@ import {
 import {
   ACTIVE_RSIMAGE_BOARD,
   FILE_ORIGINAL_BASIC,
+  FILE_DEACTIVE,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import ImageResourceModal from "./ImageResourceModal";
@@ -109,7 +110,7 @@ const ImageResourceBoard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 이미지를 비활성화하시겠습니까?")) {
       try {
-        await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
+        await fetcher.post(FILE_DEACTIVE + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
         window.alert("이미지를 비활성화하였습니다.");
       } catch (err) {

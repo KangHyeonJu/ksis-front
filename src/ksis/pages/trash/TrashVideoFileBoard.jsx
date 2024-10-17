@@ -1,7 +1,7 @@
  import React, { useState, useEffect } from "react";
   import fetcher from "../../../fetcher";
   import { format, parseISO } from "date-fns";
-  import { FaSearch, FaEdit } from "react-icons/fa";
+  import { FaSearch } from "react-icons/fa";
   import { ImCross } from "react-icons/im";
   import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
   import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
@@ -10,7 +10,7 @@
     TRASH_VIDEO_FILE
   } from "../../../constants/page_constant";
   import {
-    ECVIDEO_BOARD,
+    DEACTIVE_VIDEO_BOARD,
     FILE_ENCODED_BASIC,
   } from "../../../constants/api_constant";
   
@@ -32,7 +32,7 @@
   
     useEffect(() => {
       fetcher
-        .get(ECVIDEO_BOARD)
+        .get(DEACTIVE_VIDEO_BOARD)
         .then((response) => {
           setVideos(response.data);
           setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
@@ -51,40 +51,6 @@
     const handleEditClick = (index, title) => {
       setEditingTitleIndex(index);
       setNewTitle(title);
-    };
-  
-    // 엔터 키로 제목 저장
-    const handleKeyDown = (e, id) => {
-      if (e.key === "Enter") {
-        handleSaveClick(id);
-      }
-    };
-    
-    // 제목 수정
-    const handleSaveClick = async (id) => {
-      if(window.confirm("정말로 파일의 제목을 변경하시겠습니까?")){
-      try {
-        await fetcher.put(`${FILE_ENCODED_BASIC}/${id}`, {
-          fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
-        });
-  
-        // 제목이 변경된 후 videos 상태를 업데이트
-        const updatedVideos = videos.map((video) =>
-          video.encodedResourceId === id
-            ? { ...video, fileTitle: newTitle }
-            : video
-        );
-        setVideos(updatedVideos);
-  
-        // 변경된 videos를 기반으로 filteredPosts 상태도 업데이트
-        setFilteredPosts(updatedVideos);
-  
-        setEditingTitleIndex(null);
-        setNewTitle("");
-      } catch (error) {
-        window.confirm("수정에 실패했습니다.");
-        console.error("제목 수정 중 오류 발생:", error);
-      }}
     };
   
     const handlePageChange = ({ selected }) => {
@@ -232,7 +198,6 @@
                           type="text"
                           value={newTitle}
                           onChange={(e) => setNewTitle(e.target.value)}
-                          onKeyDown={(e) => handleKeyDown(e, post.encodedResourceId)} // 엔터 키 이벤트 추가
                           className="w-full text-xl font-midium border-b text-center
                           border-gray-400 outline-none transition-colors duration-200 
                           focus:border-gray-600 max-w-full mx-auto justify-start"
@@ -244,15 +209,7 @@
                       </h2>
                         )}
                         <div>
-                        <FaEdit
-                          onClick={() =>
-                            editingTitleIndex === index
-                              ? handleSaveClick(post.encodedResourceId)
-                              : handleEditClick(index, post.fileTitle)
-                          }
-                          className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
-                      transform hover:scale-110 hover:text-gray-800 m-1 "
-                      />
+                        
                       </div>
                      </div>
   

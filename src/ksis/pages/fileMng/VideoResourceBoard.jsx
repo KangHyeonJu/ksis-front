@@ -10,6 +10,7 @@ import {
 import {
   ACTIVE_RSVIDEO_BOARD,
   FILE_ORIGINAL_BASIC,
+  FILE_DEACTIVE,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import VideoResourceModal from "./VideoResourceModal";
@@ -119,7 +120,7 @@ const handleToggle = () => {
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
       try {
-        await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
+        await fetcher.post(FILE_DEACTIVE + `/${id}`);
         setVideos(videos.filter((video) => video.id !== id));
         window.alert("영상을 삭제하였습니다.");
       } catch (err) {
