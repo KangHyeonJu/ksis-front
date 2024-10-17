@@ -86,8 +86,18 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
           // newElement.muted = true;
         }
         newElement.src = resource.filePath;
-        newElement.style.width = "100%";
-        newElement.style.height = "100%";
+
+        if (resource.resolution) {
+          newElement.style.width = "100%";
+          newElement.style.height = "auto";
+        } else {
+          newElement.style.height = "100%";
+          newElement.style.width = "auto"; // 가로는 자동
+          // newElement.style.objectFit = "contain"; // 비율 유지
+        }
+        newElement.style.display = "block";
+        newElement.style.margin = "auto";
+
         // 기존 요소가 있으면 교체, 없으면 추가
         if (container.firstChild) {
           container.replaceChild(newElement, container.firstChild);
@@ -194,7 +204,10 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
         },
       }}
     >
-      <div id="container" className="h-full w-full absolute"></div>
+      <div
+        id="container"
+        className="h-full w-full fixed left-0 top-0 bg-black flex items-center justify-center align-middle"
+      ></div>
 
       <div className="h-1/12 w-full bg-gray-800/10 flex items-center fixed bottom-0">
         <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">

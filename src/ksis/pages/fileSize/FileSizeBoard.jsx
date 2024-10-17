@@ -49,6 +49,14 @@ const FileSizeBoard = () => {
   const handleSave = async () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
 
+     // 사용자 확인 창 추가
+  const confirmMessage = "설정을 저장하시겠습니까?";
+  const isConfirmed = window.confirm(confirmMessage);
+
+  if (!isConfirmed) {
+    return; // 사용자가 취소한 경우 함수 종료
+    }
+
     try {
       const response = await fetcher.put(FILE_SIZE, fileSizeData); // fetcher를 사용한 PUT 요청
 

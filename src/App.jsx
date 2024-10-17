@@ -25,6 +25,9 @@ import {
   MAIN,
   RESOLUTION_LIST,
   SIGNAGE_PLAY_PAGE,
+  TRASH_IMAGE_FILE,
+  TRASH_VIDEO_FILE,
+  TRASH_NOTICE,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -80,6 +83,12 @@ import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
+import TrashImageFileBoard from "./ksis/pages/trash/TrashImageFileBoard.jsx";
+import TrashVideoFileBoard from "./ksis/pages/trash/TrashVideoFileBoard.jsx";
+import TrashNoticeBoard from "./ksis/pages/trash/TrashNoticeBoard.jsx";
+import { EventSourcePolyfill } from "event-source-polyfill";
+import { decodeJwt } from "./decodeJwt";
+
 function App() {
   const location = useLocation();
   // 사이드바를 숨기고 싶은 경로들
@@ -108,15 +117,15 @@ function App() {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       fetcher
-          .post(TOKEN_CHECK)
-          .then((response) => {
-            if (response.data.logout) {
-              logout();
-            }
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-          });
+        .post(TOKEN_CHECK)
+        .then((response) => {
+          if (response.data.logout) {
+            logout();
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+        });
     } else {
       localStorage.removeItem("accessToken");
     }
@@ -210,6 +219,11 @@ function App() {
 
             {/* error */}
             <Route pate={ERROR_403} element={<Error403 />} />
+
+            {/* 휴지통 */}
+            <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard />} />
+            <Route path={TRASH_VIDEO_FILE} element={<TrashVideoFileBoard />} />
+            <Route path={TRASH_NOTICE} element={<TrashNoticeBoard />} />
           </Route>
 
           {/* 재생 */}

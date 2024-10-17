@@ -68,6 +68,13 @@ const ApiBoard = () => {
       alert("삭제할 게시글을 선택해주세요.");
       return;
     }
+    // 삭제 확인 창 추가
+  const confirmMessage = "선택한 게시글을 삭제하시겠습니까?";
+  const isConfirmed = window.confirm(confirmMessage);
+
+  if (!isConfirmed) {
+    return; // 사용자가 취소한 경우 함수 종료
+  }
     try {
       const deletePromises = [...selectedPosts].map((id) =>
         fetcher(API_NOTICE + `/${id}`, {

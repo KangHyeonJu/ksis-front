@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ApexCharts from "apexcharts";
 import {
   TOTAL_FILE_SIZE,
@@ -7,9 +7,15 @@ import {
   SIGNAGE_STATUS,
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
+import axios from "axios";
 
 const Main = () => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const API_WS_URL = process.env.REACT_APP_API_WS_URL;
+
+  const MAX_RETRIES = 5;
+  let retryCount = 0;
+  const socketRef = useRef(null);
 
   const [fileSize, setFileSize] = useState({});
   const [fileCount, setFileCount] = useState({});
@@ -35,6 +41,7 @@ const Main = () => {
 
   const loadDevice = async () => {
     try {
+      // const response = await axios.get(API_BASE_URL + SIGNAGE_STATUS);
       const response = await fetcher.get(SIGNAGE_STATUS);
 
       if (response.data) {
@@ -51,8 +58,9 @@ const Main = () => {
     loadPage();
   }, []);
 
-  useEffect(() => {
+  const connectWebSocket = () => {
     const socket = new WebSocket(API_WS_URL + `/ws/main`);
+    socketRef.current = socket;
 
     socket.onmessage = (event) => {
       if (event.data === "statusUpdate") {
@@ -62,18 +70,36 @@ const Main = () => {
 
     socket.onopen = () => {
       console.log("WebSocket connected");
+      retryCount = 0;
     };
 
     socket.onclose = () => {
-      console.log("WebSocket disconnected");
+      if (retryCount < MAX_RETRIES) {
+        const retryTimeout = Math.pow(2, retryCount) * 1000; // 지수 백오프 적용
+        console.log(
+          `WebSocket disconnected. Reconnecting in ${
+            retryTimeout / 1000
+          } seconds...`
+        );
+        retryCount++;
+        setTimeout(connectWebSocket, retryTimeout); // 재연결 시도
+      } else {
+        console.log("Max retries reached. No further reconnection attempts.");
+      }
     };
 
-    socket.onerror = (e) => {
-      console.log(e);
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
     };
+  };
+
+  useEffect(() => {
+    connectWebSocket();
 
     return () => {
-      socket.close();
+      if (socketRef.current) {
+        socketRef.current.close(); // 컴포넌트 언마운트 시 WebSocket 종료
+      }
     };
   }, []);
 
@@ -539,22 +565,22 @@ const Main = () => {
           <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
             <thead>
               <tr>
-                <th className="border border-gray-300">재생장치 이름</th>
-                <th className="border border-gray-300">연결 상태</th>
+                <th className="border border-gray-300 p-1">재생장치 이름</th>
+                <th className="border border-gray-300 p-1">연결 상태</th>
               </tr>
             </thead>
             <tbody>
               {devices.map((device) => (
                 <tr>
-                  <td className="border border-gray-300 text-center">
+                  <td className="border border-gray-300 text-center p-2">
                     {device.deviceName}
                   </td>
 
-                  <td className="border border-gray-300 text-center">
+                  <td className="border border-gray-300 text-center p-2">
                     {device.isConnect ? (
-                      <div className="w-4 h-4 rounded-full bg-green-500 inline-block"></div>
+                      <div className="w-5 h-5 rounded-full bg-green-500 inline-block"></div>
                     ) : (
-                      <div className="w-4 h-4 rounded-full bg-red-500 inline-block"></div>
+                      <div className="w-5 h-5 rounded-full bg-red-500 inline-block"></div>
                     )}
                   </td>
                 </tr>

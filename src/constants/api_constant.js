@@ -27,8 +27,10 @@ export const API_BASIC = "/api";
 
 //notice
 export const NOTICE_LIST = "/notices";
-export const DEACTIVE_NOTICE = "/notices/delete";
 export const NOTICE_ALL = "/notices/all";
+export const ACTIVE_NOTICE = "/notices/activation";
+export const NOTICE_DEACTIVE_ALL = "/notices/deactivation/all";
+export const DEACTIVE_NOTICE = "/notices/deactivation";
 
 //notification
 export const NOTIFICATION_PAGE = "/api/notifications";
@@ -39,13 +41,17 @@ export const NOTIFICATION_COUNT = "/api/notifications/unread";
 export const FILE_SIZE = "/api/filesize";
 export const FILE_BASIC = "/resourceList";
 export const FILE_ALL = "/resourceList/All";
+export const FILE_DEACTIVION = "/resourceList/deactivation";
+export const FILE_ACTIVE = "/resourceList/active";
 export const FILE_ORIGINAL_BASIC = "/resourceList/original";
 export const IMG_ORIGINAL_BASIC = "/resourceList/Img";
 export const VIDEO_ORIGINAL_BASIC = "/resourceList/Video";
 export const FILE_ENCODED_BASIC = "/resourceList/encoded";
-export const RSIMAGE_BOARD = "/resourceList/RsImages";
+export const DEACTIVE_IMAGE_BOARD = "/resourceList/deactivation/Images";
+export const DEACTIVE_VIDEO_BOARD = "/resourceList/deactivation/Videos";
+export const ACTIVE_RSIMAGE_BOARD = "/resourceList/active/RsImages";
+export const ACTIVE_RSVIDEO_BOARD = "/resourceList/active/RsVideos";
 export const ECIMAGE_BOARD = "/resourceList/EcImages";
-export const RSVIDEO_BOARD = "/resourceList/RsVideos";
 export const ECVIDEO_BOARD = "/resourceList/EcVideos";
 export const ENCODED_IMG = "/resourceList/img/encoding";
 export const ENCODED_VIDEO = "/resourceList/video/encoding";
@@ -65,5 +71,5 @@ export const UPLOADLOG_LIST = "/log/upload";
 //resolution
 export const RESOLUTION = "/resolution";
 
-//sse
-export const SSE_CONNECT = "/sse/connect";
+//websocket
+export const WEBSOCKET_NOTIFICATION = "/ws/notifications";

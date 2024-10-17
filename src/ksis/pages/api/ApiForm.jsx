@@ -54,6 +54,7 @@ const ApiForm = () => {
     return regex.test(date);
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,6 +62,18 @@ const ApiForm = () => {
       alert("날짜 형식이 올바르지 않습니다. yyyy-mm-dd 형식으로 입력해주세요.");
       return;
     }
+
+
+     // 수정 또는 등록 시에만 확인 창 표시
+  const isUpdate = !!apiId; // apiId가 존재하면 수정으로 간주
+  const action = isUpdate ? "수정" : "등록"; // 동작 유형 결정
+  const confirmMessage = `${action}된 API 정보를 저장하시겠습니까?`;
+
+  const isConfirmed = window.confirm(confirmMessage);
+
+  if (!isConfirmed) {
+    return; // 사용자가 취소한 경우 함수 종료
+  }
 
     const apiData = {
       apiName,

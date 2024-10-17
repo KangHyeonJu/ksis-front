@@ -4,12 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
   IMAGE_RESOURCE_BOARD,
-  IMAGE_FILE_BOARD,
   IMAGE_ENCODING,
+  VIDEO_RESOURCE_BOARD
 } from "../../../constants/page_constant";
 import {
-  RSIMAGE_BOARD,
+  ACTIVE_RSIMAGE_BOARD,
   FILE_ORIGINAL_BASIC,
+  FILE_DEACTIVION,
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import ImageResourceModal from "./ImageResourceModal";
@@ -19,7 +20,7 @@ import fetcher from "../../../fetcher";
 const ImageResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("total");
-  const [isOriginal, setIsOriginal] = useState(true);
+  const [isOriginal, setIsOriginal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const postsPerPage = 16;
   const [images, setImages] = useState([]);
@@ -32,12 +33,8 @@ const ImageResourceBoard = () => {
   const [selectedImage, setSelectedImage] = useState(null); // 선택한 이미지의 정보를 관리하는 상태값 추가
 
   useEffect(() => {
-    navigate(isOriginal ? IMAGE_RESOURCE_BOARD : IMAGE_FILE_BOARD);
-  }, [isOriginal, navigate]);
-
-  useEffect(() => {
     fetcher
-      .get(RSIMAGE_BOARD)
+      .get(ACTIVE_RSIMAGE_BOARD)
       .then((response) => {
         setImages(response.data);
       })
@@ -66,7 +63,9 @@ const ImageResourceBoard = () => {
   }, [images, searchTerm, searchCategory]);
 
   const handleToggle = () => {
-    setIsOriginal((prevIsOriginal) => !prevIsOriginal);
+    const newIsOriginal = !isOriginal;
+    setIsOriginal(newIsOriginal);
+    navigate(newIsOriginal ? VIDEO_RESOURCE_BOARD : IMAGE_RESOURCE_BOARD);
   };
 
   const handlePageChange = ({ selected }) => {
@@ -87,6 +86,7 @@ const ImageResourceBoard = () => {
 
   //제목 수정
   const handleSaveClick = async (id) => {
+    if(window.confirm("정말로 파일의 제목을 변경하시겠습니까?")){
     try {
       await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
         fileTitle: newTitle,
@@ -104,18 +104,18 @@ const ImageResourceBoard = () => {
       window.confirm("수정에 실패했습니다.");
       console.error("제목 수정 중 오류 발생:", error);
     }
-  };
+  }};
 
 
-  const handleDelete = async (id) => {
-    if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
+  const handleDeactivate = async (id) => {
+    if (window.confirm("정말로 이 이미지를 비활성화하시겠습니까?")) {
       try {
-        await fetcher.delete(FILE_ORIGINAL_BASIC + `/${id}`);
+        await fetcher.post(FILE_DEACTIVION + `/${id}`);
         setImages(images.filter((image) => image.id !== id));
-        window.alert("이미지를 삭제하였습니다.");
+        window.alert("이미지를 비활성화하였습니다.");
       } catch (err) {
-        console.error("이미지 삭제 오류:", err);
-        window.alert("이미지 삭제에 실패했습니다.");
+        console.error("이미지 비활성화 오류:", err);
+        window.alert("이미지 비활성화에 실패했습니다.");
       }
     }
   };
@@ -195,8 +195,8 @@ const ImageResourceBoard = () => {
 
      
 
-      {/* 원본, 인코딩 페이지 선택 토글버튼 */}
-      <div className="flex justify-start space-x-2">
+      {/* 토글 버튼 */}
+      <div className="flex justify-end space-x-2">
         <button
           type="button"
           onClick={handleToggle}
@@ -206,7 +206,7 @@ const ImageResourceBoard = () => {
           role="switch"
           aria-checked={isOriginal}
         >
-          <span className="sr-only">{isOriginal ? "원본" : "인코딩"}</span>
+          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
           <span
             className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
               isOriginal ? "translate-x-10" : "translate-x-0"
@@ -218,7 +218,7 @@ const ImageResourceBoard = () => {
               isOriginal ? "text-left" : "text-right"
             }`}
           >
-            {isOriginal ? "원본" : "인코딩"}
+            {isOriginal ? "이미지" : "영상"}
           </span>
         </button>
       </div>
@@ -305,10 +305,10 @@ const ImageResourceBoard = () => {
                   
                 <button
                   type="button"
-                  onClick={() => handleDelete(post.originalResourceId)}
+                  onClick={() => handleDeactivate(post.originalResourceId)}
                   className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
                 >
-                  삭제
+                  비활성화
                 </button>
                 </div>
               </div>

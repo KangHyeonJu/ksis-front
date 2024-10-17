@@ -166,19 +166,21 @@ const SignageForm = () => {
         new Blob([JSON.stringify(accountIds)], { type: "application/json" })
       );
 
-      const response = await fetcher.post(SIGNAGE_ADD, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(response.data);
+      if (window.confirm("등록하시겠습니까?")) {
+        const response = await fetcher.post(SIGNAGE_ADD, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(response.data);
 
-      if (response.status === 200) {
-        alert("재생장치가 정상적으로 등록되었습니다.");
-        navigate(SIGNAGE_INVENTORY);
-      } else {
-        alert("재생장치 등록을 실패했습니다.");
-        return;
+        if (response.status === 200) {
+          alert("재생장치가 정상적으로 등록되었습니다.");
+          navigate(SIGNAGE_INVENTORY);
+        } else {
+          alert("재생장치 등록을 실패했습니다.");
+          return;
+        }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -217,7 +219,14 @@ const SignageForm = () => {
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         재생장치 등록
       </h1>
-      <form onSubmit={handleSave}>
+      <form
+        onSubmit={handleSave}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        }}
+      >
         <div className="shadow-sm ring-1 ring-gray-900/5 text-center pt-5 pb-5">
           <div className="flex items-center">
             <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
