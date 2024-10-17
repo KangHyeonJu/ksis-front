@@ -27,7 +27,8 @@ export const API_BASIC = "/api";
 
 //notice
 export const NOTICE_LIST = "/notices";
-export const DEACTIVE_NOTICE = "/notices/delete";
+export const DEACTIVE_NOTICE = "/notices/deactivation";
+export const NOTICE_DEACTIVE_ALL = "/notices/deactivation/all";
 export const NOTICE_ALL = "/notices/all";
 
 //notification
