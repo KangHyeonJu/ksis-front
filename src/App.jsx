@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
 import ProtectedRoute from "./ksis/components/ProtectedRoute";
@@ -25,6 +25,9 @@ import {
   MAIN,
   RESOLUTION_LIST,
   SIGNAGE_PLAY_PAGE,
+  TRASH_IMAGE_FILE,
+  TRASH_VIDEO_FILE,
+  TRASH_NOTICE,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -43,7 +46,6 @@ import {
   ACCOUNT_LIST_BOARD,
   TOKEN_CALLBACK,
   TOKEN_CHECK,
-  EVENT,
 } from "./constants/account_constant";
 import PcForm from "./ksis/pages/pc/PcForm";
 import PcList from "./ksis/pages/pc/PcList";
@@ -81,21 +83,20 @@ import fetcher from "./fetcher";
 import Error403 from "./ksis/pages/main/error403.jsx";
 import ResolutionList from "./ksis/pages/resolution/ResolutionList.jsx";
 import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
+import TrashImageFileBoard from "./ksis/pages/trash/TrashImageFileBoard.jsx";
+import TrashVideoFileBoard from "./ksis/pages/trash/TrashVideoFileBoard.jsx";
+import TrashNoticeBoard from "./ksis/pages/trash/TrashNoticeBoard.jsx";
 import { EventSourcePolyfill } from "event-source-polyfill";
-import {decodeJwt} from "./decodeJwt";
+import { decodeJwt } from "./decodeJwt";
 
 function App() {
   const location = useLocation();
-
   // 사이드바를 숨기고 싶은 경로들
   const noSidebarRoutes = ["/downloadApp", "/signageplay"];
 
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
-  const URL = process.env.REACT_APP_API_BASE_URL;
-  const navigate = useNavigate();
-  const userInfo = decodeJwt();
 
   window.addEventListener("storage", (event) => {
     if (event.key === "accessToken" && event.newValue === null) {
@@ -114,23 +115,6 @@ function App() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    let eventSource = new EventSourcePolyfill(`${URL}${EVENT}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 추가
-      },
-    });
-    // let eventSource = new EventSource("${URL}/api/events");
-
-    eventSource.addEventListener("logout", (event) => {
-      const loggedOutAccountId = event.data;
-      const currentAccountId = userInfo.accountId;
-
-      if (loggedOutAccountId === currentAccountId) {
-        logout();
-        eventSource.close(); // 로그아웃 후 SSE 연결 종료
-      }
-    });
-
     if (accessToken) {
       fetcher
         .post(TOKEN_CHECK)
@@ -235,6 +219,11 @@ function App() {
 
             {/* error */}
             <Route pate={ERROR_403} element={<Error403 />} />
+
+            {/* 휴지통 */}
+            <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard />} />
+            <Route path={TRASH_VIDEO_FILE} element={<TrashVideoFileBoard />} />
+            <Route path={TRASH_NOTICE} element={<TrashNoticeBoard />} />
           </Route>
 
           {/* 재생 */}

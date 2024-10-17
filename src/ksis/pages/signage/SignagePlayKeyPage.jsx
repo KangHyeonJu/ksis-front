@@ -2,7 +2,6 @@ import { useSearchParams } from "react-router-dom";
 import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
-  SSE_CONNECT,
 } from "../../../constants/api_constant";
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
@@ -33,19 +32,25 @@ const SignagePlayKeyPage = () => {
   const scrollRef = useRef(null);
 
   const loadPage = async () => {
-    // ip & key 검증
-    const response = await axios.get(API_BASE_URL + SIGNAGE_PLAY, {
-      params: { key: keyValue },
-    });
-    if (response.status === 200 && response.data !== null) {
-      setVerification(true);
+    try {
+      // ip & key 검증
+      const response = await axios.get(API_BASE_URL + SIGNAGE_PLAY, {
+        params: { key: keyValue },
+      });
+      if (response.status === 200 && response.data !== null) {
+        setVerification(true);
 
-      loadPlayData(response.data);
-      setDeviceId(response.data);
-      setLoading(false);
-    } else {
-      console.log("IP와 KEY 검증 실패");
-      setVerification(false);
+        loadResource(response.data);
+        loadNotice(response.data);
+
+        setDeviceId(response.data);
+        setLoading(false);
+      } else {
+        console.log("IP와 KEY 검증 실패");
+        setVerification(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -58,17 +63,29 @@ const SignagePlayKeyPage = () => {
     loadPage();
   }, []);
 
-  const loadPlayData = async (signageId) => {
+  const loadResource = async (signageId) => {
     try {
-      const [responseResource, responseNotice] = await Promise.all([
-        axios.get(API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`),
-        axios.get(API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`),
-      ]);
-      setResources(responseResource.data);
-      console.log(responseResource);
+      const response = await axios.get(
+        API_BASE_URL + SIGNAGE_PLAY + `/${signageId}`
+      );
 
-      setNotices(responseNotice.data);
-      console.log(responseNotice);
+      if (response.data) {
+        setResources(response.data);
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const loadNotice = async (signageId) => {
+    try {
+      const response = await axios.get(
+        API_BASE_URL + SIGNAGE_PLAY_NOTICE + `/${signageId}`
+      );
+
+      setNotices(response.data);
+      console.log("Notices", response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -80,6 +97,16 @@ const SignagePlayKeyPage = () => {
     );
 
     socketRef.current = socket;
+
+    socket.onmessage = (event) => {
+      if (event.data === "playlistUpdate") {
+        console.log("playlistUpdate");
+        loadResource(deviceIdRef.current);
+      } else if (event.data === "noticeUpdate") {
+        console.log("noticeUpdate");
+        loadNotice(deviceIdRef.current);
+      }
+    };
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -109,6 +136,8 @@ const SignagePlayKeyPage = () => {
       socket.close();
     };
   };
+
+  const sendMessage = () => {};
 
   useEffect(() => {
     connectWebSocket();
@@ -183,8 +212,18 @@ const SignagePlayKeyPage = () => {
             });
           };
         }
-        newElement.style.width = "100%";
-        newElement.style.height = "100%";
+
+        if (resource.resolution) {
+          newElement.style.width = "100%";
+          newElement.style.height = "auto";
+        } else {
+          newElement.style.height = "100%";
+          newElement.style.width = "auto"; // 가로는 자동
+          // newElement.style.objectFit = "contain"; // 비율 유지
+        }
+        newElement.style.display = "block";
+        newElement.style.margin = "auto";
+
         // 기존 요소가 있으면 교체, 없으면 추가
         if (container.firstChild) {
           container.replaceChild(newElement, container.firstChild);
@@ -221,7 +260,18 @@ const SignagePlayKeyPage = () => {
   });
 
   const tick = () => {
-    setDate(new Date());
+    const newDate = new Date();
+
+    // 날짜 비교
+    if (
+      date.getDate() !== newDate.getDate() ||
+      date.getMonth() !== newDate.getMonth() ||
+      date.getFullYear() !== newDate.getFullYear()
+    ) {
+      loadNotice(deviceIdRef.current);
+    }
+
+    setDate(newDate);
   };
 
   const getWeather = async (lat, lon) => {
@@ -262,11 +312,11 @@ const SignagePlayKeyPage = () => {
         <div>
           <div
             id="container"
-            className="h-full w-full fixed left-0 top-0"
+            className="h-full w-full fixed left-0 top-0 bg-black flex items-center justify-center align-middle"
           ></div>
 
-          <div className="h-1/12 w-full bg-gray-800/30 flex items-center fixed left-0 bottom-0">
-            <div className="flex-auto text-center w-1/12">
+          <div className="h-1/12 w-full bg-gray-300/30 flex items-center fixed left-0 bottom-0">
+            <div className="flex-auto text-center w-1/12 mr-5">
               <div className="flex">
                 <img
                   className="m-auto"

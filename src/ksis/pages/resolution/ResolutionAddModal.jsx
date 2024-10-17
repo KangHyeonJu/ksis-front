@@ -7,6 +7,7 @@ import {
 } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import { RESOLUTION } from "../../../constants/api_constant";
+import { ImCross } from "react-icons/im";
 
 const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
   const [data, setData] = useState({
@@ -23,14 +24,22 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
   const postResolution = async (e) => {
     try {
       e.preventDefault();
-      const response = await fetcher.post(RESOLUTION, data);
 
-      if (response.status === 200) {
-        alert("해상도가 등록되었습니다.");
-        setData({ name: "", width: "", height: "" });
-        onRequestClose();
-      } else {
-        alert("해상도 등록 중 오류가 발생했습니다.");
+      if (data.width % 2 !== 0 || data.height % 2 !== 0) {
+        alert("해상도는 짝수만 등록가능합니다.");
+        return;
+      }
+
+      if (window.confirm("등록하시겠습니까?")) {
+        const response = await fetcher.post(RESOLUTION, data);
+
+        if (response.status === 200) {
+          alert("해상도가 등록되었습니다.");
+          setData({ name: "", width: "", height: "" });
+          onRequestClose();
+        } else {
+          alert("해상도 등록 중 오류가 발생했습니다.");
+        }
       }
     } catch (error) {
       console.log(error.response.data);
@@ -45,11 +54,16 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-3/12 sm:p-6 h-80">
+        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-3/12 sm:p-6">
           <DialogTitle className="">
             <h1 className="text-xl font-bold text-gray-900 ml-1">
               해상도 등록
             </h1>
+
+            <ImCross
+              className="absolute top-5 right-5 text-red-500 cursor-pointer"
+              onClick={onCloseHandler}
+            />
           </DialogTitle>
           <form onSubmit={postResolution}>
             <DialogBody className="mt-2">
@@ -99,16 +113,10 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
                 />
               </div>
             </DialogBody>
-            <DialogActions className="mt-4">
-              <div
-                onClick={onCloseHandler}
-                className="cursor-pointer inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600/70 text-base font-medium text-white shadow-sm hover:bg-red-700/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
-              >
-                닫기
-              </div>
+            <DialogActions>
               <button
                 type="submit"
-                className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
+                className="mr-3 inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
               >
                 등록
               </button>
