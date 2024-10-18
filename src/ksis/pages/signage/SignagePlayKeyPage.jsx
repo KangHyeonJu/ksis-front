@@ -120,6 +120,11 @@ const SignagePlayKeyPage = () => {
     socket.onmessage = (event) => {
       if (event.data === "playlistUpdate") {
         console.log("playlistUpdate");
+        const container = document.getElementById("container");
+        while (container.firstChild) {
+          container.removeChild(container.firstChild); // 첫 번째 자식 노드가 없어질 때까지 제거
+        }
+
         loadResource(deviceIdRef.current);
       } else if (event.data === "noticeUpdate") {
         console.log("noticeUpdate");
@@ -196,6 +201,12 @@ const SignagePlayKeyPage = () => {
 
     if (resources.length > 0 && container) {
       const resource = resources[currentIndex];
+
+      if (!resource) {
+        console.error("Invalid resource at index:", currentIndex);
+        window.location.reload();
+        return;
+      }
 
       // 일정 시간 후에 새로운 이미지나 비디오를 페이드 인
       setTimeout(() => {
