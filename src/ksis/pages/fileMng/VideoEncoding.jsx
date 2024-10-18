@@ -7,9 +7,11 @@ import {
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
+import { decodeJwt } from "../../../decodeJwt";
 
 const VideoEncoding = () => {
   const params = useParams();
+  const accountId = decodeJwt().accountId;
   const navigate = useNavigate();
   const [video, setVideo] = useState(null);
   const [resolutions, setResolution] = useState([]);
@@ -84,6 +86,7 @@ const VideoEncoding = () => {
         const resolutionToUse = option.resolution || `${resolutions[0].width}x${resolutions[0].height}`;
 
         const requestData = {
+          accountId: accountId,
           originalResourceId: video.originalResourceId,
           fileTitle: video.fileTitle,
           filePath: video.filePath,
