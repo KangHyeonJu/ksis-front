@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
@@ -86,18 +86,18 @@ import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
 import TrashImageFileBoard from "./ksis/pages/trash/TrashImageFileBoard.jsx";
 import TrashVideoFileBoard from "./ksis/pages/trash/TrashVideoFileBoard.jsx";
 import TrashNoticeBoard from "./ksis/pages/trash/TrashNoticeBoard.jsx";
-import { EventSourcePolyfill } from "event-source-polyfill";
-import { decodeJwt } from "./decodeJwt";
 
 function App() {
   const location = useLocation();
   // 사이드바를 숨기고 싶은 경로들
   const noSidebarRoutes = ["/downloadApp", "/signageplay"];
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [marginClass, setMarginClass] = useState('ml-64');
 
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
-
+  const handleResize = () => {setWindowWidth(window.innerWidth);};
   window.addEventListener("storage", (event) => {
     if (event.key === "accessToken" && event.newValue === null) {
       // 로그아웃 처리
@@ -112,6 +112,14 @@ function App() {
     localStorage.removeItem("accountId");
     window.location.href = "/downloadApp";
   };
+
+  useEffect(() => {
+    if (windowWidth >= 1024) {
+      setMarginClass('ml-64');
+    } else {
+      setMarginClass('ml-16');
+    }
+  }, [windowWidth]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -129,105 +137,110 @@ function App() {
     } else {
       localStorage.removeItem("accessToken");
     }
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
       {!isNoSidebarRoute && accessToken && <Sidebar />}
-      <div className="content flex-1 p-4">
+      <div className={`content flex-1 p-4 ${marginClass}`}>
         <Routes>
-          <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
-          <Route path={"/downloadApp"} element={<DownloadApp />} />
+          <Route path={TOKEN_CALLBACK} element={<TokenCallback/>}/>
+          <Route path={"/downloadApp"} element={<DownloadApp/>}/>
 
-          <Route element={<ProtectedRoute />}>
-            <Route path={MAIN} element={<Main />} />
+          <Route element={<ProtectedRoute/>}>
+            <Route path={MAIN} element={<Main/>}/>
 
             {/* 계정 관련 경로 */}
-            <Route path={ACCOUNT_FORM} element={<AccountRegForm />} />
-            <Route path={ACCOUNT_LIST_BOARD} element={<AccountList />} />
-            <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm />} />
+            <Route path={ACCOUNT_FORM} element={<AccountRegForm/>}/>
+            <Route path={ACCOUNT_LIST_BOARD} element={<AccountList/>}/>
+            <Route path={ACCOUNT_EDIT_FORM} element={<AccountEditForm/>}/>
 
             {/* PC 관련 경로 */}
-            <Route path={PC_INVENTORY} element={<PcList />} />
-            <Route path={PC_FORM} element={<PcForm />} />
-            <Route path={PC_DTL + "/:id"} element={<PcDtl />} />
-            <Route path={PC_UPDATE_FORM + "/:id"} element={<PcUpdateForm />} />
+            <Route path={PC_INVENTORY} element={<PcList/>}/>
+            <Route path={PC_FORM} element={<PcForm/>}/>
+            <Route path={PC_DTL + "/:id"} element={<PcDtl/>}/>
+            <Route path={PC_UPDATE_FORM + "/:id"} element={<PcUpdateForm/>}/>
 
             {/* Signage 관련 경로 */}
-            <Route path={SIGNAGE_INVENTORY} element={<SignageList />} />
-            <Route path={SIGNAGE_FORM} element={<SignageForm />} />
-            <Route path={SIGNAGE_GRID} element={<SignageGrid />} />
-            <Route path={SIGNAGE_DTL + "/:id"} element={<SignageDtl />} />
+            <Route path={SIGNAGE_INVENTORY} element={<SignageList/>}/>
+            <Route path={SIGNAGE_FORM} element={<SignageForm/>}/>
+            <Route path={SIGNAGE_GRID} element={<SignageGrid/>}/>
+            <Route path={SIGNAGE_DTL + "/:id"} element={<SignageDtl/>}/>
             <Route
-              path={SIGNAGE_UPDATE_FORM + "/:id"}
-              element={<SignageUpdateForm />}
+                path={SIGNAGE_UPDATE_FORM + "/:id"}
+                element={<SignageUpdateForm/>}
             />
 
             {/* API 관련 경로 */}
-            <Route path={API_BOARD} element={<ApiBoard />} />
-            <Route path={API_FORM} element={<ApiForm />} />
-            <Route path={API_FORM + "/:apiId"} element={<ApiForm />} />
+            <Route path={API_BOARD} element={<ApiBoard/>}/>
+            <Route path={API_FORM} element={<ApiForm/>}/>
+            <Route path={API_FORM + "/:apiId"} element={<ApiForm/>}/>
 
             {/* File Size 관련 경로 */}
-            <Route path={FILESIZE_FORM} element={<FileSizeBoard />} />
+            <Route path={FILESIZE_FORM} element={<FileSizeBoard/>}/>
 
             {/* 공지사항 관련 경로 */}
-            <Route path={NOTICE_BOARD} element={<NoticeBoard />} />
-            <Route path={NOTICE_FORM} element={<NoticeForm />} />
-            <Route path={NOTICE_FORM + "/:noticeId"} element={<NoticeForm />} />
-            <Route path={NOTICE_DTL + "/:noticeId"} element={<NoticeDtl />} />
+            <Route path={NOTICE_BOARD} element={<NoticeBoard/>}/>
+            <Route path={NOTICE_FORM} element={<NoticeForm/>}/>
+            <Route path={NOTICE_FORM + "/:noticeId"} element={<NoticeForm/>}/>
+            <Route path={NOTICE_DTL + "/:noticeId"} element={<NoticeDtl/>}/>
 
             {/* 미디어관리 관련 경로 */}
-            <Route path={IMAGE_FILE_BOARD} element={<ImageFileBoard />} />
+            <Route path={IMAGE_FILE_BOARD} element={<ImageFileBoard/>}/>
             <Route
-              path={IMAGE_RESOURCE_BOARD}
-              element={<ImageResourceBoard />}
+                path={IMAGE_RESOURCE_BOARD}
+                element={<ImageResourceBoard/>}
             />
-            <Route path={VIDEO_FILE_BOARD} element={<VideoFileBoard />} />
+            <Route path={VIDEO_FILE_BOARD} element={<VideoFileBoard/>}/>
             <Route
-              path={VIDEO_RESOURCE_BOARD}
-              element={<VideoResourceBoard />}
-            />
-            <Route
-              path={IMAGE_RESOURCE_MODAL + "/:originalResourceId"}
-              element={<ImageResourceModal />}
+                path={VIDEO_RESOURCE_BOARD}
+                element={<VideoResourceBoard/>}
             />
             <Route
-              path={IMAGE_ENCODING + "/:originalResourceId"}
-              element={<ImageEncoding />}
+                path={IMAGE_RESOURCE_MODAL + "/:originalResourceId"}
+                element={<ImageResourceModal/>}
             />
             <Route
-              path={VIDEO_RESOURCE_MODAL + "/:originalResourceId"}
-              element={<VideoResourceModal />}
+                path={IMAGE_ENCODING + "/:originalResourceId"}
+                element={<ImageEncoding/>}
             />
             <Route
-              path={VIDEO_ENCODING + "/:originalResourceId"}
-              element={<VideoEncoding />}
+                path={VIDEO_RESOURCE_MODAL + "/:originalResourceId"}
+                element={<VideoResourceModal/>}
+            />
+            <Route
+                path={VIDEO_ENCODING + "/:originalResourceId"}
+                element={<VideoEncoding/>}
             />
 
             {/* 로그 */}
-            <Route path={ACCESSLOG_INVENTORY} element={<AccessLogBoard />} />
+            <Route path={ACCESSLOG_INVENTORY} element={<AccessLogBoard/>}/>
             <Route
-              path={ACTIVITYLOG_INVENTORY}
-              element={<ActivityLogBoard />}
+                path={ACTIVITYLOG_INVENTORY}
+                element={<ActivityLogBoard/>}
             />
-            <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard />} />
+            <Route path={UPLOADLOG_INVENTORY} element={<UploadLogBoard/>}/>
 
             {/* 해상도 */}
-            <Route path={RESOLUTION_LIST} element={<ResolutionList />} />
+            <Route path={RESOLUTION_LIST} element={<ResolutionList/>}/>
 
             {/* error */}
-            <Route pate={ERROR_403} element={<Error403 />} />
+            <Route pate={ERROR_403} element={<Error403/>}/>
 
             {/* 휴지통 */}
-            <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard />} />
-            <Route path={TRASH_VIDEO_FILE} element={<TrashVideoFileBoard />} />
-            <Route path={TRASH_NOTICE} element={<TrashNoticeBoard />} />
+            <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard/>}/>
+            <Route path={TRASH_VIDEO_FILE} element={<TrashVideoFileBoard/>}/>
+            <Route path={TRASH_NOTICE} element={<TrashNoticeBoard/>}/>
           </Route>
 
           {/* 재생 */}
-          <Route path={SIGNAGE_PLAY_PAGE} element={<SignagePlayKeyPage />} />
+          <Route path={SIGNAGE_PLAY_PAGE} element={<SignagePlayKeyPage/>}/>
         </Routes>
       </div>
     </div>
