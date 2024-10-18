@@ -66,13 +66,9 @@ const PlaylistUpdateModal = ({
       if (response.data) {
         setResources(response.data.content);
         setTotalPages(response.data.totalPages);
-
-        loadResource();
       } else {
         console.error("No data property in response");
       }
-
-      //순서, 인코딩리소스
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -98,6 +94,7 @@ const PlaylistUpdateModal = ({
   useEffect(() => {
     if (isOpen && signageId) {
       loadModal();
+      loadResource();
     }
   }, [isOpen, signageId]);
 
@@ -281,10 +278,10 @@ const PlaylistUpdateModal = ({
                             resources.map((resource) => (
                               <div
                                 key={resource.encodedResourceId}
-                                className="group relative border border-gray-900 cursor-pointer"
                                 onClick={() => addList(resource)}
+                                className="group relative border border-gray-900 cursor-pointer"
                               >
-                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40 ">
+                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40">
                                   <img
                                     src={resource.thumbFilePath}
                                     alt={resource.fileTitle}
@@ -310,7 +307,7 @@ const PlaylistUpdateModal = ({
                                     {resource.fileTitle}
                                   </p>
 
-                                  <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                  <span className="z-10 absolute left-0 bottom-1/4 w-full p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                     {resource.fileTitle}
                                   </span>
                                 </div>
@@ -318,12 +315,13 @@ const PlaylistUpdateModal = ({
                             ))}
                         </div>
                       </div>
-                      <Stack spacing={2} className="mt-3">
+                      <Stack spacing={2} className="mt-6">
                         <Pagination
                           count={totalPages}
                           page={currentPage}
                           onChange={handlePageChange}
                           color={"primary"}
+                          className="z-20"
                         />
                       </Stack>
                     </div>
@@ -359,9 +357,9 @@ const PlaylistUpdateModal = ({
                                         {resourceAdd.fileTitle}
                                       </p>
 
-                                      <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
+                                      {/* <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
                                         {resourceAdd.fileTitle}
-                                      </span>
+                                      </span> */}
 
                                       <ImCross
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer"

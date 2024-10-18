@@ -6,6 +6,7 @@ import {
   SIGNAGE_RESOURCE_PAGE,
 } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
+import { RxCrossCircled } from "react-icons/rx";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FaSearch } from "react-icons/fa";
 
@@ -192,6 +193,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
     setData({ fileTitle: "", slideTime: "" });
     setSearchCategory("");
     setSearchTerm("");
+    setCurrentPage(1);
     onRequestClose();
   };
 
@@ -237,10 +239,10 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                           {resources.map((resource) => (
                             <div
                               key={resource.encodedResourceId}
-                              className="group relative border border-gray-900 cursor-pointer"
                               onClick={() => addList(resource)}
+                              className="group relative border border-gray-900 cursor-pointer"
                             >
-                              <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40 ">
+                              <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40">
                                 <img
                                   src={resource.thumbFilePath}
                                   alt={resource.fileTitle}
@@ -265,7 +267,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                   {resource.fileTitle}
                                 </p>
 
-                                <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                <span className="z-10 absolute left-0 bottom-1/4 w-full p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                   {resource.fileTitle}
                                 </span>
                               </div>
@@ -273,12 +275,13 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                           ))}
                         </div>
                       </div>
-                      <Stack spacing={2} className="mt-3">
+                      <Stack spacing={2} className="mt-6">
                         <Pagination
                           count={totalPages}
                           page={currentPage}
                           onChange={handlePageChange}
                           color={"primary"}
+                          className="z-20"
                         />
                       </Stack>
                     </div>
@@ -313,9 +316,9 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                       <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
                                         {resourceAdd.fileTitle}
                                       </p>
-                                      <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
+                                      {/* <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
                                         {resourceAdd.fileTitle}
-                                      </span>
+                                      </span> */}
                                       <ImCross
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer"
                                         onClick={() => removeList(resourceAdd)}

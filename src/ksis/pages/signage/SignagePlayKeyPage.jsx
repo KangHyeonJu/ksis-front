@@ -159,6 +159,16 @@ const SignagePlayKeyPage = () => {
 
     const scrollContainer = scrollRef.current;
     if (verification && scrollContainer) {
+      // 텍스트의 길이에 따라 애니메이션 지속 시간을 계산
+      const contentLength = scrollContainer.scrollWidth;
+      const containerWidth = scrollContainer.offsetWidth;
+      const scrollSpeed = 100; // 1초에 100px씩 움직인다고 가정
+
+      const animationDuration = (contentLength - containerWidth) / scrollSpeed; // 애니메이션 지속 시간 계산
+
+      // 애니메이션 지속 시간 설정
+      scrollContainer.style.animationDuration = `${animationDuration}s`;
+
       const handleAnimationIteration = () => {
         scrollContainer.appendChild(scrollContainer.firstChild.cloneNode(true));
         scrollContainer.style.animation = "none"; // 애니메이션 일시 중지

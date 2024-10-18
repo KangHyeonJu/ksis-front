@@ -190,6 +190,8 @@ const SignageDtl = () => {
     try {
       if (playlistId == null) {
         alert("삭제할 재생목록을 선택하세요.");
+      } else if (radiobox === playlistId) {
+        alert("현재 기본으로 선택된 재생목록입니다. 변경 후 삭제해주세요.");
       } else {
         if (window.confirm("삭제하시겠습니까?")) {
           const response = await fetcher.delete(SIGNAGE_PLAYLIST, {
