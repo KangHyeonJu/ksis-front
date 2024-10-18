@@ -201,7 +201,7 @@ const Sidebar = () => {
               <div className="submenu ml-8 mt-2">
                 <Link
                   to={IMAGE_RESOURCE_BOARD}
-                  onClick={() => handleMenuClick("original")}
+                  onClick={() => handleMenuClick("ORIGINAL")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -209,7 +209,7 @@ const Sidebar = () => {
                 </Link>
                 <Link
                   to={IMAGE_FILE_BOARD}
-                  onClick={() => handleMenuClick("encoded")}
+                  onClick={() => handleMenuClick("ENCODED")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -313,7 +313,7 @@ const Sidebar = () => {
               <div className="submenu ml-8 mt-2">
                 <Link
                   to={TRASH_IMAGE_FILE}
-                  onClick={() => handleMenuClick("TRASHIMAGEFILE")}
+                  onClick={() => handleMenuClick("TRASHFILE")}
                   className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
                 >
                   <FaRegCircle size={10} className="mr-2" />
