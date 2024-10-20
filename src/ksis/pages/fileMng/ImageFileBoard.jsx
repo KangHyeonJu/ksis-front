@@ -3,7 +3,6 @@ import { format, parseISO } from "date-fns";
 import { FaSearch, FaEdit } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import ReactPaginate from "react-paginate";
 import {
   VIDEO_FILE_BOARD,
   IMAGE_FILE_BOARD,
@@ -11,31 +10,48 @@ import {
 import { ECIMAGE_BOARD, FILE_ENCODED_BASIC } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
+
 const ImageFileBoard = () => {
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("total");
   const [isOriginal, setIsOriginal] = useState(false);
   const [images, setImages] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const postsPerPage = 16;
+  const [currentPage, setCurrentPage] = useState(1);
+ 
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
+  
   const navigate = useNavigate();
+  const postsPerPage = 16;
+
 
   useEffect(() => {
     fetcher
-      .get(ECIMAGE_BOARD)
+      .get(ECIMAGE_BOARD, {
+        params: {
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
+      })
       .then((response) => {
-        setImages(response.data);
+        setTotalPages(response.data.totalPages);
+        setImages(response.data.content);
         setFilteredPosts(response.data);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
       });
-  }, []);
+      
+  }, [currentPage, searchTerm]);
 
   const handleEditClick = (index, title) => {
     setEditingTitleIndex(index);
@@ -67,10 +83,6 @@ const ImageFileBoard = () => {
     const newIsOriginal = !isOriginal;
     setIsOriginal(newIsOriginal);
     navigate(newIsOriginal ? VIDEO_FILE_BOARD : IMAGE_FILE_BOARD);
-  };
-
-  const handlePageChange = ({ selected }) => {
-    setCurrentPage(selected);
   };
 
     // 엔터 키로 제목 저장
@@ -113,6 +125,17 @@ const handleKeyDown = (e, id) => {
     setSelectedImage("");
   };
 
+ // 페이지 변경 핸들러
+ const handlePageChange = (event, page) => {
+  setCurrentPage(page);
+};
+
+// 검색어 변경 핸들러
+const handleSearch = (e) => {
+  setSearchTerm(e.target.value);
+  setCurrentPage(1); // 검색 시 첫 페이지로 이동
+};
+
   const currentPosts = filteredPosts.slice(
     currentPage * postsPerPage,
     (currentPage + 1) * postsPerPage
@@ -143,7 +166,8 @@ const handleKeyDown = (e, id) => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
+
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -283,35 +307,15 @@ const handleKeyDown = (e, id) => {
       </div>
 
         {/* 페이지네이션 */}
-        {filteredPosts.length > postsPerPage && (
-              <ReactPaginate
-                previousLabel={"이전"}
-                nextLabel={"다음"}
-                breakLabel={"..."}
-                pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageChange}
-                containerClassName={"flex justify-center mt-4"}
-                pageClassName={"mx-1"}
-                pageLinkClassName={
-                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-                }
-                previousClassName={"mx-1"}
-                previousLinkClassName={
-                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-                }
-                nextClassName={"mx-1"}
-                nextLinkClassName={
-                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-                }
-                breakClassName={"mx-1"}
-                breakLinkClassName={
-                  "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-                }
-                activeClassName={"bg-blue-500 text-white"}
-              />
-            )}
+        <Stack spacing={2}
+      className="mt-2" >
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
+        />
+      </Stack>
 
       {/* 모달창 */}
       {isOpen && (
