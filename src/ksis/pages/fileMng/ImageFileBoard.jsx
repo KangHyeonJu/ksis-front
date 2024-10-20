@@ -15,12 +15,14 @@ import Stack from "@mui/material/Stack";
 
 
 const ImageFileBoard = () => {
-  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("total");
+  const [searchCategory, setSearchCategory] = useState("fileTitle");
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [isOriginal, setIsOriginal] = useState(false);
   const [images, setImages] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
  
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
@@ -29,7 +31,7 @@ const ImageFileBoard = () => {
   const [selectedImage, setSelectedImage] = useState("");
   
   const navigate = useNavigate();
-  const postsPerPage = 16;
+  const postsPerPage = 10;
 
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const ImageFileBoard = () => {
           page: currentPage - 1,
           size: postsPerPage,
           searchTerm,
-          searchCategory,
+          searchCategory, // 카테고리 검색에 필요한 필드
         },
       })
       .then((response) => {
@@ -92,18 +94,23 @@ const handleKeyDown = (e, id) => {
   }
 };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
-      try {
-        await fetcher.delete(`${FILE_ENCODED_BASIC}/${id}`);
-        setImages(images.filter((image) => image.encodedResourceId !== id));
-        window.alert("이미지를 삭제하였습니다.");
-      } catch (err) {
-        console.error("이미지 삭제 오류:", err);
-        window.alert("이미지 삭제에 실패했습니다.");
-      }
+const handleDelete = async (id) => {
+  if (window.confirm("정말로 이 이미지를 삭제하시겠습니까?")) {
+    try {
+      await fetcher.delete(`${FILE_ENCODED_BASIC}/${id}`);
+      const updatedImages = images.filter(
+        (image) => image.encodedResourceId !== id
+      );
+      setImages(updatedImages);
+      setTotalPages(Math.ceil(updatedImages.length / postsPerPage)); // 페이지 수 업데이트
+      window.alert("이미지를 삭제하였습니다.");
+    } catch (err) {
+      console.error("이미지 삭제 오류:", err);
+      window.alert("이미지 삭제에 실패했습니다.");
     }
-  };
+  }
+};
+
 
   const formatDate = (dateString) => {
     try {
@@ -158,9 +165,9 @@ const handleSearch = (e) => {
           onChange={(e) => setSearchCategory(e.target.value)}
             className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
         >
-          <option value="total">전체</option>
-          <option value="title">제목</option>
+          <option value="fileTitle">제목</option>
           <option value="regDate">등록일</option>
+          <option value="resolution">해상도</option>
         </select>
         <div className="relative flex-grow">
           <input
