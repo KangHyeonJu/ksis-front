@@ -6,6 +6,10 @@ import { NOTICE_BOARD } from "../../../constants/page_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { format, parseISO } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
+import { Input } from "../../css/input"; // 추가
+import { Button } from "../../css/button"; // 추가
+import { Textarea } from "../../css/textarea";
+import { Select } from "../../css/select";
 
 const NoticeForm = () => {
   const [formData, setFormData] = useState({
@@ -62,10 +66,10 @@ const NoticeForm = () => {
             endDate,
             deviceList = [],
           } = response.data;
-          
+
           // deviceList에서 deviceId만 추출하여 deviceIds에 설정
           const selectedDeviceIds = deviceList.map((device) => device.deviceId);
-  
+
           setFormData({
             accountId,
             title,
@@ -86,10 +90,15 @@ const NoticeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { accountId, title, content, startDate, endDate, deviceIds } = formData;
+    const { accountId, title, content, startDate, endDate, deviceIds } =
+      formData;
 
     // 관리자가 아닌 경우에만 노출 시작일과 종료일을 필수로 체크
-    if (!title.trim() || !content.trim() || (role !== "ROLE_ADMIN" && (!startDate || !endDate))) {
+    if (
+      !title.trim() ||
+      !content.trim() ||
+      (role !== "ROLE_ADMIN" && (!startDate || !endDate))
+    ) {
       alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
       return;
     }
@@ -100,15 +109,15 @@ const NoticeForm = () => {
       return;
     }
 
-     // 사용자 확인 창 추가
-  const confirmMessage = isEditing
-          ? "정말 수정하시겠습니까?"
-          : "정말 저장하시겠습니까?";
-  const isConfirmed = window.confirm(confirmMessage);
+    // 사용자 확인 창 추가
+    const confirmMessage = isEditing
+      ? "정말 수정하시겠습니까?"
+      : "정말 저장하시겠습니까?";
+    const isConfirmed = window.confirm(confirmMessage);
 
-if (!isConfirmed) {
-  return; // 사용자가 취소한 경우 함수 종료
-}
+    if (!isConfirmed) {
+      return; // 사용자가 취소한 경우 함수 종료
+    }
 
     try {
       const noticeData = {
@@ -174,46 +183,43 @@ if (!isConfirmed) {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+    <div className="grid place-items-center min-h-screen">
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/3 min-w-96 scale-125">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           {isEditing ? "공지글 수정" : "공지글 작성"}
         </h1>
-      </header>
-      <div className="border border-gray-300 rounded-lg p-6 shadow-sm bg-[#ffe69c]">
+        <br />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-4">
-            <div>
-              <input
-                id="title"
-                name="title"
-                placeholder="제목을 입력하세요."
-                type="text"
-                value={formData.title}
-                onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <textarea
-                id="content"
-                name="content"
-                placeholder="내용을 입력하세요."
-                value={formData.content}
-                onChange={handleChange}
-                className="mt-1 block w-full p-5 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                rows="4"
-              />
-            </div>
+            <Input
+              id="title"
+              name="title"
+              placeholder="제목을 입력하세요."
+              type="text"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+            <Textarea
+              id="content"
+              name="content"
+              placeholder="내용을 입력하세요."
+              value={formData.content}
+              onChange={handleChange}
+              rows="15"
+              required
+            />
+
             {role !== "ROLE_ADMIN" && (
               <>
                 <div>
                   {formData.deviceIds.map((device, index) => (
                     <div key={index} className="flex items-center mb-2">
-                      <select
+                      <Select
                         value={device}
-                        onChange={(e) => handleDeviceChange(index, e.target.value)}
-                        className="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        onChange={(e) =>
+                          handleDeviceChange(index, e.target.value)
+                        }
                       >
                         <option value="">재생장치를 선택하세요</option>
 
@@ -222,7 +228,7 @@ if (!isConfirmed) {
                             {option.label}
                           </option>
                         ))}
-                      </select>
+                      </Select>
 
                       <div className="ml-2 flex items-center">
                         <button
@@ -248,59 +254,49 @@ if (!isConfirmed) {
                   ))}
                 </div>
                 <div className="rounded-lg p-2 shadow-sm bg-white">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <div className="flex-1 flex items-center">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+                    <div className="flex flex-col">
                       <label
                         htmlFor="startDate"
-                        className="w-2/4 block text-sm font-semibold leading-6 text-gray-900"
+                        className="block text-sm font-semibold leading-6 text-gray-900"
                       >
                         노출 시작일
                       </label>
-                      <input
+                      <Input
                         id="startDate"
                         name="startDate"
                         type="date"
                         value={formatDate(formData.startDate)}
                         onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
                     </div>
-                    <span className="text-sm text-gray-500">-</span>
-                    <div className="flex-1 flex items-center">
+                    <div className="flex flex-col">
                       <label
                         htmlFor="endDate"
-                        className="w-2/4 block text-sm font-semibold leading-6 text-gray-900"
+                        className="block text-sm font-semibold leading-6 text-gray-900"
                       >
                         노출 종료일
                       </label>
-                      <input
+                      <Input
                         id="endDate"
                         name="endDate"
                         type="date"
                         value={formatDate(formData.endDate)}
                         onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
                     </div>
                   </div>
                 </div>
               </>
             )}
-            <div className="flex justify-end space-x-4">
-          <button
-              type="submit"
-              className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            >
-              저장
-            </button>
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            >
-              취소
-            </button>
-          </div>
+            <div className="flex justify-center space-x-4">
+              <Button type="submit" color="blue">
+                저장
+              </Button>
+              <Button type="button" color="red" onClick={handleCancel}>
+                취소
+              </Button>
+            </div>
           </div>
         </form>
       </div>

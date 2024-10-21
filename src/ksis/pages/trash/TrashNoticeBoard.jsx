@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { Link } from "react-router-dom";
 import { NOTICE_DTL } from "../../../constants/page_constant";
-import { NOTICE_DEACTIVE_ALL, ACTIVE_NOTICE } from "../../../constants/api_constant";
+import {
+  NOTICE_DEACTIVE_ALL,
+  ACTIVE_NOTICE,
+} from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
-
 
 const TrashNoticeBoard = () => {
   const [notices, setNotices] = useState([]);
@@ -21,7 +23,6 @@ const TrashNoticeBoard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-
     setLoading(true);
     fetcher
       .get(NOTICE_DEACTIVE_ALL)
@@ -77,7 +78,7 @@ const TrashNoticeBoard = () => {
     }
   };
 
-const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (id) => {
     setSelectedNotices((prevSelected) =>
       prevSelected.includes(id)
         ? prevSelected.filter((noticeId) => noticeId !== id)
@@ -96,8 +97,12 @@ const handleCheckboxChange = (id) => {
   const handleActivation = async () => {
     if (window.confirm("선택한 공지를 활성화하시겠습니까?")) {
       try {
-        await Promise.all(selectedNotices.map((id) => fetcher.post(`${ACTIVE_NOTICE}/${id}`)));
-        setNotices(notices.filter((notice) => !selectedNotices.includes(notice.noticeId)));
+        await Promise.all(
+          selectedNotices.map((id) => fetcher.post(`${ACTIVE_NOTICE}/${id}`))
+        );
+        setNotices(
+          notices.filter((notice) => !selectedNotices.includes(notice.noticeId))
+        );
         setSelectedNotices([]);
         window.alert("선택한 공지를 활성화하였습니다.");
       } catch (err) {
@@ -147,7 +152,7 @@ const handleCheckboxChange = (id) => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr>
-              <th className="border border-gray-300 p-2">
+                <th className="border border-gray-300 p-2">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
@@ -162,7 +167,7 @@ const handleCheckboxChange = (id) => {
             <tbody>
               {paginatedNotices.map((notice) => (
                 <tr key={notice.noticeId}>
-                   <td className="text-center border border-gray-300 p-2">
+                  <td className="text-center border border-gray-300 p-2">
                     <input
                       type="checkbox"
                       checked={selectedNotices.includes(notice.noticeId)}
@@ -170,7 +175,7 @@ const handleCheckboxChange = (id) => {
                     />
                   </td>
                   <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
-                    <Link to={`${NOTICE_DTL}/${notice.noticeIed}`}>
+                    <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
                       {notice.title}
                     </Link>
                   </td>
