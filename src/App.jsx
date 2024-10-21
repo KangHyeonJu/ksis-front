@@ -108,8 +108,6 @@ function App() {
   const logout = () => {
     alert("로그아웃 되었습니다.");
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("authority");
-    localStorage.removeItem("accountId");
     window.location.href = "/downloadApp";
   };
 

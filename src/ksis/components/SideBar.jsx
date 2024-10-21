@@ -43,11 +43,27 @@ const Sidebar = () => {
   const accessToken = localStorage.getItem("accessToken");
   const API_WS_URL = process.env.REACT_APP_API_WS_URL;
 
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false); // 특정 크기 이하에서는 축소
+    } else {
+      setIsSidebarOpen(true); // 그 이상에서는 확장
+    }
+  };
+
   useEffect(() => {
     const userInfo = decodeJwt();
     if (userInfo) {
       setUserInfo(userInfo);
     }
+
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false); // 작은 화면에서 새로 고침 시 사이드바 닫기
+    } else {
+      setIsSidebarOpen(true); // 큰 화면에서 새로 고침 시 사이드바 열기
+    }
+
     ws.current = new WebSocket(API_WS_URL + "/ws/login");
 
     ws.current.onopen = () => {
@@ -72,15 +88,6 @@ const Sidebar = () => {
 
     ws.current.onclose = () => {
       console.log("WebSocket connection closed");
-    };
-
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      if (window.innerWidth < 1024) {
-        setIsSidebarOpen(false); // 특정 크기 이하에서는 축소
-      } else {
-        setIsSidebarOpen(true); // 그 이상에서는 확장
-      }
     };
 
     window.addEventListener('resize', handleResize);
@@ -108,8 +115,6 @@ const Sidebar = () => {
       // 로그아웃 성공 시 로컬스토리지 토큰 제거
       // alert("로그아웃되었습니다.");
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("accountId");
-      localStorage.removeItem("authority");
       navigate("/downloadApp");
     } catch (error) {
       console.error("로그아웃 실패: ", error);
@@ -538,7 +543,7 @@ const Sidebar = () => {
                     >
                       <FaRegCircle size={10} className="mr-2"/>
                       <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
-                        일반 PC 관리
+                        일반 P C 관리
                       </span>
                     </Link>
                   </div>
@@ -562,8 +567,8 @@ const Sidebar = () => {
                     >
                       <FaRegCircle size={10} className="mr-2"/>
                       <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
-                해상도 관리
-            </span>
+                        해상도 관리
+                      </span>
                     </Link>
                     {isAdmin && (
                         <>
@@ -574,8 +579,8 @@ const Sidebar = () => {
                           >
                             <FaRegCircle size={10} className="mr-2"/>
                             <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
-                        API 관리
-                    </span>
+                              A P I 관리
+                            </span>
                           </Link>
 
                           <Link
@@ -585,8 +590,8 @@ const Sidebar = () => {
                           >
                             <FaRegCircle size={10} className="mr-2"/>
                             <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
-                        용량 관리
-                    </span>
+                              용량 관리
+                            </span>
                           </Link>
                         </>
                     )}
