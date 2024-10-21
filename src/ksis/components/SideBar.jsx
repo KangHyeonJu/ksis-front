@@ -29,7 +29,7 @@ import ksisLogo from "../../img/ksis-logo.png";
 import Notification from "../pages/notification/Notification"; // 알림 모달 컴포넌트 import
 import NotificationCountComponent from "../pages/notification/NotificationCount"; // 알림 개수 컴포넌트
 import { decodeJwt } from "../../decodeJwt";
-import { ACCESS_LOG, LOG_OUT } from "../../constants/account_constant";
+import {ACCESS_LOG, ACCOUNT_LIST, ACCOUNT_LIST_BOARD, LOG_OUT} from "../../constants/account_constant";
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -200,7 +200,7 @@ const Sidebar = () => {
               {openMenu === "account" && (
                 <div className="submenu ml-8 mt-2">
                   <Link
-                    to="/accountList"
+                    to={ACCOUNT_LIST_BOARD}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "ACCOUNT_LIST" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     onClick={() => handleMenuClick("ACCOUNT_LIST")}
                   >
@@ -376,6 +376,7 @@ const Sidebar = () => {
         </button>
       </div>
     </div>
+      //////////////////////////////////////////////////////////////////////////////////
   )} else {
     return (
         <div className="bg-gray-100 text-black fixed top-0 left-0 h-full p-4 flex flex-col">
@@ -393,27 +394,37 @@ const Sidebar = () => {
             <div className="flex flex-col space-y-4 mb-4">
               <Link
                   to={`/account/${userInfo.accountId}`}
-                  className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+                  className="flex items-center p-2 rounded cursor-pointer relative group"
                   onClick={() => handleMenuClick("ACCOUNT_INFO")}
               >
                 <BiUser className="mr-1"/>
-                <span className="hidden group-hover:inline-block ml-2">정보</span>
+                {/* 호버 시 이름 표시 */}
+                <span
+                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+            정보
+          </span>
               </Link>
 
               <a
-                  className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer group"
+                  className="relative flex items-center p-2 rounded cursor-pointer group"
                   onClick={() => setNotificationOpen(true)}
               >
                 <NotificationCountComponent/>
-                <span className="hidden group-hover:inline-block ml-2">알림</span>
+                <span
+                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+            알림
+          </span>
               </a>
 
               <a
-                  className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer group"
+                  className="relative flex items-center p-2 rounded cursor-pointer group"
                   onClick={handleOpenApp}
               >
                 <BiWindowAlt className="mr-1"/>
-                <span className="hidden group-hover:inline-block ml-2">App</span>
+                <span
+                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+            앱
+          </span>
               </a>
             </div>
             <hr className="border-black border-1 border-dashed"/>
@@ -424,12 +435,13 @@ const Sidebar = () => {
                       onClick={() => toggleMenu("account")}
                   >
                     <MdManageAccounts className="mr-3"/>
-                    <span className="hidden group-hover:inline-block ml-2">계정관리</span>
+                    <span
+                        className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">계정관리</span>
                   </div>
                   {openMenu === "account" && (
                       <div className="submenu ml-8 mt-2">
                         <Link
-                            to="/accountList"
+                            to={ACCOUNT_LIST_BOARD}
                             className={`flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "ACCOUNT_LIST" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                             onClick={() => handleMenuClick("ACCOUNT_LIST")}
                         >
@@ -455,7 +467,7 @@ const Sidebar = () => {
                   onClick={() => toggleMenu("media")}
               >
                 <MdOutlinePermMedia className="mr-3"/>
-                <span className="hidden group-hover:inline-block ml-2">미디어 관리</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">미디어 관리</span>
               </div>
               {openMenu === "media" && (
                   <div className="submenu ml-8 mt-2">
@@ -486,7 +498,7 @@ const Sidebar = () => {
                   onClick={() => handleMenuClick("NOTICE")}
               >
                 <MdChat className="mr-3"/>
-                <span className="hidden group-hover:inline-block ml-2">공지글 관리</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">공지글 관리</span>
               </Link>
             </div>
 
@@ -496,7 +508,7 @@ const Sidebar = () => {
                   onClick={() => toggleMenu("device")}
               >
                 <MdDevices className="mr-3"/>
-                <span className="hidden group-hover:inline-block ml-2">디바이스 관리</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">디바이스 관리</span>
               </div>
               {openMenu === "device" && (
                   <div className="submenu ml-8 mt-2">
@@ -526,7 +538,7 @@ const Sidebar = () => {
                   onClick={() => toggleMenu("settings")}
               >
                 <BiCog className="mr-3"/>
-                <span className="hidden group-hover:inline-block ml-2">기타 관리</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">기타 관리</span>
               </div>
               {openMenu === "settings" && (
                   <div className="submenu ml-8 mt-2">
@@ -569,7 +581,7 @@ const Sidebar = () => {
                   onClick={() => toggleMenu("trash")}
               >
                 <BiTrash className="mr-3"/>
-                <span className="hidden group-hover:inline-block ml-2">휴지통</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">휴지통</span>
               </div>
               {openMenu === "trash" && (
                   <div className="submenu ml-8 mt-2">
