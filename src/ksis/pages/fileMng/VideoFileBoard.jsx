@@ -4,7 +4,6 @@ import { format, parseISO } from "date-fns";
 import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
 import {
   IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
@@ -14,33 +13,48 @@ import {
   FILE_ENCODED_BASIC,
 } from "../../../constants/api_constant";
 
-const VideoFileBoard = () => {
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
+const VideoFileBoard = () => { 
+  // 페이지네이션 관련 상태
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("total");
+  const [searchCategory, setSearchCategory] = useState("fileTitle");
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
   const [videos, setVideos] = useState([]);
-  // 페이지네이션 관련 상태
-  const [currentPage, setCurrentPage] = useState(0);
+ 
 
-  const postsPerPage = 16; // 페이지당 게시물 수
   const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState("");
+
   const navigate = useNavigate(); // Initialize useNavigate
+  const postsPerPage = 16; // 페이지당 게시물 수
 
   useEffect(() => {
     fetcher
-      .get(ECVIDEO_BOARD)
+      .get(ECVIDEO_BOARD, {
+        params: {
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory, // 카테고리 검색에 필요한 필드
+        },
+      })
       .then((response) => {
-        setVideos(response.data);
+        setTotalPages(response.data.totalPages);
+        setVideos(response.data.content);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
       })
       .catch((error) => {
         console.error("Error fetching videos:", error);
       });
-  }, []);
+  }, [currentPage, searchTerm]);
 
   const handleToggle = () => {
     const newIsOriginal = !isOriginal;
@@ -87,15 +101,27 @@ const VideoFileBoard = () => {
     }}
   };
 
-  const handlePageChange = ({ selected }) => {
-    setCurrentPage(selected);
-  };
+ // 페이지 변경 핸들러
+ const handlePageChange = (event, page) => {
+  setCurrentPage(page);
+};
+
+// 검색어 변경 핸들러
+const handleSearch = (e) => {
+  setSearchTerm(e.target.value);
+  setCurrentPage(1); // 검색 시 첫 페이지로 이동
+};
 
   const handleDelete = async (id) => {
     if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
       try {
         await fetcher.delete(FILE_ENCODED_BASIC + `/${id}`);
-        setVideos(videos.filter((video) => video.id !== id));
+        const updatedVideos = videos.filter(
+          (video) => video.encodedResourceId !== id
+        );
+
+        setVideos(updatedVideos);
+        setTotalPages(Math.ceil(updatedVideos.length / postsPerPage)); // 페이지 수 업데이트
         window.alert("영상을 삭제하였습니다.");
       } catch (err) {
         console.error("영상 삭제 오류:", err);
@@ -123,11 +149,7 @@ const VideoFileBoard = () => {
     setIsOpen(false);
     setSelectedVideo("");
   };
-
-  const currentPosts = filteredPosts.slice(
-    currentPage * postsPerPage,
-    (currentPage + 1) * postsPerPage
-  );
+  
 
   return (
     <div className="p-6">
@@ -144,15 +166,15 @@ const VideoFileBoard = () => {
           onChange={(e) => setSearchCategory(e.target.value)}
            className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
         >
-          <option value="total">전체</option>
-          <option value="title">제목</option>
-          <option value="regDate">등록일</option>
+           <option value="fileTitle">제목</option>
+          <option value="regTime">등록일</option>
+          <option value="resolution">해상도</option>
         </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -206,8 +228,8 @@ const VideoFileBoard = () => {
 
        {/* 그리드 시작 */}
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-        {currentPosts.length > 0 ? (
-          currentPosts.map((post, index) => (
+        {videos.length > 0 ? (
+          videos.map((post, index) => (
             <div key={index} className="grid p-1">
               
             {/* 카드 */}
@@ -288,35 +310,15 @@ const VideoFileBoard = () => {
       </div>
 
       {/* 페이지네이션 */}
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2}
+      className="mt-2" >
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
 
       {/* 모달창 */}
       {isOpen && (

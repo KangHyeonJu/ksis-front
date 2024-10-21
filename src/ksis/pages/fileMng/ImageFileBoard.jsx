@@ -31,7 +31,7 @@ const ImageFileBoard = () => {
   const [selectedImage, setSelectedImage] = useState("");
   
   const navigate = useNavigate();
-  const postsPerPage = 10;
+  const postsPerPage = 16;
 
 
   useEffect(() => {
@@ -48,11 +48,12 @@ const ImageFileBoard = () => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
         setFilteredPosts(response.data);
+        console.log( "데이터 "+response.data.content);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
       });
-      
+     
   }, [currentPage, searchTerm]);
 
   const handleEditClick = (index, title) => {
@@ -143,11 +144,6 @@ const handleSearch = (e) => {
   setCurrentPage(1); // 검색 시 첫 페이지로 이동
 };
 
-  const currentPosts = filteredPosts.slice(
-    currentPage * postsPerPage,
-    (currentPage + 1) * postsPerPage
-  );
-
   return (
     <div className="p-6">
       <header className="mb-6">
@@ -166,7 +162,7 @@ const handleSearch = (e) => {
             className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
         >
           <option value="fileTitle">제목</option>
-          <option value="regDate">등록일</option>
+          <option value="regTime">등록일</option>
           <option value="resolution">해상도</option>
         </select>
         <div className="relative flex-grow">
@@ -233,8 +229,8 @@ const handleSearch = (e) => {
 
             {/* 그리드 시작 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-            {currentPosts.length > 0 ? (
-              currentPosts.map((post, index) => (
+            {images.length > 0 ? (
+              images.map((post, index) => (
 
             <div key={index} className="grid p-1">
 
