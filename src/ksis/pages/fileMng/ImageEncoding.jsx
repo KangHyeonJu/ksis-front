@@ -22,10 +22,23 @@ const ImageEncoding = () => {
 
   const fetchImageData = async (originalResourceId) => {
     try {
+     
       const response = await fetcher.get(
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
       setImage(response.data);
+
+      if (
+        decodeJwt.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === decodeJwt.accountId
+        )
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(IMAGE_RESOURCE_BOARD);
+      }
+
+
     } catch (error) {
       console.error("Error fetching image:", error);
     }

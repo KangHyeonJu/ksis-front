@@ -48,7 +48,6 @@ const ImageFileBoard = () => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
         setFilteredPosts(response.data);
-        console.log( "데이터 "+response.data.content);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
