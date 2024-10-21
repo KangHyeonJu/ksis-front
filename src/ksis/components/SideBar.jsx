@@ -136,7 +136,7 @@ const Sidebar = () => {
     window.location.href = "ksis://open";
   };
 
-  if (windowWidth >= 1024) {
+  if (isSidebarOpen) {
   return (
     <div className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col">
       {/* 알림 모달 창 표시 */}
@@ -205,7 +205,7 @@ const Sidebar = () => {
                     onClick={() => handleMenuClick("ACCOUNT_LIST")}
                   >
                     <FaRegCircle size={10} className="mr-2" />
-                    <span>계정목록 조회</span>
+                    계정목록 조회
                   </Link>
                   <Link
                     to={ACCESSLOG_INVENTORY}
@@ -213,7 +213,7 @@ const Sidebar = () => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "LOG" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
-                    <span>로그 기록</span>
+                    로그 기록
                   </Link>
                 </div>
               )}
@@ -416,7 +416,7 @@ const Sidebar = () => {
                 <span className="hidden group-hover:inline-block ml-2">App</span>
               </a>
             </div>
-
+            <hr className="border-black border-1 border-dashed"/>
             {isAdmin && (
                 <div className="mt-3">
                   <div
@@ -434,7 +434,7 @@ const Sidebar = () => {
                             onClick={() => handleMenuClick("ACCOUNT_LIST")}
                         >
                           <FaRegCircle size={10} className="mr-2"/>
-                          <span className="hidden group-hover:inline-block ml-2">계정목록 조회</span>
+                          <span>계정목록 조회</span>
                         </Link>
                         <Link
                             to={ACCESSLOG_INVENTORY}
@@ -442,7 +442,7 @@ const Sidebar = () => {
                             className={`flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "LOG" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                         >
                           <FaRegCircle size={10} className="mr-2"/>
-                          <span className="hidden group-hover:inline-block ml-2">로그 기록</span>
+                          <span>로그 기록</span>
                         </Link>
                       </div>
                   )}
