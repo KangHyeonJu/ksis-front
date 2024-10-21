@@ -6,7 +6,7 @@ import {
   SIGNAGE_RESOURCE_PAGE,
 } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
-import { RxCrossCircled } from "react-icons/rx";
+import SignageResourceModal from "./SignageResourceModal";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FaSearch } from "react-icons/fa";
 
@@ -28,6 +28,15 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 8; // 한 페이지 10개 데이터
+
+  //이미지/영상 불러오기
+  const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
+  const openResourceModal = () => setResourceModalIsOpen(true);
+  const closeResourceModal = () => {
+    setResourceModalIsOpen(false);
+    loadModal();
+    setResourceAdds([]);
+  };
 
   //재생장치의 인코딩리소스 불러오기
   const loadModal = async () => {
@@ -202,10 +211,23 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <div className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160">
           <div className="h-full">
-            <div className="items-center justify-center">
-              <DialogTitle className="leading-6 text-gray-900 text-center">
+            <div className="flex items-center justify-center">
+              <DialogTitle className="leading-6 text-gray-900 text-center flex-grow">
                 <p className="text-xl">재생 목록 등록</p>
               </DialogTitle>
+              <button
+                onClick={openResourceModal}
+                type="button"
+                className="rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 ml-4"
+              >
+                파일 불러오기
+              </button>
+
+              <SignageResourceModal
+                isOpen={resourceModalIsOpen}
+                onRequestClose={closeResourceModal}
+                signageId={data.deviceId}
+              />
             </div>
             <div className="flex items-center justify-center">
               <div className="w-9/12 pr-4">
