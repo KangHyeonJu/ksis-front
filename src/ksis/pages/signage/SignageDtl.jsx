@@ -19,6 +19,8 @@ import PlaylistUpdateModal from "./PlaylistUpdateModal";
 import SignagePlay from "./SignagePlay";
 import { decodeJwt } from "../../../decodeJwt";
 import { BsPlusSquare } from "react-icons/bs";
+import { FaRegCopy } from "react-icons/fa";
+import { FaRegMap } from "react-icons/fa6";
 
 const SignageDtl = () => {
   const userInfo = decodeJwt();
@@ -26,7 +28,6 @@ const SignageDtl = () => {
 
   const [enabled, setEnabled] = useState(false);
   const [radiobox, setRadiobox] = useState(null);
-  const [hover, setHover] = useState(false);
 
   //불러오기
   const [data, setData] = useState({});
@@ -50,10 +51,7 @@ const SignageDtl = () => {
 
   //재생목록 추가
   const [playlistAddIsOpen, setPlaylistAddIsOpen] = useState(false);
-  const openPlaylistAdd = () => {
-    setHover(false);
-    setPlaylistAddIsOpen(true);
-  };
+  const openPlaylistAdd = () => setPlaylistAddIsOpen(true);
   const closePlaylistAdd = () => setPlaylistAddIsOpen(false);
 
   //재생목록 수정
@@ -113,7 +111,11 @@ const SignageDtl = () => {
       setRadiobox(selectedPlaylist.playlistId);
     }
 
-    onClickPlaylist(selectedPlaylist.playlistId, selectedPlaylist.title);
+    onClickPlaylist(
+      selectedPlaylist.playlistId,
+      selectedPlaylist.title,
+      selectedPlaylist.playTime
+    );
   };
 
   useEffect(() => {
@@ -222,7 +224,6 @@ const SignageDtl = () => {
   const handleModalClose = async () => {
     await loadPlayList(data.deviceId);
     closePlaylistAdd();
-    setHover(false);
   };
 
   const handleUpdateMoalClose = async () => {
@@ -232,6 +233,19 @@ const SignageDtl = () => {
     setSlideTime("");
     setPlayListId("");
     closePlaylistUpdate();
+  };
+
+  const copyKey = () => {
+    var key = document.getElementById("deviceKey").innerText;
+
+    navigator.clipboard
+      .writeText(key)
+      .then(() => {
+        alert("복사되었습니다.");
+      })
+      .catch(() => {
+        alert("복사에 실패했습니다.");
+      });
   };
 
   if (loading) {
@@ -284,28 +298,23 @@ const SignageDtl = () => {
                 재생장치 명
               </label>
               <div className="border-r border-gray-300 h-10"></div>
-              <input
-                value={data.deviceName}
-                readOnly
-                maxLength="50"
-                name="deviceName"
-                type="text"
-                className="rounded-md bg-white block w-full px-4 py-1.5 text-gray-900 h-10"
-              />
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.deviceName}
+              </div>
             </div>
             <div className="border-r border-gray-300 h-10"></div>
             <div className="w-1/2 flex items-center justify-end">
               <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
-                <div className="h-10 relative inline-flex items-center px-3 py-2 font-medium text-gray-900 hover:text-[#FF9C00]">
+                <div className="h-10 relative inline-flex items-center px-3 py-2 font-medium text-blue-600 hover:font-semibold">
                   정보 수정
                 </div>
               </Link>
-              <div className="h-10 relative inline-flex items-center font-medium text-gray-900">
+              <div className="h-10 relative inline-flex items-center font-medium text-blue-600 ">
                 |
               </div>
               <div
                 onClick={openNoticeModal}
-                className="cursor-pointer h-10 relative inline-flex items-center px-3 py-2 font-medium text-gray-900 hover:text-[#FF9C00]"
+                className="cursor-pointer h-10 relative inline-flex items-center px-3 py-2 font-medium text-blue-600 hover:font-semibold"
               >
                 공지 조회
               </div>
@@ -323,17 +332,13 @@ const SignageDtl = () => {
                 담당자
               </label>
               <div className="border-r border-gray-300 h-10"></div>
-              <input
-                type="text"
-                value={
-                  data.accountList &&
+
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.accountList &&
                   data.accountList
                     .map((account) => `${account.name}(${account.accountId})`)
-                    .join(", ")
-                }
-                readOnly
-                className="rounded-md bg-white block w-full px-4 py-1.5 text-gray-900 h-10"
-              />
+                    .join(", ")}
+              </div>
             </div>
             <div className="border-r border-gray-300 h-10"></div>
             <div className="w-1/2 flex items-center">
@@ -342,21 +347,23 @@ const SignageDtl = () => {
               </label>
 
               <div className="border-r border-gray-300 h-10"></div>
-              <div className="relative group w-full">
-                <input
+              <div className="flex relative group w-full">
+                <div className="inline-flex items-center bg-white px-4 py-1.5 text-gray-900 h-10">
+                  {`${data.location} (${data.detailAddress})`}
+                </div>
+                <div
+                  className="inline-flex items-center text-gray-500 cursor-pointer"
                   onClick={openModal}
-                  type="text"
-                  value={`${data.location} (${data.detailAddress})`}
-                  readOnly
-                  className="cursor-pointer rounded-md bg-white block w-full px-4 py-1.5 text-gray-900 h-10 hover:text-[#FF9C00]"
-                />
+                >
+                  <FaRegMap className="hover:text-[#FF9C00]" />
+                </div>
                 <LocationModal
                   isOpen={modalIsOpen}
                   onRequestClose={closeModal}
                   address={data.location}
                 />
-                {data.location.length + data.detailAddress.length > 57 && (
-                  <span className="absolute left-2 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                {data.location.length + data.detailAddress.length > 30 && (
+                  <span className="absolute left-3 top-5 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     {data.location} ({data.detailAddress})
                   </span>
                 )}
@@ -370,11 +377,9 @@ const SignageDtl = () => {
                 IP
               </label>
               <div className="border-r border-gray-300 h-10"></div>
-              <input
-                value={data.ipAddress}
-                type="text"
-                className="rounded-md bg-white block w-full px-4 py-1.5 text-gray-900 h-10"
-              />
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.ipAddress}
+              </div>
             </div>
             <div className="border-r border-gray-300 h-10"></div>
             <div className="w-1/2 flex items-center">
@@ -382,12 +387,19 @@ const SignageDtl = () => {
                 KEY
               </label>
               <div className="border-r border-gray-300 h-10"></div>
-              <div className="relative group w-full">
-                <input
-                  value={data.deviceKey}
-                  type="text"
-                  className="rounded-md bg-white block w-full px-4 py-1.5 text-gray-900 h-10"
-                />
+              <div className="relative group w-full flex">
+                <div
+                  className="inline-flex items-center rounded-md bg-white px-4 py-1.5 text-gray-900 h-10"
+                  id="deviceKey"
+                >
+                  {data.deviceKey}
+                </div>
+                <div
+                  className="inline-flex items-center text-gray-500 cursor-pointer"
+                  onClick={copyKey}
+                >
+                  <FaRegCopy className="hover:text-[#FF9C00]" />
+                </div>
               </div>
             </div>
           </div>
@@ -398,11 +410,9 @@ const SignageDtl = () => {
                 해상도
               </label>
               <div className="border-r border-gray-300 h-10"></div>
-              <input
-                value={data.resolution}
-                type="text"
-                className="rounded-md bg-white block w-full px-4 py-1.5 text-gray-900 h-10"
-              />
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.resolution}
+              </div>
             </div>
             <div className="border-r border-gray-300 h-10"></div>
             <div className="w-1/2 flex items-center">
@@ -411,35 +421,25 @@ const SignageDtl = () => {
               </label>
               <div className="border-r border-gray-300 h-10"></div>
               <div className="relative group w-full">
-                <input
-                  value={data.screenSize}
-                  type="text"
-                  className="rounded-md bg-white block w-full px-4 py-1.5 text-gray-900 h-10"
-                />
+                <div className="inline-flex items-center bg-white  w-full px-4 py-1.5 text-gray-900 h-10">
+                  {data.screenSize}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div className="flex items-center mt-5">
-          <div className="flex-1 overflow-y-auto border border-gray-300 px-4 py-4 h-160">
-            <div className="flex items-center justify-between space-x-2 mr-1">
+          <div className="flex-1 border border-gray-300 px-4 py-4 h-160">
+            <div className="flex items-center justify-between space-x-2 mr-1 h-8">
               <div className="text-lg font-semibold ml-2">재생목록 내역</div>
               <div
                 className="relative inline-block cursor-pointer"
-                onMouseOver={() => setHover(true)}
-                onMouseOut={() => setHover(false)}
                 onClick={openPlaylistAdd}
               >
                 <BsPlusSquare
                   size="22"
-                  className={`relative transition duration-200 ${
-                    playlistAddIsOpen
-                      ? "text-gray-700"
-                      : hover
-                      ? "text-[#FF9C00]"
-                      : "text-gray-700"
-                  }`}
+                  className="text-gray-700 hover:text-[#FF9C00]"
                 />
                 <SignagePlaylistModal
                   isOpen={playlistAddIsOpen}
@@ -449,118 +449,133 @@ const SignageDtl = () => {
                 />
               </div>
             </div>
-            <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mt-4">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-400 p-2">재생목록명</th>
-                  <th className="border border-gray-400 p-2">등록일</th>
-                  <th className="border border-gray-400 p-2">선택</th>
-                </tr>
-              </thead>
-              <tbody>
-                {playlists.map((playlist) => (
-                  <tr
-                    key={playlist.playlistId}
-                    onClick={() =>
-                      onClickPlaylist(
-                        playlist.playlistId,
-                        playlist.title,
-                        playlist.playTime
-                      )
-                    }
-                    className="cursor-pointer"
-                  >
-                    <td
-                      className={`border border-gray-400 p-2 cursor-pointer hover:underline ${
-                        playListId === playlist.playlistId
-                          ? " text-[#FF9C00] font-bold"
-                          : ""
-                      }`}
-                    >
-                      {playlist.title}
-                    </td>
-                    <td className="border border-gray-400 p-2">
-                      {format(parseISO(playlist.regTime), "yyyy-MM-dd")}
-                    </td>
-                    <td className="border border-gray-400 p-2">
-                      <input
-                        type="radio"
-                        className="border-gray-300 text-orange-600 focus:ring-orange-600 cursor-pointer"
-                        value={playlist.playlistId}
-                        onChange={onChangeRadio}
-                        name="selectedPlaylist"
-                        checked={radiobox === playlist.playlistId}
-                      />
-                    </td>
+            <div className="h-145 overflow-y-auto my-3">
+              <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-400 p-2">재생목록명</th>
+                    <th className="border border-gray-400 p-2">등록일</th>
+                    <th className="border border-gray-400 p-2">선택</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {playlists.map((playlist) => (
+                    <tr
+                      key={playlist.playlistId}
+                      onClick={() =>
+                        onClickPlaylist(
+                          playlist.playlistId,
+                          playlist.title,
+                          playlist.playTime
+                        )
+                      }
+                      className="cursor-pointer"
+                    >
+                      <td
+                        className={`border border-gray-400 p-2 cursor-pointer hover:underline ${
+                          playListId === playlist.playlistId
+                            ? " font-bold underline"
+                            : ""
+                        }`}
+                      >
+                        {playlist.title}
+                      </td>
+                      <td className="border border-gray-400 p-2">
+                        {format(parseISO(playlist.regTime), "yyyy-MM-dd")}
+                      </td>
+                      <td className="border border-gray-400 p-2">
+                        <input
+                          type="radio"
+                          className="border-gray-300 text-orange-600 focus:ring-orange-600 cursor-pointer"
+                          value={playlist.playlistId}
+                          onChange={onChangeRadio}
+                          name="selectedPlaylist"
+                          checked={radiobox === playlist.playlistId}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="h-8 flex justify-end">
+              <button
+                type="button"
+                className="inline-flex items-center h-8 rounded-sm bg-orange-200 text-black px-3 py-2 text-sm font-semibold hover:bg-orange-300"
+                onClick={openPlay}
+              >
+                미리보기
+              </button>
+              <SignagePlay
+                isOpen={playIsOpen}
+                onRequestClose={closePlay}
+                signageId={data.deviceId}
+              />
+            </div>
           </div>
-          <div className="flex-1 overflow-y-auto border border-gray-300 ml-2 px-4 py-4 h-160">
-            <div className="flex items-center justify-between">
+          <div className="flex-1 border border-gray-300 ml-2 px-4 py-4 h-160">
+            <div className="flex items-center justify-between h-8">
               <div className="text-lg font-semibold ml-2">{playlistTitle}</div>
-              <div className="bg-[#d9d9d8] p-1 flex">
-                <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
-                <p className="bg-white pr-1 pl-1 ml-1">{slideTime}(s)</p>
-              </div>
-              <div>
-                <button
-                  type="button"
-                  className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                  onClick={openPlaylist}
-                >
-                  수정
-                </button>
-                <PlaylistUpdateModal
-                  isOpen={playlistUpdateIsOpen}
-                  onRequestClose={handleUpdateMoalClose}
-                  signageId={data.deviceId}
-                  playlistId={playListId}
-                />
-                <button
-                  type="button"
-                  className="ml-2 relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                  onClick={() => deletePlaylist(playListId)}
-                >
-                  삭제
-                </button>
-              </div>
+              <div className="">Slide Time: {slideTime} (s)</div>
             </div>
 
-            <div className="mt-2 grid gap-x-3 gap-y-5 md:grid-cols-3">
-              {playlistDtl.map((resource) => (
-                <div
-                  key={resource.encodedResourceId}
-                  className="group relative border border-gray-900"
-                >
-                  <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
-                    {resource.sequence}
-                  </div>
+            <div className="overflow-y-auto h-145 my-3">
+              <div className="grid gap-x-3 gap-y-3 md:grid-cols-3">
+                {playlistDtl.map((resource) => (
+                  <div
+                    key={resource.encodedResourceId}
+                    className="group relative border border-gray-900"
+                  >
+                    <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
+                      {resource.sequence}
+                    </div>
 
-                  <div className="w-full h-full overflow-hidden lg:h-48">
-                    <img
-                      src={resource.thumbFilePath}
-                      alt={resource.fileTitle}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
-                  <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
-                    <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                      {resource.fileTitle}
-                    </p>
+                    <div className="w-full h-full overflow-hidden lg:h-48">
+                      <img
+                        src={resource.thumbFilePath}
+                        alt={resource.fileTitle}
+                        className="h-full w-full object-cover object-center"
+                      />
+                    </div>
+                    <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
+                      <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                        {resource.fileTitle}
+                      </p>
 
-                    <span className="absolute left-0 w-auto p-1 z-10 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      {resource.fileTitle}
-                    </span>
+                      <span className="absolute left-0 w-auto p-1 z-10 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        {resource.fileTitle}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="h-8 items-center flex justify-end mt-2">
+              <button
+                type="button"
+                className="h-8 relative inline-flex items-center rounded-sm bg-gray-200 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-gray-300"
+                onClick={openPlaylist}
+              >
+                수정
+              </button>
+              <PlaylistUpdateModal
+                isOpen={playlistUpdateIsOpen}
+                onRequestClose={handleUpdateMoalClose}
+                signageId={data.deviceId}
+                playlistId={playListId}
+              />
+              <button
+                type="button"
+                className="h-8 ml-2 relative inline-flex items-center rounded-sm bg-red-200 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-300"
+                onClick={() => deletePlaylist(playListId)}
+              >
+                삭제
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center mt-5 justify-between">
+        {/* <div className="flex items-center mt-5 justify-between">
           <Link to={SIGNAGE_INVENTORY}>
             <button
               type="button"
@@ -569,19 +584,7 @@ const SignageDtl = () => {
               목록
             </button>
           </Link>
-          <button
-            type="button"
-            className="rounded-sm bg-[#FF9C00] px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-400"
-            onClick={openPlay}
-          >
-            미리보기
-          </button>
-          <SignagePlay
-            isOpen={playIsOpen}
-            onRequestClose={closePlay}
-            signageId={data.deviceId}
-          />
-        </div>
+        </div> */}
       </div>
     </div>
   );
