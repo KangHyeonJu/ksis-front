@@ -639,7 +639,7 @@ const Sidebar = () => {
             >
               <RiLogoutBoxRLine className="mr-2"/>
               <span
-                  className="absolute left-full hidden group-hover:flex group-hover:ml-2 bg-black text-white p-1 text-xs rounded">로그아웃</span>
+                  className="absolute left-full hidden group-hover:flex group-hover:ml-2 bg-black text-white p-1 text-xs rounded whitespace-nowrap">로그아웃</span>
             </button>
           </div>
         </div>
