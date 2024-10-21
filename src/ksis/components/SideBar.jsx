@@ -57,12 +57,7 @@ const Sidebar = () => {
     if (userInfo) {
       setUserInfo(userInfo);
     }
-
-    if (window.innerWidth < 1024) {
-      setIsSidebarOpen(false); // 작은 화면에서 새로 고침 시 사이드바 닫기
-    } else {
-      setIsSidebarOpen(true); // 큰 화면에서 새로 고침 시 사이드바 열기
-    }
+    handleResize();
 
     ws.current = new WebSocket(API_WS_URL + "/ws/login");
 
@@ -381,7 +376,6 @@ const Sidebar = () => {
         </button>
       </div>
     </div>
-      //////////////////////////////////////////////////////////////////////////////////
   )} else {
     return (
         <div className="bg-gray-100 text-black fixed top-0 left-0 h-full p-4 flex flex-col">
@@ -404,7 +398,7 @@ const Sidebar = () => {
               >
                 <BiUser className="mr-1"/>
                 <span
-                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
             정보
           </span>
               </Link>
@@ -415,7 +409,7 @@ const Sidebar = () => {
               >
                 <NotificationCountComponent/>
                 <span
-                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
             알림
           </span>
               </a>
@@ -440,7 +434,7 @@ const Sidebar = () => {
                   >
                     <MdManageAccounts className="mr-3"/>
                     <span
-                        className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">계정관리</span>
+                        className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">계정관리</span>
                   </div>
                   {openMenu === "account" && (
                       <div className="submenu ml-8 mt-2">
@@ -450,7 +444,7 @@ const Sidebar = () => {
                             onClick={() => handleMenuClick("ACCOUNT_LIST")}
                         >
                           <FaRegCircle size={10} className="mr-2" />
-                          <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                          <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                             계정목록 조회
                           </span>
                         </Link>
@@ -460,7 +454,7 @@ const Sidebar = () => {
                             className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "LOG" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                         >
                           <FaRegCircle size={10} className="mr-2" />
-                          <span className="absolute left-full hidden group-hover:block mr-2 bg-black text-white p-1 text-sm rounded">
+                          <span className="absolute left-full hidden group-hover:block mr-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                             로그 기록
                           </span>
                         </Link>
@@ -477,7 +471,7 @@ const Sidebar = () => {
               >
                 <MdOutlinePermMedia className="mr-3"/>
                 <span
-                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">미디어 관리</span>
+                    className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">미디어 관리</span>
               </div>
               {openMenu === "media" && (
                   <div className="submenu ml-8 mt-2">
@@ -487,7 +481,7 @@ const Sidebar = () => {
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "ORIGINAL" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     >
                       <FaRegCircle size={10} className="mr-2"/>
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                         원본 관리
                       </span>
                     </Link>
@@ -497,7 +491,7 @@ const Sidebar = () => {
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "ENCODED" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     >
                       <FaRegCircle size={10} className="mr-2"/>
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                         인코딩 관리
                       </span>
                     </Link>
@@ -512,7 +506,7 @@ const Sidebar = () => {
                   onClick={() => handleMenuClick("NOTICE")}
               >
                 <MdChat className="mr-3"/>
-                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">공지글 관리</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">공지글 관리</span>
               </Link>
             </div>
 
@@ -522,7 +516,7 @@ const Sidebar = () => {
                   onClick={() => toggleMenu("device")}
               >
                 <MdDevices className="mr-3"/>
-                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">디바이스 관리</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">디바이스 관리</span>
               </div>
               {openMenu === "device" && (
                   <div className="submenu ml-8 mt-2">
@@ -532,7 +526,7 @@ const Sidebar = () => {
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "SIGNAGE" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     >
                       <FaRegCircle size={10} className="mr-2"/>
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                         재생장치 관리
                       </span>
                     </Link>
@@ -542,8 +536,8 @@ const Sidebar = () => {
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "PC" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     >
                       <FaRegCircle size={10} className="mr-2"/>
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
-                        일반 P C 관리
+                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+                        일반 PC 관리
                       </span>
                     </Link>
                   </div>
@@ -556,7 +550,7 @@ const Sidebar = () => {
                   onClick={() => toggleMenu("settings")}
               >
                 <BiCog className="mr-3"/>
-                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">기타 관리</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">기타 관리</span>
               </div>
               {openMenu === "settings" && (
                   <div className="submenu ml-8 mt-2">
@@ -566,7 +560,7 @@ const Sidebar = () => {
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "RESOLUTION" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     >
                       <FaRegCircle size={10} className="mr-2"/>
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                         해상도 관리
                       </span>
                     </Link>
@@ -578,8 +572,8 @@ const Sidebar = () => {
                               className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "API" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                           >
                             <FaRegCircle size={10} className="mr-2"/>
-                            <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
-                              A P I 관리
+                            <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+                              API 관리
                             </span>
                           </Link>
 
@@ -589,7 +583,7 @@ const Sidebar = () => {
                               className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "FILE_SIZE" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                           >
                             <FaRegCircle size={10} className="mr-2"/>
-                            <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                            <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                               용량 관리
                             </span>
                           </Link>
@@ -605,7 +599,7 @@ const Sidebar = () => {
                   onClick={() => toggleMenu("trash")}
               >
                 <BiTrash className="mr-3"/>
-                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">휴지통</span>
+                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">휴지통</span>
               </div>
               {openMenu === "trash" && (
                   <div className="submenu ml-8 mt-2">
@@ -615,7 +609,7 @@ const Sidebar = () => {
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "TRASHFILE" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     >
                       <FaRegCircle size={10} className="mr-2"/>
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                         이미지 및 영상
                       </span>
                     </Link>
@@ -626,7 +620,7 @@ const Sidebar = () => {
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "TRASHNOTICE" ? 'bg-[#fe6500]/30' : 'hover:bg-[#fe6500]/30'}`}
                     >
                       <FaRegCircle size={10} className="mr-2"/>
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                         공지글
                       </span>
                     </Link>
