@@ -23,7 +23,7 @@ const TrashNoticeBoard = () => {
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const postsPerPage = 10;
+  const postsPerPage = 20;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -141,7 +141,6 @@ const handleCheckboxChange = (id) => {
          <option value="title">제목</option>
           <option value="account">작성자</option>
           <option value="regTime">등록일</option>
-          <option value="device">재생장치</option>
         </select>
         <div className="relative flex-grow">
           <input
