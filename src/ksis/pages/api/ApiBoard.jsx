@@ -173,14 +173,16 @@ const ApiBoard = () => {
       <div className="flex justify-end space-x-2 mb-4">
         <button
           onClick={() => navigate("/apiform")}
-          className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
+          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+         >
           API 등록
         </button>
         <button
           onClick={handleDeletePosts}
-          className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-        >
+          className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+>
           삭제
         </button>
       </div>
@@ -191,41 +193,40 @@ const ApiBoard = () => {
             등록된 API가 없습니다.
           </p>
         ) : (
-          <table className="w-full border-collapse border border-gray-200">
-            <thead>
-              <tr>
-                <th className="border border-gray-300 p-2">
+          <table className="w-full table-fixed border-collapse mt-4">
+                <thead className="border-t border-b border-double border-[#FF9C00]">
+                  <tr>
+                  <th className="w-1/12 p-2 text-center text-gray-800">
                   <input
                     type="checkbox"
                     checked={isAllSelected}
                     onChange={handleSelectAllChange}
                   />
                 </th>
-                <th className="border border-gray-300 p-2">API 이름</th>
-                <th className="border border-gray-300 p-2">만료일</th>
-                <th className="border border-gray-300 p-2">제공업체</th>
+                <th className="w-3/12 p-2 text-gray-800 text-center">API 이름</th>
+                <th className="w-4/12 p-2 text-gray-800 text-center">만료일</th>
+                <th className="w-4/12 p-2 text-gray-800 text-center">제공업체</th>
               </tr>
             </thead>
             <tbody>
               {posts.map((post) => (
-                <tr key={post.apiId}>
-                  <td className="border border-gray-300 p-2 text-center">
+                <tr key={post.apiId} >
+                  <td className="text-center p-2 border-b border-gray-300">
                     <input
                       type="checkbox"
                       checked={selectedPosts.has(post.apiId)}
                       onChange={(e) => handleCheckboxChange(post.apiId, e)}
                     />
                   </td>
-                  <td
-                    className="border border-gray-300 p-2 text-black cursor-pointer"
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300 hover:underline hover:text-[#FF9C00] cursor-pointer"
                     onClick={() => handleApiNameClick(post.apiId)}
                   >
                     {post.apiName}
                   </td>
-                  <td className="border border-gray-300 p-2">
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                     {formatDate(post.expiryDate)}
                   </td>
-                  <td className="border border-gray-300 p-2">
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                     {post.provider}
                   </td>
                 </tr>

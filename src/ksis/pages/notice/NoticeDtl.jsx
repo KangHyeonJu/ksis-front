@@ -202,32 +202,35 @@ const NoticeDetail = () => {
               {(notice.role === "ADMIN" && role === "ROLE_USER") ||
               (notice.role === "USER" && role === "ROLE_ADMIN") ? null : (
                 <>
-                  <Button
+                  <button
                     type="button"
                     color="blue"
-                    className="scale-110"
+                     className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
                     onClick={handleEdit}
                   >
                     수정하기
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     type="button"
                     color="red"
-                    className="scale-110"
+                     className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
                     onClick={handleDeActive}
                   >
                     비활성화
-                  </Button>
+                  </button>
                 </>
               )}
-              <Button
+              <button
                 type="button"
                 color="zinc"
-                className="scale-110"
+                className=" rounded-md border border-gray-600 bg-white text-gray-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-gray-600 hover:text-white hover:shadow-inner hover:shadow-gray-800 focus-visible:outline-gray-600 transition duration-200"
                 onClick={handleCancel}
               >
                 뒤로가기
-              </Button>
+              </button>
             </div>
           </div>
         </form>

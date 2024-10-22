@@ -510,8 +510,9 @@ const SignageDtl = () => {
             <div className="h-8 flex justify-end">
               <button
                 type="button"
-                className="inline-flex items-center h-8 rounded-sm bg-[#FCA929] text-white px-3 py-2 text-xs font-semibold hover:bg-gray-200 hover:text-[#444444]"
                 onClick={openPlay}
+                className="inline-flex items-center rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
               >
                 미리보기
               </button>
@@ -562,9 +563,10 @@ const SignageDtl = () => {
             <div className="h-8 items-center flex justify-end mt-2">
               <button
                 type="button"
-                className="h-8 relative inline-flex items-center rounded-sm bg-[#FCA929] px-3 py-2 text-xs font-semibold text-white hover:bg-gray-200 hover:text-[#444444]"
                 onClick={openPlaylist}
-              >
+                className="inline-flex items-center mr-2 h-8 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
+                hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
+                >
                 수정
               </button>
               <PlaylistUpdateModal
@@ -575,9 +577,10 @@ const SignageDtl = () => {
               />
               <button
                 type="button"
-                className="h-8 ml-2 relative inline-flex items-center rounded-sm bg-[#444444] px-3 py-2 text-xs font-semibold text-white hover:bg-gray-200 hover:text-[#444444]"
                 onClick={() => deletePlaylist(playListId)}
-              >
+                className="inline-flex items-center h-8 rounded-md border border-[#444444] bg-white text-[#444444] px-3 py-2 text-sm font-semibold shadow-sm 
+                hover:bg-[#444444] hover:text-white hover:shadow-inner hover:shadow-[#444444] focus-visible:outline-[#444444] transition duration-200"
+                >
                 삭제
               </button>
             </div>

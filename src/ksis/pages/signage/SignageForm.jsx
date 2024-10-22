@@ -348,14 +348,15 @@ const SignageForm = () => {
                   readOnly
                   className="mr-3"
                 />
-                <Button
+                <button
                   type="button"
                   color="zinc"
                   onClick={execDaumPostcode}
-                  className="whitespace-nowrap"
+                  className="whitespace-nowrap rounded-md border border-gray-600 bg-white text-gray-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-gray-600 hover:text-white hover:shadow-inner hover:shadow-gray-800 focus-visible:outline-gray-600 transition duration-200"
                 >
                   주소검색
-                </Button>
+                </button>
                 {addressError && (
                   <p className="text-red-500 text-sm ml-2">{addressError}</p>
                 )}
@@ -450,12 +451,19 @@ const SignageForm = () => {
           <br />
 
           <div className="mt-6 flex justify-center gap-4">
-            <Button type="submit" color="blue">
+            <button type="submit" 
+            className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+         >
               등록하기
-            </Button>
-            <Button type="button" color="red" onClick={onCancel}>
+            </button>
+            <button type="button" 
+            onClick={onCancel}
+            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+        >
               뒤로가기
-            </Button>
+            </button>
           </div>
         </form>
       </div>

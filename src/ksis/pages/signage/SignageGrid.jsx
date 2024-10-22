@@ -102,8 +102,9 @@ const SignageGrid = () => {
             <Link to={SIGNAGE_FORM}>
               <button
                 type="button"
-                className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-              >
+                className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+         >
                 재생장치 등록
               </button>
             </Link>
@@ -114,7 +115,7 @@ const SignageGrid = () => {
         {signages.map((signage) => (
           <div
             key={signage.deviceId}
-            className="group relative border-2 border-[#fcc310] rounded-md p-3"
+            className="group relative border border-[#FF9C00] p-3"
           >
             <div className="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
               <img
@@ -123,13 +124,14 @@ const SignageGrid = () => {
                 className="h-full w-full object-cover object-center"
               />
             </div>
-            <div className="mt-2 text-gray-700 text-center w-full border-2 border-[#fcc310] rounded-md p-1">
+            <div className="mt-2 text-gray-700 text-center w-full border border-[#FF9C00] rounded-md p-1">
               재생장치 : {signage.deviceName}
             </div>
             <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
               <button
                 type="button"
-                className="mt-2 bg-[#fad96e] w-full rounded-md p-1"
+                className="mt-2 w-full p-1 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] text-sm font-semibold
+                shadow-sm hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
               >
                 상세보기
               </button>
@@ -138,14 +140,17 @@ const SignageGrid = () => {
         ))}
       </div>
 
-      <Stack spacing={2} className="mt-5">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+        {/* 페이지네이션 */}
+    {totalPages > 1 && (
+  <Stack spacing={2} className="mt-2">
+    <Pagination
+      count={totalPages}
+      page={currentPage}
+      onChange={handlePageChange}
+      color={"primary"}
+    />
+  </Stack>
+)}
     </div>
   );
 };
