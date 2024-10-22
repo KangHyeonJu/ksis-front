@@ -177,6 +177,10 @@ const Sidebar = ({ onToggleSidebar }) => {
           }
         }}
       >
+        {/* 알림 모달 창 표시 */}
+        {isNotificationOpen && (
+          <Notification onClose={() => setNotificationOpen(false)} />
+        )}
         <div>
           <div className="logo mb-8">
             <Link
@@ -208,10 +212,6 @@ const Sidebar = ({ onToggleSidebar }) => {
             >
               <NotificationCountComponent />
               <span>알림</span>
-              {/* 알림 모달 창 표시 */}
-              {isNotificationOpen && (
-                <Notification onClose={() => setNotificationOpen(false)} />
-              )}
             </div>
             <div
               className="relative flex items-center p-2 hover:bg-gray-200rounded w-24 whitespace-nowrap cursor-pointer"
