@@ -144,11 +144,6 @@ const AccountRegForm = () => {
         <AlertTitle>알림창</AlertTitle>
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
-          {alertMessage !== "계정이 등록되었습니다." && (
-            <Button plain onClick={() => setIsAlertOpen(false)}>
-              취소
-            </Button>
-          )}
           {confirmAction && (
             <Button
               onClick={() => {
@@ -157,6 +152,11 @@ const AccountRegForm = () => {
               }}
             >
               확인
+            </Button>
+          )}
+          {alertMessage !== "계정이 등록되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
             </Button>
           )}
         </AlertActions>

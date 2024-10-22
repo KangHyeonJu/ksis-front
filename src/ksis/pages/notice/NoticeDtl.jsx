@@ -110,9 +110,6 @@ const NoticeDetail = () => {
         <AlertTitle>알림창</AlertTitle>
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
-          <Button plain onClick={() => setIsAlertOpen(false)}>
-            취소
-          </Button>
           {confirmAction && (
             <Button
               onClick={() => {
@@ -123,6 +120,9 @@ const NoticeDetail = () => {
               확인
             </Button>
           )}
+          <Button plain onClick={() => setIsAlertOpen(false)}>
+            취소
+          </Button>
         </AlertActions>
       </Alert>
       <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">

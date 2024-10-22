@@ -202,6 +202,10 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
           inset: "0px",
           padding: "0px",
         },
+        overlay: {
+          position: "fixed",
+          zIndex: 30,
+        },
       }}
     >
       <div

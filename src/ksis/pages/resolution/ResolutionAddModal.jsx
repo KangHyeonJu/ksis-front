@@ -84,11 +84,6 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
         <AlertTitle>알림창</AlertTitle>
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
-          {alertMessage !== "해상도가 등록되었습니다." && (
-            <Button plain onClick={() => setIsAlertOpen(false)}>
-              취소
-            </Button>
-          )}
           {confirmAction && (
             <Button
               onClick={() => {
@@ -97,6 +92,11 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
               }}
             >
               확인
+            </Button>
+          )}
+          {alertMessage !== "해상도가 등록되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
             </Button>
           )}
         </AlertActions>

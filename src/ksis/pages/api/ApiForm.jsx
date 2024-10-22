@@ -134,11 +134,6 @@ const ApiForm = () => {
         <AlertTitle>알림창</AlertTitle>
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
-          {alertMessage !== "API 정보가 성공적으로 저장되었습니다." && (
-            <Button plain onClick={() => setIsAlertOpen(false)}>
-              취소
-            </Button>
-          )}
           {confirmAction && (
             <Button
               onClick={() => {
@@ -147,6 +142,11 @@ const ApiForm = () => {
               }}
             >
               확인
+            </Button>
+          )}
+          {alertMessage !== "API 정보가 성공적으로 저장되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
             </Button>
           )}
         </AlertActions>

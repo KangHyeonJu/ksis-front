@@ -176,11 +176,6 @@ const AccountEditForm = () => {
         <AlertTitle>알림창</AlertTitle>
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
-          {alertMessage !== "계정 정보가 성공적으로 업데이트되었습니다." && (
-            <Button plain onClick={() => setIsAlertOpen(false)}>
-              취소
-            </Button>
-          )}
           {confirmAction && (
             <Button
               onClick={() => {
@@ -189,6 +184,11 @@ const AccountEditForm = () => {
               }}
             >
               확인
+            </Button>
+          )}
+          {alertMessage !== "계정 정보가 성공적으로 업데이트되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
             </Button>
           )}
         </AlertActions>
