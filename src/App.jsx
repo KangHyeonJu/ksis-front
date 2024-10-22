@@ -93,7 +93,7 @@ function App() {
   const noSidebarRoutes = ["/downloadApp", "/signageplay"];
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [marginClass, setMarginClass] = useState('ml-64');
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(windowWidth >= 1024);
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
@@ -111,13 +111,22 @@ function App() {
     window.location.href = "/downloadApp";
   };
 
+  const handleSidebarToggle = (isOpen) => {
+    setIsSidebarOpen(isOpen);
+    console.log("isOpen : ", isOpen);
+  };
+
   useEffect(() => {
     if (windowWidth >= 1024) {
-      setMarginClass('ml-64');
+      if (isSidebarOpen) {
+        setMarginClass('ml-64'); // 큰 사이드바 열림
+      } else {
+        setMarginClass('ml-16'); // 큰 사이드바 닫힘
+      }
     } else {
-      setMarginClass('ml-16');
+      setMarginClass('ml-16'); // 작은 화면에서는 항상 축소된 마진
     }
-  }, [windowWidth]);
+  }, [windowWidth, isSidebarOpen]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -145,7 +154,7 @@ function App() {
   return (
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
-      {!isNoSidebarRoute && accessToken && <Sidebar />}
+      {!isNoSidebarRoute && accessToken && <Sidebar onToggleSidebar={handleSidebarToggle} />}
       <div className={`content flex-1 p-4 ${marginClass}`}>
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback/>}/>
