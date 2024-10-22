@@ -78,7 +78,7 @@ const NotificationCountComponent = () => {
 
   return (
     <div className="relative flex items-center">
-      <BiBell size={24} />
+      <BiBell size={16} />
       {unreadCount > 0 && (
         <span className="absolute top-0 right-0 w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
           {unreadCount}

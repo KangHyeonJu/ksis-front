@@ -9,6 +9,15 @@ import {
 } from "../../../constants/api_constant";
 import { SIGNAGE_INVENTORY } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
+import { Input } from "../../css/input";
+import { Button } from "../../css/button";
+import { Select } from "../../css/select";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
 
 const SignageForm = () => {
   //가로세로크기
@@ -23,6 +32,16 @@ const SignageForm = () => {
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   //해상도
   const [selectedValue, setSelectedValue] = useState();
@@ -215,187 +234,234 @@ const SignageForm = () => {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-        재생장치 등록
-      </h1>
-      <form
-        onSubmit={handleSave}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
+    <div className="grid place-items-center min-h-screen">
+      {/* Alert 컴포넌트 추가 */}
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (
+            alertMessage === "재생장치가 정상적으로 등록되었습니다." &&
+            confirmAction
+          ) {
+            confirmAction();
           }
         }}
+        size="lg"
       >
-        <div className="shadow-sm ring-1 ring-gray-900/5 text-center pt-5 pb-5">
-          <div className="flex items-center">
-            <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              재생장치 이름
-            </label>
-            <input
-              required
-              minLength="2"
-              maxlength="10"
-              value={data.deviceName}
-              onChange={(e) => {
-                onChangeHandler(e);
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {alertMessage !== "재생장치가 정상적으로 등록되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction();
               }}
-              name="deviceName"
-              type="text"
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          {responsibles.map((responsible, index) => (
-            <div className="flex items-center mt-5" key={responsible.id}>
-              <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-                담당자
+            >
+              확인
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+          재생장치 등록
+        </h1>
+        <br />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            showAlert("재생장치를 등록하시겠습니까?", handleSave);
+          }}
+          className="space-y-4"
+        >
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                재생장치 이름
               </label>
-              <select
-                required
-                id={`responsible-${responsible.id}`}
-                onChange={(e) => handleResponsibleChange(e, index)}
-                className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              >
-                <option value="">담당자 선택</option>
-                {accounts.map((account) => (
-                  <option value={account.accountId} key={account.accountId}>
-                    {account.name}({account.accountId})
-                  </option>
-                ))}
-              </select>
-              {responsibles.length > 1 && (
-                <>
-                  <button onClick={addResponsible} className="ml-2">
-                    <AiFillPlusCircle size={25} color="#f25165" />
-                  </button>
-                  <button
-                    onClick={() => removeResponsible(responsible.id)}
-                    className="ml-2"
-                  >
-                    <AiFillMinusCircle size={25} color="#717273" />
-                  </button>
-                </>
-              )}
-              {responsibles.length === 1 && (
-                <button onClick={addResponsible} className="ml-2">
-                  <AiFillPlusCircle size={25} color="#f25165" />
-                </button>
-              )}
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  required
+                  minLength="2"
+                  maxLength="10"
+                  value={data.deviceName}
+                  onChange={onChangeHandler}
+                  name="deviceName"
+                  type="text"
+                />
+              </div>
             </div>
-          ))}
-          <div className="flex items-center mt-5">
-            <label className="w-40 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
-              위치
-            </label>
-            <input
-              id="address"
-              type="text"
-              value={address}
-              readOnly
-              className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-            <button
-              type="button"
-              className="ml-2 bg-[#ffe69c] rounded-full px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-yellow-50"
-              onClick={execDaumPostcode}
-            >
-              주소검색
-            </button>
-            {addressError && (
-              <p className="text-red-500 text-sm ml-2">{addressError}</p>
-            )}
+
+            {responsibles.map((responsible, index) => (
+              <div className="flex items-center mt-8" key={responsible.id}>
+                <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                  담당자
+                </label>
+
+                <div className="flex-grow flex items-center space-x-2">
+                  <Select
+                    required
+                    id={`responsible-${responsible.id}`}
+                    onChange={(e) => handleResponsibleChange(e, index)}
+                  >
+                    <option value="">담당자 선택</option>
+                    {accounts.map((account) => (
+                      <option value={account.accountId} key={account.accountId}>
+                        {account.name}({account.accountId})
+                      </option>
+                    ))}
+                  </Select>
+
+                  <div className="ml-2 flex items-center">
+                    <button type="button" onClick={addResponsible}>
+                      <AiFillPlusCircle size={25} color="#f25165" />
+                    </button>
+                    {responsibles.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeResponsible(responsible.id)}
+                        className="ml-2"
+                      >
+                        <AiFillMinusCircle size={25} color="#717273" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="flex items-center mt-5">
-            <label className="w-40 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900"></label>
-            <input
-              required
-              placeholder=" 상세주소"
-              id="detailAddress"
-              value={data.detailAddress}
-              onChange={onChangeHandler}
-              name="detailAddress"
-              className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-5">
-            <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              IP주소
-            </label>
-            <input
-              required
-              id="ipAddress"
-              onChange={onChangeHandler}
-              value={data.ipAddress}
-              type="text"
-              name="ipAddress"
-              className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
-            />
-            {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
-          </div>
-          <div className="flex items-center mt-5">
-            <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              해상도
-            </label>
-            <select
-              required
-              onChange={handleChange}
-              value={selectedValue}
-              className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              <option value="">해상도 선택</option>
-              {resolutions.map((resolution) => (
-                <option
-                  value={`${resolution.name} (${resolution.width} x ${resolution.height})`}
-                  key={resolution.resolutionId}
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+            <div className="flex items-center mt-8">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                위치
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  id="address"
+                  type="text"
+                  value={address}
+                  readOnly
+                  className="mr-3"
+                />
+                <Button
+                  type="button"
+                  color="zinc"
+                  onClick={execDaumPostcode}
+                  className="whitespace-nowrap"
                 >
-                  {resolution.name}({resolution.width} x {resolution.height})
-                </option>
-              ))}
-            </select>
+                  주소검색
+                </Button>
+                {addressError && (
+                  <p className="text-red-500 text-sm ml-2">{addressError}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center mt-8">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                상세주소
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                {" "}
+                <Input
+                  required
+                  id="detailAddress"
+                  value={data.detailAddress}
+                  onChange={onChangeHandler}
+                  name="detailAddress"
+                  placeholder="상세주소 입력"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center mt-8">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                IP주소
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  required
+                  id="ipAddress"
+                  value={data.ipAddress}
+                  onChange={onChangeHandler}
+                  name="ipAddress"
+                  type="text"
+                  placeholder="IP 주소 입력"
+                />
+                {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
+              </div>
+            </div>
+
+            <div className="flex items-center mt-8">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                해상도
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Select required onChange={handleChange} value={selectedValue}>
+                  <option value="">해상도 선택</option>
+                  {resolutions.map((resolution) => (
+                    <option
+                      value={`${resolution.name} (${resolution.width} x ${resolution.height})`}
+                      key={resolution.resolutionId}
+                    >
+                      {resolution.name} ({resolution.width} x{" "}
+                      {resolution.height})
+                    </option>
+                  ))}
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex items-center mt-8">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                너비(W)
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  required
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                  type="number"
+                  placeholder="너비 입력 (cm 기준)"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center mt-8">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                높이(H)
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  required
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  type="number"
+                  placeholder="높이 입력 (cm 기준)"
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex items-center mt-5">
-            <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              너비(W)
-            </label>
-            <input
-              required
-              value={width}
-              onChange={(e) => setWidth(e.target.value)}
-              type="number"
-              className="bg-[#ffe69c] block w-40 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-            <p className="ml-2">(cm 기준)</p>
+          <br />
+
+          <div className="mt-6 flex justify-center gap-4">
+            <Button type="submit" color="blue">
+              등록하기
+            </Button>
+            <Button type="button" color="red" onClick={onCancel}>
+              뒤로가기
+            </Button>
           </div>
-          <div className="flex items-center mt-5">
-            <label className="w-40 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              높이(H)
-            </label>
-            <input
-              required
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              type="number"
-              className="bg-[#ffe69c] block w-40 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-            <p className="ml-2">(cm 기준)</p>
-          </div>
-        </div>
-        <div className="mt-2 flex justify-end">
-          <button
-            type="submit"
-            className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            등록하기
-          </button>
-          <button
-            type="button"
-            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            onClick={onCancel}
-          >
-            뒤로가기
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

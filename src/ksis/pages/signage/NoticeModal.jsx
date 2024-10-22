@@ -142,6 +142,14 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
                 ))}
               </tbody>
             </table>
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color={"primary"}
+              />
+            </Stack>
           </DialogBody>
           <DialogActions className="mt-4">
             <Stack spacing={2}>

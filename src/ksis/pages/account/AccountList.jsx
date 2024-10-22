@@ -41,6 +41,10 @@ const AccountList = () => {
   };
 
   useEffect(() => {
+    setSearchTerm("");
+  }, [searchCategory]);
+
+  useEffect(() => {
     // 관리자가 아닌 경우 접근 차단
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자만 접근 가능합니다.");
@@ -93,7 +97,7 @@ const AccountList = () => {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value); // 검색어를 업데이트
-    setCurrentPage(0); // 검색할 때 페이지를 0으로 초기화
+    setCurrentPage(1);
   };
 
   if (loading) {
