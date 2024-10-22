@@ -17,7 +17,7 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
   const [searchCategory, setSearchCategory] = useState("title");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  const postsPerPage = 5; // 한 페이지 10개 데이터
+  const postsPerPage = 7; // 한 페이지 10개 데이터
 
   const modalRef = useRef(null);
 
@@ -86,7 +86,7 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
         </span> */}
         <div
           ref={modalRef}
-          className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-5/12 sm:p-6 h-128"
+          className="inline-block align-bottom bg-white rounded-sm px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-5/12 sm:p-6 h-128"
         >
           <DialogBody className="h-96">
             <div className="mb-4 flex items-center">
@@ -142,14 +142,6 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
                 ))}
               </tbody>
             </table>
-            <Stack spacing={2}>
-              <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={handlePageChange}
-                color={"primary"}
-              />
-            </Stack>
           </DialogBody>
           <DialogActions className="mt-4">
             <Stack spacing={2}>

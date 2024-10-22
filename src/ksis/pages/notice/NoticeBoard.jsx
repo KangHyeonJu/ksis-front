@@ -6,6 +6,7 @@ import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
 import { NOTICE_ALL, DEACTIVE_NOTICE } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
+import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -22,6 +23,8 @@ const NoticeBoard = () => {
 
   const postsPerPage = 20;
   const navigate = useNavigate();
+
+  const authority = decodeJwt().roles;
 
   useEffect(() => {
     const fetchNotices = async () => {
@@ -152,7 +155,11 @@ const NoticeBoard = () => {
           className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
         >
           <option value="title">제목</option>
-          <option value="account">작성자</option>
+
+          {authority === "ROLE_ADMIN" ? (
+            <option value="account">작성자</option>
+          ) : null}
+
           <option value="regTime">등록일</option>
           <option value="device">재생장치</option>
         </select>

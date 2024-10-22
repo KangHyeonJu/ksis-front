@@ -167,7 +167,7 @@ const Sidebar = ({ onToggleSidebar }) => {
   if (isSidebarOpen) {
     return (
       <div
-        className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col"
+        className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col z-10"
         onClick={(e) => {
           if (e.target === e.currentTarget && windowWidth > 1024) {
             // 사이드바의 빈 공간을 클릭했을 때만 작동
@@ -175,11 +175,6 @@ const Sidebar = ({ onToggleSidebar }) => {
           }
         }}
       >
-        {/* 알림 모달 창 표시 */}
-        {isNotificationOpen && (
-          <Notification onClose={() => setNotificationOpen(false)} />
-        )}
-
         <div>
           <div className="logo mb-8">
             <Link
@@ -191,10 +186,10 @@ const Sidebar = ({ onToggleSidebar }) => {
             </Link>
           </div>
           <div className="mb-4">
-            <a className="flex items-center px-2 font-semibold text-black text-lg">
+            <div className="flex items-center px-2 font-semibold text-black text-lg">
               <CiFaceSmile className="mr-2" size="24" />
               <span>{userInfo.accountId}</span>
-            </a>
+            </div>
           </div>
           <div className="flex space-x-0.2 mb-4">
             <Link
@@ -209,20 +204,24 @@ const Sidebar = ({ onToggleSidebar }) => {
               <BiUser className="mr-1" />
               정보
             </Link>
-            <a
-              className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded w-24 whitespace-nowrap"
+            <div
+              className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded w-24 whitespace-nowrap cursor-pointer"
               onClick={() => setNotificationOpen(true)} // 알림 버튼 클릭 시 모달 열기
             >
               <NotificationCountComponent />
               <span>알림</span>
-            </a>
-            <a
-              className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded w-24 whitespace-nowrap"
+              {/* 알림 모달 창 표시 */}
+              {isNotificationOpen && (
+                <Notification onClose={() => setNotificationOpen(false)} />
+              )}
+            </div>
+            <div
+              className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded w-24 whitespace-nowrap cursor-pointer"
               onClick={handleOpenApp}
             >
               <BiWindowAlt className="mr-1" />
               App
-            </a>
+            </div>
           </div>
           <hr className="border-black border-1 border-dashed" />
           <div className="menu--list">
@@ -501,7 +500,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               </span>
             </Link>
 
-            <a
+            <div
               className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-[#fe6500]/30"
               onClick={() => setNotificationOpen(true)}
             >
@@ -509,9 +508,9 @@ const Sidebar = ({ onToggleSidebar }) => {
               <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
                 알림
               </span>
-            </a>
+            </div>
 
-            <a
+            <div
               className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-[#fe6500]/30"
               onClick={handleOpenApp}
             >
@@ -519,7 +518,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
                 앱
               </span>
-            </a>
+            </div>
           </div>
           <hr className="border-black border-1 border-dashed" />
           {isAdmin && (
