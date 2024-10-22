@@ -62,12 +62,6 @@ const ImageResourceBoard = () => {
       });
   }, [currentPage, searchTerm]);
 
-  const handleToggle = () => {
-    const newIsOriginal = !isOriginal;
-    setIsOriginal(newIsOriginal);
-    navigate(newIsOriginal ? VIDEO_RESOURCE_BOARD : IMAGE_RESOURCE_BOARD);
-  };
-
   const handleEditClick = (index, title) => {
     setEditingTitleIndex(index);
     setNewTitle(title);
@@ -163,14 +157,14 @@ const handleSearch = (e) => {
         </h1>
       </header>
 
- {/* 검색바 입력창 */}
- <div className="flex items-center relative flex-grow mb-4">
+ {/* 검색바 입력창 */} 
+ <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
-         <option value="fileTitle">제목</option>
+          <option value="fileTitle">제목</option>
           <option value="regTime">등록일</option>
           <option value="resolution">해상도</option>
         </select>
@@ -180,15 +174,43 @@ const handleSearch = (e) => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-            {/* 탭버튼 */}
-            <div className="flex items-center justify-between mb-4">
+           {/* 탭버튼 */} 
+        <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2">
+          {/* 이미지 탭 */}
+          <div className="border-b-2 border-[#FF9C00]">
+          <button
+            className={`px-6 py-2 rounded-t-lg font-semibold border ${
+              window.location.pathname === IMAGE_RESOURCE_BOARD
+                ? "text-black bg-white border-border-[#FF9C00] border-b-0"
+                : "text-gray-500 bg-gray-300 border-transparent"
+            }`}
+            onClick={() => navigate(IMAGE_RESOURCE_BOARD)}
+          >
+            이미지
+          </button>
+          </div>
+          <div className="border-b-2 border-gray-200">
+          {/* 영상 탭 */}
+          <button
+            className={`px-6 py-2 rounded-t-lg font-semibold border  ${
+              window.location.pathname === VIDEO_RESOURCE_BOARD
+                ? "text-black bg-white border-gray-300 border-b-0"
+                : "text-gray-500 bg-gray-100 border-transparent "
+            }`}
+            onClick={() => navigate(VIDEO_RESOURCE_BOARD)}
+          >
+            영상
+          </button>
+          </div>
         </div>
+      </div>
 
        {/* 그리드 시작 */}
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
@@ -262,8 +284,8 @@ const handleSearch = (e) => {
                 <button
                     className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                  >
-                      인코딩
+                   >
+                       인코딩
                   </button>
                   </Link>
 
@@ -288,15 +310,17 @@ const handleSearch = (e) => {
       </div>
 
       {/* 페이지네이션 */}
-      <Stack spacing={2}
-      className="mt-2" >
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
+
 
       {/* 모달 컴포넌트 호출 */}
       {selectedImage && (

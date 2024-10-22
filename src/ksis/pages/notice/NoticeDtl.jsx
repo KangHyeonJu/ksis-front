@@ -16,6 +16,7 @@ import {
 } from "../../css/alert";
 
 const NoticeDetail = () => {
+  const userInfo = decodeJwt();
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,12 +35,21 @@ const NoticeDetail = () => {
 
   useEffect(() => {
     const fetchNotice = async () => {
-      const authority = decodeJwt().roles;
-      setRole(authority); // 역할 상태 설정
+      setRole(userInfo.roles); // 역할 상태 설정
 
       try {
         const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
         setNotice(response.data);
+        if (
+          userInfo.roles !== "ROLE_ADMIN" &&
+          !response.data.accountList.some(
+            (i) => i.accountId === userInfo.accountId
+          )
+        ) {
+          alert("접근권한이 없습니다.");
+          navigate(NOTICE_BOARD);
+        }
+        
       } catch (err) {
         setError("공지사항 정보를 가져오는 데 실패했습니다.");
       } finally {

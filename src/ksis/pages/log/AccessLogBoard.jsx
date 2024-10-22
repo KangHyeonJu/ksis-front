@@ -118,11 +118,11 @@ const AccessLogBoard = () => {
         접근 로그
       </h1>
 
-      <div className="mb-4 flex items-center">
+      <div className="mb-4 flex items-center border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 border border-gray-300 rounded-md"
+          className="mr-1 p-2 text-gray-600 font-bold"
         >
           <option value="account">아이디</option>
           <option value="detail">내용</option>
@@ -131,13 +131,13 @@ const AccessLogBoard = () => {
           <input
             type="date"
             onChange={handleStartTime}
-            className="p-2 border border-gray-300 rounded-md"
+            className="p-2"
           />
           <spna>~</spna>
           <input
             type="date"
             onChange={handleEndTime}
-            className="p-2 border border-gray-300 rounded-md"
+            className="p-2"
           />
         </div>
         {searchCategory === "account" ? (
@@ -147,9 +147,9 @@ const AccessLogBoard = () => {
               value={searchTerm}
               onChange={handleSearch}
               placeholder="검색어를 입력하세요"
-              className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+              className="w-full p-2 pr-10 "
             />
-            <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
+            <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
           </div>
         ) : (
           <div className="relative flex-grow">
@@ -180,7 +180,7 @@ const AccessLogBoard = () => {
       </div>
       <div className="flex justify-end space-x-2 mb-4">
         <select
-          className="mr-1 p-2 border bg-[#ffb246] rounded-md"
+          className="mr-1 p-2 text-gray-600"
           onChange={handleSelectChange}
           value={getCurrentValue()}
         >
@@ -190,37 +190,40 @@ const AccessLogBoard = () => {
         </select>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
-        <thead>
-          <tr>
-            <th className="border border-gray-300">접근일시</th>
-            <th className="border border-gray-300">이름(아이디)</th>
-            <th className="border border-gray-300">내용</th>
+      <table className="min-w-full mt-4 table-fixed">
+        <thead className=" border-t border-b  border-double border-[#FF9C00]">
+          <tr className="text-gray-800">
+            <th className="w-1/5">접근일시</th>
+            <th className="w-1/5">이름(아이디)</th>
+            <th className="w-3/5">내용</th>
           </tr>
         </thead>
         <tbody>
           {logList.map((log) => (
             <tr key={log.logId}>
-              <td className="border border-gray-300 p-2">
+              <td className="text-center p-2 border-b border-gray-300">
                 {format(new Date(log.dateTime), "yyyy-MM-dd HH:mm:ss")}
               </td>
-              <td className="border border-gray-300 p-2">
+              <td className="text-center p-2 border-b border-gray-300">
                 {log.account.name}({log.account.accountId})
               </td>
-              <td className="border border-gray-300 p-2">{log.detail}</td>
+              <td className="p-2 border-b border-gray-300">{log.detail}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <Stack spacing={2}>
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+        {/* 페이지네이션 */}
+{totalPages > 1 && (
+  <Stack spacing={2} className="mt-2">
+    <Pagination
+      count={totalPages}
+      page={currentPage}
+      onChange={handlePageChange}
+      color={"primary"}
+    />
+  </Stack>
+)}
     </div>
   );
 };

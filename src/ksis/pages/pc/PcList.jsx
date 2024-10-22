@@ -109,11 +109,11 @@ const PcList = () => {
         일반 PC 관리
       </h1>
 
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 border border-gray-300 rounded-md"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="deviceName">PC명</option>
 
@@ -127,10 +127,10 @@ const PcList = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
       {userInfo.roles === "ROLE_ADMIN" ? (
@@ -204,14 +204,17 @@ const PcList = () => {
         </tbody>
       </table>
 
-      <Stack spacing={2}>
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+    {/* 페이지네이션 */}
+    {totalPages > 1 && (
+  <Stack spacing={2} className="mt-2">
+    <Pagination
+      count={totalPages}
+      page={currentPage}
+      onChange={handlePageChange}
+      color={"primary"}
+    />
+  </Stack>
+)}
     </div>
   );
 };

@@ -147,13 +147,14 @@ const ApiBoard = () => {
           API 목록
         </h1>
       </header>
-      <div className="mb-6 flex items-center">
+
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-4 p-2 border border-gray-300 rounded-md"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
-          <option value="apiName">API 이름</option>
+          <option value="apiName">이름</option>
           <option value="provider">제공업체</option>
           <option value="expiryDate">만료일</option>
         </select>
@@ -163,11 +164,12 @@ const ApiBoard = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색..."
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
+
       <div className="flex justify-end space-x-2 mb-4">
         <button
           onClick={() => navigate("/apiform")}
@@ -232,15 +234,18 @@ const ApiBoard = () => {
           </table>
         )}
       </div>
-      <Stack spacing={2}
-      className="mt-2" >
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+
+    {/* 페이지네이션 */}
+    {totalPages > 1 && (
+  <Stack spacing={2} className="mt-2">
+    <Pagination
+      count={totalPages}
+      page={currentPage}
+      onChange={handlePageChange}
+      color={"primary"}
+    />
+  </Stack>
+)}
     </div>
   );
 };
