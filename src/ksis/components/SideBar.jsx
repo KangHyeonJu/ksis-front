@@ -447,36 +447,6 @@ const Sidebar = ({ onToggleSidebar }) => {
                 </div>
               )}
             </div>
-            <div className="item mt-3">
-              <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                onClick={() => toggleMenu("trash")}
-              >
-                <BiTrash className="mr-3" />
-                <span>휴지통</span>
-              </div>
-              {openMenu === "trash" && (
-                <div className="submenu ml-8 mt-2">
-                  <Link
-                    to={TRASH_IMAGE_FILE}
-                    onClick={() => handleMenuClick("TRASHFILE")}
-                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2" />
-                    <span>이미지 및 영상</span>
-                  </Link>
-
-                  <Link
-                    to={TRASH_NOTICE}
-                    onClick={() => handleMenuClick("TRASHNOTICE")}
-                    className="flex items-center py-1 mt-3 hover:bg-[#fe6500]/30 rounded cursor-pointer"
-                  >
-                    <FaRegCircle size={10} className="mr-2" />
-                    <span>공지글</span>
-                  </Link>
-                </div>
-              )}
-            </div>
           </div>
         </div>
         <div className="mt-auto">
@@ -510,9 +480,9 @@ const Sidebar = ({ onToggleSidebar }) => {
         )}
 
         <div>
-          <div className="logo mb-8">
+          <div className="logo mb-8 mt-1">
             <Link to={MAIN} className="text-2xl font-semibold">
-              <img src={ksisLogo} alt="KSIS Logo" className="w-10 h-10" />
+              <img src={ksisLogo} alt="KSIS Logo" className="w-11 h-6" />
             </Link>
           </div>
           <div className="flex flex-col space-y-4 mb-4">
