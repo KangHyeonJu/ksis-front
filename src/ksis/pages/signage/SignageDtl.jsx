@@ -109,13 +109,13 @@ const SignageDtl = () => {
     );
     if (selectedPlaylist) {
       setRadiobox(selectedPlaylist.playlistId);
-    }
 
-    onClickPlaylist(
-      selectedPlaylist.playlistId,
-      selectedPlaylist.title,
-      selectedPlaylist.playTime
-    );
+      onClickPlaylist(
+        selectedPlaylist.playlistId,
+        selectedPlaylist.title,
+        selectedPlaylist.playTime
+      );
+    }
   };
 
   useEffect(() => {
