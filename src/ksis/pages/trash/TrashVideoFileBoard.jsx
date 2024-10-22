@@ -2,9 +2,7 @@
   import fetcher from "../../../fetcher";
   import { format, parseISO } from "date-fns";
   import { FaSearch, FaRegPlayCircle  } from "react-icons/fa";
-import { FaRegCircleXmark } from "react-icons/fa6";
-  import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-  import ReactPaginate from "react-paginate"; // 페이지네이션 컴포넌트 가져오기
+  import { useNavigate } from "react-router-dom"; // Import useNavigate
   import {
     TRASH_IMAGE_FILE,
     TRASH_VIDEO_FILE
@@ -13,39 +11,48 @@ import { FaRegCircleXmark } from "react-icons/fa6";
     DEACTIVE_VIDEO_BOARD,
     FILE_ACTIVE,
   } from "../../../constants/api_constant";
+
+  import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
   
   const TrashVideoFileBoard = () => {
+     // 페이지네이션 관련 상태
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchCategory, setSearchCategory] = useState("total");
+    const [searchCategory, setSearchCategory] = useState("fileTitle");
+    const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+    const [currentPage, setCurrentPage] = useState(1);
+
     const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
     const [videos, setVideos] = useState([]);
-    // 페이지네이션 관련 상태
-    const [currentPage, setCurrentPage] = useState(0);
-  
-    const postsPerPage = 16; // 페이지당 게시물 수
     const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
-    const navigate = useNavigate(); // Initialize useNavigate
-  
+    
+    const postsPerPage = 16; // 페이지당 게시물 수
+    const navigate = useNavigate();
+
     useEffect(() => {
       fetcher
-        .get(DEACTIVE_VIDEO_BOARD)
+        .get(DEACTIVE_VIDEO_BOARD, {
+          params: {
+            page: currentPage - 1,
+            size: postsPerPage,
+            searchTerm,
+            searchCategory, // 카테고리 검색에 필요한 필드
+          },
+        })
         .then((response) => {
-          setVideos(response.data);
+          setTotalPages(response.data.totalPages);
+          setVideos(response.data.content);
           setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
         })
         .catch((error) => {
           console.error("Error fetching videos:", error);
         });
-    }, []);
+    }, [currentPage, searchTerm]);
   
     const handleToggle = () => {
       const newIsOriginal = !isOriginal;
       setIsOriginal(newIsOriginal);
       navigate(newIsOriginal ? TRASH_VIDEO_FILE : TRASH_IMAGE_FILE);
-    };
-
-    const handlePageChange = ({ selected }) => {
-      setCurrentPage(selected);
     };
   
     const handleActivation = async (id) => {
@@ -60,6 +67,17 @@ import { FaRegCircleXmark } from "react-icons/fa6";
         }
       }
     };
+
+     // 페이지 변경 핸들러
+ const handlePageChange = (event, page) => {
+  setCurrentPage(page);
+};
+
+// 검색어 변경 핸들러
+const handleSearch = (e) => {
+  setSearchTerm(e.target.value);
+  setCurrentPage(1); // 검색 시 첫 페이지로 이동
+};
   
     const formatDate = (dateString) => {
       try {
@@ -70,11 +88,7 @@ import { FaRegCircleXmark } from "react-icons/fa6";
         return "Invalid date";
       }
     };
-  
-    const currentPosts = filteredPosts.slice(
-      currentPage * postsPerPage,
-      (currentPage + 1) * postsPerPage
-    );
+
   
     return (
       <div className="p-6">
@@ -91,15 +105,15 @@ import { FaRegCircleXmark } from "react-icons/fa6";
           onChange={(e) => setSearchCategory(e.target.value)}
            className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
         >
-          <option value="total">전체</option>
-          <option value="title">제목</option>
-          <option value="regDate">등록일</option>
+           <option value="fileTitle">제목</option>
+          <option value="regTime">등록일</option>
+          <option value="resolution">해상도</option>
         </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -141,8 +155,8 @@ import { FaRegCircleXmark } from "react-icons/fa6";
 
        {/* 그리드 시작 */}
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-        {currentPosts.length > 0 ? (
-          currentPosts.map((post, index) => (
+        {videos.length > 0 ? (
+          videos.map((post, index) => (
             <div key={index} className="grid p-1">
               
             {/* 카드 */}
@@ -200,38 +214,17 @@ import { FaRegCircleXmark } from "react-icons/fa6";
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+     {/* 페이지네이션 */}
+     <Stack spacing={2}
+      className="mt-2" >
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
 
-     
     </div>
   );
 };

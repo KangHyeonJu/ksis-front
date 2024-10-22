@@ -8,6 +8,7 @@ import { IMAGE_RESOURCE_BOARD } from "../../../constants/page_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
+import { decodeJwt } from "../../../decodeJwt";
 
 const ImageEncoding = () => {
   const params = useParams();
@@ -17,14 +18,27 @@ const ImageEncoding = () => {
   const [encodingOptions, setEncodingOptions] = useState([
     { format: "png", resolution: "" },
   ]);
-  const accountId = localStorage.getItem("accountId");
+  const accountId = decodeJwt().accountId;
 
   const fetchImageData = async (originalResourceId) => {
     try {
+     
       const response = await fetcher.get(
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
       setImage(response.data);
+
+      if (
+        decodeJwt.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === decodeJwt.accountId
+        )
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(IMAGE_RESOURCE_BOARD);
+      }
+
+
     } catch (error) {
       console.error("Error fetching image:", error);
     }

@@ -1,7 +1,6 @@
     import React, { useState, useEffect } from "react";
     import { FaSearch } from "react-icons/fa";
-    import { Link, useNavigate } from "react-router-dom";
-    import ReactPaginate from "react-paginate";
+    import { useNavigate } from "react-router-dom";
     import {
       TRASH_IMAGE_FILE,
       TRASH_VIDEO_FILE
@@ -13,29 +12,44 @@
     import { format, parseISO } from "date-fns";
     import fetcher from "../../../fetcher";
     
+    import Pagination from "@mui/material/Pagination";
+    import Stack from "@mui/material/Stack";
+
     // ImageResourceBoard 컴포넌트를 정의합니다.
     const TrashImageFileBoard = () => {
+
       const [searchTerm, setSearchTerm] = useState("");
-      const [searchCategory, setSearchCategory] = useState("total");
+      const [searchCategory, setSearchCategory] = useState("fileTitle");
+      const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+      const [currentPage, setCurrentPage] = useState(1);
+
       const [isOriginal, setIsOriginal] = useState(false);
-      const [currentPage, setCurrentPage] = useState(0);
-      const postsPerPage = 16;
       const [images, setImages] = useState([]);
       const [filteredPosts, setFilteredPosts] = useState([]);
+
+      const postsPerPage = 16;
       const navigate = useNavigate();
     
     
       useEffect(() => {
         fetcher
-          .get(DEACTIVE_IMAGE_BOARD)
+          .get(DEACTIVE_IMAGE_BOARD, {
+            params: {
+              page: currentPage - 1,
+              size: postsPerPage,
+              searchTerm,
+              searchCategory, // 카테고리 검색에 필요한 필드
+            },
+          })
           .then((response) => {
-            setImages(response.data);
+            setTotalPages(response.data.totalPages);
+            setImages(response.data.content);
             setFilteredPosts(response.data);;
           })
           .catch((error) => {
             console.error("Error fetching images:", error);
           });
-      }, []);
+      }, [currentPage, searchTerm]);
 
      const handleToggle = () => {
         const newIsOriginal = !isOriginal;
@@ -48,6 +62,7 @@
           try {
             await fetcher.post(`${FILE_ACTIVE}/${id}`);
             setImages(images.filter((image) => image.originalResourceId !== id));
+            
             window.alert("이미지를 활성화하였습니다.");
           } catch (err) {
             console.error("이미지 활성화 오류:", err);
@@ -56,13 +71,17 @@
         }
       };
 
-      const handlePageChange = ({ selected }) => {
-        setCurrentPage(selected);
-      };
-      const currentPosts = filteredPosts.slice(
-        currentPage * postsPerPage,
-        (currentPage + 1) * postsPerPage
-      );
+ // 페이지 변경 핸들러
+ const handlePageChange = (event, page) => {
+  setCurrentPage(page);
+};
+
+// 검색어 변경 핸들러
+const handleSearch = (e) => {
+  setSearchTerm(e.target.value);
+  setCurrentPage(1); // 검색 시 첫 페이지로 이동
+};
+
     
       const formatDate = (dateString) => {
         try {
@@ -90,15 +109,15 @@
             onChange={(e) => setSearchCategory(e.target.value)}
              className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
           >
-            <option value="total">전체</option>
-            <option value="title">제목</option>
-            <option value="regDate">등록일</option>
+           <option value="fileTitle">제목</option>
+          <option value="regTime">등록일</option>
+          <option value="resolution">해상도</option>
           </select>
           <div className="relative flex-grow">
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearch}
               placeholder="검색어를 입력하세요"
               className="w-full p-2 pl-10 border border-gray-300 rounded-md"
             />
@@ -140,8 +159,8 @@
   
          {/* 그리드 시작 */}
          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-          {currentPosts.length > 0 ? (
-            currentPosts.map((post, index) => (
+          {images.length > 0 ? (
+            images.map((post, index) => (
               <div key={index} className="grid p-1">
                 
               {/* 카드 */}
@@ -201,38 +220,17 @@
           )}
         </div>
   
-        {/* 페이지네이션 */}
-        {filteredPosts.length > postsPerPage && (
-          <ReactPaginate
-            previousLabel={"이전"}
-            nextLabel={"다음"}
-            breakLabel={"..."}
-            pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageChange}
-            containerClassName={"flex justify-center mt-4"}
-            pageClassName={"mx-1"}
-            pageLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-            }
-            previousClassName={"mx-1"}
-            previousLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-            }
-            nextClassName={"mx-1"}
-            nextLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-            }
-            breakClassName={"mx-1"}
-            breakLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-            }
-            activeClassName={"bg-blue-500 text-white"}
-          />
-        )}
+       {/* 페이지네이션 */}
+       <Stack spacing={2}
+      className="mt-2" >
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
+        />
+      </Stack>
   
-       
       </div>
     );
   };

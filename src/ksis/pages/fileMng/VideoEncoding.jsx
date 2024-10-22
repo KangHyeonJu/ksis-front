@@ -4,12 +4,17 @@ import {
   ENCODED_VIDEO,
   RESOLUTION,
 } from "../../../constants/api_constant";
+import {
+  VIDEO_RESOURCE_BOARD,
+} from "../../../constants/page_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
+import { decodeJwt } from "../../../decodeJwt";
 
 const VideoEncoding = () => {
   const params = useParams();
+  const accountId = decodeJwt().accountId;
   const navigate = useNavigate();
   const [video, setVideo] = useState(null);
   const [resolutions, setResolution] = useState([]);
@@ -23,6 +28,17 @@ const VideoEncoding = () => {
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
       setVideo(response.data);
+
+      if (
+        decodeJwt.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === decodeJwt.accountId
+        )
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(VIDEO_RESOURCE_BOARD);
+      }
+
     } catch (error) {
       console.error("Error fetching image:", error);
     }
@@ -84,6 +100,7 @@ const VideoEncoding = () => {
         const resolutionToUse = option.resolution || `${resolutions[0].width}x${resolutions[0].height}`;
 
         const requestData = {
+          accountId: accountId,
           originalResourceId: video.originalResourceId,
           fileTitle: video.fileTitle,
           filePath: video.filePath,
