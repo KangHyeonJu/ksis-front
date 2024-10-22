@@ -130,7 +130,7 @@ const AccountRegForm = () => {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       <Alert
         open={isAlertOpen}
         onClose={() => {
@@ -162,7 +162,7 @@ const AccountRegForm = () => {
         </AlertActions>
       </Alert>
 
-      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg scale-125">
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           계정 등록
         </h1>
@@ -355,7 +355,7 @@ const AccountRegForm = () => {
               <label className="w-44 pl-4 text-left text-sm font-semibold text-gray-900">
                 성별
               </label>
-              <div className="flex gap-4 ml-10">
+              <div className="flex gap-4">
                 <div>
                   <input
                     type="radio"
@@ -387,12 +387,12 @@ const AccountRegForm = () => {
           <br />
 
           <div className="mt-4 flex gap-8 justify-center">
-            <Button type="submit" color="blue">
+            <Button type="submit" color="blue" className="scale-110">
               등록
             </Button>
             <div>
               <Link to={ACCOUNT_LIST_BOARD}>
-                <Button type="button" color="red">
+                <Button type="button" color="red" className="scale-110">
                   취소
                 </Button>
               </Link>

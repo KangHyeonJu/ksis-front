@@ -49,7 +49,10 @@ const NoticeBoard = () => {
   }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
 
   const filteredNotices = useMemo(() => {
-    return notices
+    // notices가 undefined일 경우 빈 배열로 초기화
+    const validNotices = notices || [];
+
+    return validNotices
       .filter((notice) =>
         notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
       )

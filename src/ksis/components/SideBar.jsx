@@ -167,7 +167,7 @@ const Sidebar = ({ onToggleSidebar }) => {
   if (isSidebarOpen) {
     return (
       <div
-        className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col"
+        className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col z-10"
         onClick={(e) => {
           if (e.target === e.currentTarget && windowWidth > 1024) {
             // 사이드바의 빈 공간을 클릭했을 때만 작동

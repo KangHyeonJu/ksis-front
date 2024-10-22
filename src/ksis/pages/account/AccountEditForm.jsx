@@ -159,7 +159,7 @@ const AccountEditForm = () => {
   }
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       <Alert
         open={isAlertOpen}
         onClose={() => {
@@ -194,7 +194,7 @@ const AccountEditForm = () => {
         </AlertActions>
       </Alert>
 
-      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg scale-125">
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           계정 수정
         </h1>
@@ -412,7 +412,7 @@ const AccountEditForm = () => {
 
           <br />
 
-          <div className="mt-4 flex gap-8 justify-center">
+          <div className="mt-10 flex gap-8 justify-center">
             <Button type="submit" color="blue" className="scale-110">
               저장
             </Button>

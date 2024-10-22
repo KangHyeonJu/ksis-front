@@ -121,15 +121,15 @@ const NoticeForm = () => {
       return;
     }
 
-     // 사용자 확인 창 추가
-  const confirmMessage = isEditing
-          ? "정말 수정하시겠습니까?"
-          : "정말 저장하시겠습니까?";
-  const isConfirmed = window.confirm(confirmMessage);
+    // 사용자 확인 창 추가
+    const confirmMessage = isEditing
+      ? "정말 수정하시겠습니까?"
+      : "정말 저장하시겠습니까?";
+    const isConfirmed = window.confirm(confirmMessage);
 
-if (!isConfirmed) {
-  return; // 사용자가 취소한 경우 함수 종료
-}
+    if (!isConfirmed) {
+      return; // 사용자가 취소한 경우 함수 종료
+    }
 
     try {
       const noticeData = {
@@ -194,7 +194,7 @@ if (!isConfirmed) {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       {/* Alert 컴포넌트 추가 */}
       <Alert
         open={isAlertOpen}
@@ -341,11 +341,16 @@ if (!isConfirmed) {
                 </div>
               </>
             )}
-            <div className="flex justify-center space-x-4">
-              <Button type="submit" color="blue">
+            <div className="flex justify-center space-x-8">
+              <Button type="submit" color="blue" className="scale-110">
                 저장
               </Button>
-              <Button type="button" color="red" onClick={handleCancel}>
+              <Button
+                type="button"
+                color="red"
+                className="scale-110"
+                onClick={handleCancel}
+              >
                 취소
               </Button>
             </div>
