@@ -8,13 +8,13 @@ import {
 import { MAIN } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 import { Input } from "../../css/input";
+import { Button } from "../../css/button";
 import {
   Alert,
   AlertActions,
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
-import { Button } from "../../css/button"; // Button 컴포넌트 추가
 
 const initialFormData = {
   accountId: "",

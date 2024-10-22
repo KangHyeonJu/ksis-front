@@ -6,10 +6,16 @@ import { NOTICE_BOARD } from "../../../constants/page_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { format, parseISO } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
-import { Input } from "../../css/input"; // 추가
-import { Button } from "../../css/button"; // 추가
+import { Input } from "../../css/input";
+import { Button } from "../../css/button";
 import { Textarea } from "../../css/textarea";
 import { Select } from "../../css/select";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
 
 const NoticeForm = () => {
   const [formData, setFormData] = useState({
@@ -25,8 +31,18 @@ const NoticeForm = () => {
   const [deviceOptions, setDeviceOptions] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [role, setRole] = useState(""); // 역할 상태 추가
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼 동작 설정
   const navigate = useNavigate();
   const { noticeId } = useParams();
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   useEffect(() => {
     const fetchDevices = async () => {
@@ -44,8 +60,7 @@ const NoticeForm = () => {
           }))
         );
       } catch (error) {
-        console.error("디바이스 목록을 불러오는 중 오류 발생:", error);
-        alert("디바이스 목록을 불러오는 중 오류가 발생했습니다.", error);
+        showAlert("디바이스 목록을 불러오는 중 오류가 발생했습니다.", error);
       }
     };
 
@@ -79,17 +94,14 @@ const NoticeForm = () => {
             deviceIds: selectedDeviceIds.length ? selectedDeviceIds : [""],
           });
         } catch (error) {
-          console.error("공지글을 불러오는 중 오류 발생:", error);
-          alert("공지글을 불러오는 중 오류가 발생했습니다.");
+          showAlert("공지글을 불러오는 중 오류가 발생했습니다.");
         }
       };
       fetchNotice();
     }
   }, [noticeId]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     const { accountId, title, content, startDate, endDate, deviceIds } =
       formData;
 
@@ -99,24 +111,14 @@ const NoticeForm = () => {
       !content.trim() ||
       (role !== "ROLE_ADMIN" && (!startDate || !endDate))
     ) {
-      alert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
+      showAlert("제목, 내용, 노출 시작일, 종료일을 모두 입력해야 합니다.");
       return;
     }
 
     // 관리자가 아닌 경우에만 재생장치 선택 검사
     if (role !== "ROLE_ADMIN" && deviceIds.some((device) => !device)) {
-      alert("모든 재생장치를 선택해야 합니다.");
+      showAlert("모든 재생장치를 선택해야 합니다.");
       return;
-    }
-
-    // 사용자 확인 창 추가
-    const confirmMessage = isEditing
-      ? "정말 수정하시겠습니까?"
-      : "정말 저장하시겠습니까?";
-    const isConfirmed = window.confirm(confirmMessage);
-
-    if (!isConfirmed) {
-      return; // 사용자가 취소한 경우 함수 종료
     }
 
     try {
@@ -134,13 +136,12 @@ const NoticeForm = () => {
         : await fetcher.post(NOTICE_LIST, noticeData);
 
       if ([200, 201, 204].includes(response.status)) {
-        navigate(-1);
+        showAlert("공지글이 저장되었습니다.", () => navigate(-1));
       } else {
-        alert("공지글 저장에 실패했습니다.");
+        showAlert("공지글 저장에 실패했습니다.");
       }
     } catch (error) {
-      console.error("공지글 저장 중 오류 발생:", error);
-      alert("공지글 저장 중 오류가 발생했습니다.");
+      showAlert("공지글 저장 중 오류가 발생했습니다.");
     }
   };
 
@@ -184,12 +185,53 @@ const NoticeForm = () => {
 
   return (
     <div className="grid place-items-center min-h-screen">
-      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/3 min-w-96 scale-125">
+      {/* Alert 컴포넌트 추가 */}
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (alertMessage === "공지글이 저장되었습니다." && confirmAction) {
+            confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {alertMessage !== "공지글이 저장되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           {isEditing ? "공지글 수정" : "공지글 작성"}
         </h1>
         <br />
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // 등록 또는 수정 확인 알림창을 띄움
+            showAlert(
+              isEditing ? "정말 수정하시겠습니까?" : "정말 저장하시겠습니까?",
+              handleSubmit
+            );
+          }}
+          className="space-y-4"
+        >
           <div className="grid grid-cols-1 gap-4">
             <Input
               id="title"
