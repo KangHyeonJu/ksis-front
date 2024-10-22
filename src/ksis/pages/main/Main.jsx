@@ -543,7 +543,7 @@ const Main = () => {
   }, [visitCount, fileCount, fileSize]);
 
   return (
-    <div className="grid grid-cols-2 gap-4 rounded-lg border-2 border-[#fcc310] p-10 w-full h-full">
+    <div className="grid grid-cols-2 gap-4 rounded-sm border-2 border-[#FCA929] p-10 w-full h-full">
       <div class="w-auto bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
         <div class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-5">
           이미지 및 영상 수

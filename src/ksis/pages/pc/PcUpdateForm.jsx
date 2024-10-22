@@ -5,6 +5,15 @@ import fetcher from "../../../fetcher";
 import { PC_ACCOUNT, PC_LIST } from "../../../constants/api_constant";
 import { PC_INVENTORY } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
+import { Input } from "../../css/input";
+import { Button } from "../../css/button";
+import { Select } from "../../css/select";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
 
 const PcUpdateForm = () => {
   //불러오기
@@ -15,6 +24,16 @@ const PcUpdateForm = () => {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   const loadPcDtl = async (pcId) => {
     try {
@@ -154,10 +173,8 @@ const PcUpdateForm = () => {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSave = async (e) => {
+  const handleSave = async () => {
     try {
-      e.preventDefault();
-
       setIsDisabled(false);
       setIsReadOnly(false);
 
@@ -187,23 +204,22 @@ const PcUpdateForm = () => {
         new Blob([JSON.stringify(accountIds)], { type: "application/json" })
       );
 
-      if (window.confirm("수정하시겠습니까?")) {
-        const response = await fetcher.patch(PC_LIST, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(response.data);
+      const response = await fetcher.patch(PC_LIST, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response.data);
 
-        if (response.status === 200) {
-          alert("PC가 정상적으로 수정되었습니다.");
+      if (response.status === 200) {
+        showAlert("PC가 정상적으로 수정되었습니다.", () => {
           setIsDisabled(true);
           setIsReadOnly(true);
           navigate(PC_INVENTORY);
-        } else if (response.status === 202) {
-          alert("이미 등록된 MAC주소입니다.");
-          return;
-        }
+        });
+      } else if (response.status === 202) {
+        showAlert("이미 등록된 MAC주소입니다.");
+        return;
       }
     } catch (error) {
       console.log(error.response);
@@ -237,48 +253,83 @@ const PcUpdateForm = () => {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-        일반 PC 수정
-      </h1>
-      <form
-        onSubmit={handleSave}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
+    <div className="grid place-items-center min-h-[80vh]">
+      {/* Alert 컴포넌트 추가 */}
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (
+            alertMessage === "PC가 정상적으로 수정되었습니다." &&
+            confirmAction
+          ) {
+            confirmAction();
           }
         }}
+        size="lg"
       >
-        <div className="shadow-sm ring-1 ring-gray-900/5 text-center pt-5 pb-5">
-          <div className="flex items-center">
-            <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              PC 이름
-            </label>
-            <input
-              required
-              value={data.deviceName}
-              onChange={(e) => {
-                onChangeHandler(e);
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {alertMessage !== "PC가 정상적으로 수정되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction();
               }}
-              maxLength="50"
-              name="deviceName"
-              type="text"
-              className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          {responsibles.map((responsible, index) => (
-            <div className="flex items-center mt-5" key={responsible.id}>
-              <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-                담당자
+            >
+              확인
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+          일반 PC 수정
+        </h1>
+        <br />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            showAlert("PC를 수정하시겠습니까?", handleSave);
+          }}
+          className="space-y-4"
+        >
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                PC 이름
               </label>
-              {userInfo.roles === "ROLE_ADMIN" ? (
-                <>
-                  <select
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  required
+                  minLength="2"
+                  maxLength="10"
+                  value={data.deviceName}
+                  onChange={onChangeHandler}
+                  name="deviceName"
+                  type="text"
+                />
+              </div>
+            </div>
+
+            {responsibles.map((responsible, index) => (
+              <div className="flex items-center mt-10" key={responsible.id}>
+                <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                  담당자
+                </label>
+                <div className="flex-grow flex items-center space-x-2">
+                  <Select
                     required
-                    value={responsible.accountId}
                     id={`responsible-${responsible.id}`}
                     onChange={(e) => handleResponsibleChange(e, index)}
-                    className="bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+                    value={responsible.accountId}
                   >
                     <option value="">담당자 선택</option>
                     {accounts.map((account) => (
@@ -286,118 +337,94 @@ const PcUpdateForm = () => {
                         {account.name}({account.accountId})
                       </option>
                     ))}
-                  </select>
-                  {responsibles.length > 1 && (
-                    <>
-                      <button onClick={addResponsible} className="ml-2">
-                        <AiFillPlusCircle size={25} color="#f25165" />
-                      </button>
+                  </Select>
+                  <div className="ml-2 flex items-center">
+                    <button type="button" onClick={addResponsible}>
+                      <AiFillPlusCircle size={25} color="#f25165" />
+                    </button>
+                    {responsibles.length > 1 && (
                       <button
+                        type="button"
                         onClick={() => removeResponsible(responsible.id)}
                         className="ml-2"
                       >
                         <AiFillMinusCircle size={25} color="#717273" />
                       </button>
-                    </>
-                  )}
-                  {responsibles.length === 1 && (
-                    <button onClick={addResponsible} className="ml-2">
-                      <AiFillPlusCircle size={25} color="#f25165" />
-                    </button>
-                  )}
-                </>
-              ) : (
-                <>
-                  <select
-                    disabled={isDisabled}
-                    value={responsible.accountId}
-                    id={`responsible-${responsible.id}`}
-                    onChange={(e) => handleResponsibleChange(e, index)}
-                    className="bg-[#e7d8ac] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-                  >
-                    <option>담당자 선택</option>
-                    {accounts.map((account) => (
-                      <option value={account.accountId} key={account.accountId}>
-                        {account.name}({account.accountId})
-                      </option>
-                    ))}
-                  </select>
-                </>
-              )}
-            </div>
-          ))}
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
 
-          <div className="flex items-center mt-5">
-            <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900">
-              위치
-            </label>
-            <input
-              type="text"
-              value={address}
-              readOnly
-              className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-            />
-            <button
-              type="button"
-              className="ml-2 bg-[#ffe69c] rounded-full px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-yellow-50"
-              onClick={execDaumPostcode}
-            >
-              주소검색
-            </button>
+            <div className="flex items-center mt-10">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                Mac 주소
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  required
+                  id="macAddress"
+                  value={macAddress}
+                  onChange={handleMacAddressChange}
+                  type="text"
+                  placeholder="Mac 주소 입력"
+                />
+                {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
+              </div>
+            </div>
           </div>
-          <div className="flex items-center mt-5">
-            <label className="w-20 ml-px block pl-4 text-sm font-semibold  leading-6 text-gray-900"></label>
-            <input
-              required
-              placeholder=" 상세주소"
-              type="text"
-              id="detailAddress"
-              value={data.detailAddress}
-              onChange={onChangeHandler}
-              name="detailAddress"
-              className=" bg-[#ffe69c] block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-            />
+
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+            <div className="flex items-center mt-10">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                위치
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  id="address"
+                  type="text"
+                  value={address}
+                  readOnly
+                  className="mr-3"
+                />
+                <Button
+                  type="button"
+                  color="zinc"
+                  onClick={execDaumPostcode}
+                  className="whitespace-nowrap"
+                >
+                  주소검색
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex items-center mt-10">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                상세주소
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  required
+                  id="detailAddress"
+                  value={data.detailAddress}
+                  onChange={onChangeHandler}
+                  name="detailAddress"
+                  placeholder="상세주소 입력"
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex items-center mt-5">
-            <label className="w-20 ml-px block pl-4 text-sm font-semibold leading-6 text-gray-900">
-              Mac주소
-            </label>
-            {userInfo.roles === "ROLE_ADMIN" ? (
-              <input
-                required
-                id="macAddress"
-                onChange={handleMacAddressChange}
-                value={macAddress}
-                type="text"
-                className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#ffe69c]"
-              />
-            ) : (
-              <input
-                readOnly={isReadOnly}
-                value={macAddress}
-                type="text"
-                className="block w-80 ml-2 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 bg-[#e7d8ac]"
-              />
-            )}
-            {error && <p className="text-red-500 text-sm ml-2">{error}</p>}
+          <br />
+          <div className="mt-6 flex justify-center gap-4">
+            <Button type="submit" color="blue">
+              수정하기
+            </Button>
+            <Button type="button" color="red" onClick={onCancel}>
+              뒤로가기
+            </Button>
           </div>
-        </div>
-        <div className="mt-2 flex justify-end">
-          <button
-            type="submit"
-            className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            수정하기
-          </button>
-          <button
-            type="button"
-            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            onClick={onCancel}
-          >
-            뒤로가기
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

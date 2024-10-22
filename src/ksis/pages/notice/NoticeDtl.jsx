@@ -114,7 +114,7 @@ const NoticeDetail = () => {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       {/* Alert 컴포넌트 추가 */}
       <Alert open={isAlertOpen} onClose={() => setIsAlertOpen(false)} size="lg">
         <AlertTitle>알림창</AlertTitle>
@@ -197,20 +197,35 @@ const NoticeDetail = () => {
             )}
 
             {/* 버튼들 */}
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center space-x-8">
               {/* notice 작성자가 admin인 경우 숨기기 */}
               {(notice.role === "ADMIN" && role === "ROLE_USER") ||
               (notice.role === "USER" && role === "ROLE_ADMIN") ? null : (
                 <>
-                  <Button type="button" color="blue" onClick={handleEdit}>
+                  <Button
+                    type="button"
+                    color="blue"
+                    className="scale-110"
+                    onClick={handleEdit}
+                  >
                     수정하기
                   </Button>
-                  <Button type="button" color="red" onClick={handleDeActive}>
+                  <Button
+                    type="button"
+                    color="red"
+                    className="scale-110"
+                    onClick={handleDeActive}
+                  >
                     비활성화
                   </Button>
                 </>
               )}
-              <Button type="button" color="zinc" onClick={handleCancel}>
+              <Button
+                type="button"
+                color="zinc"
+                className="scale-110"
+                onClick={handleCancel}
+              >
                 뒤로가기
               </Button>
             </div>

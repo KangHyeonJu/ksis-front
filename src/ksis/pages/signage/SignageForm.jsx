@@ -148,10 +148,8 @@ const SignageForm = () => {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSave = async (e) => {
+  const handleSave = async () => {
     try {
-      e.preventDefault();
-
       if (address === "") {
         setAddressError("위치를 입력하세요.");
         document.getElementById("address").focus();
@@ -185,21 +183,20 @@ const SignageForm = () => {
         new Blob([JSON.stringify(accountIds)], { type: "application/json" })
       );
 
-      if (window.confirm("등록하시겠습니까?")) {
-        const response = await fetcher.post(SIGNAGE_ADD, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(response.data);
+      const response = await fetcher.post(SIGNAGE_ADD, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response.data);
 
-        if (response.status === 200) {
-          alert("재생장치가 정상적으로 등록되었습니다.");
-          navigate(SIGNAGE_INVENTORY);
-        } else {
-          alert("재생장치 등록을 실패했습니다.");
-          return;
-        }
+      if (response.status === 200) {
+        showAlert("재생장치가 정상적으로 등록되었습니다.", () =>
+          navigate(SIGNAGE_INVENTORY)
+        );
+      } else {
+        showAlert("재생장치 등록을 실패했습니다.");
+        return;
       }
     } catch (error) {
       console.log(error.response.data);
@@ -234,7 +231,7 @@ const SignageForm = () => {
   }
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       {/* Alert 컴포넌트 추가 */}
       <Alert
         open={isAlertOpen}

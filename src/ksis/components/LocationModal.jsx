@@ -12,7 +12,7 @@ const LocationModal = ({ isOpen, onRequestClose, address }) => {
       onRequestClose={onRequestClose}
       style={{
         content: {
-          top: "50%",
+          top: "45%",
           left: "50%",
           right: "auto",
           bottom: "auto",
@@ -20,9 +20,12 @@ const LocationModal = ({ isOpen, onRequestClose, address }) => {
           transform: "translate(-50%, -50%)",
           width: "50%", // 모달 너비 설정
           height: "70%", // 모달 높이 설정
-          overlay: {
-            backgroundColor: "rgba(255, 255, 255, 0.5)", // 이 모달 인스턴스의 오버레이 배경색
-          },
+          borderRadius: "0%",
+        },
+        overlay: {
+          backgroundColor: "rgba(9, 9, 11, 0.5)", // 이 모달 인스턴스의 오버레이 배경색
+          position: "fixed",
+          zIndex: 30,
         },
       }}
       contentLabel="위치 보기 모달"

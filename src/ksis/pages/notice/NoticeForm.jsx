@@ -184,7 +184,7 @@ const NoticeForm = () => {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       {/* Alert 컴포넌트 추가 */}
       <Alert
         open={isAlertOpen}
@@ -331,11 +331,16 @@ const NoticeForm = () => {
                 </div>
               </>
             )}
-            <div className="flex justify-center space-x-4">
-              <Button type="submit" color="blue">
+            <div className="flex justify-center space-x-8">
+              <Button type="submit" color="blue" className="scale-110">
                 저장
               </Button>
-              <Button type="button" color="red" onClick={handleCancel}>
+              <Button
+                type="button"
+                color="red"
+                className="scale-110"
+                onClick={handleCancel}
+              >
                 취소
               </Button>
             </div>

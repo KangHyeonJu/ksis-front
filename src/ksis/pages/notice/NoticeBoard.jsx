@@ -6,6 +6,7 @@ import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
 import { NOTICE_ALL, DEACTIVE_NOTICE } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
+import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -22,6 +23,8 @@ const NoticeBoard = () => {
 
   const postsPerPage = 20;
   const navigate = useNavigate();
+
+  const authority = decodeJwt().roles;
 
   useEffect(() => {
     const fetchNotices = async () => {
@@ -49,7 +52,10 @@ const NoticeBoard = () => {
   }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
 
   const filteredNotices = useMemo(() => {
-    return notices
+    // notices가 undefined일 경우 빈 배열로 초기화
+    const validNotices = notices || [];
+
+    return validNotices
       .filter((notice) =>
         notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
       )
@@ -152,7 +158,11 @@ const NoticeBoard = () => {
           className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="title">제목</option>
-          <option value="account">작성자</option>
+
+          {authority === "ROLE_ADMIN" ? (
+            <option value="account">작성자</option>
+          ) : null}
+
           <option value="regTime">등록일</option>
         </select>
         <div className="relative flex-grow">
