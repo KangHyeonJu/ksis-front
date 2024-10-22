@@ -21,6 +21,8 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
 
   const modalRef = useRef(null);
 
+  const modalRef = useRef(null);
+
   const loadPage = async () => {
     try {
       const response = await fetcher.get(SIGNAGE_NOTICE + `/${signageId}`, {

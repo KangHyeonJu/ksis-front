@@ -11,6 +11,9 @@ import { decodeJwt } from "../../../decodeJwt";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
 const NoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("title"); // "fileTitle" 대신 "title"로 수정
