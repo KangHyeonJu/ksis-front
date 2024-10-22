@@ -201,21 +201,21 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="flex space-x-0.2 mb-4">
             <Link
               to={`/account/${userInfo.accountId}`}
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 w-24 whitespace-nowrap`}
+              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 w-24 whitespace-nowrap`}
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
               정보
             </Link>
             <a
-              className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded w-24 whitespace-nowrap"
+              className="relative flex items-center p-2 hover:bg-gray-200 rounded w-24 whitespace-nowrap"
               onClick={() => setNotificationOpen(true)} // 알림 버튼 클릭 시 모달 열기
             >
               <NotificationCountComponent />
               <span>알림</span>
             </a>
             <a
-              className="relative flex items-center p-2 hover:bg-[#fe6500]/30 rounded w-24 whitespace-nowrap"
+              className="relative flex items-center p-2 hover:bg-gray-200 rounded w-24 whitespace-nowrap"
               onClick={handleOpenApp}
             >
               <BiWindowAlt className="mr-1" />
@@ -227,7 +227,7 @@ const Sidebar = ({ onToggleSidebar }) => {
             {isAdmin && (
               <div className="item mt-3">
                 <div
-                  className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                  className="flex items-center p-2 hover:bg-gray-200 rounded cursor-pointer"
                   onClick={() => toggleMenu("account")}
                 >
                   <MdManageAccounts className="mr-3" />
@@ -240,7 +240,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "ACCOUNT_LIST"
                           ? "bg-[#fe6500]/30"
-                          : "hover:bg-[#fe6500]/30"
+                          : "hover:bg-gray-200"
                       }`}
                       onClick={() => handleMenuClick("ACCOUNT_LIST")}
                     >
@@ -253,7 +253,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "LOG"
                           ? "bg-[#fe6500]/30"
-                          : "hover:bg-[#fe6500]/30"
+                          : "hover:bg-gray-200"
                       }`}
                     >
                       <FaRegCircle size={10} className="mr-2" />
@@ -265,7 +265,7 @@ const Sidebar = ({ onToggleSidebar }) => {
             )}
             <div className="item mt-3">
               <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                className="flex items-center p-2 hover:bg-gray-200 rounded cursor-pointer"
                 onClick={() => toggleMenu("media")}
               >
                 <MdOutlinePermMedia className="mr-3" />
@@ -279,7 +279,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "ORIGINAL"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -291,7 +291,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "ENCODED"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -306,7 +306,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                 className={`flex items-center p-2 rounded cursor-pointer ${
                   selectedMenu === "NOTICE"
                     ? "bg-[#fe6500]/30"
-                    : "hover:bg-[#fe6500]/30"
+                    : "hover:bg-gray-200"
                 }`}
                 onClick={() => handleMenuClick("NOTICE")}
               >
@@ -317,7 +317,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
             <div className="item mt-3">
               <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                className="flex items-center p-2 hover:bg-gray-200 rounded cursor-pointer"
                 onClick={() => toggleMenu("device")}
               >
                 <MdDevices className="mr-3" />
@@ -331,7 +331,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "SIGNAGE"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -343,7 +343,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "PC"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -355,7 +355,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
             <div className="item mt-3">
               <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                className="flex items-center p-2 hover:bg-gray-200 rounded cursor-pointer"
                 onClick={() => toggleMenu("settings")}
               >
                 <BiCog className="mr-3" />
@@ -369,7 +369,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "RESOLUTION"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -383,7 +383,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                         className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                           selectedMenu === "API"
                             ? "bg-[#fe6500]/30"
-                            : "hover:bg-[#fe6500]/30"
+                            : "hover:bg-gray-200"
                         }`}
                       >
                         <FaRegCircle size={10} className="mr-2" />
@@ -396,7 +396,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                         className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                           selectedMenu === "FILE_SIZE"
                             ? "bg-[#fe6500]/30"
-                            : "hover:bg-[#fe6500]/30"
+                            : "hover:bg-gray-200"
                         }`}
                       >
                         <FaRegCircle size={10} className="mr-2" />
@@ -409,7 +409,7 @@ const Sidebar = ({ onToggleSidebar }) => {
             </div>
             <div className="item mt-3">
               <div
-                className="flex items-center p-2 hover:bg-[#fe6500]/30 rounded cursor-pointer"
+                className="flex items-center p-2 hover:bg-gray-200 rounded cursor-pointer"
                 onClick={() => toggleMenu("trash")}
               >
                 <BiTrash className="mr-3" />
@@ -423,7 +423,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "TRASHFILE"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -436,7 +436,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "TRASHNOTICE"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -453,7 +453,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               handleMenuClick("LOGOUT");
               handleLogout();
             }}
-            className="w-full text-left flex items-center p-2 hover:bg-[#fe6500]/30 rounded"
+            className="w-full text-left flex items-center p-2 hover:bg-gray-200 rounded"
           >
             <RiLogoutBoxRLine className="mr-2" />
             <span>로그아웃</span>
@@ -486,7 +486,7 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="flex flex-col space-y-4 mb-4">
             <Link
               to={`/account/${userInfo.accountId}`}
-              className={`flex items-center p-2 rounded cursor-pointer relative group hover:bg-[#fe6500]/30`}
+              className={`flex items-center p-2 rounded cursor-pointer relative group hover:bg-gray-200`}
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
@@ -496,7 +496,7 @@ const Sidebar = ({ onToggleSidebar }) => {
             </Link>
 
             <a
-              className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-[#fe6500]/30"
+              className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-gray-200"
               onClick={() => setNotificationOpen(true)}
             >
               <NotificationCountComponent />
@@ -506,7 +506,7 @@ const Sidebar = ({ onToggleSidebar }) => {
             </a>
 
             <a
-              className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-[#fe6500]/30"
+              className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-gray-200"
               onClick={handleOpenApp}
             >
               <BiWindowAlt className="mr-1" />
@@ -519,7 +519,7 @@ const Sidebar = ({ onToggleSidebar }) => {
           {isAdmin && (
             <div className="mt-3">
               <div
-                className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+                className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
                 onClick={() => toggleMenu("account")}
               >
                 <MdManageAccounts className="mr-3" />
@@ -534,7 +534,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "ACCOUNT_LIST"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                     onClick={() => handleMenuClick("ACCOUNT_LIST")}
                   >
@@ -549,7 +549,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "LOG"
                         ? "bg-[#fe6500]/30"
-                        : "hover:bg-[#fe6500]/30"
+                        : "hover:bg-gray-200"
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
@@ -564,7 +564,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
           <div className="item mt-3">
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
               onClick={() => toggleMenu("media")}
             >
               <MdOutlinePermMedia className="mr-3" />
@@ -580,7 +580,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "ORIGINAL"
                       ? "bg-[#fe6500]/30"
-                      : "hover:bg-[#fe6500]/30"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -594,7 +594,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "ENCODED"
                       ? "bg-[#fe6500]/30"
-                      : "hover:bg-[#fe6500]/30"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -609,7 +609,7 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="mt-3">
             <Link
               to={NOTICE_BOARD}
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
               onClick={() => handleMenuClick("NOTICE")}
             >
               <MdChat className="mr-3" />
@@ -621,7 +621,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
           <div className="item mt-3">
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
               onClick={() => toggleMenu("device")}
             >
               <MdDevices className="mr-3" />
@@ -637,7 +637,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "SIGNAGE"
                       ? "bg-[#fe6500]/30"
-                      : "hover:bg-[#fe6500]/30"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -651,7 +651,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "PC"
                       ? "bg-[#fe6500]/30"
-                      : "hover:bg-[#fe6500]/30"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -665,7 +665,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
           <div className="item mt-3">
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
               onClick={() => toggleMenu("settings")}
             >
               <BiCog className="mr-3" />
@@ -681,7 +681,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "RESOLUTION"
                       ? "bg-[#fe6500]/30"
-                      : "hover:bg-[#fe6500]/30"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -697,7 +697,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "API"
                           ? "bg-[#fe6500]/30"
-                          : "hover:bg-[#fe6500]/30"
+                          : "hover:bg-gray-200"
                       }`}
                     >
                       <FaRegCircle size={10} className="mr-2" />
@@ -712,7 +712,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "FILE_SIZE"
                           ? "bg-[#fe6500]/30"
-                          : "hover:bg-[#fe6500]/30"
+                          : "hover:bg-gray-200"
                       }`}
                     >
                       <FaRegCircle size={10} className="mr-2" />
@@ -728,7 +728,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
           <div className="item mt-3">
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
               onClick={() => toggleMenu("trash")}
             >
               <BiTrash className="mr-3" />
@@ -744,7 +744,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "TRASHFILE"
                       ? "bg-[#fe6500]/30"
-                      : "hover:bg-[#fe6500]/30"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -759,7 +759,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "TRASHNOTICE"
                       ? "bg-[#fe6500]/30"
-                      : "hover:bg-[#fe6500]/30"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
@@ -778,7 +778,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               handleMenuClick("LOGOUT");
               handleLogout();
             }}
-            className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 relative group`}
+            className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
           >
             <RiLogoutBoxRLine className="mr-2" />
             <span className="absolute left-full hidden group-hover:flex group-hover:ml-2 bg-black text-white p-1 text-xs rounded whitespace-nowrap">

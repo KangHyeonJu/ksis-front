@@ -86,8 +86,7 @@ import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
 import TrashImageFileBoard from "./ksis/pages/trash/TrashImageFileBoard.jsx";
 import TrashVideoFileBoard from "./ksis/pages/trash/TrashVideoFileBoard.jsx";
 import TrashNoticeBoard from "./ksis/pages/trash/TrashNoticeBoard.jsx";
-import { EventSourcePolyfill } from "event-source-polyfill";
-import { decodeJwt } from "./decodeJwt";
+
 
 function App() {
   const location = useLocation();
@@ -119,7 +118,6 @@ function App() {
 
   const handleSidebarToggle = (isOpen) => {
     setIsSidebarOpen(isOpen);
-    console.log("isOpen : ", isOpen);
   };
 
   useEffect(() => {
