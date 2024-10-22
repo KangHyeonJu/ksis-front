@@ -121,6 +121,16 @@ const NoticeForm = () => {
       return;
     }
 
+     // 사용자 확인 창 추가
+  const confirmMessage = isEditing
+          ? "정말 수정하시겠습니까?"
+          : "정말 저장하시겠습니까?";
+  const isConfirmed = window.confirm(confirmMessage);
+
+if (!isConfirmed) {
+  return; // 사용자가 취소한 경우 함수 종료
+}
+
     try {
       const noticeData = {
         accountId,

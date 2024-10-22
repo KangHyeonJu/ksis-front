@@ -22,7 +22,6 @@ const ImageEncoding = () => {
 
   const fetchImageData = async (originalResourceId) => {
     try {
-     
       const response = await fetcher.get(
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
@@ -37,8 +36,6 @@ const ImageEncoding = () => {
         alert("접근권한이 없습니다.");
         navigate(IMAGE_RESOURCE_BOARD);
       }
-
-
     } catch (error) {
       console.error("Error fetching image:", error);
     }

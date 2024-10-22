@@ -103,7 +103,6 @@ const SignagePlayKeyPage = () => {
       );
 
       setNotices(response.data);
-
       console.log("Notices", response);
     } catch (error) {
       console.error("Error fetching data:", error);

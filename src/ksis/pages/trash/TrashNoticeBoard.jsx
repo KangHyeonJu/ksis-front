@@ -156,7 +156,6 @@ const TrashNoticeBoard = () => {
           <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
       </div>
-
       <div className="flex justify-end space-x-2 mb-4">
         <button
           onClick={handleActivation}
