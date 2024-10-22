@@ -45,12 +45,13 @@ const Sidebar = ({ onToggleSidebar }) => {
   const API_WS_URL = process.env.REACT_APP_API_WS_URL;
 
   const handleResize = () => {
-    setWindowWidth(window.innerWidth);
-    if (window.innerWidth < 1024) {
-      setIsSidebarOpen(false); // 특정 크기 이하에서는 축소
-    } else {
-      setIsSidebarOpen(isExpanded);
-    }
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth < 1024) {
+        setIsSidebarOpen(false); // 특정 크기 이하에서는 축소
+      } else {
+        setIsSidebarOpen(isExpanded);
+        console.log("isExpanded :", isExpanded);
+      }
   };
 
   const toggleExpand = () => {
@@ -64,7 +65,6 @@ const Sidebar = ({ onToggleSidebar }) => {
     if (userInfo) {
       setUserInfo(userInfo);
     }
-    handleResize();
 
     ws.current = new WebSocket(API_WS_URL + "/ws/login");
 
@@ -91,10 +91,12 @@ const Sidebar = ({ onToggleSidebar }) => {
     ws.current.onclose = () => {
       console.log("WebSocket connection closed");
     };
+  }, []);
 
+  useEffect(() => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [windowWidth, isExpanded]);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
