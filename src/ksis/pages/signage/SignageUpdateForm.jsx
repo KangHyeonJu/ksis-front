@@ -250,9 +250,21 @@ const SignageUpdateForm = () => {
 
   const handleResponsibleChange = (e, index) => {
     const { value } = e.target;
-    const newResponsibles = [...responsibles];
-    newResponsibles[index].accountId = value;
-    setResponsibles(newResponsibles);
+
+    const isDuplicate = responsibles.some(
+      (responsible, idx) => responsible.accountId === value && idx !== index
+    );
+
+    if (!isDuplicate) {
+      const newResponsibles = [...responsibles];
+      newResponsibles[index].accountId = value;
+
+      setResponsibles(newResponsibles);
+    } else {
+      alert("이미 존재하는 담당자입니다.");
+      e.target.value = "";
+      return;
+    }
   };
 
   return (
@@ -274,11 +286,6 @@ const SignageUpdateForm = () => {
         <AlertTitle>알림창</AlertTitle>
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
-          {alertMessage !== "재생장치가 정상적으로 수정되었습니다." && (
-            <Button plain onClick={() => setIsAlertOpen(false)}>
-              취소
-            </Button>
-          )}
           {confirmAction && (
             <Button
               onClick={() => {
@@ -287,6 +294,11 @@ const SignageUpdateForm = () => {
               }}
             >
               확인
+            </Button>
+          )}
+          {alertMessage !== "재생장치가 정상적으로 수정되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
             </Button>
           )}
         </AlertActions>
