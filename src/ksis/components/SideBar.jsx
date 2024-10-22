@@ -239,7 +239,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       to={ACCOUNT_LIST_BOARD}
                       className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "ACCOUNT_LIST"
-                          ? "bg-[#fe6500]/30"
+                          ? "bg-gray-200"
                           : "hover:bg-gray-200"
                       }`}
                       onClick={() => handleMenuClick("ACCOUNT_LIST")}
@@ -252,7 +252,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       onClick={() => handleMenuClick("LOG")}
                       className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "LOG"
-                          ? "bg-[#fe6500]/30"
+                          ? "bg-gray-200"
                           : "hover:bg-gray-200"
                       }`}
                     >
@@ -278,7 +278,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("ORIGINAL")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "ORIGINAL"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -290,7 +290,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("ENCODED")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "ENCODED"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -305,7 +305,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                 to={NOTICE_BOARD}
                 className={`flex items-center p-2 rounded cursor-pointer ${
                   selectedMenu === "NOTICE"
-                    ? "bg-[#fe6500]/30"
+                    ? "bg-gray-200"
                     : "hover:bg-gray-200"
                 }`}
                 onClick={() => handleMenuClick("NOTICE")}
@@ -330,7 +330,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("SIGNAGE")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "SIGNAGE"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -342,7 +342,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("PC")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "PC"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -368,7 +368,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("RESOLUTION")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "RESOLUTION"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -382,7 +382,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                         onClick={() => handleMenuClick("API")}
                         className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                           selectedMenu === "API"
-                            ? "bg-[#fe6500]/30"
+                            ? "bg-gray-200"
                             : "hover:bg-gray-200"
                         }`}
                       >
@@ -395,7 +395,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                         onClick={() => handleMenuClick("FILE_SIZE")}
                         className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                           selectedMenu === "FILE_SIZE"
-                            ? "bg-[#fe6500]/30"
+                            ? "bg-gray-200"
                             : "hover:bg-gray-200"
                         }`}
                       >
@@ -422,7 +422,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("TRASHFILE")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "TRASHFILE"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -435,7 +435,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("TRASHNOTICE")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "TRASHNOTICE"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -533,7 +533,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     to={ACCOUNT_LIST_BOARD}
                     className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "ACCOUNT_LIST"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                     onClick={() => handleMenuClick("ACCOUNT_LIST")}
@@ -548,7 +548,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                     onClick={() => handleMenuClick("LOG")}
                     className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "LOG"
-                        ? "bg-[#fe6500]/30"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
                   >
@@ -579,7 +579,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   onClick={() => handleMenuClick("ORIGINAL")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "ORIGINAL"
-                      ? "bg-[#fe6500]/30"
+                      ? "bg-gray-200"
                       : "hover:bg-gray-200"
                   }`}
                 >
@@ -593,7 +593,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   onClick={() => handleMenuClick("ENCODED")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "ENCODED"
-                      ? "bg-[#fe6500]/30"
+                      ? "bg-gray-200"
                       : "hover:bg-gray-200"
                   }`}
                 >
@@ -636,7 +636,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   onClick={() => handleMenuClick("SIGNAGE")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "SIGNAGE"
-                      ? "bg-[#fe6500]/30"
+                      ? "bg-gray-200"
                       : "hover:bg-gray-200"
                   }`}
                 >
@@ -650,7 +650,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   onClick={() => handleMenuClick("PC")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "PC"
-                      ? "bg-[#fe6500]/30"
+                      ? "bg-gray-200"
                       : "hover:bg-gray-200"
                   }`}
                 >
@@ -680,7 +680,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   onClick={() => handleMenuClick("RESOLUTION")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "RESOLUTION"
-                      ? "bg-[#fe6500]/30"
+                      ? "bg-gray-200"
                       : "hover:bg-gray-200"
                   }`}
                 >
@@ -696,7 +696,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       onClick={() => handleMenuClick("API")}
                       className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "API"
-                          ? "bg-[#fe6500]/30"
+                          ? "bg-gray-200"
                           : "hover:bg-gray-200"
                       }`}
                     >
@@ -711,7 +711,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       onClick={() => handleMenuClick("FILE_SIZE")}
                       className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                         selectedMenu === "FILE_SIZE"
-                          ? "bg-[#fe6500]/30"
+                          ? "bg-gray-200"
                           : "hover:bg-gray-200"
                       }`}
                     >
@@ -743,7 +743,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   onClick={() => handleMenuClick("TRASHFILE")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "TRASHFILE"
-                      ? "bg-[#fe6500]/30"
+                      ? "bg-gray-200"
                       : "hover:bg-gray-200"
                   }`}
                 >
@@ -758,7 +758,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   onClick={() => handleMenuClick("TRASHNOTICE")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                     selectedMenu === "TRASHNOTICE"
-                      ? "bg-[#fe6500]/30"
+                      ? "bg-gray-200"
                       : "hover:bg-gray-200"
                   }`}
                 >
