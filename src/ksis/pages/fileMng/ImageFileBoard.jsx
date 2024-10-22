@@ -176,19 +176,7 @@ const ImageFileBoard = () => {
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        {/* 파일등록 버튼 */}
-        <div className="flex justify-start space-x-2 ">
-          <Link to="ksis://open">
-            <button
-              type="button"
-              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
-          font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
-          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-            >
-              파일 등록
-            </button>
-          </Link>
-        </div>
+       
 
         {/* 토글 버튼 */}
         <div className="flex justify-end space-x-2">
@@ -225,19 +213,15 @@ const ImageFileBoard = () => {
           images.map((post, index) => (
             <div key={index} className="grid p-1">
               {/* 카드 */}
-              <div
-                className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
-              h-full overflow-hidden max-w-xs"
-              >
-                {" "}
-                {/* max-w-xs로 카드 너비 제한 */}
+              <div className="flex flex-col  h-full overflow-hidden max-w-xs">
+
                 {/* 이미지 */}
-                <div>
-                  <div className="w-full h-full mb-1 overflow-hidden">
+                <div className="w-full h-auto md:h-60 lg:h-70">
+                <div className="w-full h-full overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
-                      className="w-full h-full cursor-pointer object-cover object-center hover:scale-150"
+                      className="w-full h-full cursor-pointer object-cover object-center hover:scale-150 hover:"
                       onClick={() => openResourceModal(post.filePath)}
                     />
                   </div>
@@ -258,10 +242,7 @@ const ImageFileBoard = () => {
                       placeholder="제목을 입력해주세요."
                     />
                   ) : (
-                    <h2
-                      className="text-xl font-bold truncate max-w-full mx-auto justify-start"
-                      title={post.fileTitle}
-                    >
+                    <h2 className="text-xl font-bold truncate max-w-full mx-auto justify-start text-gray-800" title={post.fileTitle}>
                       {post.fileTitle}
                     </h2>
                   )}
@@ -273,23 +254,24 @@ const ImageFileBoard = () => {
                           ? handleSaveClick(post.encodedResourceId)
                           : handleEditClick(index, post.fileTitle)
                       }
-                      className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
+                     className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
                     transform hover:scale-110 hover:text-gray-800 m-1 "
                     />
                   </div>
                 </div>
+                
                 {/* 등록일 */}
-                <div className="">
-                  <p className="text-gray-700 mb-2">
-                    {formatDate(post.regTime)}
-                  </p>
+                <div className="mx-auto">
+                <p className="text-gray-500">{formatDate(post.regTime)}</p>
                 </div>
+
                 {/* 삭제 버튼 */}
                 <div>
-                  <div className="items-center text-center row mx-auto p-2">
+                <div className="flex justify-end p-2">
                     <button
                       type="button"
-                      className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+                       className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
                       onClick={() => handleDelete(post.encodedResourceId)}
                     >
                       삭제

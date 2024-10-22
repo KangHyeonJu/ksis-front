@@ -94,7 +94,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                 )}
 
                  {/* 테이블: 현재 페이지에 해당하는 항목만 렌더링 */}
-                  {currentItems.length > 1 ? ( // 현재 아이템이 있을 때만 테이블 렌더링
+                 {currentItems.some(post => post.encodedResourceId !== null) ? ( // 현재 아이템이 있을 때만 테이블 렌더링
                     <table
                       className="min-w-full divide-y divide-gray-700 border-collapse 
                     border border-gray-700 mb-2 text-center"
