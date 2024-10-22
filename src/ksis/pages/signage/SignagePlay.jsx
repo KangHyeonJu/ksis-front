@@ -209,7 +209,7 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
         className="h-full w-full fixed left-0 top-0 bg-black flex items-center justify-center align-middle"
       ></div>
 
-      <div className="h-1/12 w-full bg-gray-800/10 flex items-center fixed bottom-0">
+      <div className="h-1/12 w-full bg-gray-300/30 flex items-center fixed bottom-0">
         <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
           <img
             src={weather.icon}

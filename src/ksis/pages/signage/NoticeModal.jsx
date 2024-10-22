@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Dialog, DialogBody, DialogActions } from "../../css/dialog";
 import fetcher from "../../../fetcher";
 import { FaSearch } from "react-icons/fa";
@@ -18,6 +18,8 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 5; // 한 페이지 10개 데이터
+
+  const modalRef = useRef(null);
 
   const loadPage = async () => {
     try {
@@ -58,14 +60,35 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
     }
   }, [currentPage, searchTerm]);
 
+  const handleClickOutside = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onRequestClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         {/* <span className="hidden sm:inline-block sm:align-middle sm:h-screen">
           &#8203;
         </span> */}
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-5/12 sm:p-6 h-128">
-          <DialogBody className="mt-2 h-96">
+        <div
+          ref={modalRef}
+          className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-5/12 sm:p-6 h-128"
+        >
+          <DialogBody className="h-96">
             <div className="mb-4 flex items-center">
               <select
                 value={searchCategory}
@@ -129,12 +152,20 @@ const NoticeModal = ({ isOpen, onRequestClose, signageId }) => {
             </Stack>
           </DialogBody>
           <DialogActions className="mt-4">
-            <button
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color={"primary"}
+              />
+            </Stack>
+            {/* <button
               onClick={onRequestClose}
               className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600/70 text-base font-medium text-white shadow-sm hover:bg-red-700/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
             >
               닫기
-            </button>
+            </button> */}
           </DialogActions>
         </div>
       </div>

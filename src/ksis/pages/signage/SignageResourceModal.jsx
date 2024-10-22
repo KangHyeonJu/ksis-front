@@ -128,7 +128,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <div
           ref={modalRef}
-          className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-9/12 sm:p-6"
+          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-8/12 sm:p-6"
         >
           <div className="flex h-160">
             <div className="w-4/6 pr-4">
@@ -137,9 +137,9 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
               </DialogTitle>
               <DialogBody className="mt-2">
                 <div className="mb-4 flex items-center">
-                  <div className="w-full border h-150 border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                  <div className="w-full border h-150 border-gray-900 overflow-y-auto p-4 bg-white">
                     <div className="space-y-2">
-                      <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
+                      <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-5">
                         {resources.map((resource) => (
                           <div
                             key={resource.encodedResourceId}
@@ -186,7 +186,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
               </DialogTitle>
               <DialogBody className="mt-2">
                 <div className="mb-4 flex items-center">
-                  <div className="w-full h-150 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                  <div className="w-full h-150 border border-gray-900 overflow-y-auto p-4 bg-white">
                     <div className="space-y-2">
                       <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-2 md:gap-y-0 lg:gap-x-8">
                         {myResources.map((resource) => {
@@ -199,7 +199,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                             <div
                               key={resource.encodedResourceId}
                               className={`group relative border border-gray-900 mb-5 ${
-                                isInResources ? "bg-orange-200" : "bg-white"
+                                isInResources ? "bg-gray-300" : "bg-white"
                               }`}
                             >
                               <div className="w-full h-full overflow-hidden lg:h-60">
@@ -213,7 +213,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                               <div className="relative group text-gray-700 text-center w-full p-1">
                                 <p
                                   className={`truncate whitespace-nowrap overflow-hidden text-ellipsis ${
-                                    isInResources ? "bg-orange-200" : "bg-white"
+                                    isInResources ? "bg-gray-300" : "bg-white"
                                   }`}
                                 >
                                   {resource.fileTitle}
@@ -234,13 +234,13 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="flex flex-row-reverse">
                 <button
                   onClick={onRequestClose}
-                  className="ml-2 inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#f48f8f] text-base font-bold text-black shadow-sm hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-300 hover:text-[#444444]"
                 >
                   닫기
                 </button>
                 <button
                   onClick={addResourceOnClick}
-                  className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
+                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-300 hover:text-[#444444]"
                 >
                   등록
                 </button>

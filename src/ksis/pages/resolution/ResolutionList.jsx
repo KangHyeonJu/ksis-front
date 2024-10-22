@@ -180,7 +180,7 @@ const ResolutionList = () => {
                   const isChecked = e.target.checked;
                   setSelectedPosts(
                     isChecked
-                      ? new Set(resolutions.map((post) => post.deviceId))
+                      ? new Set(resolutions.map((post) => post.resolutionId))
                       : new Set()
                   );
                 }}

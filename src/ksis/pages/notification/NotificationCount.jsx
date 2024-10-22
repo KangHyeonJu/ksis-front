@@ -11,6 +11,9 @@ const NotificationCountComponent = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   let socket; // WebSocket 변수
 
+  const MAX_RETRIES = 5;
+  let retryCount = 0;
+
   // 알림 개수를 서버로부터 가져오는 함수
   const fetchUnreadCount = async () => {
     try {
@@ -46,7 +49,18 @@ const NotificationCountComponent = () => {
 
     // WebSocket 연결이 닫혔을 때 처리
     socket.onclose = () => {
-      console.log("WebSocket connection closed");
+      if (retryCount < MAX_RETRIES) {
+        const retryTimeout = Math.pow(2, retryCount) * 1000; // 지수 백오프 적용
+        console.log(
+          `WebSocket disconnected. Reconnecting in ${
+            retryTimeout / 1000
+          } seconds...`
+        );
+        retryCount++;
+        setTimeout(connectWebSocket, retryTimeout); // 재연결 시도
+      } else {
+        console.log("Max retries reached. No further reconnection attempts.");
+      }
     };
   };
 

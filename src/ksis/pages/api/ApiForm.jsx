@@ -157,7 +157,7 @@ const ApiForm = () => {
             만료일
           </label>
           <input
-            type="date"
+            type="date" max="9999-12-31"
             value={expiryDate}
             onChange={(e) => setExpiryDate(e.target.value)}
             className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"

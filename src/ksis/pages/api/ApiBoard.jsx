@@ -7,18 +7,21 @@ import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher"; 
 import { decodeJwt } from "../../../decodeJwt";
 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
 const ApiBoard = () => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("apiName");
-  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const postsPerPage = 5;
+  const postsPerPage = 10;
   const navigate = useNavigate();
-  const accountId = decodeJwt().accountId; // accountId 정의
 
   useEffect(() => {
     const userInfo = decodeJwt();
@@ -31,8 +34,16 @@ const ApiBoard = () => {
 
     const fetchPosts = async () => {
       try {
-        const response = await fetcher.get(API_LIST);
-        setPosts(response.data);
+        const response = await fetcher.get(API_LIST, {
+          params: {
+            page: currentPage - 1,
+            size: postsPerPage,
+            searchTerm,
+            searchCategory,
+          },
+        });
+        setTotalPages(response.data.totalPages);
+        setPosts(response.data.content);
       } catch (err) {
         setError(err.message || "데이터를 가져오는 중 오류가 발생했습니다.");
       } finally {
@@ -41,7 +52,19 @@ const ApiBoard = () => {
     };
 
     fetchPosts();
-  }, [navigate, accountId]); // navigate와 accountId를 의존성으로 추가
+  }, [currentPage, searchTerm]); // navigate와 accountId를 의존성으로 추가
+
+  
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+  };
 
   const handleCheckboxChange = (postId, event) => {
     event.stopPropagation();
@@ -59,7 +82,7 @@ const ApiBoard = () => {
   const handleSelectAllChange = (e) => {
     const isChecked = e.target.checked;
     setSelectedPosts(
-      isChecked ? new Set(paginatedPosts.map((post) => post.apiId)) : new Set()
+      isChecked ? new Set(posts.map((post) => post.apiId)) : new Set()
     );
   };
 
@@ -101,31 +124,13 @@ const ApiBoard = () => {
     return dateString.substring(0, 10);
   };
 
-  const filteredPosts = useMemo(
-    () =>
-      posts.filter((post) => {
-        const value = post[searchCategory]?.toLowerCase() || "";
-        return value.includes(searchTerm.toLowerCase());
-      }),
-    [posts, searchTerm, searchCategory]
-  );
-
-  const paginatedPosts = useMemo(() => {
-    const startIndex = currentPage * postsPerPage;
-    return filteredPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [filteredPosts, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
-
   const handleApiNameClick = (apiId) => {
     navigate(`${API_FORM}/${apiId}`);
   };
 
   const isAllSelected =
-    paginatedPosts.length > 0 &&
-    paginatedPosts.every((post) => selectedPosts.has(post.apiId));
+    posts.length > 0 &&
+    posts.every((post) => selectedPosts.has(post.apiId));
 
   if (loading) {
     return <p>로딩 중...</p>;
@@ -149,14 +154,14 @@ const ApiBoard = () => {
           className="mr-4 p-2 border border-gray-300 rounded-md"
         >
           <option value="apiName">API 이름</option>
-          <option value="expiryDate">만료일</option>
           <option value="provider">제공업체</option>
+          <option value="expiryDate">만료일</option>
         </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             placeholder="검색..."
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
@@ -179,7 +184,7 @@ const ApiBoard = () => {
       </div>
 
       <div>
-        {filteredPosts.length === 0 ? (
+        {posts.length === 0 ? (
           <p className="text-center text-gray-600 mt-10 w-full">
             등록된 API가 없습니다.
           </p>
@@ -200,7 +205,7 @@ const ApiBoard = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedPosts.map((post) => (
+              {posts.map((post) => (
                 <tr key={post.apiId}>
                   <td className="border border-gray-300 p-2 text-center">
                     <input
@@ -227,36 +232,15 @@ const ApiBoard = () => {
           </table>
         )}
       </div>
-
-      {filteredPosts.length > postsPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredPosts.length / postsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName={"flex justify-center mt-4"}
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200"
-          }
-          activeClassName={"bg-blue-500 text-white"}
+      <Stack spacing={2}
+      className="mt-2" >
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
     </div>
   );
 };
