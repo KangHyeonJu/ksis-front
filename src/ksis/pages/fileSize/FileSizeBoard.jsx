@@ -82,13 +82,13 @@ const FileSizeBoard = () => {
           최대 용량 설정
         </h1>
       </header>
-      <table className="w-full border-collapse border border-gray-300 bg-white shadow-lg">
+      <table className="w-full border-collapse bg-white shadow-lg">
         <tbody>
           <tr>
-            <th className="border border-gray-300 p-2 text-gray-800 text-left bg-orange-200">
+            <th className="border-t border-b border-gray-300 p-2 text-gray-800 mx-auto bg-gray-100">
               이미지 제한 크기
             </th>
-            <td className="border border-gray-300 p-2">
+            <td className="border-t border-b border-gray-300 p-2">
               <div className="flex items-center">
                 <input
                   type="number"
@@ -105,10 +105,10 @@ const FileSizeBoard = () => {
             </td>
           </tr>
           <tr>
-            <th className="border border-gray-300 p-2 text-gray-800 text-left bg-orange-200">
+            <th className="border-b border-gray-300 p-2 text-gray-800 mx-auto bg-gray-100">
               영상 제한 크기
             </th>
-            <td className="border border-gray-300 p-2 bg-gray-50">
+            <td className="border-b border-gray-300 p-2 bg-gray-50">
               <div className="flex items-center">
                 <input
                   type="number"
