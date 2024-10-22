@@ -135,7 +135,7 @@ function App() {
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
       {!isNoSidebarRoute && accessToken && <Sidebar />}
-      <div className="content flex-1 p-4">
+      <div className="content flex-1">
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route path={"/downloadApp"} element={<DownloadApp />} />

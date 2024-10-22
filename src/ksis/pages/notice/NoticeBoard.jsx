@@ -49,13 +49,15 @@ const NoticeBoard = () => {
   }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
 
   const filteredNotices = useMemo(() => {
-    return notices.filter((notice) =>
-      notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
-    ).sort((a, b) => {
-      if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
-      if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
-      return 0;
-    });
+    return notices
+      .filter((notice) =>
+        notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) => {
+        if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
+        if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
+        return 0;
+      });
   }, [notices, searchTerm, searchCategory]);
 
   const handlePageChange = (event, page) => {
@@ -119,8 +121,12 @@ const NoticeBoard = () => {
   const handleDectivation = async () => {
     if (window.confirm("선택한 공지를 비활성화하시겠습니까?")) {
       try {
-        await Promise.all(selectedNotices.map((id) => fetcher.post(`${DEACTIVE_NOTICE}/${id}`)));
-        setNotices(notices.filter((notice) => !selectedNotices.includes(notice.noticeId)));
+        await Promise.all(
+          selectedNotices.map((id) => fetcher.post(`${DEACTIVE_NOTICE}/${id}`))
+        );
+        setNotices(
+          notices.filter((notice) => !selectedNotices.includes(notice.noticeId))
+        );
         setSelectedNotices([]);
         window.alert("선택한 공지를 비활성화하였습니다.");
       } catch (err) {
@@ -137,7 +143,7 @@ const NoticeBoard = () => {
           공지글 관리
         </h1>
       </header>
-      
+
       {/* 검색바 입력창 */}
       <div className="flex items-center relative flex-grow mb-4">
         <select
@@ -213,7 +219,7 @@ const NoticeBoard = () => {
                     />
                   </td>
                   <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
-                    {notice.role === "ADMIN" ? "📢 " : ""} 
+                    {notice.role === "ADMIN" ? "📢 " : ""}
                     <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
                       {notice.title}
                     </Link>

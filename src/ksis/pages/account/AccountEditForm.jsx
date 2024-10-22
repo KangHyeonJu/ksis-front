@@ -7,6 +7,15 @@ import {
 } from "../../../constants/account_constant";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
+import { Input } from "../../css/input";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button"; // Button 컴포넌트 추가
+import { Field } from "../../css/fieldset";
 
 const AccountEditForm = () => {
   const { accountId } = useParams();
@@ -24,14 +33,24 @@ const AccountEditForm = () => {
   });
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
   const navigate = useNavigate();
   const userInfo = decodeJwt();
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   useEffect(() => {
     // 사용자 권한 확인
     if (
-        userInfo.accountId !== accountId &&
-        !userInfo.roles.includes("ROLE_ADMIN")
+      userInfo.accountId !== accountId &&
+      !userInfo.roles.includes("ROLE_ADMIN")
     ) {
       alert("본인 계정이거나 관리자만 접근 가능합니다.");
       navigate(MAIN);
@@ -85,11 +104,9 @@ const AccountEditForm = () => {
   const handlePhoneNumberChange = (e, fieldName) => {
     let value = e.target.value.replace(/[^0-9]/g, "").slice(0, 11); // 숫자만 남기고 11자리 제한
 
-    const parts = [
-      value.slice(0, 3),
-      value.slice(3, 7),
-      value.slice(7)
-    ].filter(Boolean); // 빈 문자열 제외
+    const parts = [value.slice(0, 3), value.slice(3, 7), value.slice(7)].filter(
+      Boolean
+    ); // 빈 문자열 제외
 
     const formattedValue = parts.join("-"); // 하이픈 추가
     setFormData({ ...formData, [fieldName]: formattedValue });
@@ -107,8 +124,9 @@ const AccountEditForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!passwordMatch) {
-      alert("비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
+      showAlert("비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
       return;
     }
 
@@ -118,23 +136,16 @@ const AccountEditForm = () => {
     };
 
     try {
-      const confirmation = window.confirm("계정 정보를 수정하시겠습니까?");
-
-      if (!confirmation) {
-        return;
-      }
-
       const response = await fetcher.put(
         `${ACCOUNT_FORM}/${accountId}`,
         cleanedFormData
       );
       if (response.status === 200) {
-        alert("계정 정보가 성공적으로 업데이트되었습니다.");
-        if (userInfo.roles.includes("ROLE_ADMIN")) {
-          navigate(ACCOUNT_LIST_BOARD);
-        } else {
-          navigate(MAIN);
-        }
+        showAlert("계정 정보가 성공적으로 업데이트되었습니다.", () =>
+          navigate(
+            userInfo.roles.includes("ROLE_ADMIN") ? ACCOUNT_LIST_BOARD : MAIN
+          )
+        );
       } else {
         console.error("계정 업데이트에 실패했습니다.");
       }
@@ -144,67 +155,128 @@ const AccountEditForm = () => {
   };
 
   if (!hasPermission) {
-    return null; // 또는 로딩 스피너 등을 추가할 수 있음
+    return null; // 권한이 없으면 아무것도 보여주지 않음
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-        계정 정보
-      </h1>
-      <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-6 bg-white rounded-lg">
-        <form onSubmit={handleSubmit}>
-          <div className="flex items-center mt-2">
-            <label
+    <div className="grid place-items-center min-h-screen">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (
+            alertMessage === "계정 정보가 성공적으로 업데이트되었습니다." &&
+            confirmAction
+          ) {
+            confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {alertMessage !== "계정 정보가 성공적으로 업데이트되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg scale-125">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+          계정 수정
+        </h1>
+        <br />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            showAlert("정말로 수정하시겠습니까?", () => handleSubmit(e));
+          }}
+          className="space-y-4"
+        >
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+            <div className="flex items-center space-x-10">
+              <label
                 htmlFor="accountId"
-                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              아이디<span className="text-red-500">*</span>
-            </label>
-            <input
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                아이디<span className="text-red-500">*</span>
+              </label>
+              <Input
                 id="accountId"
-              name="accountId"
-              type="text"
-              value={formData.accountId}
-              readOnly
-              className="bg-gray-200 block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label
+                name="accountId"
+                type="text"
+                value={formData.accountId}
+                readOnly
+              />
+            </div>
+
+            <div className="flex items-center space-x-10">
+              <label
+                htmlFor="name"
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                이름<span className="text-red-500">*</span>
+              </label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                maxLength={20}
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="flex items-center space-x-10">
+              <label
                 htmlFor="password"
-                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              비밀번호<span className="text-red-500">*</span>
-            </label>
-            <input
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                비밀번호<span className="text-red-500">*</span>
+              </label>
+              <Input
                 id="password"
-              name="password"
-              type="password"
-              minLength={8}
-              maxLength={20}
-              value={formData.password}
-              onChange={handlePasswordChange}
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label
+                name="password"
+                type="password"
+                minLength={8}
+                maxLength={20}
+                value={formData.password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+
+            <div className="flex items-center space-x-10">
+              <label
                 htmlFor="confirmPassword"
-                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              비밀번호 확인<span className="text-red-500">*</span>
-            </label>
-            <input
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                비밀번호 확인<span className="text-red-500">*</span>
+              </label>
+              <Input
                 id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              maxLength={20}
-              value={formData.confirmPassword}
-              onChange={handlePasswordChange}
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
+                name="confirmPassword"
+                type="password"
+                maxLength={20}
+                value={formData.confirmPassword}
+                onChange={handlePasswordChange}
+              />
+            </div>
           </div>
+
           {formData.confirmPassword && (
             <div
               className={`mt-2 font-bold ${
@@ -216,157 +288,147 @@ const AccountEditForm = () => {
                 : "비밀번호가 일치하지 않습니다."}
             </div>
           )}
-          <div className="flex items-center mt-2">
-            <label
-                htmlFor="name"
-                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              이름<span className="text-red-500">*</span>
-            </label>
-            <input
-                id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label
-              htmlFor="birthDate"
-              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              생년월일
-            </label>
-            <input
-              id="birthDate"
-              name="birthDate"
-              type="date"
-              value={formData.birthDate}
-              max={new Date().toISOString().split("T")[0]}
-              onChange={handleChange}
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label
+
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+            <div className="flex items-center space-x-10">
+              <label
                 htmlFor="businessTel"
-                className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              업무 전화번호<span className="text-red-500">*</span>
-            </label>
-            <input
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                업무 전화번호<span className="text-red-500">*</span>
+              </label>
+              <Input
                 id="businessTel"
-              name="businessTel"
-              type="tel"
-              value={formData.businessTel}
-              onChange={handleChange}
-              required
-              pattern="\d{3}-\d{4}-\d{4}"
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label
-              htmlFor="emergencyTel"
-              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              긴급 연락처
-            </label>
-            <input
-              id="emergencyTel"
-              name="emergencyTel"
-              type="tel"
-              value={formData.emergencyTel}
-              onChange={handleChange}
-              pattern="\d{3}-\d{4}-\d{4}"
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label
-              htmlFor="email"
-              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              이메일
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              maxLength={50}
-              value={formData.email}
-              onChange={handleChange}
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label
-              htmlFor="position"
-              className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900"
-            >
-              직위
-            </label>
-            <input
-              id="position"
-              name="position"
-              type="text"
-              maxLength={20}
-              value={formData.position}
-              onChange={handleChange}
-              className="bg-[#ffe69c] block w-80 ml-4 rounded-full border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-            />
-          </div>
-          <div className="flex items-center mt-2">
-            <label className="w-28 ml-px block pl-4 text-left text-sm font-semibold leading-6 text-gray-900">
-              성별
-            </label>
-            <div className="flex gap-4 ml-4">
-              <div>
-                <input
-                  type="radio"
-                  id="gender-male"
-                  name="gender"
-                  value="MALE"
-                  checked={formData.gender === "MALE"}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="gender-male">남성</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  id="gender-female"
-                  name="gender"
-                  value="FEMALE"
-                  checked={formData.gender === "FEMALE"}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="gender-female">여성</label>
+                name="businessTel"
+                type="tel"
+                value={formData.businessTel}
+                onChange={handleChange}
+                required
+                pattern="\d{3}-\d{4}-\d{4}"
+              />
+            </div>
+
+            <div className="flex items-center space-x-10">
+              <label
+                htmlFor="email"
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                이메일<span className="text-red-500">*</span>
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                maxLength={50}
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="flex items-center space-x-10">
+              <label
+                htmlFor="birthDate"
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                생년월일
+              </label>
+              <Input
+                id="birthDate"
+                name="birthDate"
+                type="date"
+                value={formData.birthDate}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex items-center space-x-10">
+              <label
+                htmlFor="emergencyTel"
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                긴급 연락처
+              </label>
+              <Input
+                id="emergencyTel"
+                name="emergencyTel"
+                type="tel"
+                value={formData.emergencyTel}
+                onChange={handleChange}
+                pattern="\d{3}-\d{4}-\d{4}"
+              />
+            </div>
+
+            <div className="flex items-center space-x-10">
+              <label
+                htmlFor="position"
+                className="w-44 pl-4 text-left text-sm font-semibold text-gray-900"
+              >
+                직위
+              </label>
+              <Input
+                id="position"
+                name="position"
+                type="text"
+                maxLength={20}
+                value={formData.position}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex items-center">
+              <label className="w-44 pl-4 text-left text-sm font-semibold text-gray-900">
+                성별
+              </label>
+              <div className="flex gap-4 ml-10">
+                <div>
+                  <input
+                    type="radio"
+                    id="gender-male"
+                    name="gender"
+                    value="MALE"
+                    checked={formData.gender === "MALE"}
+                    onChange={handleChange}
+                    className="mr-2"
+                  />
+                  <label htmlFor="gender-male">남성</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="gender-female"
+                    name="gender"
+                    value="FEMALE"
+                    checked={formData.gender === "FEMALE"}
+                    onChange={handleChange}
+                    className="mr-2"
+                  />
+                  <label htmlFor="gender-female">여성</label>
+                </div>
               </div>
             </div>
           </div>
-          <div className="mt-4 flex gap-2 justify-end">
-            <button
-              type="submit"
-              className="bg-[#0034ff] hover:bg-[#5500ff] mt-4 mx-1 py-1.5 px-4 rounded-full text-sm font-semibold leading-6 text-white shadow-sm"
-            >
+
+          <br />
+
+          <div className="mt-4 flex gap-8 justify-center">
+            <Button type="submit" color="blue" className="scale-110">
               저장
-            </button>
-            <Link
-              to={
-                userInfo.roles.includes("ROLE_ADMIN")
-                  ? ACCOUNT_LIST_BOARD
-                  : MAIN
-              }
-              className="bg-[#ff0000] hover:bg-red-400 mt-4 mx-1 py-1.5 px-4 rounded-full text-sm font-semibold leading-6 text-white shadow-sm"
-            >
-              취소
-            </Link>
+            </Button>
+            <div>
+              <Link
+                to={
+                  userInfo.roles.includes("ROLE_ADMIN")
+                    ? ACCOUNT_LIST_BOARD
+                    : MAIN
+                }
+              >
+                <Button type="button" color="red" className="scale-110">
+                  취소
+                </Button>
+              </Link>
+            </div>
           </div>
         </form>
       </div>

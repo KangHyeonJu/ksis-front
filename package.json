@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@headlessui/react": "^2.1.2",
+    "@headlessui/react": "^2.1.10",
     "@heroicons/react": "^2.1.5",
     "@mui/material": "^6.0.2",
     "@testing-library/jest-dom": "^5.17.0",
