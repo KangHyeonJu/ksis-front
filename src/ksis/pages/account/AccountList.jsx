@@ -150,8 +150,9 @@ const AccountList = () => {
         <Link to={ACCOUNT_FORM}>
           <button
               type="button"
-              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
+              className="rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] py-1 px-2 text-sm font-semibold shadow-sm 
+            hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
+           >
             계정 등록
           </button>
         </Link>
@@ -185,16 +186,17 @@ const AccountList = () => {
         <td className="text-center p-2 border-b border-gray-300 flex justify-center">
           <Link
             to={`/account/${post.accountId}`}
-            className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+            className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 py-1 px-2 text-sm font-semibold shadow-sm 
+            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
           >
             수정
           </Link>
           <button
             className={`mr-2 w-24 ${
               post.isActive
-                ? "bg-green-500 hover:bg-green-700"
-                : "bg-red-500 hover:bg-red-700"
-            } text-white font-bold py-1 px-2 rounded`}
+                ? "text-green-600 border-green-600  hover:bg-green-600 hover:text-white  hover:shadow-green-800 focus-visible:outline-green-600 "
+                : "text-red-600 border-red-600 hover:bg-red-600 hover:text-white hover:shadow-red-800 focus-visible:outline-red-600"
+            }  font-bold py-1 px-2 rounded-md border text-sm shadow-sm hover:shadow-inner transition duration-200`}
             onClick={() => handleToggleActive(post.accountId, post.isActive)}
           >
             {post.isActive ? "활성화" : "비활성화"}

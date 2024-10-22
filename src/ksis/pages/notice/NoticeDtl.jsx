@@ -197,7 +197,7 @@ const NoticeDetail = () => {
             )}
 
             {/* 버튼들 */}
-            <div className="flex justify-center space-x-8">
+            <div className="flex justify-center space-x-4">
               {/* notice 작성자가 admin인 경우 숨기기 */}
               {(notice.role === "ADMIN" && role === "ROLE_USER") ||
               (notice.role === "USER" && role === "ROLE_ADMIN") ? null : (

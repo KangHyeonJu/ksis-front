@@ -331,18 +331,22 @@ const NoticeForm = () => {
                 </div>
               </>
             )}
-            <div className="flex justify-center space-x-8">
-              <Button type="submit" color="blue" className="scale-110">
+            <div className="flex justify-center space-x-4">
+              <button 
+              type="submit" 
+              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+             >
                 저장
-              </Button>
-              <Button
+              </button>
+              <button
                 type="button"
-                color="red"
-                className="scale-110"
                 onClick={handleCancel}
+                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
               >
                 취소
-              </Button>
+              </button>
             </div>
           </div>
         </form>
