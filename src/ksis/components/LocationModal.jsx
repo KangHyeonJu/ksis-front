@@ -24,6 +24,8 @@ const LocationModal = ({ isOpen, onRequestClose, address }) => {
         },
         overlay: {
           backgroundColor: "rgba(9, 9, 11, 0.5)", // 이 모달 인스턴스의 오버레이 배경색
+          position: "fixed",
+          zIndex: 30,
         },
       }}
       contentLabel="위치 보기 모달"
