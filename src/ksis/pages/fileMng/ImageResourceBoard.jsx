@@ -242,26 +242,25 @@ const handleSearch = (e) => {
             <div key={index} className="grid p-1">
 
               {/* 카드 */}
-            <div className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
-              h-full overflow-hidden max-w-xs"> {/* max-w-xs로 카드 너비 제한 */}
-
+              <div className="flex flex-col  h-full overflow-hidden max-w-xs">
 
              {/* 이미지 */}
-             <div>
-             <div className="w-full h-full mb-1 overflow-hidden">
+             <div className="w-full h-auto md:h-60 lg:h-70">
+                <div className="w-full h-full overflow-hidden">
                       <img
                         src={post.thumbFilePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
                         alt={post.fileTitle}
-                        className="w-60 h-60 cursor-pointer object-cover object-center"
+                        className="w-full h-full cursor-pointer object-cover object-center hover:scale-150"
                         //이미지 클릭하면 모달 열림
                         onClick={() => openResourceModal(post.originalResourceId)}
                       />
                      </div>
                 </div>
 
-                {/* 제목 및 아이콘 래퍼 */}
-                <div className="flex justify-between w-full">
+               
+                 {/* 제목 및 아이콘 래퍼 */}
+                 <div className="flex justify-between w-full">
                   {editingTitleIndex === index ? (
                     <input
                       type="text"
@@ -269,16 +268,17 @@ const handleSearch = (e) => {
                       onChange={(e) => setNewTitle(e.target.value)}
                       onKeyDown={(e) => handleKeyDown(e, post.originalResourceId)} // 엔터 키 이벤트 추가
                       className="w-full text-xl font-midium border-b text-center
-                    border-gray-400 outline-none transition-colors duration-200 
-                    focus:border-gray-600 max-w-full mx-auto justify-start"
+                      border-gray-400 outline-none transition-colors duration-200 
+                      focus:border-gray-600 max-w-full mx-auto justify-start"
                     placeholder="제목을 입력해주세요." />
                     
                   ) : (
 
-                    <h2 className="text-xl font-bold truncate max-w-full mx-auto justify-start" title={post.fileTitle}>
-                      {post.fileTitle}
-                    </h2>
+                    <h2 className="text-xl font-bold truncate max-w-full mx-auto justify-start text-gray-800" title={post.fileTitle}>
+                    {post.fileTitle}
+                  </h2>
                   )}
+                  {/* 제목수정 아이콘 */}
                   <div>
                   <FaEdit
                     onClick={() =>
@@ -288,13 +288,14 @@ const handleSearch = (e) => {
                     }
                     className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
                     transform hover:scale-110 hover:text-gray-800 m-1 "
-                />
-                </div>
+                    />
+                  </div>
+                  {/* 제목수정 아이콘 끝 */}
                 </div>
 
-                 {/* 등록일 */}
-                 <div className="">
-                <p className="text-gray-700 mb-2">{formatDate(post.regTime)}</p>
+                {/* 등록일 */}
+                <div className="mx-auto">
+                <p className="text-gray-500">{formatDate(post.regTime)}</p>
                 </div>
 
                 
@@ -303,9 +304,8 @@ const handleSearch = (e) => {
                 <div className="items-center text-center row mx-auto p-2">
                 <Link to={`${IMAGE_ENCODING}/${post.originalResourceId}`}>
                 <button
-                    className="mr-2 rounded-md bg-[#6dd7e5]
-                                        px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
-                                         focus-visible:outline-blue-600"
+                    className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
                   >
                       인코딩
                   </button>
@@ -315,7 +315,8 @@ const handleSearch = (e) => {
                 <button
                   type="button"
                   onClick={() => handleDeactivate(post.originalResourceId)}
-                  className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+                  className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
                 >
                   비활성화
                 </button>

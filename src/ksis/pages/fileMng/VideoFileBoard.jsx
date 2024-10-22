@@ -325,13 +325,13 @@ const handleSearch = (e) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
         onClick={closeModal}
         >
-          <div className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
+          <div className="relative mx-auto rounded-lg w-full h-auto max-w-5xl max-h-[90vh]"
           onClick={(event) => {event.stopPropagation();}}
           >
             <video
               src={selectedVideo}
              alt="파일이 없습니다."
-              className="w-full max-h-screen bg-white text-center text-gray-500"
+              className="w-full h-full max-h-[80vh] object-contain  text-center text-gray-500"
               controls // 비디오 컨트롤러 추가
             />
                 {/* 닫기 버튼 */}
