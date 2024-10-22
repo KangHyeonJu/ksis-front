@@ -186,37 +186,9 @@ const handleSearch = (e) => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-      
-      {/* 토글 버튼 */}
-      <div className="flex justify-end space-x-2">
-        <button
-          type="button"
-          onClick={handleToggle}
-          className={`relative inline-flex items-center h-8 w-20 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-            isOriginal ? "bg-[#f39704]" : "bg-gray-200"
-          }`}
-          role="switch"
-          aria-checked={isOriginal}
-        >
-          <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
-          <span
-            className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
-              isOriginal ? "translate-x-10" : "translate-x-0"
-            }`}
-            aria-hidden="true"
-          />
-          <span
-            className={`absolute left-2 right-2 text-sm font-medium text-black transition-transform duration-200 ease-in-out ${
-              isOriginal ? "text-left" : "text-right"
-            }`}
-          >
-            {isOriginal ? "이미지" : "영상"}
-          </span>
-        </button>
-      </div>
-
-      </div>
+            {/* 탭버튼 */}
+            <div className="flex items-center justify-between mb-4">
+        </div>
 
        {/* 그리드 시작 */}
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">

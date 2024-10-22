@@ -22,7 +22,6 @@ const ImageFileBoard = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [isOriginal, setIsOriginal] = useState(false);
   const [images, setImages] = useState([]);
 
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -82,13 +81,6 @@ const ImageFileBoard = () => {
       }
     }
   };
-
-  const handleToggle = () => {
-    const newIsOriginal = !isOriginal;
-    setIsOriginal(newIsOriginal);
-    navigate(newIsOriginal ? VIDEO_FILE_BOARD : IMAGE_FILE_BOARD);
-  };
-
   // 엔터 키로 제목 저장
   const handleKeyDown = (e, id) => {
     if (e.key === "Enter") {
@@ -175,37 +167,34 @@ const ImageFileBoard = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-       
-
-        {/* 토글 버튼 */}
-        <div className="flex justify-end space-x-2">
-          <button
-            type="button"
-            onClick={handleToggle}
-            className={`relative inline-flex items-center h-8 w-20 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-              isOriginal ? "bg-[#f39704]" : "bg-gray-200"
-            }`}
-            role="switch"
-            aria-checked={isOriginal}
-          >
-            <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
-            <span
-              className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
-                isOriginal ? "translate-x-10" : "translate-x-0"
+      {/* 탭버튼 */} 
+        <div className="flex justify-between mb-4">
+          <div className="w-full">
+            {/* 이미지 탭 */}
+            <button
+              className={`px-4 py-2 text-gray-700 ${
+                window.location.pathname === IMAGE_FILE_BOARD
+                  ? " text-black"
+                  : "bg-white"
               }`}
-              aria-hidden="true"
-            />
-            <span
-              className={`absolute left-2 right-2 text-sm font-medium text-black transition-transform duration-200 ease-in-out ${
-                isOriginal ? "text-left" : "text-right"
-              }`}
+              onClick={() => navigate(IMAGE_FILE_BOARD)}
             >
-              {isOriginal ? "이미지" : "영상"}
-            </span>
-          </button>
+              이미지
+            </button>
+
+            {/* 영상 탭 */}
+            <button
+              className={`px-4 py-2 text-gray-700 ${
+                window.location.pathname === VIDEO_FILE_BOARD
+                  ? "bg-[#f39704] text-white"
+                  : "bg-white"
+              }`}
+              onClick={() => navigate(VIDEO_FILE_BOARD)}
+            >
+              영상
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
