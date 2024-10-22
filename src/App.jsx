@@ -99,6 +99,8 @@ function App() {
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
+  const computedMarginClass = location.pathname === "/downloadApp" ? "" : marginClass;
+
   const handleResize = () => {
     setWindowWidth(window.innerWidth);
   };
@@ -161,7 +163,7 @@ function App() {
       {!isNoSidebarRoute && accessToken && (
         <Sidebar onToggleSidebar={handleSidebarToggle} />
       )}
-      <div className={`content flex-1 p-4 ${marginClass}`}>
+      <div className={`content flex-1 p-4 ${computedMarginClass}`}>
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route path={"/downloadApp"} element={<DownloadApp />} />
