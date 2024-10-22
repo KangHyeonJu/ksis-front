@@ -5,14 +5,32 @@ import { NOTICE_LIST, DEACTIVE_NOTICE } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
+import { Input } from "../../css/input";
+import { Button } from "../../css/button";
+import { Textarea } from "../../css/textarea";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
 
 const NoticeDetail = () => {
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼 동작 설정
   const { noticeId } = useParams();
   const [role, setRole] = useState(""); // 역할 상태 추가
   const navigate = useNavigate();
+
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   useEffect(() => {
     const fetchNotice = async () => {
@@ -49,14 +67,14 @@ const NoticeDetail = () => {
   }
 
   const handleDeActive = async () => {
-    if (window.confirm("정말로 이 공지를 비활성화하시겠습니까?")) {
+    showAlert("정말로 이 공지를 비활성화하시겠습니까?", async () => {
       try {
         await fetcher.post(`${DEACTIVE_NOTICE}/${noticeId}`);
         navigate(NOTICE_BOARD);
       } catch (err) {
         setError("공지 비활성화에 실패했습니다.");
       }
-    }
+    });
   };
 
   const handleEdit = () => {
@@ -86,141 +104,120 @@ const NoticeDetail = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+    <div className="grid place-items-center min-h-[80vh]">
+      {/* Alert 컴포넌트 추가 */}
+      <Alert open={isAlertOpen} onClose={() => setIsAlertOpen(false)} size="lg">
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction();
+              }}
+            >
+              확인
+            </Button>
+          )}
+          <Button plain onClick={() => setIsAlertOpen(false)}>
+            취소
+          </Button>
+        </AlertActions>
+      </Alert>
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           공지사항 상세
         </h1>
-      </header>
-      <div className="border border-gray-300 rounded-lg p-6 shadow-sm bg-[#ffe69c]">
+        <br />
         <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div className="grid grid-cols-1 gap-4">
-            {/* notice 작성자가 admin인 경우 숨기기 */}
-            {notice.role === "ADMIN" ? null : (
-              <div className="flex gap-4">
+            {/* 제목 */}
+            <Input id="title" name="title" value={notice.title} readOnly />
+
+            {/* 내용 */}
+            <Textarea id="content" value={notice.content} readOnly rows="15" />
+
+            {notice.role !== "ADMIN" && (
+              <>
                 {/* 재생장치 */}
-                <div className="flex-1 flex items-center">
-                  <label
-                    htmlFor="device_id"
-                    className="text-sm font-semibold leading-6 text-gray-900 bg-[#fcc310] rounded-md text-center w-1/3 h-full flex items-center justify-center"
-                  >
-                    재생장치
-                  </label>
-                  <input
+                <div className="flex items-center mb-2">
+                  <Input
                     id="device_id"
                     type="text"
                     value={getDeviceNames(notice.deviceList)}
                     readOnly
-                    className="ml-0 flex-1 p-2 border border-gray-300 rounded-md shadow-sm bg-white"
                   />
                 </div>
-                {/* 작성일 */}
-                <div className="flex-1 flex items-center">
-                  <label
-                    htmlFor="regTime"
-                    className="text-sm font-semibold leading-6 text-gray-900 bg-[#fcc310] rounded-md text-center w-1/3 h-full flex items-center justify-center"
-                  >
-                    작성일
-                  </label>
-                  <input
-                    id="regTime"
-                    type="text"
-                    value={formatDate(notice.regDate)}
-                    readOnly
-                    className="ml-0 flex-1 p-2 border border-gray-300 rounded-md shadow-sm bg-white"
-                  />
-                </div>
-              </div>
-            )}
-            <div>
-              <label htmlFor="title"></label>
-              <input
-                id="title"
-                type="text"
-                value={notice.title}
-                readOnly
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white"
-              />
-            </div>
-            <div>
-              <label htmlFor="content"></label>
-              <textarea
-                id="content"
-                value={notice.content}
-                readOnly
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white whitespace-pre-line"
-                rows="4"
-              />
-            </div>
 
-            {notice.role !== "ADMIN" && (
-              <div className="rounded-lg p-2 shadow-sm bg-white">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex-1 flex items-center">
-                    <label
-                      htmlFor="startDate"
-                      className="w-2/4 block text-sm font-semibold leading-6 text-gray-900"
-                    >
-                      노출 시작일
-                    </label>
-                    <input
-                      id="startDate"
-                      type="date"
-                      value={formatDate(notice.startDate)}
-                      readOnly
-                      className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
-                    />
-                  </div>
-                  <span className="text-lg font-semibold">~</span>
-                  <div className="flex-1 flex items-center">
-                    <label
-                      htmlFor="endDate"
-                      className="w-1/4 block text-sm font-semibold leading-6 text-gray-900"
-                    >
-                      종료일
-                    </label>
-                    <input
-                      id="endDate"
-                      type="date"
-                      value={formatDate(notice.endDate)}
-                      readOnly
-                      className="ml-0 block w-full border border-gray-300 rounded-md shadow-sm bg-white"
-                    />
+                {/* 날짜 */}
+                <div className="rounded-lg p-2 shadow-sm bg-white">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="startDate"
+                        className="block text-sm font-semibold leading-6 text-gray-900"
+                      >
+                        노출 시작일
+                      </label>
+                      <Input
+                        id="startDate"
+                        type="date"
+                        value={formatDate(notice.startDate)}
+                        readOnly
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="endDate"
+                        className="block text-sm font-semibold leading-6 text-gray-900"
+                      >
+                        노출 종료일
+                      </label>
+                      <Input
+                        id="endDate"
+                        type="date"
+                        value={formatDate(notice.endDate)}
+                        readOnly
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             )}
-          </div>
-          <div className="flex justify-between gap-4 mt-2">
-            <div className="flex items-center">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="rounded-md bg-[#ffc107] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-[#f9a301] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f9a301]"
-              >
-                뒤로가기
-              </button>
-            </div>
-            <div className="flex gap-2 items-center">
+
+            {/* 버튼들 */}
+            <div className="flex justify-center space-x-8">
               {/* notice 작성자가 admin인 경우 숨기기 */}
-              {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
+              {(notice.role === "ADMIN" && role === "ROLE_USER") ||
+              (notice.role === "USER" && role === "ROLE_ADMIN") ? null : (
                 <>
-                  <button
+                  <Button
                     type="button"
+                    color="blue"
+                    className="scale-110"
                     onClick={handleEdit}
-                    className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                   >
                     수정하기
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    color="red"
+                    className="scale-110"
                     onClick={handleDeActive}
-                    className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                   >
                     비활성화
-                  </button>
+                  </Button>
                 </>
               )}
+              <Button
+                type="button"
+                color="zinc"
+                className="scale-110"
+                onClick={handleCancel}
+              >
+                뒤로가기
+              </Button>
             </div>
           </div>
         </form>

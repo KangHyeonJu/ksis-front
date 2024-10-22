@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
@@ -7,58 +6,73 @@ import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
 import { NOTICE_ALL, DEACTIVE_NOTICE } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
+import { decodeJwt } from "../../../decodeJwt";
+
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const NoticeBoard = () => {
-  const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(0);
+  const [searchCategory, setSearchCategory] = useState("title"); // "fileTitle" 대신 "title"로 수정
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const [currentPage, setCurrentPage] = useState(1);
+  const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const noticesPerPage = 5;
+  const postsPerPage = 20;
   const navigate = useNavigate();
 
+  const authority = decodeJwt().roles;
+
   useEffect(() => {
-    
-    setLoading(true);
-    fetcher
-      .get(NOTICE_ALL)
-      .then((response) => {
-        setNotices(response.data);
-      })
-      .catch((err) => {
+    const fetchNotices = async () => {
+      setLoading(true);
+      try {
+        const response = await fetcher.get(NOTICE_ALL, {
+          params: {
+            page: currentPage - 1,
+            size: postsPerPage,
+            searchTerm,
+            searchCategory,
+          },
+        });
+        setNotices(response.data.content);
+        setTotalPages(response.data.totalPages);
+      } catch (err) {
         setError("데이터를 가져오는 데 실패했습니다.");
         console.log(err);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
-  }, []);
+      }
+    };
+
+    fetchNotices();
+  }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
 
   const filteredNotices = useMemo(() => {
-    const filtered = notices.filter((notice) =>
-      notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    // role이 ADMIN인 공지가 먼저 오도록 정렬
-    return filtered.sort((a, b) => {
-      if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
-      if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
-      return 0;
-    });
-  }, [notices, searchTerm]);
+    // notices가 undefined일 경우 빈 배열로 초기화
+    const validNotices = notices || [];
 
-  const paginatedNotices = useMemo(() => {
-    const startIndex = currentPage * noticesPerPage;
-    return filteredNotices.slice(startIndex, startIndex + noticesPerPage);
-  }, [filteredNotices, currentPage]);
+    return validNotices
+      .filter((notice) =>
+        notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) => {
+        if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
+        if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
+        return 0;
+      });
+  }, [notices, searchTerm, searchCategory]);
 
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const handleRegisterClick = () => {
@@ -94,7 +108,7 @@ const NoticeBoard = () => {
     return deviceNames.join(", ");
   };
 
-   const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (id) => {
     setSelectedNotices((prevSelected) =>
       prevSelected.includes(id)
         ? prevSelected.filter((noticeId) => noticeId !== id)
@@ -113,8 +127,12 @@ const NoticeBoard = () => {
   const handleDectivation = async () => {
     if (window.confirm("선택한 공지를 비활성화하시겠습니까?")) {
       try {
-        await Promise.all(selectedNotices.map((id) => fetcher.post(`${DEACTIVE_NOTICE}/${id}`)));
-        setNotices(notices.filter((notice) => !selectedNotices.includes(notice.noticeId)));
+        await Promise.all(
+          selectedNotices.map((id) => fetcher.post(`${DEACTIVE_NOTICE}/${id}`))
+        );
+        setNotices(
+          notices.filter((notice) => !selectedNotices.includes(notice.noticeId))
+        );
         setSelectedNotices([]);
         window.alert("선택한 공지를 비활성화하였습니다.");
       } catch (err) {
@@ -131,18 +149,35 @@ const NoticeBoard = () => {
           공지글 관리
         </h1>
       </header>
-      <div className="mb-6 flex items-center">
+
+      {/* 검색바 입력창 */}
+      <div className="flex items-center relative flex-grow mb-4">
+        <select
+          value={searchCategory}
+          onChange={(e) => setSearchCategory(e.target.value)}
+          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
+        >
+          <option value="title">제목</option>
+
+          {authority === "ROLE_ADMIN" ? (
+            <option value="account">작성자</option>
+          ) : null}
+
+          <option value="regTime">등록일</option>
+          <option value="device">재생장치</option>
+        </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="검색..."
+            onChange={handleSearch} // 검색어 변경 핸들러
+            placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
           <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
       </div>
+
       <div className="flex justify-end mb-4">
         <button
           onClick={handleRegisterClick}
@@ -167,21 +202,21 @@ const NoticeBoard = () => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr>
-              <th className="border border-gray-300 p-2">
+                <th className="border border-gray-300 p-2">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
                     checked={selectedNotices.length === filteredNotices.length}
                   />
                 </th>
-              <th className="border border-gray-300 p-2">제목</th>
-              <th className="border border-gray-300 p-2">작성자(아이디)</th>
-              <th className="border border-gray-300 p-2">작성일</th>
-              <th className="border border-gray-300 p-2">재생장치</th>
+                <th className="border border-gray-300 p-2">제목</th>
+                <th className="border border-gray-300 p-2">작성자(아이디)</th>
+                <th className="border border-gray-300 p-2">작성일</th>
+                <th className="border border-gray-300 p-2">재생장치</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedNotices.map((notice) => (
+              {filteredNotices.map((notice) => (
                 <tr
                   key={notice.noticeId}
                   className={`${notice.role === "ADMIN" ? " font-bold" : ""}`}
@@ -194,10 +229,11 @@ const NoticeBoard = () => {
                     />
                   </td>
                   <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
-                  {notice.role === "ADMIN" ? "📢 " : ""} 
-                  <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
-                  {notice.title}
-                  </Link></td>
+                    {notice.role === "ADMIN" ? "📢 " : ""}
+                    <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
+                      {notice.title}
+                    </Link>
+                  </td>
                   <td className="border border-gray-300 p-2">
                     {notice.name}({notice.accountId})
                   </td>
@@ -213,27 +249,16 @@ const NoticeBoard = () => {
           </table>
         )}
       </div>
-      {filteredNotices.length > noticesPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredNotices.length / noticesPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName="flex justify-center mt-4 space-x-1"
-          pageClassName="mx-1"
-          pageLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          previousClassName="mx-1"
-          previousLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          nextClassName="mx-1"
-          nextLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          breakClassName="mx-1"
-          breakLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          activeClassName="bg-blue-500 text-white"
+
+      {/* 페이지네이션 */}
+      <Stack spacing={2} className="my-6">
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
         />
-      )}
+      </Stack>
     </div>
   );
 };

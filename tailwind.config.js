@@ -10,6 +10,7 @@ module.exports = {
         75: "18rem",
         128: "32rem",
         140: "35rem",
+        145: "38.5rem",
         150: "40rem",
         160: "46rem",
         280: "83.5rem",
@@ -25,6 +26,10 @@ module.exports = {
       },
       animation: {
         flow: "flow 20s linear infinite",
+      },
+      zIndex: {
+        100: "100",
+        200: "200",
       },
     },
   },

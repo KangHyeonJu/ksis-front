@@ -1,32 +1,49 @@
 import React, { useState, useEffect, useMemo } from "react";
-import ReactPaginate from "react-paginate";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { Link } from "react-router-dom";
 import { NOTICE_DTL } from "../../../constants/page_constant";
-import { NOTICE_DEACTIVE_ALL, ACTIVE_NOTICE } from "../../../constants/api_constant";
+import {
+  NOTICE_DEACTIVE_ALL,
+  ACTIVE_NOTICE,
+} from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const TrashNoticeBoard = () => {
-  const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(0);
+  const [searchCategory, setSearchCategory] = useState("fileTitle");
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
+  const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const noticesPerPage = 5;
+  const postsPerPage = 20;
   const navigate = useNavigate();
 
   useEffect(() => {
-
     setLoading(true);
     fetcher
-      .get(NOTICE_DEACTIVE_ALL)
+      .get(NOTICE_DEACTIVE_ALL, {
+        params: {
+          page: currentPage - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory, // 카테고리 검색에 필요한 필드
+        },
+      })
       .then((response) => {
-        setNotices(response.data);
+        setNotices(response.data.content);
+        setTotalPages(response.data.totalPages);
+        setFilteredPosts(response.data);
       })
       .catch((err) => {
         setError("데이터를 가져오는 데 실패했습니다.");
@@ -35,7 +52,7 @@ const TrashNoticeBoard = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [currentPage, searchTerm]);
 
   const filteredNotices = useMemo(() => {
     return notices.filter((notice) =>
@@ -43,17 +60,15 @@ const TrashNoticeBoard = () => {
     );
   }, [notices, searchTerm]);
 
-  const paginatedNotices = useMemo(() => {
-    const startIndex = currentPage * noticesPerPage;
-    return filteredNotices.slice(startIndex, startIndex + noticesPerPage);
-  }, [filteredNotices, currentPage]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
   };
 
-  const handleSearchChange = (e) => {
+  // 검색어 변경 핸들러
+  const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   if (loading) {
@@ -77,7 +92,7 @@ const TrashNoticeBoard = () => {
     }
   };
 
-const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (id) => {
     setSelectedNotices((prevSelected) =>
       prevSelected.includes(id)
         ? prevSelected.filter((noticeId) => noticeId !== id)
@@ -96,8 +111,12 @@ const handleCheckboxChange = (id) => {
   const handleActivation = async () => {
     if (window.confirm("선택한 공지를 활성화하시겠습니까?")) {
       try {
-        await Promise.all(selectedNotices.map((id) => fetcher.post(`${ACTIVE_NOTICE}/${id}`)));
-        setNotices(notices.filter((notice) => !selectedNotices.includes(notice.noticeId)));
+        await Promise.all(
+          selectedNotices.map((id) => fetcher.post(`${ACTIVE_NOTICE}/${id}`))
+        );
+        setNotices(
+          notices.filter((notice) => !selectedNotices.includes(notice.noticeId))
+        );
         setSelectedNotices([]);
         window.alert("선택한 공지를 활성화하였습니다.");
       } catch (err) {
@@ -114,13 +133,24 @@ const handleCheckboxChange = (id) => {
           비활성화 공지글 관리
         </h1>
       </header>
-      <div className="mb-6 flex items-center">
+
+      {/* 검색바 입력창 */}
+      <div className="flex items-center relative flex-grow mb-4">
+        <select
+          value={searchCategory}
+          onChange={(e) => setSearchCategory(e.target.value)}
+          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
+        >
+          <option value="title">제목</option>
+          <option value="account">작성자</option>
+          <option value="regTime">등록일</option>
+        </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="검색..."
+            onChange={handleSearch}
+            placeholder="검색어를 입력하세요"
             className="w-full p-2 pl-10 border border-gray-300 rounded-md"
           />
           <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
@@ -147,7 +177,7 @@ const handleCheckboxChange = (id) => {
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr>
-              <th className="border border-gray-300 p-2">
+                <th className="border border-gray-300 p-2">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
@@ -160,9 +190,9 @@ const handleCheckboxChange = (id) => {
               </tr>
             </thead>
             <tbody>
-              {paginatedNotices.map((notice) => (
+              {notices.map((notice) => (
                 <tr key={notice.noticeId}>
-                   <td className="text-center border border-gray-300 p-2">
+                  <td className="text-center border border-gray-300 p-2">
                     <input
                       type="checkbox"
                       checked={selectedNotices.includes(notice.noticeId)}
@@ -170,7 +200,7 @@ const handleCheckboxChange = (id) => {
                     />
                   </td>
                   <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
-                    <Link to={`${NOTICE_DTL}/${notice.noticeIed}`}>
+                    <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
                       {notice.title}
                     </Link>
                   </td>
@@ -186,27 +216,15 @@ const handleCheckboxChange = (id) => {
           </table>
         )}
       </div>
-      {filteredNotices.length > noticesPerPage && (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          pageCount={Math.ceil(filteredNotices.length / noticesPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageChange}
-          containerClassName="flex justify-center mt-4 space-x-1"
-          pageClassName="mx-1"
-          pageLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          previousClassName="mx-1"
-          previousLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          nextClassName="mx-1"
-          nextLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          breakClassName="mx-1"
-          breakLinkClassName="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in-out"
-          activeClassName="bg-blue-500 text-white"
+      {/* 페이지네이션 */}
+      <Stack spacing={2} className="mt-2">
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color={"primary"}
         />
-      )}
+      </Stack>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./ksis/components/SideBar";
 import "./index.css";
@@ -93,11 +93,18 @@ function App() {
   const location = useLocation();
   // 사이드바를 숨기고 싶은 경로들
   const noSidebarRoutes = ["/downloadApp", "/signageplay"];
-
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [marginClass, setMarginClass] = useState("ml-64");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(windowWidth >= 1024);
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
+  const computedMarginClass =
+    location.pathname === "/downloadApp" ? "" : marginClass;
 
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
   window.addEventListener("storage", (event) => {
     if (event.key === "accessToken" && event.newValue === null) {
       // 로그아웃 처리
@@ -108,10 +115,24 @@ function App() {
   const logout = () => {
     alert("로그아웃 되었습니다.");
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("authority");
-    localStorage.removeItem("accountId");
     window.location.href = "/downloadApp";
   };
+
+  const handleSidebarToggle = (isOpen) => {
+    setIsSidebarOpen(isOpen);
+  };
+
+  useEffect(() => {
+    if (windowWidth >= 1024) {
+      if (isSidebarOpen) {
+        setMarginClass("ml-64"); // 큰 사이드바 열림
+      } else {
+        setMarginClass("ml-16"); // 큰 사이드바 닫힘
+      }
+    } else {
+      setMarginClass("ml-16"); // 작은 화면에서는 항상 축소된 마진
+    }
+  }, [windowWidth, isSidebarOpen]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -129,13 +150,20 @@ function App() {
     } else {
       localStorage.removeItem("accessToken");
     }
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
     <div className="dashboard flex">
       {/* 사이드바를 조건부로 렌더링 */}
-      {!isNoSidebarRoute && accessToken && <Sidebar />}
-      <div className="content flex-1 p-4">
+      {!isNoSidebarRoute && accessToken && (
+        <Sidebar onToggleSidebar={handleSidebarToggle} />
+      )}
+      <div className={`content flex-1 p-4 ${computedMarginClass}`}>
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route path={"/downloadApp"} element={<DownloadApp />} />
@@ -216,9 +244,6 @@ function App() {
 
             {/* 해상도 */}
             <Route path={RESOLUTION_LIST} element={<ResolutionList />} />
-
-            {/* error */}
-            <Route pate={ERROR_403} element={<Error403 />} />
 
             {/* 휴지통 */}
             <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard />} />

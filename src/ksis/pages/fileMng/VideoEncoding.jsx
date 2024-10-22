@@ -4,12 +4,15 @@ import {
   ENCODED_VIDEO,
   RESOLUTION,
 } from "../../../constants/api_constant";
+import { VIDEO_RESOURCE_BOARD } from "../../../constants/page_constant";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
+import { decodeJwt } from "../../../decodeJwt";
 
 const VideoEncoding = () => {
   const params = useParams();
+  const accountId = decodeJwt().accountId;
   const navigate = useNavigate();
   const [video, setVideo] = useState(null);
   const [resolutions, setResolution] = useState([]);
@@ -23,6 +26,16 @@ const VideoEncoding = () => {
         `${ENCODING_RESOURCE_FILE}/${originalResourceId}`
       );
       setVideo(response.data);
+
+      if (
+        decodeJwt.roles !== "ROLE_ADMIN" &&
+        !response.data.accountList.some(
+          (i) => i.accountId === decodeJwt.accountId
+        )
+      ) {
+        alert("접근권한이 없습니다.");
+        navigate(VIDEO_RESOURCE_BOARD);
+      }
     } catch (error) {
       console.error("Error fetching image:", error);
     }
@@ -53,7 +66,10 @@ const VideoEncoding = () => {
   const handleAddOption = () => {
     setEncodingOptions([
       ...encodingOptions,
-      { format: "mp4", resolution: `${resolutions[0]?.width}x${resolutions[0]?.height}` }, // 새로운 옵션에 기본 해상도 추가
+      {
+        format: "mp4",
+        resolution: `${resolutions[0]?.width}x${resolutions[0]?.height}`,
+      }, // 새로운 옵션에 기본 해상도 추가
     ]);
   };
 
@@ -66,30 +82,31 @@ const VideoEncoding = () => {
     navigate(-1);
   };
 
-
   //post
   const handleEncoding = async () => {
-     // 인코딩 시작 전 확인 창
-     const confirmEncoding = window.confirm("정말 인코딩을 시작하겠습니까?");
-        
-     if (!confirmEncoding) {
-       return; // 사용자가 취소하면 함수 종료
-     }
-     try {
+    // 인코딩 시작 전 확인 창
+    const confirmEncoding = window.confirm("정말 인코딩을 시작하겠습니까?");
+
+    if (!confirmEncoding) {
+      return; // 사용자가 취소하면 함수 종료
+    }
+    try {
       let allSuccessful = true; // 인코딩 성공 여부 추적
 
       for (const option of encodingOptions) {
-
         // 해상도가 없을 경우 기본 해상도 설정
-        const resolutionToUse = option.resolution || `${resolutions[0].width}x${resolutions[0].height}`;
+        const resolutionToUse =
+          option.resolution ||
+          `${resolutions[0].width}x${resolutions[0].height}`;
 
         const requestData = {
+          accountId: accountId,
           originalResourceId: video.originalResourceId,
           fileTitle: video.fileTitle,
           filePath: video.filePath,
           fileRegTime: video.regTime,
           format: option.format,
-          resolution:resolutionToUse,
+          resolution: resolutionToUse,
         };
         const response = await fetcher.post(
           `${ENCODED_VIDEO}/${params.originalResourceId}`,
@@ -103,17 +120,17 @@ const VideoEncoding = () => {
         if (response.status === 202) {
           alert("동일한 해상도와 포멧이 존재합니다.");
           return;
-         }
+        }
       }
       alert("인코딩을 시작했습니다.");
       navigate(-1);
-  
+
       // 모든 요청이 끝난 후에 알림 한 번만 띄우기
       if (allSuccessful) {
       } else {
         alert("일부 인코딩 요청에 실패했습니다.");
       }
-  
+
       // 모든 요청이 끝난 후에 알림 한 번만 띄우기
       if (allSuccessful) {
         alert("인코딩을 시작했습니다.");
@@ -126,7 +143,6 @@ const VideoEncoding = () => {
       alert("인코딩 중 오류가 발생했습니다.");
     }
   };
-
 
   if (!video) {
     return <div>Loading...</div>;

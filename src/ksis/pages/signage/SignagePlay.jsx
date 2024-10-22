@@ -131,24 +131,24 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
     };
   }, [isOpen, resources, showNextImage]);
 
-  useEffect(() => {
-    const fullscreenchangeHandler = () => {
-      if (!document.fullscreenElement) {
-        onRequestClose(); // 전체화면이 종료되면 모달도 닫기
-      }
-    };
+  // useEffect(() => {
+  //   const fullscreenchangeHandler = () => {
+  //     if (!document.fullscreenElement) {
+  //       onRequestClose(); // 전체화면이 종료되면 모달도 닫기
+  //     }
+  //   };
 
-    window.addEventListener("fullscreenchange", fullscreenchangeHandler);
+  //   window.addEventListener("fullscreenchange", fullscreenchangeHandler);
 
-    // 모달이 열릴 때 전체화면 모드로 전환
-    if (isOpen && !document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    }
+  //   // 모달이 열릴 때 전체화면 모드로 전환
+  //   if (isOpen && !document.fullscreenElement) {
+  //     document.documentElement.requestFullscreen();
+  //   }
 
-    return () => {
-      window.removeEventListener("fullscreenchange", fullscreenchangeHandler);
-    };
-  }, [isOpen, onRequestClose]);
+  //   return () => {
+  //     window.removeEventListener("fullscreenchange", fullscreenchangeHandler);
+  //   };
+  // }, [isOpen, onRequestClose]);
 
   //현재 시간 표시
   useEffect(() => {
@@ -202,6 +202,10 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
           inset: "0px",
           padding: "0px",
         },
+        overlay: {
+          position: "fixed",
+          zIndex: 30,
+        },
       }}
     >
       <div
@@ -209,16 +213,19 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
         className="h-full w-full fixed left-0 top-0 bg-black flex items-center justify-center align-middle"
       ></div>
 
-      <div className="h-1/12 w-full bg-gray-800/10 flex items-center fixed bottom-0">
-        <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
-          <img
-            src={weather.icon}
-            alt="이미지를 불러올 수 없습니다."
-            className="inline-flex "
-          />
-          <div className="inline-flex ">{weather.temp}℃</div>
+      <div className="h-1/12 w-full bg-gray-300/30 flex items-center fixed left-0 bottom-0">
+        <div className="flex-auto text-center w-1/12  mr-5">
+          <div className="flex">
+            <img
+              src={weather.icon}
+              alt="이미지를 불러올 수 없습니다."
+              className="m-aut"
+            />
+            <div className="m-auto text-4xl font-bold text-black">
+              {weather.temp}℃
+            </div>
+          </div>
         </div>
-
         <div className="overflow-hidden flex-auto w-10/12">
           <div ref={scrollRef} className="whitespace-nowrap animate-flow">
             <span className="text-5xl font-bold text-black">

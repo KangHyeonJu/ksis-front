@@ -66,13 +66,9 @@ const PlaylistUpdateModal = ({
       if (response.data) {
         setResources(response.data.content);
         setTotalPages(response.data.totalPages);
-
-        loadResource();
       } else {
         console.error("No data property in response");
       }
-
-      //순서, 인코딩리소스
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -98,6 +94,7 @@ const PlaylistUpdateModal = ({
   useEffect(() => {
     if (isOpen && signageId) {
       loadModal();
+      loadResource();
     }
   }, [isOpen, signageId]);
 
@@ -240,7 +237,7 @@ const PlaylistUpdateModal = ({
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <div
           ref={modalRef}
-          className="inline-block align-bottom bg-[#ffe374] px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160"
+          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160"
         >
           <div className="h-full">
             <div className="items-center justify-center">
@@ -252,7 +249,7 @@ const PlaylistUpdateModal = ({
               <div className="w-9/12 pr-4">
                 <DialogBody>
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-white">
                       <div className="mb-4 flex items-center">
                         <select
                           value={searchCategory}
@@ -281,10 +278,10 @@ const PlaylistUpdateModal = ({
                             resources.map((resource) => (
                               <div
                                 key={resource.encodedResourceId}
-                                className="group relative border border-gray-900 cursor-pointer"
                                 onClick={() => addList(resource)}
+                                className="group relative border border-gray-900 cursor-pointer"
                               >
-                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40 ">
+                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40">
                                   <img
                                     src={resource.thumbFilePath}
                                     alt={resource.fileTitle}
@@ -310,7 +307,7 @@ const PlaylistUpdateModal = ({
                                     {resource.fileTitle}
                                   </p>
 
-                                  <span className="z-10 absolute left-0 w-auto p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                  <span className="z-10 absolute left-0 bottom-1/4 w-full p-1 bg-gray-100/90 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                     {resource.fileTitle}
                                   </span>
                                 </div>
@@ -318,12 +315,13 @@ const PlaylistUpdateModal = ({
                             ))}
                         </div>
                       </div>
-                      <Stack spacing={2} className="mt-3">
+                      <Stack spacing={2} className="mt-6">
                         <Pagination
                           count={totalPages}
                           page={currentPage}
                           onChange={handlePageChange}
                           color={"primary"}
+                          className="z-20"
                         />
                       </Stack>
                     </div>
@@ -333,7 +331,7 @@ const PlaylistUpdateModal = ({
               <div className="w-3/12">
                 <DialogBody className="mt-2">
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-[#f6f6f6]">
+                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-white">
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-1">
                           {(provided) => (
@@ -353,15 +351,15 @@ const PlaylistUpdateModal = ({
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      className="group relative rounded-md bg-[#fad96e] h-10 text-center pt-1.5"
+                                      className="group relative rounded-md border border-gray-300 bg-white h-10 text-center pt-1.5 hover:bg-gray-200"
                                     >
                                       <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
                                         {resourceAdd.fileTitle}
                                       </p>
 
-                                      <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
+                                      {/* <span className="absolute left-0 w-auto p-1 bg-gray-100/90 text-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10">
                                         {resourceAdd.fileTitle}
-                                      </span>
+                                      </span> */}
 
                                       <ImCross
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer"
@@ -383,39 +381,43 @@ const PlaylistUpdateModal = ({
             </div>
             <div className="flex items-center justify-between mt-2">
               <div className="flex">
-                <label className="h-10 w-20 block text-center text-sm pt-1.5 font-semibold bg-[#ffb247] leading-6 text-gray-900">
+                <label className="h-10 w-20 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
                   제목
                 </label>
                 <input
-                  className="h-10 w-60 p-1"
+                  className="h-10 w-60 pl-2 border-y border-r border-gray-200"
                   type="text"
                   value={data.fileTitle}
                   name="fileTitle"
                   onChange={onChangeHandler}
                 />
 
-                <div className="bg-[#d9d9d8] p-1 flex ml-2">
-                  <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
+                <div className="flex ml-2">
+                  <label className="h-10 w-24 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
+                    Slide Time
+                  </label>
                   <input
-                    className="w-20 ml-1 p-1"
+                    className="h-10 w-20 pl-2 border-y border-gray-200"
                     type="number"
                     value={data.slideTime}
                     name="slideTime"
                     onChange={onChangeHandler}
                   />
-                  <p className="bg-white pr-1 pl-1">(s)</p>
+                  <p className="bg-white inline-flex items-center pr-1 border-y border-r border-gray-200">
+                    (s)
+                  </p>
                 </div>
               </div>
               <div className="flex flex-row-reverse">
                 <button
                   onClick={onRequestClose}
-                  className="ml-2 inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#f48f8f] text-base font-bold text-black shadow-sm hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
                 >
                   닫기
                 </button>
                 <button
                   onClick={updatePlayList}
-                  className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-[#6dd7e5] text-base font-bold text-black shadow-sm hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
+                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
                 >
                   수정
                 </button>

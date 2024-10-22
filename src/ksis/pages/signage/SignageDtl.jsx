@@ -14,15 +14,21 @@ import LocationModal from "../../components/LocationModal";
 import { Switch } from "@headlessui/react";
 import { format, parseISO } from "date-fns";
 import NoticeModal from "./NoticeModal";
-import SignageResourceModal from "./SignageResourceModal";
 import SignagePlaylistModal from "./SignagePlaylistModal";
 import PlaylistUpdateModal from "./PlaylistUpdateModal";
 import SignagePlay from "./SignagePlay";
 import { decodeJwt } from "../../../decodeJwt";
+import { BsPlusSquare } from "react-icons/bs";
+import { FaRegCopy } from "react-icons/fa";
+import { FaRegMap } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa";
 
 const SignageDtl = () => {
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [isCopied, setIsCopied] = useState(false);
 
   const [enabled, setEnabled] = useState(false);
   const [radiobox, setRadiobox] = useState(null);
@@ -46,11 +52,6 @@ const SignageDtl = () => {
   const [noticeModalIsOpen, setNoticeModalIsOpen] = useState(false);
   const openNoticeModal = () => setNoticeModalIsOpen(true);
   const closeNoticeModal = () => setNoticeModalIsOpen(false);
-
-  //이미지/영상 불러오기
-  const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
-  const openResourceModal = () => setResourceModalIsOpen(true);
-  const closeResourceModal = () => setResourceModalIsOpen(false);
 
   //재생목록 추가
   const [playlistAddIsOpen, setPlaylistAddIsOpen] = useState(false);
@@ -112,6 +113,12 @@ const SignageDtl = () => {
     );
     if (selectedPlaylist) {
       setRadiobox(selectedPlaylist.playlistId);
+
+      onClickPlaylist(
+        selectedPlaylist.playlistId,
+        selectedPlaylist.title,
+        selectedPlaylist.playTime
+      );
     }
   };
 
@@ -190,6 +197,8 @@ const SignageDtl = () => {
     try {
       if (playlistId == null) {
         alert("삭제할 재생목록을 선택하세요.");
+      } else if (radiobox === playlistId) {
+        alert("현재 기본으로 선택된 재생목록입니다. 변경 후 삭제해주세요.");
       } else {
         if (window.confirm("삭제하시겠습니까?")) {
           const response = await fetcher.delete(SIGNAGE_PLAYLIST, {
@@ -230,58 +239,36 @@ const SignageDtl = () => {
     closePlaylistUpdate();
   };
 
+  const copyKey = () => {
+    var key =
+      API_BASE_URL +
+      "/signageplay?key=" +
+      document.getElementById("deviceKey").innerText;
+
+    navigator.clipboard.writeText(key).then(() => {
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1000);
+    });
+  };
+
   if (loading) {
     return <div></div>;
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-        재생장치 설정
-      </h1>
-      <div className="text-center pt-5 pb-5">
-        <div className="flex items-center">
-          <input
-            value={data.deviceName}
-            readOnly
-            maxLength="50"
-            name="deviceName"
-            type="text"
-            className="rounded-md bg-[#ffe374] block w-80 px-4 py-1.5 text-gray-900 text-center h-10"
-          />
-
-          <div className="relative group flex-auto">
-            <input
-              type="text"
-              value={`${data.location} (${data.detailAddress})`}
-              readOnly
-              className="rounded-md ml-2 bg-[#ffe374] block w-full px-4 py-1.5 text-gray-900 text-center h-10"
-            />
-            {data.location.length + data.detailAddress.length > 57 && (
-              <span className="absolute left-2 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                {data.location} ({data.detailAddress})
-              </span>
-            )}
-          </div>
-
-          <button
-            onClick={openModal}
-            type="button"
-            className="relative h-10 inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
-            위치 보기
-          </button>
-          <LocationModal
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            address={data.location}
-          />
-
+    <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 mt-10">
+      <div className="flex justify-between mb-4">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900">
+          재생장치 설정
+        </h1>
+        <div className="flex justify-between items-end">
           <div className="ml-2">공지 표시</div>
           <Switch
             checked={enabled}
             onChange={handleToggle}
-            className="ml-2 group relative inline-flex h-6 w-16 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 data-[checked]:bg-orange-600"
+            className="ml-2 group relative inline-flex h-6 w-16 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#FCA929] focus:ring-offset-2 data-[checked]:bg-[#FCA929]"
           >
             <span className="sr-only">Use setting</span>
             <span
@@ -306,239 +293,307 @@ const SignageDtl = () => {
             </span>
           </Switch>
         </div>
-
-        <div className="flex items-center mt-5">
-          <input
-            type="text"
-            value={formattedDate}
-            readOnly
-            className="rounded-md flex-none bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center h-10"
-          />
-
-          <input
-            value={data.ipAddress}
-            type="text"
-            className="rounded-md flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
-          />
-
-          <input
-            value={data.deviceKey}
-            type="text"
-            className="rounded-md flex-auto bg-[#ffe374] block w-40 ml-2 px-4 py-1.5 text-gray-900 text-center h-10"
-          />
-
-          <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
-            <button
-              type="button"
-              className="ml-2 h-10 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            >
-              정보 수정
-            </button>
-          </Link>
-        </div>
-
-        <div className="flex items-center mt-5">
-          <input
-            value={data.screenSize}
-            type="text"
-            className="rounded-md flex-none h-10 bg-[#ffe374] block w-40 px-4 py-1.5 text-gray-900 text-center"
-          />
-
-          <input
-            value={data.resolution}
-            type="text"
-            className="rounded-md flex-1 h-10 bg-[#ffe374] block ml-2 px-4 py-1.5 text-gray-900 text-center"
-          />
-
-          <input
-            type="text"
-            value={
-              data.accountList &&
-              data.accountList
-                .map((account) => `${account.name}(${account.accountId})`)
-                .join(", ")
-            }
-            readOnly
-            className="rounded-md flex-auto h-10 bg-[#ffe374] block w-96 ml-2 px-4 py-1.5 text-gray-900 text-center"
-          />
-        </div>
-
-        <div className="flex items-center mt-5 justify-between">
-          <button
-            onClick={openResourceModal}
-            type="button"
-            className="rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
-            영상/이미지 불러오기
-          </button>
-          <SignageResourceModal
-            isOpen={resourceModalIsOpen}
-            onRequestClose={closeResourceModal}
-            signageId={data.deviceId}
-          />
-
-          <button
-            onClick={openNoticeModal}
-            type="button"
-            className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
-            공지조회
-          </button>
-          <NoticeModal
-            isOpen={noticeModalIsOpen}
-            onRequestClose={closeNoticeModal}
-            signageId={data.deviceId}
-          />
-        </div>
-
-        <div className="flex items-center mt-5">
-          <div className="flex-1 overflow-y-auto bg-[#ffe374] px-4 py-4 h-140">
-            <div className="flex items-center justify-between space-x-2">
-              <div className="text-lg font-semibold ml-2">재생목록 내역</div>
-              <button
-                onClick={openPlaylistAdd}
-                type="button"
-                className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      </div>
+      <div className="text-center pt-5 pb-5">
+        <div className="border-t-2 border-b-2 border-gray-300">
+          {/* First Row: Device Name */}
+          <div className="flex items-center border-b border-gray-300">
+            <div className="w-1/2 flex items-center">
+              <label className="pl-2 w-1/4 text-gray-700 font-medium text-left bg-gray-100 h-10 flex items-center">
+                재생장치 명
+              </label>
+              <div className="border-r border-gray-300 h-10"></div>
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.deviceName}
+              </div>
+            </div>
+            <div className="border-r border-gray-300 h-10"></div>
+            <div className="w-1/2 flex items-center justify-end">
+              <Link to={SIGNAGE_UPDATE_FORM + `/${data.deviceId}`}>
+                <div className="h-10 relative inline-flex items-center px-3 py-2 font-medium text-blue-600 hover:font-semibold">
+                  정보 수정
+                </div>
+              </Link>
+              <div className="h-10 relative inline-flex items-center font-medium text-blue-600 ">
+                |
+              </div>
+              <div
+                onClick={openNoticeModal}
+                className="cursor-pointer h-10 relative inline-flex items-center px-3 py-2 font-medium text-blue-600 hover:font-semibold"
               >
-                추가
-              </button>
-              <SignagePlaylistModal
-                isOpen={playlistAddIsOpen}
-                onRequestClose={handleModalClose}
+                공지 조회
+              </div>
+              <NoticeModal
+                isOpen={noticeModalIsOpen}
+                onRequestClose={closeNoticeModal}
                 signageId={data.deviceId}
               />
             </div>
-            <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mt-4">
-              <thead>
-                <tr className="bg-[#ffe69c]">
-                  <th className="border border-gray-400 p-2">재생목록명</th>
-                  <th className="border border-gray-400 p-2">등록일</th>
-                  <th className="border border-gray-400 p-2">선택</th>
-                </tr>
-              </thead>
-              <tbody>
-                {playlists.map((playlist) => (
-                  <tr
-                    key={playlist.playlistId}
-                    className={`${
-                      playListId === playlist.playlistId
-                        ? "bg-orange-50"
-                        : "bg-white"
-                    }`}
-                    onClick={() =>
-                      onClickPlaylist(
-                        playlist.playlistId,
-                        playlist.title,
-                        playlist.playTime
-                      )
-                    }
-                  >
-                    <td className="border border-gray-400 p-2">
-                      {playlist.title}
-                    </td>
-                    <td className="border border-gray-400 p-2">
-                      {format(parseISO(playlist.regTime), "yyyy-MM-dd")}
-                    </td>
-                    <td className="border border-gray-400 p-2">
-                      <input
-                        type="radio"
-                        className="border-gray-300 text-orange-600 focus:ring-orange-600"
-                        value={playlist.playlistId}
-                        onChange={onChangeRadio}
-                        name="selectedPlaylist"
-                        checked={radiobox === playlist.playlistId}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
-          <div className="flex-1 overflow-y-auto bg-[#ffe374] ml-2 px-4 py-4 h-140">
-            <div className="flex items-center justify-between">
-              <div className="text-lg font-semibold ml-2">{playlistTitle}</div>
-              <div className="bg-[#d9d9d8] p-1 flex">
-                <p className="bg-[#f2f2f2] pr-1 pl-1">slide time</p>
-                <p className="bg-white pr-1 pl-1 ml-1">{slideTime}(s)</p>
-              </div>
-              <div>
-                <button
-                  type="button"
-                  className="relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                  onClick={openPlaylist}
-                >
-                  수정
-                </button>
-                <PlaylistUpdateModal
-                  isOpen={playlistUpdateIsOpen}
-                  onRequestClose={handleUpdateMoalClose}
-                  signageId={data.deviceId}
-                  playlistId={playListId}
-                />
-                <button
-                  type="button"
-                  className="ml-2 relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                  onClick={() => deletePlaylist(playListId)}
-                >
-                  삭제
-                </button>
+
+          <div className="flex items-center border-b border-gray-300">
+            <div className="w-1/2 flex items-center">
+              <label className="pl-2 w-1/4 text-gray-700 font-medium text-left bg-gray-100 h-10 flex items-center">
+                담당자
+              </label>
+              <div className="border-r border-gray-300 h-10"></div>
+
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.accountList &&
+                  data.accountList
+                    .map((account) => `${account.name}(${account.accountId})`)
+                    .join(", ")}
               </div>
             </div>
+            <div className="border-r border-gray-300 h-10"></div>
+            <div className="w-1/2 flex items-center">
+              <label className="pl-2 w-1/4 text-gray-700 font-medium text-left bg-gray-100 h-10 flex items-center">
+                위치
+              </label>
 
-            <div className="mt-2 grid gap-x-3 gap-y-5 md:grid-cols-3">
-              {playlistDtl.map((resource) => (
-                <div
-                  key={resource.encodedResourceId}
-                  className="group relative border border-gray-900"
-                >
-                  <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
-                    {resource.sequence}
-                  </div>
-
-                  <div className="w-full h-full overflow-hidden lg:h-48">
-                    <img
-                      src={resource.thumbFilePath}
-                      alt={resource.fileTitle}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
-                  <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
-                    <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                      {resource.fileTitle}
-                    </p>
-
-                    <span className="absolute left-0 w-auto p-1 z-10 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      {resource.fileTitle}
-                    </span>
-                  </div>
+              <div className="border-r border-gray-300 h-10"></div>
+              <div className="flex relative group w-full">
+                <div className="inline-flex items-center bg-white px-4 py-1.5 text-gray-900 h-10">
+                  {`${data.location} (${data.detailAddress})`}
                 </div>
-              ))}
+                <div
+                  className="inline-flex items-center text-gray-500 cursor-pointer"
+                  onClick={openModal}
+                >
+                  <FaRegMap className="hover:text-[#FF9C00]" />
+                </div>
+                <LocationModal
+                  isOpen={modalIsOpen}
+                  onRequestClose={closeModal}
+                  address={data.location}
+                />
+                {data.location.length + data.detailAddress.length > 30 && (
+                  <span className="absolute left-3 top-5 w-auto p-1 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    {data.location} ({data.detailAddress})
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center border-b border-gray-300">
+            <div className="w-1/2 flex items-center">
+              <label className="pl-2 w-1/4 text-gray-700 font-medium text-left bg-gray-100 h-10 flex items-center">
+                IP
+              </label>
+              <div className="border-r border-gray-300 h-10"></div>
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.ipAddress}
+              </div>
+            </div>
+            <div className="border-r border-gray-300 h-10"></div>
+            <div className="w-1/2 flex items-center">
+              <label className="pl-2 w-1/4 text-gray-700 font-medium text-left bg-gray-100 h-10 flex items-center">
+                KEY
+              </label>
+              <div className="border-r border-gray-300 h-10"></div>
+              <div className="relative group w-full flex">
+                <div
+                  className="inline-flex items-center rounded-md bg-white px-4 py-1.5 text-gray-900 h-10"
+                  id="deviceKey"
+                >
+                  {data.deviceKey}
+                </div>
+                <div
+                  className="inline-flex items-center text-gray-500 cursor-pointer"
+                  onClick={copyKey}
+                >
+                  {isCopied ? (
+                    <FaCheck className="text-[#FF9C00]" />
+                  ) : (
+                    <FaRegCopy className="hover:text-[#FF9C00]" />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center border-b border-gray-300">
+            <div className="w-1/2 flex items-center">
+              <label className="pl-2 w-1/4 text-gray-700 font-medium text-left bg-gray-100 h-10 flex items-center">
+                해상도
+              </label>
+              <div className="border-r border-gray-300 h-10"></div>
+              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+                {data.resolution}
+              </div>
+            </div>
+            <div className="border-r border-gray-300 h-10"></div>
+            <div className="w-1/2 flex items-center">
+              <label className="pl-2 w-1/4 text-gray-700 font-medium text-left bg-gray-100 h-10 flex items-center">
+                사이즈
+              </label>
+              <div className="border-r border-gray-300 h-10"></div>
+              <div className="relative group w-full">
+                <div className="inline-flex items-center bg-white  w-full px-4 py-1.5 text-gray-900 h-10">
+                  {data.screenSize}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center mt-5 justify-between">
+        <div className="flex items-center mt-5">
+          <div className="flex-1 border border-gray-300 px-4 py-4 h-160">
+            <div className="flex items-center justify-between space-x-2 mr-1 h-8">
+              <div className="text-lg font-semibold ml-2">재생목록 내역</div>
+              <div
+                className="relative inline-block cursor-pointer"
+                onClick={openPlaylistAdd}
+              >
+                <BsPlusSquare
+                  size="22"
+                  className="text-gray-700 hover:text-[#FF9C00]"
+                />
+                <SignagePlaylistModal
+                  isOpen={playlistAddIsOpen}
+                  onRequestClose={handleModalClose}
+                  signageId={data.deviceId}
+                  className="z-50"
+                />
+              </div>
+            </div>
+            <div className="h-145 overflow-y-auto my-3">
+              <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-400 p-2">재생목록명</th>
+                    <th className="border border-gray-400 p-2">등록일</th>
+                    <th className="border border-gray-400 p-2">선택</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {playlists.map((playlist) => (
+                    <tr
+                      key={playlist.playlistId}
+                      onClick={() =>
+                        onClickPlaylist(
+                          playlist.playlistId,
+                          playlist.title,
+                          playlist.playTime
+                        )
+                      }
+                      className="cursor-pointer"
+                    >
+                      <td
+                        className={`border border-gray-400 p-2 cursor-pointer hover:underline ${
+                          playListId === playlist.playlistId
+                            ? " font-bold underline"
+                            : ""
+                        }`}
+                      >
+                        {playlist.title}
+                      </td>
+                      <td className="border border-gray-400 p-2">
+                        {format(parseISO(playlist.regTime), "yyyy-MM-dd")}
+                      </td>
+                      <td className="border border-gray-400 p-2">
+                        <input
+                          type="radio"
+                          className="border-gray-300 text-orange-600 focus:ring-orange-600 cursor-pointer"
+                          value={playlist.playlistId}
+                          onChange={onChangeRadio}
+                          name="selectedPlaylist"
+                          checked={radiobox === playlist.playlistId}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="h-8 flex justify-end">
+              <button
+                type="button"
+                className="inline-flex items-center h-8 rounded-sm bg-[#FCA929] text-white px-3 py-2 text-xs font-semibold hover:bg-gray-200 hover:text-[#444444]"
+                onClick={openPlay}
+              >
+                미리보기
+              </button>
+              <SignagePlay
+                isOpen={playIsOpen}
+                onRequestClose={closePlay}
+                signageId={data.deviceId}
+              />
+            </div>
+          </div>
+          <div className="flex-1 border border-gray-300 ml-2 px-4 py-4 h-160">
+            <div className="flex items-center justify-between h-8">
+              <div className="text-lg font-semibold ml-2">{playlistTitle}</div>
+              <div className="">Slide Time: {slideTime} (s)</div>
+            </div>
+
+            <div className="overflow-y-auto h-145 my-3">
+              <div className="grid gap-x-3 gap-y-3 md:grid-cols-3 grid-cols-2">
+                {playlistDtl.map((resource) => (
+                  <div
+                    key={resource.encodedResourceId}
+                    className="group relative border border-gray-900"
+                  >
+                    <div className="absolute top-0 left-0 m-2 rounded-full border border-black bg-gray-200 h-6 w-6 flex items-center justify-center">
+                      {resource.sequence}
+                    </div>
+
+                    <div className="w-full h-full overflow-hidden lg:h-48">
+                      <img
+                        src={resource.thumbFilePath}
+                        alt={resource.fileTitle}
+                        className="h-full w-full object-cover object-center"
+                      />
+                    </div>
+                    <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
+                      <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                        {resource.fileTitle}
+                      </p>
+
+                      <span className="absolute left-0 w-auto p-1 z-10 bg-gray-100 text-sm  opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        {resource.fileTitle}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="h-8 items-center flex justify-end mt-2">
+              <button
+                type="button"
+                className="h-8 relative inline-flex items-center rounded-sm bg-[#FCA929] px-3 py-2 text-xs font-semibold text-white hover:bg-gray-200 hover:text-[#444444]"
+                onClick={openPlaylist}
+              >
+                수정
+              </button>
+              <PlaylistUpdateModal
+                isOpen={playlistUpdateIsOpen}
+                onRequestClose={handleUpdateMoalClose}
+                signageId={data.deviceId}
+                playlistId={playListId}
+              />
+              <button
+                type="button"
+                className="h-8 ml-2 relative inline-flex items-center rounded-sm bg-[#444444] px-3 py-2 text-xs font-semibold text-white hover:bg-gray-200 hover:text-[#444444]"
+                onClick={() => deletePlaylist(playListId)}
+              >
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="flex items-center mt-5 justify-between">
           <Link to={SIGNAGE_INVENTORY}>
             <button
               type="button"
-              className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+              className="text-white rounded-sm bg-gray-500 px-3 py-2 text-sm font-medium shadow-sm hover:bg-gray-400"
             >
-              뒤로가기
+              목록
             </button>
           </Link>
-          <button
-            type="button"
-            className="rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-            onClick={openPlay}
-          >
-            재생
-          </button>
-          <SignagePlay
-            isOpen={playIsOpen}
-            onRequestClose={closePlay}
-            signageId={data.deviceId}
-          />
-        </div>
+        </div> */}
       </div>
     </div>
   );

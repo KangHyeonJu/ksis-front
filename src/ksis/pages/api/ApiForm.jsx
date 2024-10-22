@@ -4,6 +4,14 @@ import { API_BOARD, MAIN } from "../../../constants/page_constant"; // MAIN 상�
 import { API_NOTICE, API_BASIC } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher"; // fetcher 가져오기
 import { decodeJwt } from "../../../decodeJwt";
+import { Input } from "../../css/input";
+import { Button } from "../../css/button";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
 
 const ApiForm = () => {
   const [apiName, setApiName] = useState("");
@@ -15,6 +23,17 @@ const ApiForm = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { apiId } = useParams(); // apiId를 URL에서 가져오기
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   useEffect(() => {
     const userInfo = decodeJwt();
@@ -54,26 +73,13 @@ const ApiForm = () => {
     return regex.test(date);
   };
 
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!validateDate(expiryDate)) {
-      alert("날짜 형식이 올바르지 않습니다. yyyy-mm-dd 형식으로 입력해주세요.");
+      showAlert(
+        "날짜 형식이 올바르지 않습니다. yyyy-mm-dd 형식으로 입력해주세요."
+      );
       return;
     }
-
-
-     // 수정 또는 등록 시에만 확인 창 표시
-  const isUpdate = !!apiId; // apiId가 존재하면 수정으로 간주
-  const action = isUpdate ? "수정" : "등록"; // 동작 유형 결정
-  const confirmMessage = `${action}된 API 정보를 저장하시겠습니까?`;
-
-  const isConfirmed = window.confirm(confirmMessage);
-
-  if (!isConfirmed) {
-    return; // 사용자가 취소한 경우 함수 종료
-  }
 
     const apiData = {
       apiName,
@@ -89,14 +95,15 @@ const ApiForm = () => {
         : await fetcher.post(API_BASIC + "/register", apiData); // POST 요청 시 등록
 
       if (response.status === 200 || response.status === 201) {
-        alert("API 정보가 성공적으로 저장되었습니다.");
-        navigate(API_BOARD); // 성공 시 ApiBoard로 이동
+        showAlert("API 정보가 성공적으로 저장되었습니다.", () => {
+          navigate(API_BOARD); // 성공 시 ApiBoard로 이동
+        });
       } else {
-        alert("저장 실패");
+        showAlert("저장 실패");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("정보 저장 중 오류 발생");
+      showAlert("정보 저장 중 오류 발생");
     }
   };
 
@@ -109,89 +116,136 @@ const ApiForm = () => {
   }
 
   return (
-    <div className="p-6">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold">
+    <div className="grid place-items-center min-h-[80vh]">
+      {/* Alert 컴포넌트 추가 */}
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (
+            alertMessage === "API 정보가 성공적으로 저장되었습니다." &&
+            confirmAction
+          ) {
+            confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {alertMessage !== "API 정보가 성공적으로 저장되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           {apiId ? "API 수정" : "API 등록"}
         </h1>
-      </header>
-      <form onSubmit={handleSubmit} className="border p-4 rounded">
-        <div className="mb-4">
-          <label className="block text-lg font-semibold leading-6 text-gray-900">
-            API 이름
-          </label>
-          <input
-            type="text"
-            value={apiName}
-            onChange={(e) => setApiName(e.target.value)}
-            className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-lg font-semibold leading-6 text-gray-900">
-            제공업체
-          </label>
-          <input
-            type="text"
-            value={provider}
-            onChange={(e) => setProvider(e.target.value)}
-            className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-lg font-semibold leading-6 text-gray-900">
-            API Key
-          </label>
-          <input
-            type="text"
-            value={keyValue}
-            onChange={(e) => setKeyValue(e.target.value)}
-            className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-lg font-semibold leading-6 text-gray-900">
-            만료일
-          </label>
-          <input
-            type="date"
-            value={expiryDate}
-            onChange={(e) => setExpiryDate(e.target.value)}
-            className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-lg font-semibold leading-6 text-gray-900">
-            사용 목적
-          </label>
-          <input
-            type="text"
-            value={purpose}
-            onChange={(e) => setPurpose(e.target.value)}
-            className="bg-[#ffe69c] block w-4/5 mx-auto rounded-full border-1 border-gray-300 px-4 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-500"
-            required
-          />
-        </div>
-        <div className="flex justify-end space-x-2 mb-4">
-          <button
-            type="submit"
-            className="mr-2 relative inline-flex items-center rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            {apiId ? "수정하기" : "등록하기"}
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-          >
-            뒤로가기
-          </button>
-        </div>
-      </form>
+        <br />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            showAlert(
+              apiId
+                ? "API 정보를 수정하시겠습니까?"
+                : "API 정보를 등록하시겠습니까?",
+              handleSubmit
+            );
+          }}
+          className="space-y-4"
+        >
+          <div className="grid grid-cols-1 gap-10">
+            <div className="flex items-center">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                API 이름
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  type="text"
+                  value={apiName}
+                  onChange={(e) => setApiName(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                제공업체
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  type="text"
+                  value={provider}
+                  onChange={(e) => setProvider(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                API Key
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  type="text"
+                  value={keyValue}
+                  onChange={(e) => setKeyValue(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                만료일
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  type="date"
+                  max="9999-12-31"
+                  value={expiryDate}
+                  onChange={(e) => setExpiryDate(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-40 block text-sm font-semibold leading-6 text-gray-900">
+                사용 목적
+              </label>
+              <div className="flex-grow flex items-center space-x-2">
+                <Input
+                  type="text"
+                  value={purpose}
+                  onChange={(e) => setPurpose(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex justify-center space-x-4">
+              <Button type="submit" color="blue">
+                {apiId ? "수정하기" : "등록하기"}
+              </Button>
+              <Button type="button" color="red" onClick={() => navigate(-1)}>
+                뒤로가기
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
