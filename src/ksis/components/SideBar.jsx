@@ -58,6 +58,7 @@ const Sidebar = ({ onToggleSidebar }) => {
       setIsSidebarOpen(false); // 특정 크기 이하에서는 축소
     } else {
       setIsSidebarOpen(isExpanded);
+      onToggleSidebar(isSidebarOpen);
       console.log("isExpanded :", isExpanded);
     }
   };
