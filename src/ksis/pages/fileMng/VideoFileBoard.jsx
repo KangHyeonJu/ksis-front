@@ -181,9 +181,34 @@ const VideoFileBoard = () => {
         </div>
       </div>
 
-            {/* 탭버튼 */}
-            <div className="flex items-center justify-between mb-4">
-        </div>
+      {/* 탭버튼 */} 
+      <div className="flex justify-end mb-4">
+  <div className="w-auto flex space-x-2 border-b-2 border-gray-200">
+    {/* 이미지 탭 */}
+    <button
+      className={`px-6 py-2 rounded-t-lg font-semibold border ${
+        window.location.pathname === IMAGE_FILE_BOARD
+          ? "text-black bg-white border-gray-300 border-b-0"
+          : "text-gray-500 bg-gray-100 border-transparent"
+      }`}
+      onClick={() => navigate(IMAGE_FILE_BOARD)}
+    >
+      이미지
+    </button>
+
+    {/* 영상 탭 */}
+    <button
+      className={`px-6 py-2 rounded-t-lg font-semibold border ${
+        window.location.pathname === VIDEO_FILE_BOARD
+          ? "text-black bg-white border-gray-300 border-b-0"
+          : "text-gray-500 bg-gray-100 border-transparent"
+      }`}
+      onClick={() => navigate(VIDEO_FILE_BOARD)}
+    >
+      영상
+    </button>
+  </div>
+</div>
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
