@@ -251,7 +251,7 @@ const handleSearch = (e) => {
                         src={post.thumbFilePath}
                         //이미지 파일 깨질시 이미지 제목으로 설정
                         alt={post.fileTitle}
-                        className="w-full h-full cursor-pointer object-cover object-center hover:scale-150"
+                        className="w-full h-full cursor-pointer object-cover object-center hover:scale-150 hover:"
                         //이미지 클릭하면 모달 열림
                         onClick={() => openResourceModal(post.originalResourceId)}
                       />

@@ -5,12 +5,15 @@ import {
 } from "../../../constants/api_constant";
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
+import "../../css/animation.css";
 
 const SignagePlayKeyPage = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const keyValue = searchParam.get("key");
   const [verification, setVerification] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [combinedNotices, setCombinedNotices] = useState(null);
+  const [animationDuration, setAnimationDuration] = useState(0);
 
   const [resources, setResources] = useState([]);
   const [notices, setNotices] = useState([]);
@@ -19,6 +22,7 @@ const SignagePlayKeyPage = () => {
   const [date, setDate] = useState(() => new Date());
   const [weather, setWeather] = useState({});
 
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [deviceId, setDeviceId] = useState("");
   const deviceIdRef = useRef(null);
 
@@ -78,6 +82,20 @@ const SignagePlayKeyPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (notices.length > 0) {
+      const newCombinedNotices = `${notices.join(
+        "  \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  "
+      )}  
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 
+        ${notices.join("  \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  ")}`;
+      const newAnimationDuration = newCombinedNotices.length / 10;
+
+      setCombinedNotices(newCombinedNotices);
+      setAnimationDuration(newAnimationDuration);
+    }
+  }, [notices]);
+
   const loadNotice = async (signageId) => {
     try {
       const response = await axios.get(
@@ -101,6 +119,11 @@ const SignagePlayKeyPage = () => {
     socket.onmessage = (event) => {
       if (event.data === "playlistUpdate") {
         console.log("playlistUpdate");
+        const container = document.getElementById("container");
+        while (container.firstChild) {
+          container.removeChild(container.firstChild); // 첫 번째 자식 노드가 없어질 때까지 제거
+        }
+
         loadResource(deviceIdRef.current);
       } else if (event.data === "noticeUpdate") {
         console.log("noticeUpdate");
@@ -156,39 +179,33 @@ const SignagePlayKeyPage = () => {
       let lon = position.coords.longitude;
       getWeather(lat, lon);
     });
-
-    const scrollContainer = scrollRef.current;
-    if (verification && scrollContainer) {
-      const handleAnimationIteration = () => {
-        scrollContainer.appendChild(scrollContainer.firstChild.cloneNode(true));
-        scrollContainer.style.animation = "none"; // 애니메이션 일시 중지
-        void scrollContainer.offsetHeight; // 리플로우 강제하여 애니메이션 재시작
-        scrollContainer.style.animation = ""; // 애니메이션 재시작
-      };
-
-      scrollContainer.addEventListener(
-        "animationiteration",
-        handleAnimationIteration
-      );
-
-      return () => {
-        scrollContainer.removeEventListener(
-          "animationiteration",
-          handleAnimationIteration
-        );
-      };
-    }
   }, []);
 
-  const combinedNotices = notices.join(
-    " \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 "
-  );
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setElapsedTime((prev) => {
+        if (prev + 1 > 6 * 60) {
+          clearInterval(timer);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const showNextImage = useCallback(() => {
     const container = document.getElementById("container");
 
     if (resources.length > 0 && container) {
       const resource = resources[currentIndex];
+
+      if (!resource) {
+        console.error("Invalid resource at index:", currentIndex);
+        window.location.reload();
+        return;
+      }
 
       // 일정 시간 후에 새로운 이미지나 비디오를 페이드 인
       setTimeout(() => {
@@ -202,7 +219,12 @@ const SignagePlayKeyPage = () => {
         } else if (resource.resourceType === "VIDEO") {
           newElement = document.createElement("video");
           newElement.autoplay = true;
-          newElement.muted = true;
+
+          console.log("elapsedTime", elapsedTime);
+          if (elapsedTime < 5 * 60 + 30) {
+            console.log("elapsedTimemuted");
+            newElement.muted = true;
+          }
           newElement.src = resource.filePath;
 
           // 동영상이 로드된 후에 재생을 시도합니다.
@@ -330,7 +352,13 @@ const SignagePlayKeyPage = () => {
             </div>
 
             <div className="overflow-hidden flex-auto w-10/12">
-              <div ref={scrollRef} className="whitespace-nowrap animate-flow">
+              <div
+                ref={scrollRef}
+                className="notice-text"
+                style={{
+                  animation: `flow ${animationDuration}s linear infinite`,
+                }} // 속도를 동적으로 설정
+              >
                 <span className="text-5xl font-bold text-black">
                   {combinedNotices}
                 </span>
