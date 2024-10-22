@@ -187,7 +187,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               className="text-2xl font-semibold"
               onClick={() => handleMenuClick("MAIN")}
             >
-              <img src={ksisLogo} alt="KSIS Logo" className="w-32" />
+              <img src={ksisLogo} alt="KSIS Logo" className="w-28" />
             </Link>
           </div>
           <div className="mb-4">
@@ -480,7 +480,7 @@ const Sidebar = ({ onToggleSidebar }) => {
         )}
 
         <div>
-          <div className="logo mb-8 mt-1">
+          <div className="logo mb-8 mt-2">
             <Link to={MAIN} className="text-2xl font-semibold">
               <img src={ksisLogo} alt="KSIS Logo" className="w-11 h-6" />
             </Link>
