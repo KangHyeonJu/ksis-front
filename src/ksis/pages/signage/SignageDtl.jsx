@@ -21,10 +21,14 @@ import { decodeJwt } from "../../../decodeJwt";
 import { BsPlusSquare } from "react-icons/bs";
 import { FaRegCopy } from "react-icons/fa";
 import { FaRegMap } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa";
 
 const SignageDtl = () => {
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [isCopied, setIsCopied] = useState(false);
 
   const [enabled, setEnabled] = useState(false);
   const [radiobox, setRadiobox] = useState(null);
@@ -236,16 +240,17 @@ const SignageDtl = () => {
   };
 
   const copyKey = () => {
-    var key = document.getElementById("deviceKey").innerText;
+    var key =
+      API_BASE_URL +
+      "/signageplay?key=" +
+      document.getElementById("deviceKey").innerText;
 
-    navigator.clipboard
-      .writeText(key)
-      .then(() => {
-        alert("복사되었습니다.");
-      })
-      .catch(() => {
-        alert("복사에 실패했습니다.");
-      });
+    navigator.clipboard.writeText(key).then(() => {
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1000);
+    });
   };
 
   if (loading) {
@@ -398,7 +403,11 @@ const SignageDtl = () => {
                   className="inline-flex items-center text-gray-500 cursor-pointer"
                   onClick={copyKey}
                 >
-                  <FaRegCopy className="hover:text-[#FF9C00]" />
+                  {isCopied ? (
+                    <FaCheck className="text-[#FF9C00]" />
+                  ) : (
+                    <FaRegCopy className="hover:text-[#FF9C00]" />
+                  )}
                 </div>
               </div>
             </div>
@@ -501,7 +510,7 @@ const SignageDtl = () => {
             <div className="h-8 flex justify-end">
               <button
                 type="button"
-                className="inline-flex items-center h-8 rounded-sm bg-orange-200 text-black px-3 py-2 text-sm font-semibold hover:bg-orange-300"
+                className="inline-flex items-center h-8 rounded-sm bg-[#FCA929] text-white px-3 py-2 text-xs font-semibold hover:bg-gray-200 hover:text-[#444444]"
                 onClick={openPlay}
               >
                 미리보기
@@ -553,7 +562,7 @@ const SignageDtl = () => {
             <div className="h-8 items-center flex justify-end mt-2">
               <button
                 type="button"
-                className="h-8 relative inline-flex items-center rounded-sm bg-gray-200 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-gray-300"
+                className="h-8 relative inline-flex items-center rounded-sm bg-[#FCA929] px-3 py-2 text-xs font-semibold text-white hover:bg-gray-200 hover:text-[#444444]"
                 onClick={openPlaylist}
               >
                 수정
@@ -566,7 +575,7 @@ const SignageDtl = () => {
               />
               <button
                 type="button"
-                className="h-8 ml-2 relative inline-flex items-center rounded-sm bg-red-200 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-300"
+                className="h-8 ml-2 relative inline-flex items-center rounded-sm bg-[#444444] px-3 py-2 text-xs font-semibold text-white hover:bg-gray-200 hover:text-[#444444]"
                 onClick={() => deletePlaylist(playListId)}
               >
                 삭제
