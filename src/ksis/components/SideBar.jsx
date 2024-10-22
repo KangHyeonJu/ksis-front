@@ -113,6 +113,7 @@ const Sidebar = ({ onToggleSidebar }) => {
   }, []);
 
   useEffect(() => {
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [windowWidth, isExpanded]);
@@ -199,11 +200,7 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="flex space-x-0.2 mb-4">
             <Link
               to={`/account/${userInfo.accountId}`}
-              className={`flex items-center p-2 rounded cursor-pointer ${
-                selectedMenu === "ACCOUNT_INFO"
-                  ? "bg-[#fe6500]/30"
-                  : "hover:bg-[#fe6500]/30"
-              } w-24 whitespace-nowrap`}
+              className={`flex items-center p-2 rounded cursor-pointer hover:bg-[#fe6500]/30 w-24 whitespace-nowrap`}
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
@@ -488,11 +485,7 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="flex flex-col space-y-4 mb-4">
             <Link
               to={`/account/${userInfo.accountId}`}
-              className={`flex items-center p-2 rounded cursor-pointer relative group ${
-                selectedMenu === "ACCOUNT_INFO"
-                  ? "bg-[#fe6500]/30"
-                  : "hover:bg-[#fe6500]/30"
-              }`}
+              className={`flex items-center p-2 rounded cursor-pointer relative group hover:bg-[#fe6500]/30`}
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
