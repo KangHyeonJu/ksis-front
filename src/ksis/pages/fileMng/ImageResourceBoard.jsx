@@ -196,10 +196,10 @@ const handleSearch = (e) => {
             이미지
           </button>
           </div>
-          <div className="border-b-2 border-gray-200">
+          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
           {/* 영상 탭 */}
           <button
-            className={`px-6 py-2 rounded-t-lg font-semibold border  ${
+            className={`px-6 py-2 rounded-t-lg font-semibold border hover:border-gray-300 hover:bg-white hover:text-black ${
               window.location.pathname === VIDEO_RESOURCE_BOARD
                 ? "text-black bg-white border-gray-300 border-b-0"
                 : "text-gray-500 bg-gray-100 border-transparent "

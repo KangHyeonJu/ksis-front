@@ -95,24 +95,13 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
 
                  {/* 테이블: 현재 페이지에 해당하는 항목만 렌더링 */}
                  {currentItems.some(post => post.encodedResourceId !== null) ? ( // 현재 아이템이 있을 때만 테이블 렌더링
-                    <table
-                      className="min-w-full divide-y divide-gray-700 border-collapse 
-                    border border-gray-700 mb-2 text-center"
-                    >
-                      <thead>
+                   <table className="w-full table-fixed border-collapse mt-4">
+                <thead className="border-t border-b border-double border-[#FF9C00]">
                         <tr className="font-bold">
-                          <td className="p-2 border border-gray-700 bg-[#ffb247]">
-                            제목
-                          </td>
-                          <td className="p-2 border border-gray-700 bg-[#ffb247]">
-                            인코딩 일자
-                          </td>
-                          <td className="p-2 border border-gray-700 bg-[#ffb247]">
-                            해상도
-                          </td>
-                          <td className="p-2 border border-gray-700 bg-[#ffb247]">
-                            포맷
-                          </td>
+                          <th className="w-5/12 p-2">제목</th>
+                          <th className="w-3/12 p-2">인코딩 일자</th>
+                          <th className="w-3/12 p-2">해상도</th>
+                          <th className="w-2/12 p-2"> 포맷</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -120,19 +109,19 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                           post.fileTitle !== null ? (
                             <tr key={index}>
                               <td
-                                className="p-2 border border-gray-700 bg-white overflow-hidden text-ellipsis whitespace-nowrap"
+                                className="text-left p-2 border-b border-gray-300 bg-white overflow-hidden text-ellipsis whitespace-nowrap"
                                 title={post.fileTitle}
                                 style={{ maxWidth: "150px" }} // 제목 셀의 최대 너비 설정
                               >
                                 {post.fileTitle}
                               </td>
-                              <td className="p-2 border border-gray-700 bg-white">
+                              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                                 {formatDate(post.regTime)}
                               </td>
-                              <td className="p-2 border border-gray-700 bg-white">
+                              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                                 {post.resolution}
                               </td>
-                              <td className="p-2 border border-gray-700 bg-white">
+                              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                                 {post.format}
                               </td>
                             </tr>

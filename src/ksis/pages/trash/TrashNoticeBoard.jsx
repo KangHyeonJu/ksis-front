@@ -183,9 +183,9 @@ const TrashNoticeBoard = () => {
                     checked={selectedNotices.length === filteredNotices.length}
                   />
                 </th>
-                <th className="w-5/9 p-2">제목</th>
-                <th className="w-2/9 p-2">작성자(아이디)</th>
-                <th className="w-2/9 p-2">작성일</th>
+                <th className="w-4/12 p-2">제목</th>
+                <th className="w-3/12 p-2">작성자(아이디)</th>
+                <th className="w-3/12 p-2">작성일</th>
               </tr>
             </thead>
             <tbody>

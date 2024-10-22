@@ -126,10 +126,10 @@ const TrashVideoFileBoard = () => {
 <div className="flex justify-end mb-4">
   <div className="w-auto flex space-x-2">
     {/* 이미지 탭 */}
-    <div className="border-b-2 border-gray-200 ">
-    <button
-      className={`px-6 py-2 rounded-t-lg font-semibold border ${
-        window.location.pathname === TRASH_IMAGE_FILE
+    <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
+            <button
+              className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
+                window.location.pathname === TRASH_IMAGE_FILE
           ? "text-black bg-white border-gray-300 border-b-0"
           : "text-gray-500 bg-gray-100 border-transparent"
       }`}
