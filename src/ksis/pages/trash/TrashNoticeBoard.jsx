@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { Link } from "react-router-dom";
-import { NOTICE_DTL } from "../../../constants/page_constant";
+import { DEACTIVE_NOTICE_DTL } from "../../../constants/page_constant";
 import {
   NOTICE_DEACTIVE_ALL,
   ACTIVE_NOTICE,
@@ -199,7 +199,7 @@ const TrashNoticeBoard = () => {
                     />
                   </td>
                   <td className="p-2 text-gray-800 text-left hover:underline hover:text-[#FF9C00] border-b border-gray-300">
-                    <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
+                    <Link to={`${DEACTIVE_NOTICE_DTL}/${notice.noticeId}`}>
                       {notice.title}
                     </Link>
                   </td>
