@@ -46,7 +46,6 @@ const VideoEncoding = () => {
       const responseResolution = await fetcher.get(RESOLUTION);
       setResolution(responseResolution.data);
 
-      // 처음 옵션 추가 시 기본 해상도 설정
       setEncodingOptions((prevOptions) =>
         prevOptions.map((option) => ({
           ...option,
@@ -69,7 +68,7 @@ const VideoEncoding = () => {
       {
         format: "mp4",
         resolution: `${resolutions[0]?.width}x${resolutions[0]?.height}`,
-      }, // 새로운 옵션에 기본 해상도 추가
+      },
     ]);
   };
 
@@ -82,19 +81,16 @@ const VideoEncoding = () => {
     navigate(-1);
   };
 
-  //post
   const handleEncoding = async () => {
-    // 인코딩 시작 전 확인 창
     const confirmEncoding = window.confirm("정말 인코딩을 시작하겠습니까?");
 
     if (!confirmEncoding) {
-      return; // 사용자가 취소하면 함수 종료
+      return;
     }
     try {
-      let allSuccessful = true; // 인코딩 성공 여부 추적
+      let allSuccessful = true;
 
       for (const option of encodingOptions) {
-        // 해상도가 없을 경우 기본 해상도 설정
         const resolutionToUse =
           option.resolution ||
           `${resolutions[0].width}x${resolutions[0].height}`;
@@ -114,7 +110,7 @@ const VideoEncoding = () => {
         );
         navigate();
         if (response.status !== 200) {
-          allSuccessful = false; // 실패한 요청이 있을 경우 false로 변경
+          allSuccessful = false;
         }
 
         if (response.status === 202) {
@@ -125,13 +121,11 @@ const VideoEncoding = () => {
       alert("인코딩을 시작했습니다.");
       navigate(-1);
 
-      // 모든 요청이 끝난 후에 알림 한 번만 띄우기
       if (allSuccessful) {
       } else {
         alert("일부 인코딩 요청에 실패했습니다.");
       }
 
-      // 모든 요청이 끝난 후에 알림 한 번만 띄우기
       if (allSuccessful) {
         alert("인코딩을 시작했습니다.");
         navigate(-1);
@@ -149,13 +143,13 @@ const VideoEncoding = () => {
   }
 
   return (
-    <div className="flex justify-center items-center p-6">
-      <div className="bg-[#ffe69c] p-6 rounded-lg relative max-w-4xl w-full h-auto max-h-[80vh]">
-        <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white p-2">
+    <div className="grid place-items-center min-h-[80vh]">
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg max-w-4xl w-full">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4 ">
           {video.fileTitle || "파일 제목"}
         </h1>
 
-        <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg">
+        <div className="overflow-hidden flex items-center justify-center bg-white p-10 rounded-lg">
           <div className="w-full h-full flex items-center justify-center">
             <video
               src={video.filePath}
@@ -224,17 +218,19 @@ const VideoEncoding = () => {
           </div>
         </div>
 
-        <div className="mt-2 bottom-2 flex justify-end">
+        <div className="items-center text-center row mx-auto mt-4">
           <button
             onClick={handleEncoding}
-            className="mr-2 rounded-md bg-[#6dd7e5] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
+            className="mr-4 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+           hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
           >
             인코딩
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
           >
             취소
           </button>

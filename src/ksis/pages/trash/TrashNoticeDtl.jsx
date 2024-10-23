@@ -76,7 +76,7 @@ const TrashNoticeDtl = () => {
   };
 
   return (
-    <div className="grid place-items-center min-h-[80vh]">
+    <div className="grid place-items-center min-h-screen">
       <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           공지사항 상세
