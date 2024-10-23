@@ -164,9 +164,12 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
               </div>
             </DialogBody>
             <DialogActions>
-              <Button type="submit" color="blue">
-                등록
-              </Button>
+            <button type="submit" 
+              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+            >
+                수정
+              </button>
             </DialogActions>
           </form>
         </div>
