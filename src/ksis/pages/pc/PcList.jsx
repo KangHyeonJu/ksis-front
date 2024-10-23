@@ -105,7 +105,7 @@ const PcList = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         일반 PC 관리
       </h1>
@@ -141,7 +141,7 @@ const PcList = () => {
               type="button"
               className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
               hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-             >
+            >
               일반 PC 등록
             </button>
           </Link>
@@ -150,16 +150,16 @@ const PcList = () => {
             type="button"
             className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
             hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
->
+          >
             삭제
           </button>
         </div>
       ) : null}
 
-<table className="w-full table-fixed border-collapse mt-4">
-                <thead className="border-t border-b border-double border-[#FF9C00]">
-                  <tr>
-                  <th className="w-1/12 p-2 text-center text-gray-800">
+      <table className="w-full table-fixed border-collapse mt-4">
+        <thead className="border-t border-b border-double border-[#FF9C00]">
+          <tr>
+            <th className="w-1/12 p-2 text-center text-gray-800">
               <input
                 type="checkbox"
                 onChange={(e) => {
@@ -173,7 +173,9 @@ const PcList = () => {
               />
             </th>
             <th className="w-3/12 p-2 text-gray-800 text-center">PC명</th>
-            <th className="w-3/12 p-2 text-gray-800 text-center">담당자(아이디)</th>
+            <th className="w-3/12 p-2 text-gray-800 text-center">
+              담당자(아이디)
+            </th>
             <th className="w-3/12 p-2 text-gray-800 text-center">등록일</th>
           </tr>
         </thead>
@@ -207,17 +209,17 @@ const PcList = () => {
         </tbody>
       </table>
 
-    {/* 페이지네이션 */}
-    {totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

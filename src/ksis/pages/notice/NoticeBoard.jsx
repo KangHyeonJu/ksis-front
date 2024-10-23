@@ -21,7 +21,7 @@ const NoticeBoard = () => {
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const postsPerPage = 20;
+  const postsPerPage = 10;
   const navigate = useNavigate();
 
   const authority = decodeJwt().roles;
@@ -143,7 +143,7 @@ const NoticeBoard = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           공지글 관리
@@ -171,7 +171,7 @@ const NoticeBoard = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-             className="w-full p-2  pr-10"
+            className="w-full p-2  pr-10"
           />
         </div>
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
@@ -182,7 +182,7 @@ const NoticeBoard = () => {
           onClick={handleRegisterClick}
           className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
           hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-         >
+        >
           공지글 등록
         </button>
         <button
@@ -194,64 +194,69 @@ const NoticeBoard = () => {
           비활성화
         </button>
       </div>
-      
-          <div>
-            {filteredNotices.length === 0 ? (
-              <p className="text-center text-gray-600 mt-10 w-full">
-                공지글이 없습니다.
-              </p>
-            ) : (
-              <table className="w-full table-fixed border-collapse mt-4">
-                <thead className="border-t border-b border-double border-[#FF9C00]">
-                  <tr>
-                    <th className="w-1/12 p-2 text-center text-gray-800">
-                      <input
-                        type="checkbox"
-                        onChange={handleSelectAll}
-                        checked={selectedNotices.length === filteredNotices.length}
-                      />
-                    </th>
-                    <th className="w-5/12 p-2 text-gray-800 text-center">제목</th>
-                    <th className="w-2/12 p-2 text-gray-800 text-center">작성자(아이디)</th>
-                    <th className="w-2/12 p-2 text-gray-800 text-center">작성일</th>
-                    <th className="w-2/12 p-2 text-gray-800 text-center">재생장치</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredNotices.map((notice) => (
-                    <tr
-                      key={notice.noticeId}
-                      className={`${notice.role === "ADMIN" ? "font-bold bg-gray-50" : ""} border-b border-gray-300`}
-                    >
-                      <td className="text-center p-2 border-b border-gray-300">
-                        <input
-                          type="checkbox"
-                          checked={selectedNotices.includes(notice.noticeId)}
-                          onChange={() => handleCheckboxChange(notice.noticeId)}
-                        />
-                      </td>
-                      <td className="p-2 text-gray-800 text-left hover:underline hover:text-[#FF9C00] border-b border-gray-300">
-                        {notice.role === "ADMIN" ? "📢 " : ""}
-                        <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
-                          {notice.title}
-                        </Link>
-                      </td>
-                      <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                        {notice.name} ({notice.accountId})
-                      </td>
-                      <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                        {formatDate(notice.regDate)}
-                      </td>
-                      <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                        {getDeviceNames(notice.deviceList)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
 
-            )}
-          </div>
+      <div>
+        {filteredNotices.length === 0 ? (
+          <p className="text-center text-gray-600 mt-10 w-full">
+            공지글이 없습니다.
+          </p>
+        ) : (
+          <table className="w-full table-fixed border-collapse mt-4">
+            <thead className="border-t border-b border-double border-[#FF9C00]">
+              <tr>
+                <th className="w-1/12 p-2 text-center text-gray-800">
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={selectedNotices.length === filteredNotices.length}
+                  />
+                </th>
+                <th className="w-5/12 p-2 text-gray-800 text-center">제목</th>
+                <th className="w-2/12 p-2 text-gray-800 text-center">
+                  작성자(아이디)
+                </th>
+                <th className="w-2/12 p-2 text-gray-800 text-center">작성일</th>
+                <th className="w-2/12 p-2 text-gray-800 text-center">
+                  재생장치
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredNotices.map((notice) => (
+                <tr
+                  key={notice.noticeId}
+                  className={`${
+                    notice.role === "ADMIN" ? "font-bold bg-gray-50" : ""
+                  } border-b border-gray-300`}
+                >
+                  <td className="text-center p-2 border-b border-gray-300">
+                    <input
+                      type="checkbox"
+                      checked={selectedNotices.includes(notice.noticeId)}
+                      onChange={() => handleCheckboxChange(notice.noticeId)}
+                    />
+                  </td>
+                  <td className="p-2 text-gray-800 text-left hover:underline hover:text-[#FF9C00] border-b border-gray-300">
+                    {notice.role === "ADMIN" ? "📢 " : ""}
+                    <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
+                      {notice.title}
+                    </Link>
+                  </td>
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
+                    {notice.name} ({notice.accountId})
+                  </td>
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
+                    {formatDate(notice.regDate)}
+                  </td>
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
+                    {getDeviceNames(notice.deviceList)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (

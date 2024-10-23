@@ -120,12 +120,12 @@ const SignageList = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         재생장치 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
+      <div className="flex items-center relative flex-grow border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
@@ -145,39 +145,41 @@ const SignageList = () => {
             placeholder="검색어를 입력하세요"
             className="w-full p-2  pr-10"
           />
-         </div>
-         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
+        </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
-      <div className="flex justify-between">
-        <div>
+      <div className="flex justify-between my-4">
+        <div className="inline-flex items-center">
           <ToggleSwitch />
         </div>
         {userInfo.roles === "ROLE_ADMIN" ? (
-          <div className="flex justify-end space-x-2 mb-4">
-            <Link to={SIGNAGE_FORM}>
-              <button
-                type="button"
-                className=" rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          <div className=" inline-flex items-center">
+            <div className="flex justify-end space-x-2">
+              <Link to={SIGNAGE_FORM}>
+                <button
+                  type="button"
+                  className=" rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
           hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-         >
-                재생장치 등록
-              </button>
-            </Link>
-            <button
-              onClick={deleteSignage}
-              type="button"
-              className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                >
+                  재생장치 등록
+                </button>
+              </Link>
+              <button
+                onClick={deleteSignage}
+                type="button"
+                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
               hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
->
-              삭제
-            </button>
+              >
+                삭제
+              </button>
+            </div>
           </div>
         ) : null}
       </div>
       <table className="w-full table-fixed border-collapse">
         <thead className="border-t border-b border-double border-[#FF9C00]">
           <tr>
-          <th className="w-1/12 p-2 text-center text-gray-800">
+            <th className="w-1/12 p-2 text-center text-gray-800">
               <input
                 type="checkbox"
                 onChange={(e) => {
@@ -191,7 +193,9 @@ const SignageList = () => {
               />
             </th>
             <th className="w-4/12 p-2 text-gray-800 text-center">재생장치명</th>
-            <th className="w-4/12 p-2 text-gray-800 text-center">담당자(아이디)</th>
+            <th className="w-4/12 p-2 text-gray-800 text-center">
+              담당자(아이디)
+            </th>
             <th className="w-3/12 p-2 text-gray-800 text-center">등록일</th>
           </tr>
         </thead>
@@ -225,17 +229,17 @@ const SignageList = () => {
         </tbody>
       </table>
 
-    {/* 페이지네이션 */}
-    {totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

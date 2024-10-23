@@ -26,7 +26,7 @@ const TrashVideoFileBoard = () => {
   const [videos, setVideos] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
 
-  const postsPerPage = 16; // 페이지당 게시물 수
+  const postsPerPage = 14; // 페이지당 게시물 수
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -90,15 +90,15 @@ const TrashVideoFileBoard = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           비활성화 영상 페이지
         </h1>
       </header>
 
- {/* 검색바 입력창 */} 
- <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
+      {/* 검색바 입력창 */}
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
@@ -114,65 +114,62 @@ const TrashVideoFileBoard = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-           className="w-full p-2  pr-10"
+            className="w-full p-2  pr-10"
           />
         </div>
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-
-
-{/* 탭버튼 */} 
-<div className="flex justify-end mb-4">
-  <div className="w-auto flex space-x-2">
-    {/* 이미지 탭 */}
-    <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
+      {/* 탭버튼 */}
+      <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2">
+          {/* 이미지 탭 */}
+          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
             <button
               className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
                 window.location.pathname === TRASH_IMAGE_FILE
-          ? "text-black bg-white border-gray-300 border-b-0"
-          : "text-gray-500 bg-gray-100 border-transparent"
-      }`}
-      onClick={() => navigate(TRASH_IMAGE_FILE)}
-    >
-      이미지
-    </button>
-    </div>
-    <div className="border-b-2 border-[#FF9C00]">
-    {/* 영상 탭 */}
-    <button
-      className={`px-6 py-2 rounded-t-lg font-semibold border  ${
-        window.location.pathname === TRASH_VIDEO_FILE
-          ? "text-black bg-white border-gray-300 border-b-0"
-          : "text-gray-500 bg-gray-100 border-transparent "
-      }`}
-      onClick={() => navigate(TRASH_VIDEO_FILE)}
-    >
-      영상
-    </button>
-    </div>
-  </div>
-</div>
+                  ? "text-black bg-white border-gray-300 border-b-0"
+                  : "text-gray-500 bg-gray-100 border-transparent"
+              }`}
+              onClick={() => navigate(TRASH_IMAGE_FILE)}
+            >
+              이미지
+            </button>
+          </div>
+          <div className="border-b-2 border-[#FF9C00]">
+            {/* 영상 탭 */}
+            <button
+              className={`px-6 py-2 rounded-t-lg font-semibold border  ${
+                window.location.pathname === TRASH_VIDEO_FILE
+                  ? "text-black bg-white border-gray-300 border-b-0"
+                  : "text-gray-500 bg-gray-100 border-transparent "
+              }`}
+              onClick={() => navigate(TRASH_VIDEO_FILE)}
+            >
+              영상
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
         {videos.length > 0 ? (
           videos.map((post, index) => (
             <div key={index} className="grid p-1">
               {/* 카드 */}
               <div className="flex flex-col  h-full overflow-hidden max-w-xs">
-
                 {/* 썸네일 */}
                 <div className="w-full h-auto md:h-60 lg:h-70">
-                <div className="relative w-full h-full mb-1 overflow-hidden">
-                  <img
-                    src={post.thumbFilePath}
-                    alt={post.fileTitle}
-                    className="w-60 h-60 object-cover object-center" 
-                  />
-                  {/* 아이콘 추가 */}
-                  <FaRegPlayCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl opacity-85" />
-                </div>
+                  <div className="relative w-full h-full mb-1 overflow-hidden">
+                    <img
+                      src={post.thumbFilePath}
+                      alt={post.fileTitle}
+                      className="w-60 h-60 object-cover object-center"
+                    />
+                    {/* 아이콘 추가 */}
+                    <FaRegPlayCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl opacity-85" />
+                  </div>
                 </div>
                 {/* 제목 */}
                 <div className="flex justify-between w-full">
@@ -184,12 +181,12 @@ const TrashVideoFileBoard = () => {
                   </h2>
                 </div>
                 {/* 등록일 */}
-               <div className="mx-auto">
-                <p className="text-gray-500">{formatDate(post.regTime)}</p>
+                <div className="mx-auto">
+                  <p className="text-gray-500">{formatDate(post.regTime)}</p>
                 </div>
                 {/* 활성화 버튼 */}
                 <div>
-                <div className="flex justify-center p-2">
+                  <div className="flex justify-center p-2">
                     <button
                       type="button"
                       className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 

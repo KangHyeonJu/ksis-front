@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { API_BOARD, API_FORM, MAIN } from "../../../constants/page_constant"; // MAIN 상수 추가
 import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
-import fetcher from "../../../fetcher"; 
+import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
@@ -54,7 +54,6 @@ const ApiBoard = () => {
     fetchPosts();
   }, [currentPage, searchTerm]); // navigate와 accountId를 의존성으로 추가
 
-  
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
@@ -92,12 +91,12 @@ const ApiBoard = () => {
       return;
     }
     // 삭제 확인 창 추가
-  const confirmMessage = "선택한 게시글을 삭제하시겠습니까?";
-  const isConfirmed = window.confirm(confirmMessage);
+    const confirmMessage = "선택한 게시글을 삭제하시겠습니까?";
+    const isConfirmed = window.confirm(confirmMessage);
 
-  if (!isConfirmed) {
-    return; // 사용자가 취소한 경우 함수 종료
-  }
+    if (!isConfirmed) {
+      return; // 사용자가 취소한 경우 함수 종료
+    }
     try {
       const deletePromises = [...selectedPosts].map((id) =>
         fetcher(API_NOTICE + `/${id}`, {
@@ -129,8 +128,7 @@ const ApiBoard = () => {
   };
 
   const isAllSelected =
-    posts.length > 0 &&
-    posts.every((post) => selectedPosts.has(post.apiId));
+    posts.length > 0 && posts.every((post) => selectedPosts.has(post.apiId));
 
   if (loading) {
     return <p>로딩 중...</p>;
@@ -141,7 +139,7 @@ const ApiBoard = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           API 목록
@@ -175,14 +173,14 @@ const ApiBoard = () => {
           onClick={() => navigate("/apiform")}
           className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
           hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-         >
+        >
           API 등록
         </button>
         <button
           onClick={handleDeletePosts}
           className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
           hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
->
+        >
           삭제
         </button>
       </div>
@@ -194,23 +192,27 @@ const ApiBoard = () => {
           </p>
         ) : (
           <table className="w-full table-fixed border-collapse mt-4">
-                <thead className="border-t border-b border-double border-[#FF9C00]">
-                  <tr>
-                  <th className="w-1/12 p-2 text-center text-gray-800">
+            <thead className="border-t border-b border-double border-[#FF9C00]">
+              <tr>
+                <th className="w-1/12 p-2 text-center text-gray-800">
                   <input
                     type="checkbox"
                     checked={isAllSelected}
                     onChange={handleSelectAllChange}
                   />
                 </th>
-                <th className="w-3/12 p-2 text-gray-800 text-center">API 이름</th>
+                <th className="w-3/12 p-2 text-gray-800 text-center">
+                  API 이름
+                </th>
                 <th className="w-4/12 p-2 text-gray-800 text-center">만료일</th>
-                <th className="w-4/12 p-2 text-gray-800 text-center">제공업체</th>
+                <th className="w-4/12 p-2 text-gray-800 text-center">
+                  제공업체
+                </th>
               </tr>
             </thead>
             <tbody>
               {posts.map((post) => (
-                <tr key={post.apiId} >
+                <tr key={post.apiId}>
                   <td className="text-center p-2 border-b border-gray-300">
                     <input
                       type="checkbox"
@@ -218,7 +220,8 @@ const ApiBoard = () => {
                       onChange={(e) => handleCheckboxChange(post.apiId, e)}
                     />
                   </td>
-                  <td className="p-2 text-gray-800 text-center border-b border-gray-300 hover:underline hover:text-[#FF9C00] cursor-pointer"
+                  <td
+                    className="p-2 text-gray-800 text-center border-b border-gray-300 hover:underline hover:text-[#FF9C00] cursor-pointer"
                     onClick={() => handleApiNameClick(post.apiId)}
                   >
                     {post.apiName}
@@ -236,17 +239,17 @@ const ApiBoard = () => {
         )}
       </div>
 
-    {/* 페이지네이션 */}
-    {totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

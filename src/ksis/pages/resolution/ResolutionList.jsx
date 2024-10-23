@@ -122,7 +122,7 @@ const ResolutionList = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         해상도 관리
       </h1>
@@ -147,14 +147,14 @@ const ResolutionList = () => {
           />
         </div>
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-        </div>
+      </div>
 
       <div className="flex justify-end space-x-2 mb-4">
         <button
           type="button"
           className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                     onClick={openModal}
+          onClick={openModal}
         >
           해상도 등록
           <ResolutionAddModal
@@ -167,7 +167,7 @@ const ResolutionList = () => {
           type="button"
           className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
                hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-                >
+        >
           삭제
         </button>
       </div>
@@ -189,7 +189,9 @@ const ResolutionList = () => {
               />
             </th>
             <th className="w-4/12 p-2 text-gray-800 text-center">이름</th>
-            <th className="w-4/12 p-2 text-gray-800 text-center">가로 X 세로(px)</th>
+            <th className="w-4/12 p-2 text-gray-800 text-center">
+              가로 X 세로(px)
+            </th>
             <th className="w-3/21 p-2 text-gray-800 text-center"></th>
           </tr>
         </thead>
@@ -204,7 +206,9 @@ const ResolutionList = () => {
                 />
               </td>
 
-              <td className="p-2 text-gray-800 text-center border-b border-gray-300">{post.name}</td>
+              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
+                {post.name}
+              </td>
 
               <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                 {post.width} x {post.height}
@@ -215,7 +219,7 @@ const ResolutionList = () => {
                   onClick={() => openUpdateModal(post.resolutionId)}
                   className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                    >
+                >
                   수정
                 </button>
               </td>
@@ -232,18 +236,17 @@ const ResolutionList = () => {
         />
       )}
 
-
-    {/* 페이지네이션 */}
-    {totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

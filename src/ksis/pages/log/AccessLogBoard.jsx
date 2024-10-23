@@ -113,7 +113,7 @@ const AccessLogBoard = () => {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         접근 로그
       </h1>
@@ -128,17 +128,9 @@ const AccessLogBoard = () => {
           <option value="detail">내용</option>
         </select>
         <div className="flex items-center space-x-2 mx-2">
-          <input
-            type="date"
-            onChange={handleStartTime}
-            className="p-2"
-          />
+          <input type="date" onChange={handleStartTime} className="p-2" />
           <spna>~</spna>
-          <input
-            type="date"
-            onChange={handleEndTime}
-            className="p-2"
-          />
+          <input type="date" onChange={handleEndTime} className="p-2" />
         </div>
         {searchCategory === "account" ? (
           <div className="relative flex-grow">
@@ -213,17 +205,17 @@ const AccessLogBoard = () => {
         </tbody>
       </table>
 
-        {/* 페이지네이션 */}
-{totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };
