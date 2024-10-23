@@ -110,11 +110,11 @@ const AccountList = () => {
         계정목록
       </h1>
 
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
             value={searchCategory}
             onChange={(e) => setSearchCategory(e.target.value)}
-            className="mr-1 p-2 border border-gray-300 rounded-md"
+            className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="accountId">계정 아이디</option>
           <option value="name">이름</option>
@@ -139,9 +139,9 @@ const AccountList = () => {
                   value={searchTerm}
                   onChange={handleSearchChange}
                   placeholder="검색어를 입력하세요"
-                  className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+                  className="w-full p-2"
               />
-              <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"/>
+              <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]"/>
             </div>
         )}
       </div>
@@ -150,65 +150,75 @@ const AccountList = () => {
         <Link to={ACCOUNT_FORM}>
           <button
               type="button"
-              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-          >
+              className="rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] py-1 px-2 text-sm font-semibold shadow-sm 
+            hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
+           >
             계정 등록
           </button>
         </Link>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
-        <thead>
-        <tr>
-          <th className="border border-gray-300">계정 아이디</th>
-          <th className="border border-gray-300">이름</th>
-          <th className="border border-gray-300">업무 전화번호</th>
-          <th className="border border-gray-300">비활성화 여부</th>
-          <th className="border border-gray-300">수정/비활성화</th>
-        </tr>
-        </thead>
-        <tbody>
-        {posts.map((post) => (
-            <tr key={post.accountId}>
-              <td className="border border-gray-300 p-2">{post.accountId}</td>
-              <td className="border border-gray-300 p-2">{post.name}</td>
-              <td className="border border-gray-300 p-2">{post.businessTel}</td>
-              <td className="border border-gray-300 p-2">
-                {post.isActive ? "O" : "X"}
-              </td>
-              <td className="border border-gray-300 p-2 flex justify-center">
-                <Link
-                  to={`/account/${post.accountId}`}
-                  className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                >
-                  수정
-                </Link>
-                <button
-                  className={`mr-2 w-24 ${
-                    post.isActive
-                      ? "bg-green-500 hover:bg-green-700"
-                      : "bg-red-500 hover:bg-red-700"
-                  } text-white font-bold py-1 px-2 rounded`}
-                  onClick={() =>
-                    handleToggleActive(post.accountId, post.isActive)
-                  }
-                >
-                  {post.isActive ? "활성화" : "비활성화"}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <table className="min-w-full mt-4 table-fixed">
+  <thead className="border-t border-b border-double border-[#FF9C00]">
+    <tr className="text-gray-800">
+      <th className="w-1/5 ">계정 아이디</th>
+      <th className="w-1/5 ">이름</th>
+      <th className="w-1/5 ">업무 전화번호</th>
+      <th className="w-1/5 ">비활성화 여부</th>
+      <th className="w-1/5 ">수정/비활성화</th>
+    </tr>
+  </thead>
+  <tbody>
+    {posts.map((post) => (
+      <tr key={post.accountId}>
+        <td className="text-center p-2 border-b border-gray-300">
+          {post.accountId}
+        </td>
+        <td className="text-center p-2 border-b border-gray-300">
+          {post.name}
+        </td>
+        <td className="text-center p-2 border-b border-gray-300">
+          {post.businessTel}
+        </td>
+        <td className="text-center p-2 border-b border-gray-300">
+          {post.isActive ? "O" : "X"}
+        </td>
+        <td className="text-center p-2 border-b border-gray-300 flex justify-center">
+          <Link
+            to={`/account/${post.accountId}`}
+            className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 py-1 px-2 text-sm font-semibold shadow-sm 
+            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+          >
+            수정
+          </Link>
+          <button
+            className={`mr-2 w-24 ${
+              post.isActive
+                ? "text-green-600 border-green-600  hover:bg-green-600 hover:text-white  hover:shadow-green-800 focus-visible:outline-green-600 "
+                : "text-red-600 border-red-600 hover:bg-red-600 hover:text-white hover:shadow-red-800 focus-visible:outline-red-600"
+            }  font-bold py-1 px-2 rounded-md border text-sm shadow-sm hover:shadow-inner transition duration-200`}
+            onClick={() => handleToggleActive(post.accountId, post.isActive)}
+          >
+            {post.isActive ? "활성화" : "비활성화"}
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-      <Stack spacing={2}>
-        <Pagination
+
+     {/* 페이지네이션 */}
+     {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
             color={"primary"}
-        />
-      </Stack>
+          />
+        </Stack>
+      )}
     </div>
 
   );

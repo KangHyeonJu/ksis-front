@@ -412,10 +412,13 @@ const AccountEditForm = () => {
 
           <br />
 
-          <div className="mt-10 flex gap-8 justify-center">
-            <Button type="submit" color="blue" className="scale-110">
+          <div className="mt-10 flex gap-4 justify-center">
+            <button type="submit" 
+            className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+           >
               저장
-            </Button>
+            </button>
             <div>
               <Link
                 to={
@@ -424,9 +427,12 @@ const AccountEditForm = () => {
                     : MAIN
                 }
               >
-                <Button type="button" color="red" className="scale-110">
+                <button type="button" 
+                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+        >
                   취소
-                </Button>
+                </button>
               </Link>
             </div>
           </div>

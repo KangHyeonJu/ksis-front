@@ -158,12 +158,12 @@ const VideoFileBoard = () => {
         </h1>
       </header>
 
-      {/* 검색바 입력창 */}
-      <div className="flex items-center relative flex-grow mb-4">
+      {/* 검색바 입력창 */} 
+ <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="fileTitle">제목</option>
           <option value="regTime">등록일</option>
@@ -175,55 +175,43 @@ const VideoFileBoard = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2  pr-10"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        {/* 파일등록 버튼 */}
-        <div className="flex justify-start space-x-2 ">
-          <Link to="ksis://open">
+          {/* 탭버튼 */} 
+  <div className="flex justify-end mb-4">
+  <div className="w-auto flex space-x-2 ">
+    {/* 이미지 탭 */}
+    <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
             <button
-              type="button"
-              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm 
-          font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 
-          focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-            >
-              파일 등록
-            </button>
-          </Link>
-        </div>
-
-        {/* 토글 버튼 */}
-        <div className="flex justify-end space-x-2">
-          <button
-            type="button"
-            onClick={handleToggle}
-            className={`relative inline-flex items-center h-8 w-20 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-              isOriginal ? "bg-[#f39704]" : "bg-gray-200"
-            }`}
-            role="switch"
-            aria-checked={isOriginal}
-          >
-            <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
-            <span
-              className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
-                isOriginal ? "translate-x-10" : "translate-x-0"
-              }`}
-              aria-hidden="true"
-            />
-            <span
-              className={`absolute left-2 right-2 text-sm font-medium text-black transition-transform duration-200 ease-in-out ${
-                isOriginal ? "text-left" : "text-right"
-              }`}
-            >
-              {isOriginal ? "이미지" : "영상"}
-            </span>
-          </button>
-        </div>
-      </div>
+              className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
+                window.location.pathname === IMAGE_FILE_BOARD
+          ? "text-black bg-white border-gray-300 border-b-0"
+          : "text-gray-500 bg-gray-100 border-transparent"
+      }`}
+      onClick={() => navigate(IMAGE_FILE_BOARD)}
+    >
+      이미지
+    </button>
+    </div>
+    <div className="border-b-2 border-[#FF9C00]">
+    {/* 영상 탭 */}
+    <button
+      className={`px-6 py-2 rounded-t-lg font-semibold border  ${
+        window.location.pathname === VIDEO_FILE_BOARD
+          ? "text-black bg-white border-gray-300 border-b-0"
+          : "text-gray-500 bg-gray-100 border-transparent "
+      }`}
+      onClick={() => navigate(VIDEO_FILE_BOARD)}
+    >
+      영상
+    </button>
+    </div>
+  </div>
+</div>
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
@@ -231,19 +219,16 @@ const VideoFileBoard = () => {
           videos.map((post, index) => (
             <div key={index} className="grid p-1">
               {/* 카드 */}
-              <div
-                className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
-              h-full overflow-hidden max-w-xs"
-              >
+              <div className="flex flex-col  h-full overflow-hidden max-w-xs">
                 {" "}
                 {/* max-w-xs로 카드 너비 제한 */}
                 {/* 영상 */}
-                <div>
+                <div className="w-full h-auto md:h-60 lg:h-70">
                   <div className="relative w-full h-full mb-1 overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
-                      className="w-60 h-60 cursor-pointer object-cover object-center"
+                      className="w-60 h-60 cursor-pointer object-cover object-center hover:scale-150"
                       onClick={() => openResourceModal(post.filePath)}
                     />
                     {/* 아이콘 추가 */}
@@ -264,8 +249,8 @@ const VideoFileBoard = () => {
                         handleKeyDown(e, post.encodedResourceId)
                       } // 엔터 키 이벤트 추가
                       className="w-full text-xl font-midium border-b text-center
-                        border-gray-400 outline-none transition-colors duration-200 
-                        focus:border-gray-600 max-w-full mx-auto justify-start"
+                      border-gray-400 outline-none transition-colors duration-200 
+                      focus:border-gray-600 max-w-full mx-auto justify-start"
                       placeholder="제목을 입력해주세요."
                     />
                   ) : (
@@ -283,29 +268,30 @@ const VideoFileBoard = () => {
                           ? handleSaveClick(post.encodedResourceId)
                           : handleEditClick(index, post.fileTitle)
                       }
-                      className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
+                     className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
                     transform hover:scale-110 hover:text-gray-800 m-1 "
                     />
                   </div>
                 </div>
                 {/* 등록일 */}
-                <div className="">
-                  <p className="text-gray-700 mb-2">
-                    {formatDate(post.regTime)}
-                  </p>
+                <div className="mx-auto">
+                <p className="text-gray-500">{formatDate(post.regTime)}</p>
                 </div>
+
                 {/* 삭제 버튼 */}
                 <div>
-                  <div className="items-center text-center row mx-auto p-2">
+                <div className="flex justify-center p-2">
                     <button
                       type="button"
-                      className="mr-2 rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+                       className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
                       onClick={() => handleDelete(post.encodedResourceId)}
                     >
                       삭제
                     </button>
                   </div>
                 </div>
+
               </div>
             </div>
           ))
@@ -316,15 +302,18 @@ const VideoFileBoard = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      <Stack spacing={2} className="mt-2">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+     {/* 페이지네이션 */}
+{totalPages > 1 && (
+  <Stack spacing={2} className="mt-2">
+    <Pagination
+      count={totalPages}
+      page={currentPage}
+      onChange={handlePageChange}
+      color={"primary"}
+    />
+  </Stack>
+)}
+
 
       {/* 모달창 */}
       {isOpen && (

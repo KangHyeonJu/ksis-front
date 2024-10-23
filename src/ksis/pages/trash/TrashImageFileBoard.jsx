@@ -22,7 +22,6 @@ const TrashImageFileBoard = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [isOriginal, setIsOriginal] = useState(false);
   const [images, setImages] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
 
@@ -48,12 +47,6 @@ const TrashImageFileBoard = () => {
         console.error("Error fetching images:", error);
       });
   }, [currentPage, searchTerm]);
-
-  const handleToggle = () => {
-    const newIsOriginal = !isOriginal;
-    setIsOriginal(newIsOriginal);
-    navigate(newIsOriginal ? TRASH_VIDEO_FILE : TRASH_IMAGE_FILE);
-  };
 
   const handleActivation = async (id) => {
     if (window.confirm("정말로 이 이미지를 활성화하시겠습니까?")) {
@@ -98,12 +91,12 @@ const TrashImageFileBoard = () => {
         </h1>
       </header>
 
-      {/* 검색바 입력창 */}
-      <div className="flex items-center relative flex-grow mb-4">
+      {/* 검색바 입력창 */} 
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="fileTitle">제목</option>
           <option value="regTime">등록일</option>
@@ -115,39 +108,41 @@ const TrashImageFileBoard = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+           className="w-full p-2  pr-10"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        {/* 토글 버튼 */}
-        <div className="flex justify-end space-x-2 mb-4">
+    {/* 탭버튼 */} 
+    <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2">
+          {/* 이미지 탭 */}
+          <div className="border-b-2 border-[#FF9C00]">
           <button
-            type="button"
-            onClick={handleToggle}
-            className={`relative inline-flex items-center h-8 w-20 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-              isOriginal ? "bg-[#f39704]" : "bg-gray-200"
+            className={`px-6 py-2 rounded-t-lg font-semibold border ${
+              window.location.pathname === TRASH_IMAGE_FILE
+                ? "text-black bg-white border-gray-300 border-b-0"
+                : "text-gray-500 bg-gray-100 border-transparent"
             }`}
-            role="switch"
-            aria-checked={isOriginal}
+            onClick={() => navigate(TRASH_IMAGE_FILE)}
           >
-            <span className="sr-only">{isOriginal ? "이미지" : "영상"}</span>
-            <span
-              className={`inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
-                isOriginal ? "translate-x-10" : "translate-x-0"
-              }`}
-              aria-hidden="true"
-            />
-            <span
-              className={`absolute left-2 right-2 text-sm font-medium text-black transition-transform duration-200 ease-in-out ${
-                isOriginal ? "text-left" : "text-right"
-              }`}
-            >
-              {isOriginal ? "이미지" : "영상"}
-            </span>
+            이미지
           </button>
+          </div>
+          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
+          {/* 영상 탭 */}
+          <button
+            className={`px-6 py-2 rounded-t-lg font-semibold border hover:border-gray-300 hover:bg-white hover:text-black  ${
+              window.location.pathname === TRASH_VIDEO_FILE
+                ? "text-black bg-white border-gray-300 border-b-0"
+                : "text-gray-500 bg-gray-100 border-transparent "
+            }`}
+            onClick={() => navigate(TRASH_VIDEO_FILE)}
+          >
+            영상
+          </button>
+          </div>
         </div>
       </div>
 
@@ -157,22 +152,19 @@ const TrashImageFileBoard = () => {
           images.map((post, index) => (
             <div key={index} className="grid p-1">
               {/* 카드 */}
-              <div
-                className="rounded-lg bg-[#ffe69c] px-3 py-5 flex flex-col items-center 
-                h-full overflow-hidden max-w-xs"
-              >
-                {" "}
-                {/* max-w-xs로 카드 너비 제한 */}
+              <div className="flex flex-col  h-full overflow-hidden max-w-xs">
+
                 {/* 이미지 */}
-                <div>
-                  <div className="w-full h-full mb-1 overflow-hidden">
+                <div className="w-full h-auto md:h-60 lg:h-70">
+                <div className="w-full h-full overflow-hidden">
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
-                      className="w-60 h-60 cursor-pointer object-cover object-center"
+                      className="w-full h-full object-cover object-center"
                     />
                   </div>
                 </div>
+
                 {/* 제목 */}
                 <div className="flex justify-between w-full">
                   <h2
@@ -182,20 +174,18 @@ const TrashImageFileBoard = () => {
                     {post.fileTitle}
                   </h2>
                 </div>
-                {/* 등록일 */}
-                <div className="">
-                  <p className="text-gray-700 mb-2">
-                    {formatDate(post.regTime)}
-                  </p>
+
+               {/* 등록일 */}
+               <div className="mx-auto">
+                <p className="text-gray-500">{formatDate(post.regTime)}</p>
                 </div>
-                {/* 삭제 버튼 */}
+                {/* 활성화 버튼 */}
                 <div>
-                  <div className="items-center text-center row mx-auto p-2">
+                <div className="flex justify-center p-2">
                     <button
                       type="button"
-                      className="mr-2 rounded-md bg-[#6dd7e5]
-                                        px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
-                                         focus-visible:outline-blue-600"
+                      className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
                       onClick={() => handleActivation(post.originalResourceId)}
                     >
                       활성화
@@ -213,14 +203,16 @@ const TrashImageFileBoard = () => {
       </div>
 
       {/* 페이지네이션 */}
-      <Stack spacing={2} className="mt-2">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };
