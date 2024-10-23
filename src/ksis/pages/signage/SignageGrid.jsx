@@ -64,16 +64,16 @@ const SignageGrid = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         재생장치 관리
       </h1>
 
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 border border-gray-300 rounded-md"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="deviceName">재생장치명</option>
 
@@ -87,26 +87,29 @@ const SignageGrid = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2 pr-10"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-      <div className="flex justify-between">
-        <div>
+      <div className="flex justify-between my-4">
+        <div className="inline-flex items-center">
           <ToggleSwitch />
         </div>
         {userInfo.roles === "ROLE_ADMIN" ? (
-          <div className="flex justify-end space-x-2 mb-4">
-            <Link to={SIGNAGE_FORM}>
-              <button
-                type="button"
-                className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-              >
-                재생장치 등록
-              </button>
-            </Link>
+          <div className=" inline-flex items-center">
+            <div className="flex justify-end space-x-2">
+              <Link to={SIGNAGE_FORM}>
+                <button
+                  type="button"
+                  className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+                >
+                  재생장치 등록
+                </button>
+              </Link>
+            </div>
           </div>
         ) : null}
       </div>
@@ -114,7 +117,7 @@ const SignageGrid = () => {
         {signages.map((signage) => (
           <div
             key={signage.deviceId}
-            className="group relative border-2 border-[#fcc310] rounded-md p-3"
+            className="group relative border border-[#FF9C00] p-3"
           >
             <div className="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
               <img
@@ -123,13 +126,14 @@ const SignageGrid = () => {
                 className="h-full w-full object-cover object-center"
               />
             </div>
-            <div className="mt-2 text-gray-700 text-center w-full border-2 border-[#fcc310] rounded-md p-1">
+            <div className="mt-2 text-gray-700 text-center w-full border border-[#FF9C00] rounded-md p-1">
               재생장치 : {signage.deviceName}
             </div>
             <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
               <button
                 type="button"
-                className="mt-2 bg-[#fad96e] w-full rounded-md p-1"
+                className="mt-2 w-full p-1 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] text-sm font-semibold
+                shadow-sm hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
               >
                 상세보기
               </button>
@@ -138,14 +142,17 @@ const SignageGrid = () => {
         ))}
       </div>
 
-      <Stack spacing={2} className="mt-5">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

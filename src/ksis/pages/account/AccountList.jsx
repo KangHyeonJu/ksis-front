@@ -26,7 +26,11 @@ const AccountList = () => {
 
   const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(`${ACCOUNT_LIST}?page=${page - 1}&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`);
+      const response = await fetcher.get(
+        `${ACCOUNT_LIST}?page=${
+          page - 1
+        }&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`
+      );
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -34,7 +38,6 @@ const AccountList = () => {
         console.error("No data property in response");
       }
     } catch (error) {
-
     } finally {
       setLoading(false); // 데이터 로딩 후 로딩 상태 해제
     }
@@ -105,16 +108,16 @@ const AccountList = () => {
   }
 
   return (
-    <div className="mx-auto max-w-7xl whitespace-nowrap px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         계정목록
       </h1>
 
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
-            value={searchCategory}
-            onChange={(e) => setSearchCategory(e.target.value)}
-            className="mr-1 p-2 border border-gray-300 rounded-md"
+          value={searchCategory}
+          onChange={(e) => setSearchCategory(e.target.value)}
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="accountId">계정 아이디</option>
           <option value="name">이름</option>
@@ -123,72 +126,80 @@ const AccountList = () => {
         </select>
 
         {searchCategory === "isActive" ? (
-            <select
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="ml-2 p-2 border border-gray-300 rounded-md"
-            >
-              <option value="">전체</option>
-              <option value="true">활성화</option>
-              <option value="false">비활성화</option>
-            </select>
+          <select
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="ml-2 p-2 border border-gray-300 rounded-md"
+          >
+            <option value="">전체</option>
+            <option value="true">활성화</option>
+            <option value="false">비활성화</option>
+          </select>
         ) : (
-            <div className="relative flex-grow">
-              <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  placeholder="검색어를 입력하세요"
-                  className="w-full p-2 pl-10 border border-gray-300 rounded-md"
-              />
-              <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500"/>
-            </div>
+          <div className="relative flex-grow">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="검색어를 입력하세요"
+              className="w-full p-2"
+            />
+            <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
+          </div>
         )}
       </div>
 
       <div className="flex justify-end space-x-2 mb-4">
         <Link to={ACCOUNT_FORM}>
           <button
-              type="button"
-              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            type="button"
+            className="rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] py-1 px-2 text-sm font-semibold shadow-sm 
+            hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
           >
             계정 등록
           </button>
         </Link>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
-        <thead>
-        <tr>
-          <th className="border border-gray-300">계정 아이디</th>
-          <th className="border border-gray-300">이름</th>
-          <th className="border border-gray-300">업무 전화번호</th>
-          <th className="border border-gray-300">비활성화 여부</th>
-          <th className="border border-gray-300">수정/비활성화</th>
-        </tr>
+      <table className="min-w-full mt-4 table-fixed">
+        <thead className="border-t border-b border-double border-[#FF9C00]">
+          <tr className="text-gray-800">
+            <th className="w-1/5 ">계정 아이디</th>
+            <th className="w-1/5 ">이름</th>
+            <th className="w-1/5 ">업무 전화번호</th>
+            <th className="w-1/5 ">비활성화 여부</th>
+            <th className="w-1/5 ">수정/비활성화</th>
+          </tr>
         </thead>
         <tbody>
-        {posts.map((post) => (
+          {posts.map((post) => (
             <tr key={post.accountId}>
-              <td className="border border-gray-300 p-2">{post.accountId}</td>
-              <td className="border border-gray-300 p-2">{post.name}</td>
-              <td className="border border-gray-300 p-2">{post.businessTel}</td>
-              <td className="border border-gray-300 p-2">
+              <td className="text-center p-2 border-b border-gray-300">
+                {post.accountId}
+              </td>
+              <td className="text-center p-2 border-b border-gray-300">
+                {post.name}
+              </td>
+              <td className="text-center p-2 border-b border-gray-300">
+                {post.businessTel}
+              </td>
+              <td className="text-center p-2 border-b border-gray-300">
                 {post.isActive ? "O" : "X"}
               </td>
-              <td className="border border-gray-300 p-2 flex justify-center">
+              <td className="text-center p-2 border-b border-gray-300 flex justify-center">
                 <Link
                   to={`/account/${post.accountId}`}
-                  className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                  className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 py-1 px-2 text-sm font-semibold shadow-sm 
+            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
                 >
                   수정
                 </Link>
                 <button
                   className={`mr-2 w-24 ${
                     post.isActive
-                      ? "bg-green-500 hover:bg-green-700"
-                      : "bg-red-500 hover:bg-red-700"
-                  } text-white font-bold py-1 px-2 rounded`}
+                      ? "text-green-600 border-green-600  hover:bg-green-600 hover:text-white  hover:shadow-green-800 focus-visible:outline-green-600 "
+                      : "text-red-600 border-red-600 hover:bg-red-600 hover:text-white hover:shadow-red-800 focus-visible:outline-red-600"
+                  }  font-bold py-1 px-2 rounded-md border text-sm shadow-sm hover:shadow-inner transition duration-200`}
                   onClick={() =>
                     handleToggleActive(post.accountId, post.isActive)
                   }
@@ -201,16 +212,18 @@ const AccountList = () => {
         </tbody>
       </table>
 
-      <Stack spacing={2}>
-        <Pagination
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
             color={"primary"}
-        />
-      </Stack>
+          />
+        </Stack>
+      )}
     </div>
-
   );
 };
 
