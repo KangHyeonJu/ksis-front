@@ -99,9 +99,12 @@ const ImageResourceBoard = () => {
     if (window.confirm("정말로 이 이미지를 비활성화하시겠습니까?")) {
       try {
         await fetcher.post(FILE_DEACTIVION + `/${id}`);
-        const updatedImages = images.filter((image) => image.id !== id);
+        const updatedImages = images.filter(
+          (image) => image.originalResourceId !== id
+        );
         setImages(updatedImages);
         setTotalPages(Math.ceil(updatedImages.length / postsPerPage)); // 페이지 수 업데이트
+
         window.alert("이미지를 비활성화하였습니다.");
       } catch (err) {
         console.error("이미지 비활성화 오류:", err);
