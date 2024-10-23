@@ -98,7 +98,18 @@ const Sidebar = ({ onToggleSidebar }) => {
     };
 
     ws.current.onclose = () => {
-      console.log("WebSocket connection closed");
+      if (retryCount < MAX_RETRIES) {
+        const retryTimeout = Math.pow(2, retryCount) * 1000; // 지수 백오프 적용
+        console.log(
+          `WebSocket disconnected. Reconnecting in ${
+            retryTimeout / 1000
+          } seconds...`
+        );
+        retryCount++;
+        setTimeout(retryTimeout); // 재연결 시도
+      } else {
+        console.log("Max retries reached. No further reconnection attempts.");
+      }
     };
   }, []);
 
