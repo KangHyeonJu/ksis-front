@@ -160,7 +160,7 @@ const TrashImageFileBoard = () => {
                     <img
                       src={post.thumbFilePath}
                       alt={post.fileTitle}
-                      className="w-full h-full cursor-pointer object-cover object-center hover:scale-150"
+                      className="w-full h-full object-cover object-center"
                     />
                   </div>
                 </div>

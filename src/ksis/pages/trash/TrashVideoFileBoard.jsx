@@ -168,10 +168,10 @@ const TrashVideoFileBoard = () => {
                   <img
                     src={post.thumbFilePath}
                     alt={post.fileTitle}
-                    className="w-60 h-60 cursor-pointer object-cover object-center hover:scale-150" 
+                    className="w-60 h-60 object-cover object-center" 
                   />
                   {/* 아이콘 추가 */}
-                  <FaRegPlayCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85" />
+                  <FaRegPlayCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl opacity-85" />
                 </div>
                 </div>
                 {/* 제목 */}
