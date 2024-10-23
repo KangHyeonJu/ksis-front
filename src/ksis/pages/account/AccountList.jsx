@@ -22,7 +22,7 @@ const AccountList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("accountId");
 
-  const postsPerPage = 8;
+  const postsPerPage = 10;
 
   const loadPage = async (page) => {
     try {
@@ -214,7 +214,7 @@ const AccountList = () => {
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
+        <Stack spacing={2} className="mt-10">
           <Pagination
             count={totalPages}
             page={currentPage}

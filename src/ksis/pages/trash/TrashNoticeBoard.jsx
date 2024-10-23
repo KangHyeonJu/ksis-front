@@ -26,7 +26,7 @@ const TrashNoticeBoard = () => {
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const postsPerPage = 20;
+  const postsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -218,7 +218,7 @@ const TrashNoticeBoard = () => {
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
+        <Stack spacing={2} className="mt-10">
           <Pagination
             count={totalPages}
             page={currentPage}

@@ -144,7 +144,7 @@ const SignageGrid = () => {
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
+        <Stack spacing={2} className="mt-10">
           <Pagination
             count={totalPages}
             page={currentPage}
