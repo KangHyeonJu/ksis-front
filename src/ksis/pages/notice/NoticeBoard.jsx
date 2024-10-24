@@ -6,6 +6,7 @@ import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
 import { NOTICE_ALL, DEACTIVE_NOTICE } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
+import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -20,8 +21,10 @@ const NoticeBoard = () => {
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const postsPerPage = 20;
+  const postsPerPage = 10;
   const navigate = useNavigate();
+
+  const authority = decodeJwt().roles;
 
   useEffect(() => {
     const fetchNotices = async () => {
@@ -49,7 +52,10 @@ const NoticeBoard = () => {
   }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
 
   const filteredNotices = useMemo(() => {
-    return notices
+    // notices가 undefined일 경우 빈 배열로 초기화
+    const validNotices = notices || [];
+
+    return validNotices
       .filter((notice) =>
         notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
       )
@@ -137,7 +143,7 @@ const NoticeBoard = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           공지글 관리
@@ -145,92 +151,104 @@ const NoticeBoard = () => {
       </header>
 
       {/* 검색바 입력창 */}
-      <div className="flex items-center relative flex-grow mb-4">
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="title">제목</option>
-          <option value="account">작성자</option>
+
+          {authority === "ROLE_ADMIN" ? (
+            <option value="account">작성자</option>
+          ) : null}
+
           <option value="regTime">등록일</option>
-          <option value="device">재생장치</option>
         </select>
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchTerm}
-            onChange={handleSearch} // 검색어 변경 핸들러
+            onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2  pr-10"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
       <div className="flex justify-end mb-4">
         <button
           onClick={handleRegisterClick}
-          className="relative inline-flex items-center mx-3 rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
         >
           공지글 등록
         </button>
         <button
           onClick={handleDectivation}
           type="button"
-          className="rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
         >
           비활성화
         </button>
       </div>
+
       <div>
         {filteredNotices.length === 0 ? (
           <p className="text-center text-gray-600 mt-10 w-full">
             공지글이 없습니다.
           </p>
         ) : (
-          <table className="w-full border-collapse border border-gray-200">
-            <thead>
+          <table className="w-full table-fixed border-collapse mt-4">
+            <thead className="border-t border-b border-double border-[#FF9C00]">
               <tr>
-                <th className="border border-gray-300 p-2">
+                <th className="w-1/12 p-2 text-center text-gray-800">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
                     checked={selectedNotices.length === filteredNotices.length}
                   />
                 </th>
-                <th className="border border-gray-300 p-2">제목</th>
-                <th className="border border-gray-300 p-2">작성자(아이디)</th>
-                <th className="border border-gray-300 p-2">작성일</th>
-                <th className="border border-gray-300 p-2">재생장치</th>
+                <th className="w-5/12 p-2 text-gray-800 text-center">제목</th>
+                <th className="w-2/12 p-2 text-gray-800 text-center">
+                  작성자(아이디)
+                </th>
+                <th className="w-2/12 p-2 text-gray-800 text-center">작성일</th>
+                <th className="w-2/12 p-2 text-gray-800 text-center">
+                  재생장치
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredNotices.map((notice) => (
                 <tr
                   key={notice.noticeId}
-                  className={`${notice.role === "ADMIN" ? " font-bold" : ""}`}
+                  className={`${
+                    notice.role === "ADMIN" ? "font-bold bg-gray-50" : ""
+                  } border-b border-gray-300`}
                 >
-                  <td className="text-center border border-gray-300 p-2">
+                  <td className="text-center p-2 border-b border-gray-300">
                     <input
                       type="checkbox"
                       checked={selectedNotices.includes(notice.noticeId)}
                       onChange={() => handleCheckboxChange(notice.noticeId)}
                     />
                   </td>
-                  <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
+                  <td className="p-2 text-gray-800 text-left hover:underline hover:text-[#FF9C00] border-b border-gray-300">
                     {notice.role === "ADMIN" ? "📢 " : ""}
                     <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
                       {notice.title}
                     </Link>
                   </td>
-                  <td className="border border-gray-300 p-2">
-                    {notice.name}({notice.accountId})
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
+                    {notice.name} ({notice.accountId})
                   </td>
-                  <td className="border border-gray-300 p-2">
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                     {formatDate(notice.regDate)}
                   </td>
-                  <td className="border border-gray-300 p-2">
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                     {getDeviceNames(notice.deviceList)}
                   </td>
                 </tr>
@@ -241,14 +259,16 @@ const NoticeBoard = () => {
       </div>
 
       {/* 페이지네이션 */}
-      <Stack spacing={2} className="my-6">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-        />
-      </Stack>
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-10">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

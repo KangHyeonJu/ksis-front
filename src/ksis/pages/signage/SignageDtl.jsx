@@ -21,10 +21,14 @@ import { decodeJwt } from "../../../decodeJwt";
 import { BsPlusSquare } from "react-icons/bs";
 import { FaRegCopy } from "react-icons/fa";
 import { FaRegMap } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa";
 
 const SignageDtl = () => {
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [isCopied, setIsCopied] = useState(false);
 
   const [enabled, setEnabled] = useState(false);
   const [radiobox, setRadiobox] = useState(null);
@@ -236,16 +240,17 @@ const SignageDtl = () => {
   };
 
   const copyKey = () => {
-    var key = document.getElementById("deviceKey").innerText;
+    var key =
+      API_BASE_URL +
+      "/signageplay?key=" +
+      document.getElementById("deviceKey").innerText;
 
-    navigator.clipboard
-      .writeText(key)
-      .then(() => {
-        alert("복사되었습니다.");
-      })
-      .catch(() => {
-        alert("복사에 실패했습니다.");
-      });
+    navigator.clipboard.writeText(key).then(() => {
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1000);
+    });
   };
 
   if (loading) {
@@ -398,7 +403,11 @@ const SignageDtl = () => {
                   className="inline-flex items-center text-gray-500 cursor-pointer"
                   onClick={copyKey}
                 >
-                  <FaRegCopy className="hover:text-[#FF9C00]" />
+                  {isCopied ? (
+                    <FaCheck className="text-[#FF9C00]" />
+                  ) : (
+                    <FaRegCopy className="hover:text-[#FF9C00]" />
+                  )}
                 </div>
               </div>
             </div>
@@ -501,8 +510,9 @@ const SignageDtl = () => {
             <div className="h-8 flex justify-end">
               <button
                 type="button"
-                className="inline-flex items-center h-8 rounded-sm bg-orange-200 text-black px-3 py-2 text-sm font-semibold hover:bg-orange-300"
                 onClick={openPlay}
+                className="inline-flex items-center rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
               >
                 미리보기
               </button>
@@ -520,7 +530,7 @@ const SignageDtl = () => {
             </div>
 
             <div className="overflow-y-auto h-145 my-3">
-              <div className="grid gap-x-3 gap-y-3 md:grid-cols-3">
+              <div className="grid gap-x-3 gap-y-3 md:grid-cols-3 grid-cols-2">
                 {playlistDtl.map((resource) => (
                   <div
                     key={resource.encodedResourceId}
@@ -553,9 +563,10 @@ const SignageDtl = () => {
             <div className="h-8 items-center flex justify-end mt-2">
               <button
                 type="button"
-                className="h-8 relative inline-flex items-center rounded-sm bg-gray-200 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-gray-300"
                 onClick={openPlaylist}
-              >
+                className="inline-flex items-center mr-2 h-8 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
+                hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
+                >
                 수정
               </button>
               <PlaylistUpdateModal
@@ -566,9 +577,10 @@ const SignageDtl = () => {
               />
               <button
                 type="button"
-                className="h-8 ml-2 relative inline-flex items-center rounded-sm bg-red-200 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-300"
                 onClick={() => deletePlaylist(playListId)}
-              >
+                className="inline-flex items-center h-8 rounded-md border border-[#444444] bg-white text-[#444444] px-3 py-2 text-sm font-semibold shadow-sm 
+                hover:bg-[#444444] hover:text-white hover:shadow-inner hover:shadow-[#444444] focus-visible:outline-[#444444] transition duration-200"
+                >
                 삭제
               </button>
             </div>

@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { Link } from "react-router-dom";
-import { NOTICE_DTL } from "../../../constants/page_constant";
+import { DEACTIVE_NOTICE_DTL } from "../../../constants/page_constant";
 import {
   NOTICE_DEACTIVE_ALL,
   ACTIVE_NOTICE,
@@ -26,7 +26,7 @@ const TrashNoticeBoard = () => {
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const postsPerPage = 20;
+  const postsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const TrashNoticeBoard = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           비활성화 공지글 관리
@@ -135,11 +135,11 @@ const TrashNoticeBoard = () => {
       </header>
 
       {/* 검색바 입력창 */}
-      <div className="flex items-center relative flex-grow mb-4">
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 mr-2 rounded-md bg-[#f39704] text-white"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="title">제목</option>
           <option value="account">작성자</option>
@@ -151,18 +151,17 @@ const TrashNoticeBoard = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2  pr-10"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
       <div className="flex justify-end space-x-2 mb-4">
         <button
           onClick={handleActivation}
           type="button"
-          className="mr-2 rounded-md bg-[#6dd7e5]
-                                        px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 
-                                         focus-visible:outline-blue-600"
+          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
         >
           활성화
         </button>
@@ -174,40 +173,40 @@ const TrashNoticeBoard = () => {
             공지글이 없습니다.
           </p>
         ) : (
-          <table className="w-full border-collapse border border-gray-200">
-            <thead>
+          <table className="w-full table-fixed border-collapse mt-4">
+            <thead className="border-t border-b border-double border-[#FF9C00]">
               <tr>
-                <th className="border border-gray-300 p-2">
+                <th className="w-1/12 p-2 text-center text-gray-800">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
                     checked={selectedNotices.length === filteredNotices.length}
                   />
                 </th>
-                <th className="border border-gray-300 p-2">제목</th>
-                <th className="border border-gray-300 p-2">작성자(아이디)</th>
-                <th className="border border-gray-300 p-2">작성일</th>
+                <th className="w-4/12 p-2">제목</th>
+                <th className="w-3/12 p-2">작성자(아이디)</th>
+                <th className="w-3/12 p-2">작성일</th>
               </tr>
             </thead>
             <tbody>
               {notices.map((notice) => (
                 <tr key={notice.noticeId}>
-                  <td className="text-center border border-gray-300 p-2">
+                  <td className="text-center p-2 border-b border-gray-300">
                     <input
                       type="checkbox"
                       checked={selectedNotices.includes(notice.noticeId)}
                       onChange={() => handleCheckboxChange(notice.noticeId)}
                     />
                   </td>
-                  <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
-                    <Link to={`${NOTICE_DTL}/${notice.noticeId}`}>
+                  <td className="p-2 text-gray-800 text-left hover:underline hover:text-[#FF9C00] border-b border-gray-300">
+                    <Link to={`${DEACTIVE_NOTICE_DTL}/${notice.noticeId}`}>
                       {notice.title}
                     </Link>
                   </td>
-                  <td className="border border-gray-300 p-2">
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                     {notice.name}({notice.accountId})
                   </td>
-                  <td className="border border-gray-300 p-2">
+                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                     {formatDate(notice.regDate)}
                   </td>
                 </tr>
@@ -216,15 +215,18 @@ const TrashNoticeBoard = () => {
           </table>
         )}
       </div>
+
       {/* 페이지네이션 */}
-      <Stack spacing={2} className="mt-2">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-10">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

@@ -159,7 +159,7 @@ const AccountEditForm = () => {
   }
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       <Alert
         open={isAlertOpen}
         onClose={() => {
@@ -176,11 +176,6 @@ const AccountEditForm = () => {
         <AlertTitle>알림창</AlertTitle>
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
-          {alertMessage !== "계정 정보가 성공적으로 업데이트되었습니다." && (
-            <Button plain onClick={() => setIsAlertOpen(false)}>
-              취소
-            </Button>
-          )}
           {confirmAction && (
             <Button
               onClick={() => {
@@ -191,10 +186,15 @@ const AccountEditForm = () => {
               확인
             </Button>
           )}
+          {alertMessage !== "계정 정보가 성공적으로 업데이트되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
         </AlertActions>
       </Alert>
 
-      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg scale-125">
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           계정 수정
         </h1>
@@ -412,10 +412,13 @@ const AccountEditForm = () => {
 
           <br />
 
-          <div className="mt-4 flex gap-8 justify-center">
-            <Button type="submit" color="blue" className="scale-110">
+          <div className="mt-10 flex gap-4 justify-center">
+            <button type="submit" 
+            className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+           >
               저장
-            </Button>
+            </button>
             <div>
               <Link
                 to={
@@ -424,9 +427,12 @@ const AccountEditForm = () => {
                     : MAIN
                 }
               >
-                <Button type="button" color="red" className="scale-110">
+                <button type="button" 
+                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+        >
                   취소
-                </Button>
+                </button>
               </Link>
             </div>
           </div>

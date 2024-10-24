@@ -28,6 +28,7 @@ import {
   TRASH_IMAGE_FILE,
   TRASH_VIDEO_FILE,
   TRASH_NOTICE,
+  DEACTIVE_NOTICE_DTL,
 } from "./constants/page_constant";
 import {
   PC_DTL,
@@ -62,6 +63,7 @@ import FileSizeBoard from "./ksis/pages/fileSize/FileSizeBoard";
 import NoticeBoard from "./ksis/pages/notice/NoticeBoard";
 import NoticeForm from "./ksis/pages/notice/NoticeForm";
 import NoticeDtl from "./ksis/pages/notice/NoticeDtl.jsx";
+import TrashNoticeDtl from "./ksis/pages/trash/TrashNoticeDtl.jsx";
 import AccountRegForm from "./ksis/pages/account/AccountRegForm";
 import AccountList from "./ksis/pages/account/AccountList";
 import AccountEditForm from "./ksis/pages/account/AccountEditForm";
@@ -86,7 +88,8 @@ import SignagePlayKeyPage from "./ksis/pages/signage/SignagePlayKeyPage.jsx";
 import TrashImageFileBoard from "./ksis/pages/trash/TrashImageFileBoard.jsx";
 import TrashVideoFileBoard from "./ksis/pages/trash/TrashVideoFileBoard.jsx";
 import TrashNoticeBoard from "./ksis/pages/trash/TrashNoticeBoard.jsx";
-
+import { EventSourcePolyfill } from "event-source-polyfill";
+import { decodeJwt } from "./decodeJwt";
 
 function App() {
   const location = useLocation();
@@ -98,7 +101,8 @@ function App() {
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
-  const computedMarginClass = location.pathname === "/downloadApp" ? "" : marginClass;
+  const computedMarginClass =
+    location.pathname === "/downloadApp" ? "" : marginClass;
 
   const handleResize = () => {
     setWindowWidth(window.innerWidth);
@@ -247,6 +251,7 @@ function App() {
             <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard />} />
             <Route path={TRASH_VIDEO_FILE} element={<TrashVideoFileBoard />} />
             <Route path={TRASH_NOTICE} element={<TrashNoticeBoard />} />
+            <Route path={DEACTIVE_NOTICE_DTL+ "/:noticeId"} element={<TrashNoticeDtl />} />
           </Route>
 
           {/* 재생 */}

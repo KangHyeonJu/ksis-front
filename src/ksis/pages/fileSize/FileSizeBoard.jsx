@@ -37,7 +37,7 @@ const FileSizeBoard = () => {
     // 관리자 권한 체크
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자 계정만 접근 가능합니다.");
-      
+
       navigate(MAIN); // MAIN으로 이동
       return;
     }
@@ -49,12 +49,12 @@ const FileSizeBoard = () => {
   const handleSave = async () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
 
-     // 사용자 확인 창 추가
-  const confirmMessage = "설정을 저장하시겠습니까?";
-  const isConfirmed = window.confirm(confirmMessage);
+    // 사용자 확인 창 추가
+    const confirmMessage = "설정을 저장하시겠습니까?";
+    const isConfirmed = window.confirm(confirmMessage);
 
-  if (!isConfirmed) {
-    return; // 사용자가 취소한 경우 함수 종료
+    if (!isConfirmed) {
+      return; // 사용자가 취소한 경우 함수 종료
     }
 
     try {
@@ -76,20 +76,20 @@ const FileSizeBoard = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           최대 용량 설정
         </h1>
       </header>
-      <table className="w-full border-collapse border border-gray-900">
+      <table className="w-full border-collapse bg-white shadow-lg">
         <tbody>
           <tr>
-            <th className="border border-gray-300 p-2 text-gray-500 text-left bg-[#ffc97e]">
+            <th className="border-t border-b border-gray-300 p-2 text-gray-800 mx-auto bg-gray-100">
               이미지 제한 크기
             </th>
-            <td className="border border-gray-300 p-2 items-center">
-              <div>
+            <td className="border-t border-b border-gray-300 p-2">
+              <div className="flex items-center">
                 <input
                   type="number"
                   className="border border-gray-300 p-1 rounded-md w-20 text-right"
@@ -97,37 +97,40 @@ const FileSizeBoard = () => {
                   onChange={(e) => setImageMaxSize(e.target.value)}
                   min="0"
                 />
-                <span className="ml-2">MB</span>
+                <span className="ml-2 text-gray-800">MB</span>
               </div>
-              <p className="text-gray-500">
+              <p className="text-gray-600">
                 하나의 이미지에 대해 최대 용량을 지정할 수 있습니다.
               </p>
             </td>
           </tr>
           <tr>
-            <th className="border border-gray-300 p-2 text-gray-500 text-left background bg-[#ffc97e]">
+            <th className="border-b border-gray-300 p-2 text-gray-800 mx-auto bg-gray-100">
               영상 제한 크기
             </th>
-            <td className="border border-gray-300 p-2 items-center bg-[#ffe8cc]">
-              <input
-                type="number"
-                className="border border-gray-300 p-1 rounded-md w-20 text-right"
-                value={videoMaxSize}
-                onChange={(e) => setVideoMaxSize(e.target.value)}
-                min="0"
-              />
-              <span className="ml-2">MB</span>
-              <p className="text-gray-500">
+            <td className="border-b border-gray-300 p-2 bg-gray-50">
+              <div className="flex items-center">
+                <input
+                  type="number"
+                  className="border border-gray-300 p-1 rounded-md w-20 text-right"
+                  value={videoMaxSize}
+                  onChange={(e) => setVideoMaxSize(e.target.value)}
+                  min="0"
+                />
+                <span className="ml-2 text-gray-800">MB</span>
+              </div>
+              <p className="text-gray-600">
                 하나의 영상에 대해 최대 용량을 지정할 수 있습니다.
               </p>
             </td>
           </tr>
         </tbody>
       </table>
-      <div className="flex justify-end">
-        <button 
+      <div className="flex justify-end mt-6">
+        <button
           onClick={handleSave}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
         >
           저장
         </button>

@@ -27,6 +27,10 @@ module.exports = {
       animation: {
         flow: "flow 20s linear infinite",
       },
+      zIndex: {
+        100: "100",
+        200: "200",
+      },
     },
   },
   plugins: [],

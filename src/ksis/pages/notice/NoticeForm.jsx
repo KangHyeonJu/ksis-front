@@ -121,16 +121,6 @@ const NoticeForm = () => {
       return;
     }
 
-     // 사용자 확인 창 추가
-  const confirmMessage = isEditing
-          ? "정말 수정하시겠습니까?"
-          : "정말 저장하시겠습니까?";
-  const isConfirmed = window.confirm(confirmMessage);
-
-if (!isConfirmed) {
-  return; // 사용자가 취소한 경우 함수 종료
-}
-
     try {
       const noticeData = {
         accountId,
@@ -194,7 +184,7 @@ if (!isConfirmed) {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       {/* Alert 컴포넌트 추가 */}
       <Alert
         open={isAlertOpen}
@@ -342,12 +332,21 @@ if (!isConfirmed) {
               </>
             )}
             <div className="flex justify-center space-x-4">
-              <Button type="submit" color="blue">
+              <button 
+              type="submit" 
+              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+             >
                 저장
-              </Button>
-              <Button type="button" color="red" onClick={handleCancel}>
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+              >
                 취소
-              </Button>
+              </button>
             </div>
           </div>
         </form>

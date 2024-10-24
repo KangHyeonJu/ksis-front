@@ -9,6 +9,7 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { ButtonGroup } from "@mui/material";
 
 const PcList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -104,16 +105,16 @@ const PcList = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         일반 PC 관리
       </h1>
 
-      <div className="mb-4 flex items-center">
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 border border-gray-300 rounded-md"
+          className="p-2 bg-white text-gray-600 font-bold"
         >
           <option value="deviceName">PC명</option>
 
@@ -127,10 +128,10 @@ const PcList = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md"
+            className="w-full p-2  pr-10"
           />
-          <FaSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
         </div>
+        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
       {userInfo.roles === "ROLE_ADMIN" ? (
@@ -138,7 +139,8 @@ const PcList = () => {
           <Link to={PC_FORM}>
             <button
               type="button"
-              className="relative inline-flex items-center rounded-md bg-[#ffcf8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
             >
               일반 PC 등록
             </button>
@@ -146,17 +148,18 @@ const PcList = () => {
           <button
             onClick={deletePc}
             type="button"
-            className="relative inline-flex items-center rounded-md bg-[#f48f8f] px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
           >
             삭제
           </button>
         </div>
       ) : null}
 
-      <table className="min-w-full divide-y divide-gray-300 border-collapse border border-gray-300 mb-4">
-        <thead>
+      <table className="w-full table-fixed border-collapse mt-4">
+        <thead className="border-t border-b border-double border-[#FF9C00]">
           <tr>
-            <th className="border border-gray-300">
+            <th className="w-1/12 p-2 text-center text-gray-800">
               <input
                 type="checkbox"
                 onChange={(e) => {
@@ -169,15 +172,17 @@ const PcList = () => {
                 }}
               />
             </th>
-            <th className="border border-gray-300">PC명</th>
-            <th className="border border-gray-300">담당자(아이디)</th>
-            <th className="border border-gray-300">등록일</th>
+            <th className="w-3/12 p-2 text-gray-800 text-center">PC명</th>
+            <th className="w-3/12 p-2 text-gray-800 text-center">
+              담당자(아이디)
+            </th>
+            <th className="w-3/12 p-2 text-gray-800 text-center">등록일</th>
           </tr>
         </thead>
         <tbody>
           {posts.map((post) => (
-            <tr key={post.deviceId} className="hover:bg-gray-100">
-              <td className="border border-gray-300 p-2 text-center">
+            <tr key={post.deviceId}>
+              <td className="text-center p-2 border-b border-gray-300">
                 <input
                   type="checkbox"
                   checked={selectedPosts.has(post.deviceId)}
@@ -185,18 +190,18 @@ const PcList = () => {
                 />
               </td>
 
-              <td className="border border-gray-300 p-2 text-blue-600 font-semibold hover:underline">
+              <td className="p-2 text-center text-gray-800 text-left hover:underline hover:text-[#FF9C00] border-b border-gray-300">
                 <Link to={PC_UPDATE_FORM + `/${post.deviceId}`}>
                   {post.deviceName}
                 </Link>
               </td>
 
-              <td className="border border-gray-300 p-2">
+              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                 {post.accountList
                   .map((account) => `${account.name}(${account.accountId})`)
                   .join(", ")}
               </td>
-              <td className="border border-gray-300 p-2">
+              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
                 {format(post.regDate, "yyyy-MM-dd")}
               </td>
             </tr>
@@ -204,14 +209,17 @@ const PcList = () => {
         </tbody>
       </table>
 
-      <Stack spacing={2}>
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          color={"primary"}
-        />
-      </Stack>
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-10">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

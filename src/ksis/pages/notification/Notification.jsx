@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ReactDOM from "react-dom";
 import {
   NOTIFICATION_PAGE,
   NOTIFICATION_ISREAD,
@@ -90,7 +91,7 @@ const Notification = ({ onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20"
       onClick={onClose} // 모달 바깥 클릭 시 모달 닫기
     >
       <div

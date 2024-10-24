@@ -403,13 +403,13 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="flex flex-row-reverse">
                 <button
                   onClick={onCloseHandler}
-                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-300 hover:text-[#444444]"
+                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
                 >
                   취소
                 </button>
                 <button
                   onClick={addPlayList}
-                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-300 hover:text-[#444444]"
+                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
                 >
                   등록
                 </button>

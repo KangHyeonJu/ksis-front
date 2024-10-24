@@ -169,7 +169,7 @@ const Sidebar = ({ onToggleSidebar }) => {
   if (isSidebarOpen) {
     return (
       <div
-        className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col"
+        className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col z-10"
         onClick={(e) => {
           if (e.target === e.currentTarget && windowWidth > 1024) {
             // 사이드바의 빈 공간을 클릭했을 때만 작동
@@ -181,7 +181,6 @@ const Sidebar = ({ onToggleSidebar }) => {
         {isNotificationOpen && (
           <Notification onClose={() => setNotificationOpen(false)} />
         )}
-
         <div>
           <div className="logo mb-8">
             <Link
@@ -189,14 +188,14 @@ const Sidebar = ({ onToggleSidebar }) => {
               className="text-2xl font-semibold"
               onClick={() => handleMenuClick("MAIN")}
             >
-              <img src={ksisLogo} alt="KSIS Logo" className="w-32" />
+              <img src={ksisLogo} alt="KSIS Logo" className="w-28" />
             </Link>
           </div>
           <div className="mb-4">
-            <a className="flex items-center px-2 font-semibold text-black text-lg">
+            <div className="flex items-center px-2 font-semibold text-black text-lg">
               <CiFaceSmile className="mr-2" size="24" />
               <span>{userInfo.accountId}</span>
-            </a>
+            </div>
           </div>
           <div className="flex space-x-0.2 mb-4">
             <Link
@@ -207,20 +206,20 @@ const Sidebar = ({ onToggleSidebar }) => {
               <BiUser className="mr-1" />
               정보
             </Link>
-            <a
-              className="relative flex items-center p-2 hover:bg-gray-200 rounded w-24 whitespace-nowrap"
+            <div
+              className="relative flex items-center p-2 hover:bg-gray-200 rounded w-24 whitespace-nowrap cursor-pointer"
               onClick={() => setNotificationOpen(true)} // 알림 버튼 클릭 시 모달 열기
             >
               <NotificationCountComponent />
               <span>알림</span>
-            </a>
-            <a
-              className="relative flex items-center p-2 hover:bg-gray-200 rounded w-24 whitespace-nowrap"
+            </div>
+            <div
+              className="relative flex items-center p-2 hover:bg-gray-200rounded w-24 whitespace-nowrap cursor-pointer"
               onClick={handleOpenApp}
             >
               <BiWindowAlt className="mr-1" />
               App
-            </a>
+            </div>
           </div>
           <hr className="border-black border-1 border-dashed" />
           <div className="menu--list">
@@ -649,9 +648,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   to={PC_INVENTORY}
                   onClick={() => handleMenuClick("PC")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
-                    selectedMenu === "PC"
-                      ? "bg-gray-200"
-                      : "hover:bg-gray-200"
+                    selectedMenu === "PC" ? "bg-gray-200" : "hover:bg-gray-200"
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />

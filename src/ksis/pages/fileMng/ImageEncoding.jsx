@@ -143,13 +143,13 @@ const ImageEncoding = () => {
   }
 
   return (
-    <div className="flex justify-center items-center p-6">
-      <div className="bg-[#ffe69c] p-6 rounded-lg relative max-w-4xl w-full h-auto max-h-[80vh]">
-        <h1 className="mx-auto text-center rounded-lg text-xl font-bold mb-4 bg-white p-2">
+    <div className="grid place-items-center min-h-[80vh]">
+      <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg max-w-4xl w-full">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           {image.fileTitle || "파일 제목"}
         </h1>
 
-        <div className="overflow-hidden flex items-center justify-center bg-gray-100 p-10 rounded-lg mb-3">
+        <div className="overflow-hidden flex items-center justify-center bg-white p-10 rounded-lg mb-3">
           <div className="w-full h-full flex items-center justify-center">
             <img
               src={image.filePath}
@@ -220,17 +220,19 @@ const ImageEncoding = () => {
           </div>
         </div>
 
-        <div className="items-center text-center row mx-auto p-2">
+        <div className="items-center text-center row mx-auto mt-4">
           <button
             onClick={handleEncoding}
-            className="mr-2 rounded-md bg-[#6dd7e5] p-3 text-sm font-semibold text-black shadow-sm hover:bg-sky-400 focus-visible:outline-blue-600"
+            className="mr-4 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+           hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
           >
             인코딩
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="rounded-md bg-[#f48f8f] p-3 text-sm font-semibold text-black shadow-sm hover:bg-red-400 focus-visible:outline-red-600"
+            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
           >
             취소
           </button>
