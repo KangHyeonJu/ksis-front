@@ -34,14 +34,12 @@ const TrashNoticeDtl = () => {
         setNotice(response.data);
         if (
           userInfo.roles !== "ROLE_ADMIN" &&
-          !response.data.accountList.some(
-            (i) => i.accountId === userInfo.accountId
-          )
+          response.data.accountId !== userInfo.accountId &&
+          response.data.role !== "ADMIN"
         ) {
           alert("접근권한이 없습니다.");
           navigate(TRASH_NOTICE);
         }
-        
       } catch (err) {
         setError("공지사항 정보를 가져오는 데 실패했습니다.");
       } finally {
@@ -76,7 +74,7 @@ const TrashNoticeDtl = () => {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="grid place-items-center min-h-[80vh]">
       <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg w-1/2 min-w-96">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           공지사항 상세
@@ -90,41 +88,39 @@ const TrashNoticeDtl = () => {
             {/* 내용 */}
             <Textarea id="content" value={notice.content} readOnly rows="15" />
 
-         
-                {/* 날짜 */}
-                <div className="rounded-lg p-2 shadow-sm bg-white">
-                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
-                    <div className="flex flex-col">
-                      <label
-                        htmlFor="startDate"
-                        className="block text-sm font-semibold leading-6 text-gray-900"
-                      >
-                        노출 시작일
-                      </label>
-                      <Input
-                        id="startDate"
-                        type="date"
-                        value={formatDate(notice.startDate)}
-                        readOnly
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <label
-                        htmlFor="endDate"
-                        className="block text-sm font-semibold leading-6 text-gray-900"
-                      >
-                        노출 종료일
-                      </label>
-                      <Input
-                        id="endDate"
-                        type="date"
-                        value={formatDate(notice.endDate)}
-                        readOnly
-                      />
-                    </div>
-                  </div>
+            {/* 날짜 */}
+            <div className="rounded-lg p-2 shadow-sm bg-white">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="startDate"
+                    className="block text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    노출 시작일
+                  </label>
+                  <Input
+                    id="startDate"
+                    type="date"
+                    value={formatDate(notice.startDate)}
+                    readOnly
+                  />
                 </div>
-             
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="endDate"
+                    className="block text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    노출 종료일
+                  </label>
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={formatDate(notice.endDate)}
+                    readOnly
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* 버튼들 */}
             <div className="flex justify-center space-x-4">

@@ -40,16 +40,15 @@ const NoticeDetail = () => {
       try {
         const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
         setNotice(response.data);
+
         if (
           userInfo.roles !== "ROLE_ADMIN" &&
-          !response.data.accountList.some(
-            (i) => i.accountId === userInfo.accountId
-          )
+          response.data.accountId !== userInfo.accountId &&
+          response.data.role !== "ADMIN"
         ) {
           alert("접근권한이 없습니다.");
           navigate(NOTICE_BOARD);
         }
-        
       } catch (err) {
         setError("공지사항 정보를 가져오는 데 실패했습니다.");
       } finally {
@@ -199,13 +198,12 @@ const NoticeDetail = () => {
             {/* 버튼들 */}
             <div className="flex justify-center space-x-4">
               {/* notice 작성자가 admin인 경우 숨기기 */}
-              {(notice.role === "ADMIN" && role === "ROLE_USER") ||
-              (notice.role === "USER" && role === "ROLE_ADMIN") ? null : (
+              {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
                 <>
                   <button
                     type="button"
                     color="blue"
-                     className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                    className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
                     onClick={handleEdit}
                   >
@@ -214,7 +212,7 @@ const NoticeDetail = () => {
                   <button
                     type="button"
                     color="red"
-                     className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                    className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
                     onClick={handleDeActive}
                   >
