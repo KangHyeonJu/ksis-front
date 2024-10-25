@@ -4,6 +4,7 @@ import { FILE_SIZE } from "../../../constants/api_constant";
 import { MAIN } from "../../../constants/page_constant";
 import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
+import Loading from "../../components/Loading";
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
@@ -72,7 +73,7 @@ const FileSizeBoard = () => {
   };
 
   if (loading) {
-    return <div>데이터를 불러오는 중입니다...</div>;
+    return <Loading />;
   }
 
   return (

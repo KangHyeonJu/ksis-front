@@ -14,8 +14,11 @@ import {
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const TrashVideoFileBoard = () => {
+  const [loading, setLoading] = useState(true);
+
   // 페이지네이션 관련 상태
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("fileTitle");
@@ -43,6 +46,8 @@ const TrashVideoFileBoard = () => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching videos:", error);
@@ -88,6 +93,10 @@ const TrashVideoFileBoard = () => {
       return "Invalid date";
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">

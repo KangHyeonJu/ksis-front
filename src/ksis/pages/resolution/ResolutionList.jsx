@@ -7,6 +7,7 @@ import ResolutionUpdateModal from "./ResolutionUpdateModal";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const ResolutionList = () => {
   const [resolutions, setResolutions] = useState([]);
@@ -16,6 +17,7 @@ const ResolutionList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [checkedRowId, setCheckedRowId] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
@@ -48,6 +50,8 @@ const ResolutionList = () => {
       if (response.data.content) {
         setResolutions(response.data.content);
         setTotalPages(response.data.totalPages);
+
+        setLoading(false);
       } else {
         console.error("No data property in response");
       }
@@ -120,6 +124,10 @@ const ResolutionList = () => {
     await loadPage();
     closeUpdateModal();
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">

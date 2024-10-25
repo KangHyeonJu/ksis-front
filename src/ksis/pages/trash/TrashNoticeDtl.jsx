@@ -14,6 +14,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import Loading from "../../components/Loading";
 
 const TrashNoticeDtl = () => {
   const userInfo = decodeJwt();
@@ -51,7 +52,7 @@ const TrashNoticeDtl = () => {
   }, [noticeId]);
 
   if (loading) {
-    return <p></p>;
+    return <Loading />;
   }
 
   if (error) {

@@ -14,6 +14,7 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const ActivityLogBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -110,7 +111,7 @@ const ActivityLogBoard = () => {
   };
 
   if (loading) {
-    return <div></div>;
+    return <Loading />;
   }
 
   return (

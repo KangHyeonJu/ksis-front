@@ -14,10 +14,12 @@ import { ToggleSwitch } from "../../css/switch";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const SignageGrid = () => {
   const userInfo = decodeJwt();
   const [signages, setSignages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [searchCategory, setSearchCategory] = useState("deviceName");
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,6 +42,8 @@ const SignageGrid = () => {
       if (response.data) {
         setSignages(response.data.content);
         setTotalPages(response.data.totalPages);
+
+        setLoading(false);
       } else {
         console.error("No data property in response");
       }
@@ -62,6 +66,10 @@ const SignageGrid = () => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="mx-auto max-w-screen-2xl p-6">

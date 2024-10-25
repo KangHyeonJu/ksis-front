@@ -15,6 +15,7 @@ import fetcher from "../../../fetcher";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const ImageFileBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +24,7 @@ const ImageFileBoard = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
@@ -47,6 +49,8 @@ const ImageFileBoard = () => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
         setFilteredPosts(response.data);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -135,6 +139,10 @@ const ImageFileBoard = () => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="p-6 max-w-screen-2xl mx-auto">

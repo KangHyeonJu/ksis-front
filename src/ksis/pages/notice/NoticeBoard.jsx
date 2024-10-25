@@ -10,6 +10,7 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const NoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -80,7 +81,7 @@ const NoticeBoard = () => {
   };
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <Loading />;
   }
 
   if (error) {

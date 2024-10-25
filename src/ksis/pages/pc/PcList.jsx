@@ -10,6 +10,7 @@ import { decodeJwt } from "../../../decodeJwt";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { ButtonGroup } from "@mui/material";
+import Loading from "../../components/Loading";
 
 const PcList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,6 +22,8 @@ const PcList = () => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 10; // 한 페이지 10개 데이터
+
+  const [loading, setLoading] = useState(true);
 
   const [posts, setPosts] = useState([]);
 
@@ -39,6 +42,8 @@ const PcList = () => {
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
+
+        setLoading(false);
       } else {
         console.error("No data property in response");
       }
@@ -103,6 +108,10 @@ const PcList = () => {
       console.log(error.response.data);
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">

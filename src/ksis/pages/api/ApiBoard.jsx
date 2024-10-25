@@ -9,6 +9,7 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const ApiBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -131,7 +132,7 @@ const ApiBoard = () => {
     posts.length > 0 && posts.every((post) => selectedPosts.has(post.apiId));
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <Loading />;
   }
 
   if (error) {
