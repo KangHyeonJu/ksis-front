@@ -5,6 +5,7 @@ import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
 } from "../../../constants/api_constant";
+import Loading from "../../components/Loading";
 
 const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
   const [resources, setResources] = useState([]);
@@ -14,6 +15,8 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
   const [date, setDate] = useState(() => new Date());
   const [weather, setWeather] = useState({});
 
+  const [loading, setLoading] = useState(true);
+
   const loadModal = useCallback(async () => {
     try {
       const [responseResource, responseNotice] = await Promise.all([
@@ -21,10 +24,9 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
         fetcher.get(SIGNAGE_PLAY_NOTICE + `/${signageId}`),
       ]);
       setResources(responseResource.data);
-      console.log(responseResource);
-
       setNotices(responseNotice.data);
-      console.log(responseNotice);
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -189,6 +191,10 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
       console.error(err);
     }
   };
+
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
   return (
     <Modal

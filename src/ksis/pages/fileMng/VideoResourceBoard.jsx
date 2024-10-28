@@ -19,11 +19,14 @@ import fetcher from "../../../fetcher";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
+import Loading from "../../components/Loading";
+
 const VideoResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("fileTitle");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const [isOriginal, setIsOriginal] = useState(true);
   const [videos, setVideos] = useState([]);
@@ -52,6 +55,8 @@ const VideoResourceBoard = () => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content); // 영상 데이터를 설정
         setFilteredPosts(response.data);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching video:", error);
@@ -173,6 +178,10 @@ const VideoResourceBoard = () => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="p-6 max-w-screen-2xl mx-auto">

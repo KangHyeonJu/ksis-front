@@ -11,6 +11,7 @@ import { MAIN } from "../../../constants/page_constant";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
@@ -104,7 +105,7 @@ const AccountList = () => {
   };
 
   if (loading) {
-    return <div>로딩 중...</div>;
+    return <Loading />;
   }
 
   return (

@@ -15,6 +15,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import Loading from "../../components/Loading";
 
 const initialFormData = {
   accountId: "",
@@ -38,6 +39,7 @@ const AccountRegForm = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
   const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
   const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+  const [loading, setLoading] = useState(true);
 
   // 알림창 메서드
   const showAlert = (message, onConfirm = null) => {
@@ -57,6 +59,8 @@ const AccountRegForm = () => {
     // 사용자 권한 확인
     if (userInfo && userInfo.roles.includes("ROLE_ADMIN")) {
       setHasPermission(true); // 권한이 있는 경우
+
+      setLoading(false);
     } else {
       alert("관리자만 접근 가능합니다.");
       navigate(MAIN);
@@ -128,6 +132,10 @@ const AccountRegForm = () => {
       }
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="grid place-items-center min-h-[80vh]">

@@ -16,6 +16,7 @@ import {
 } from "../../css/alert";
 import { Button } from "../../css/button"; // Button 컴포넌트 추가
 import { Field } from "../../css/fieldset";
+import Loading from "../../components/Loading";
 
 const AccountEditForm = () => {
   const { accountId } = useParams();
@@ -36,6 +37,7 @@ const AccountEditForm = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
   const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
   const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const userInfo = decodeJwt();
 
@@ -69,6 +71,8 @@ const AccountEditForm = () => {
             password: "",
             confirmPassword: "",
           });
+
+          setLoading(false);
         } else {
           console.error("계정 데이터를 가져오지 못했습니다.");
         }
@@ -156,6 +160,10 @@ const AccountEditForm = () => {
 
   if (!hasPermission) {
     return null; // 권한이 없으면 아무것도 보여주지 않음
+  }
+
+  if (loading) {
+    return <Loading />;
   }
 
   return (
@@ -413,10 +421,11 @@ const AccountEditForm = () => {
           <br />
 
           <div className="mt-10 flex gap-4 justify-center">
-            <button type="submit" 
-            className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+            <button
+              type="submit"
+              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
             hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-           >
+            >
               저장
             </button>
             <div>
@@ -427,10 +436,11 @@ const AccountEditForm = () => {
                     : MAIN
                 }
               >
-                <button type="button" 
-                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                <button
+                  type="button"
+                  className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-        >
+                >
                   취소
                 </button>
               </Link>

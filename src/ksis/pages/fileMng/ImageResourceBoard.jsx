@@ -17,6 +17,7 @@ import fetcher from "../../../fetcher";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const ImageResourceBoard = () => {
@@ -35,6 +36,8 @@ const ImageResourceBoard = () => {
   const navigate = useNavigate();
   const postsPerPage = 14;
 
+  const [loading, setLoading] = useState(true);
+
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); // 선택한 이미지의 정보를 관리하는 상태값 추가
 
@@ -52,6 +55,8 @@ const ImageResourceBoard = () => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
         setFilteredPosts(response.data);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -144,6 +149,10 @@ const ImageResourceBoard = () => {
     setResourceModalIsOpen(false);
     setSelectedImage(null); // 모달을 닫을 때 선택된 이미지를 초기화합니다.
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="p-6 max-w-screen-2xl mx-auto">

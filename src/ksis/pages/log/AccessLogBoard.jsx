@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const AccessLogBoard = () => {
   const [logList, setLogList] = useState([]); // 현재 페이지 데이터
@@ -109,7 +110,7 @@ const AccessLogBoard = () => {
   };
 
   if (loading) {
-    return <div></div>;
+    return <Loading />;
   }
 
   return (

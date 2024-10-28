@@ -14,6 +14,7 @@ import { ToggleSwitch } from "../../css/switch";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const SignageList = () => {
   const userInfo = decodeJwt();
@@ -22,6 +23,7 @@ const SignageList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [checkedRowId, setCheckedRowId] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
@@ -43,6 +45,8 @@ const SignageList = () => {
       if (response.data) {
         setSignages(response.data.content);
         setTotalPages(response.data.totalPages);
+
+        setLoading(false);
       } else {
         console.error("No data property in response");
       }
@@ -118,6 +122,10 @@ const SignageList = () => {
       console.log(error.response.data);
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="mx-auto max-w-screen-2xl p-6">
@@ -228,7 +236,6 @@ const SignageList = () => {
           ))}
         </tbody>
       </table>
-
       {/* 페이지네이션 */}
       {totalPages > 1 && (
         <Stack spacing={2} className="mt-10">

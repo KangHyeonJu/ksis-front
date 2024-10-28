@@ -14,6 +14,7 @@ import fetcher from "../../../fetcher";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const TrashImageFileBoard = () => {
@@ -24,6 +25,7 @@ const TrashImageFileBoard = () => {
 
   const [images, setImages] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const postsPerPage = 14;
   const navigate = useNavigate();
@@ -42,6 +44,8 @@ const TrashImageFileBoard = () => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
         setFilteredPosts(response.data);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -82,6 +86,10 @@ const TrashImageFileBoard = () => {
       return "Invalid date";
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">

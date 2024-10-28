@@ -22,6 +22,7 @@ import { BsPlusSquare } from "react-icons/bs";
 import { FaRegCopy } from "react-icons/fa";
 import { FaRegMap } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
+import Loading from "../../components/Loading";
 
 const SignageDtl = () => {
   const userInfo = decodeJwt();
@@ -254,7 +255,7 @@ const SignageDtl = () => {
   };
 
   if (loading) {
-    return <div></div>;
+    return <Loading />;
   }
 
   return (
@@ -566,7 +567,7 @@ const SignageDtl = () => {
                 onClick={openPlaylist}
                 className="inline-flex items-center mr-2 h-8 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
                 hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
-                >
+              >
                 수정
               </button>
               <PlaylistUpdateModal
@@ -580,7 +581,7 @@ const SignageDtl = () => {
                 onClick={() => deletePlaylist(playListId)}
                 className="inline-flex items-center h-8 rounded-md border border-[#444444] bg-white text-[#444444] px-3 py-2 text-sm font-semibold shadow-sm 
                 hover:bg-[#444444] hover:text-white hover:shadow-inner hover:shadow-[#444444] focus-visible:outline-[#444444] transition duration-200"
-                >
+              >
                 삭제
               </button>
             </div>

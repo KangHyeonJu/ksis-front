@@ -6,6 +6,7 @@ import {
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import "../../css/animation.css";
+import Loading from "../../components/Loading";
 
 const SignagePlayKeyPage = () => {
   const [searchParam, setSearchParam] = useSearchParams();
@@ -325,7 +326,7 @@ const SignagePlayKeyPage = () => {
   };
 
   if (loading) {
-    return <div></div>;
+    return <Loading />;
   }
 
   return (
