@@ -236,7 +236,6 @@ const SignageList = () => {
           ))}
         </tbody>
       </table>
-
       {/* 페이지네이션 */}
       {totalPages > 1 && (
         <Stack spacing={2} className="mt-10">

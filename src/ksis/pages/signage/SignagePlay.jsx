@@ -192,9 +192,9 @@ const SignagePlay = ({ isOpen, onRequestClose, signageId }) => {
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
   return (
     <Modal
