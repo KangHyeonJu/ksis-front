@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Link 컴포넌트 import
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Link 컴포넌트 import
 import { BiUser, BiCog, BiTrash, BiWindowAlt } from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
@@ -31,13 +31,13 @@ import NotificationCountComponent from "../pages/notification/NotificationCount"
 import { decodeJwt } from "../../decodeJwt";
 import {
   ACCESS_LOG,
-  ACCOUNT_LIST,
   ACCOUNT_LIST_BOARD,
   LOG_OUT,
 } from "../../constants/account_constant";
 
 const Sidebar = ({ onToggleSidebar }) => {
   const [openMenu, setOpenMenu] = useState(null);
+  const [overlayOpen, setOverlayOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
   const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
   const [selectedMenu, setSelectedMenu] = useState("");
@@ -48,7 +48,7 @@ const Sidebar = ({ onToggleSidebar }) => {
   const ws = useRef(null);
   const accessToken = localStorage.getItem("accessToken");
   const API_WS_URL = process.env.REACT_APP_API_WS_URL;
-
+  const location = useLocation();
   const MAX_RETRIES = 5;
   let retryCount = 0;
 
@@ -118,6 +118,53 @@ const Sidebar = ({ onToggleSidebar }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [windowWidth, isExpanded]);
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case MAIN:
+        setSelectedMenu("MAIN");
+        break;
+      case ACCOUNT_LIST_BOARD:
+        setSelectedMenu("ACCOUNT_LIST");
+        break;
+      case ACCESSLOG_INVENTORY:
+        setSelectedMenu("LOG");
+        break;
+      case IMAGE_RESOURCE_BOARD:
+        setSelectedMenu("ORIGINAL");
+        break;
+      case IMAGE_FILE_BOARD:
+        setSelectedMenu("ENCODED");
+        break;
+      case NOTICE_BOARD:
+        setSelectedMenu("NOTICE");
+        break;
+      case SIGNAGE_INVENTORY:
+        setSelectedMenu("SIGNAGE");
+        break;
+      case PC_INVENTORY:
+        setSelectedMenu("PC");
+        break;
+      case RESOLUTION_LIST:
+        setSelectedMenu("RESOLUTION");
+        break;
+      case API_BOARD:
+        setSelectedMenu("API");
+        break;
+      case FILESIZE_FORM:
+        setSelectedMenu("FILE_SIZE");
+        break;
+      case TRASH_IMAGE_FILE:
+        setSelectedMenu("TRASHFILE");
+        break;
+      case TRASH_NOTICE:
+        setSelectedMenu("TRASHNOTICE");
+        break;
+        // 필요한 경우 추가
+      default:
+        setSelectedMenu(null);
+    }
+  }, [location.pathname]);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
