@@ -13,9 +13,8 @@ import {
   FILE_ENCODED_BASIC,
 } from "../../../constants/api_constant";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const VideoFileBoard = () => {
   // 페이지네이션 관련 상태
@@ -309,26 +308,22 @@ const VideoFileBoard = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
 
       {/* 모달창 */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-          onClick={closeModal}
-        >
           <div
-            className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+              onClick={closeModal}
+          >
+            <div
+                className="relative mx-auto rounded-lg max-w-3xl w-full h-auto max-h-[80vh]"
             onClick={(event) => {
               event.stopPropagation();
             }}

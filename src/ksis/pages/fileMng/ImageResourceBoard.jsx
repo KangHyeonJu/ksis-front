@@ -15,9 +15,8 @@ import { format, parseISO } from "date-fns";
 import ImageResourceModal from "./ImageResourceModal";
 import fetcher from "../../../fetcher";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const ImageResourceBoard = () => {
@@ -311,24 +310,20 @@ const ImageResourceBoard = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
 
       {/* 모달 컴포넌트 호출 */}
       {selectedImage && (
-        <ImageResourceModal
-          isOpen={resourceModalIsOpen}
-          onRequestClose={closeResourceModal}
-          originalResourceId={selectedImage} // 선택한 이미지의 정보를 전달합니다.
+          <ImageResourceModal
+              isOpen={resourceModalIsOpen}
+              onRequestClose={closeResourceModal}
+              originalResourceId={selectedImage} // 선택한 이미지의 정보를 전달합니다.
         />
       )}
     </div>

@@ -7,10 +7,8 @@ import { Link } from "react-router-dom";
 import { PC_UPDATE_FORM, PC_FORM } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import { ButtonGroup } from "@mui/material";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const PcList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -226,18 +224,13 @@ const PcList = () => {
         </div>
       ) : null}
 
-      {/* 페이지네이션 */}
-      {totalPages > 0 && (
-        <Stack spacing={2} className="mt-10 items-center">
-          <Pagination
-            shape="rounded"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={""}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

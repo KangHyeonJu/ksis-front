@@ -11,10 +11,8 @@ import {
 } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 import { ToggleSwitch } from "../../css/switch";
-
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const SignageList = () => {
   const userInfo = decodeJwt();
@@ -236,17 +234,13 @@ const SignageList = () => {
           ))}
         </tbody>
       </table>
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

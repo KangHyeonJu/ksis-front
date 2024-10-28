@@ -10,9 +10,8 @@ import {
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -217,17 +216,13 @@ const TrashNoticeBoard = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

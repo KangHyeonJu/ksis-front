@@ -1,13 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import fetcher from "../../../fetcher";
 import { RESOLUTION } from "../../../constants/api_constant";
 import { FaSearch } from "react-icons/fa";
 import ResolutionAddModal from "./ResolutionAddModal";
 import ResolutionUpdateModal from "./ResolutionUpdateModal";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const ResolutionList = () => {
   const [resolutions, setResolutions] = useState([]);
@@ -244,17 +243,13 @@ const ResolutionList = () => {
         />
       )}
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

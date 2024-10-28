@@ -9,9 +9,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
 
-import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponent from "../../components/ButtonComponent";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
@@ -27,11 +28,15 @@ const AccountList = () => {
 
   const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(
-        `${ACCOUNT_LIST}?page=${
-          page - 1
-        }&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`
-      );
+      const response = await fetcher.get(ACCOUNT_LIST, {
+        params: {
+          page: page - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
+      });
+
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -151,15 +156,9 @@ const AccountList = () => {
       </div>
 
       <div className="flex justify-end space-x-2 mb-4">
-        <Link to={ACCOUNT_FORM}>
-          <button
-            type="button"
-            className="rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] py-1 px-2 text-sm font-semibold shadow-sm 
-            hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
-          >
-            계정 등록
-          </button>
-        </Link>
+        <ButtonComponent to={ACCOUNT_FORM} defaultColor="[#FF9C00]" shadowColor="[#FF9C00]">
+          계정 등록
+        </ButtonComponent>
       </div>
 
       <table className="min-w-full mt-4 table-fixed">
@@ -188,42 +187,34 @@ const AccountList = () => {
                 {post.isActive ? "O" : "X"}
               </td>
               <td className="text-center p-2 border-b border-gray-300 flex justify-center">
-                <Link
-                  to={`/account/${post.accountId}`}
-                  className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 py-1 px-2 text-sm font-semibold shadow-sm 
-            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+                <ButtonComponent
+                    to={`/account/${post.accountId}`}
+                    defaultColor="blue-600"
+                    shadowColor="blue-800"
                 >
                   수정
-                </Link>
-                <button
-                  className={`mr-2 w-24 ${
-                    post.isActive
-                      ? "text-green-600 border-green-600  hover:bg-green-600 hover:text-white  hover:shadow-green-800 focus-visible:outline-green-600 "
-                      : "text-red-600 border-red-600 hover:bg-red-600 hover:text-white hover:shadow-red-800 focus-visible:outline-red-600"
-                  }  font-bold py-1 px-2 rounded-md border text-sm shadow-sm hover:shadow-inner transition duration-200`}
-                  onClick={() =>
-                    handleToggleActive(post.accountId, post.isActive)
-                  }
+                </ButtonComponent>
+
+                <ButtonComponent
+                    onClick={() => handleToggleActive(post.accountId, post.isActive)}
+                    defaultColor={post.isActive ? "green-600" : "red-600"}
+                    hoverColor={post.isActive ? "green-800" : "red-800"}
                 >
                   {post.isActive ? "활성화" : "비활성화"}
-                </button>
+                </ButtonComponent>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
           />
-        </Stack>
-      )}
+      </div>
     </div>
   );
 };

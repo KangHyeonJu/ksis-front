@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { ACTIVITYLOG_LIST } from "../../../constants/api_constant";
 import { FaSearch } from "react-icons/fa";
@@ -12,9 +12,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const ActivityLogBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -115,84 +114,80 @@ const ActivityLogBoard = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-        활동 로그
-      </h1>
+      <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+          활동 로그
+        </h1>
 
-      <div className="mb-4 flex items-center border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 text-gray-600 font-bold"
-        >
-          <option value="account">아이디</option>
-          <option value="detail">내용</option>
-        </select>
-        <div className="flex items-center space-x-2 mx-2">
-          <input type="date" onChange={handleStartTime} className="p-2" />
-          <spna>~</spna>
-          <input type="date" onChange={handleEndTime} className="p-2" />
+        <div className="mb-4 flex items-center border border-[#FF9C00]">
+          <select
+              value={searchCategory}
+              onChange={(e) => setSearchCategory(e.target.value)}
+              className="mr-1 p-2 text-gray-600 font-bold"
+          >
+            <option value="account">아이디</option>
+            <option value="detail">내용</option>
+          </select>
+          <div className="flex items-center space-x-2 mx-2">
+            <input type="date" onChange={handleStartTime} className="p-2"/>
+            <spna>~</spna>
+            <input type="date" onChange={handleEndTime} className="p-2"/>
+          </div>
+          <div className="relative flex-grow">
+            <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="검색어를 입력하세요"
+                className="w-full p-2 pr-10"
+            />
+            <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]"/>
+          </div>
         </div>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2 pr-10"
-          />
-          <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
+
+        <div className="flex justify-end space-x-2 mb-4">
+          <select
+              className="mr-1 p-2 text-gray-600"
+              onChange={handleSelectChange}
+              value={getCurrentValue()}
+          >
+            <option value="access">접근 로그</option>
+            <option value="activity">활동 로그</option>
+            <option value="upload">업로드 로그</option>
+          </select>
         </div>
-      </div>
 
-      <div className="flex justify-end space-x-2 mb-4">
-        <select
-          className="mr-1 p-2 text-gray-600"
-          onChange={handleSelectChange}
-          value={getCurrentValue()}
-        >
-          <option value="access">접근 로그</option>
-          <option value="activity">활동 로그</option>
-          <option value="upload">업로드 로그</option>
-        </select>
-      </div>
-
-      <table className="min-w-full mt-4 table-fixed">
-        <thead className=" border-t border-b  border-double border-[#FF9C00]">
+        <table className="min-w-full mt-4 table-fixed">
+          <thead className=" border-t border-b  border-double border-[#FF9C00]">
           <tr className="text-gray-800">
             <th className="w-1/5">접근일시</th>
             <th className="w-1/5">이름(아이디)</th>
             <th className="w-3/5">내용</th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           {logList.map((log) => (
-            <tr key={log.logId}>
-              <td className="text-center p-2 border-b border-gray-300">
-                {format(new Date(log.dateTime), "yyyy-MM-dd HH:mm:ss")}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {log.account.name}({log.account.accountId})
-              </td>
-              <td className="p-2 border-b border-gray-300">{log.detail}</td>
-            </tr>
+              <tr key={log.logId}>
+                <td className="text-center p-2 border-b border-gray-300">
+                  {format(new Date(log.dateTime), "yyyy-MM-dd HH:mm:ss")}
+                </td>
+                <td className="text-center p-2 border-b border-gray-300">
+                  {log.account.name}({log.account.accountId})
+                </td>
+                <td className="p-2 border-b border-gray-300">{log.detail}</td>
+              </tr>
           ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
+        <div>
+          <PaginationComponent
+              totalPages={totalPages}
+              currentPage={currentPage}
+              handlePageChange={handlePageChange}
           />
-        </Stack>
-      )}
-    </div>
+        </div>
+      </div>
   );
 };
 

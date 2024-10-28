@@ -12,9 +12,8 @@ import {
   FILE_ACTIVE,
 } from "../../../constants/api_constant";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const TrashVideoFileBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -216,17 +215,13 @@ const TrashVideoFileBoard = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

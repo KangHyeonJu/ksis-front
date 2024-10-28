@@ -12,9 +12,8 @@ import {
 import { format, parseISO } from "date-fns";
 import fetcher from "../../../fetcher";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const TrashImageFileBoard = () => {
@@ -209,17 +208,13 @@ const TrashImageFileBoard = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

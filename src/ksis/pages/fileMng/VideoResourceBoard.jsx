@@ -16,10 +16,9 @@ import { format, parseISO } from "date-fns";
 import VideoResourceModal from "./VideoResourceModal";
 import fetcher from "../../../fetcher";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const VideoResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -343,24 +342,20 @@ const VideoResourceBoard = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+        />
+      </div>
 
       {/* 모달 컴포넌트 호출 */}
       {selectedVideo && (
-        <VideoResourceModal
-          isOpen={resourceModalIsOpen}
-          onRequestClose={closeResourceModal}
-          originalResourceId={selectedVideo} // 선택한 영상의 정보를 전달합니다.
+          <VideoResourceModal
+              isOpen={resourceModalIsOpen}
+              onRequestClose={closeResourceModal}
+              originalResourceId={selectedVideo} // 선택한 영상의 정보를 전달합니다.
         />
       )}
     </div>
