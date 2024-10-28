@@ -21,7 +21,7 @@ const PcList = () => {
   const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  const postsPerPage = 10; // 한 페이지 10개 데이터
+  const postsPerPage = 15;
 
   const [loading, setLoading] = useState(true);
 
