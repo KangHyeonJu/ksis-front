@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { RESOLUTION } from "../../../constants/api_constant";
 import { FaSearch } from "react-icons/fa";
@@ -8,6 +8,7 @@ import ResolutionUpdateModal from "./ResolutionUpdateModal";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import CheckboxTable from "../../components/CheckboxTable";
 
 const ResolutionList = () => {
   const [resolutions, setResolutions] = useState([]);
@@ -16,7 +17,6 @@ const ResolutionList = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPosts, setSelectedPosts] = useState(new Set());
-  const [checkedRowId, setCheckedRowId] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -35,7 +35,7 @@ const ResolutionList = () => {
     setSelectUpdate(null);
   };
 
-  const postsPerPage = 10;
+  const postsPerPage = 15;
 
   const loadPage = async () => {
     try {
@@ -64,22 +64,6 @@ const ResolutionList = () => {
     loadPage();
   }, [currentPage, searchTerm]);
 
-  const handleCheckboxChange = (postId) => {
-    setSelectedPosts((prevSelectedPosts) => {
-      const newSelectedPosts = new Set(prevSelectedPosts);
-      if (newSelectedPosts.has(postId)) {
-        let newCheckedRowId = checkedRowId.filter((e) => e !== postId);
-        setCheckedRowId(newCheckedRowId);
-
-        newSelectedPosts.delete(postId);
-      } else {
-        setCheckedRowId([...checkedRowId, postId]);
-        newSelectedPosts.add(postId);
-      }
-      return newSelectedPosts;
-    });
-  };
-
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
@@ -93,18 +77,19 @@ const ResolutionList = () => {
 
   const deleteResolution = async (e) => {
     try {
-      if (checkedRowId.length === 0) {
+      if (selectedPosts.size === 0) {
         alert("삭제할 해상도를 선택해주세요.");
+        return;
       } else {
         if (window.confirm("삭제하시겠습니까?")) {
-          const queryString = checkedRowId.join(",");
+          const queryString = Array.from(selectedPosts).join(",");
           const response = await fetcher.delete(
             RESOLUTION + "?resolutionIds=" + queryString
           );
           console.log(response.data);
           setResolutions((prevresolution) =>
             prevresolution.filter(
-              (resolution) => !checkedRowId.includes(resolution.resolutionId)
+              (resolution) => !selectedPosts.has(resolution.resolutionId)
             )
           );
           alert("해상도가 정상적으로 삭제되었습니다.");
@@ -130,16 +115,16 @@ const ResolutionList = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         해상도 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
+      <div className="flex items-center relative flex-grow border-y border-gray-300 my-10">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-gray-600 font-bold"
+          className="p-2 bg-white text-[#444444] font-bold border-x border-gray-300"
         >
           <option value="name">이름</option>
           <option value="width">가로</option>
@@ -151,17 +136,48 @@ const ResolutionList = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2  pr-10"
+            className="w-full p-2"
           />
         </div>
-        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
+        <div className="bg-[#FF9C00] border-x border-[#FF9C00] text-white h-10 w-10 inline-flex items-center text-center">
+          <FaSearch className=" w-full" />
+        </div>
       </div>
 
-      <div className="flex justify-end space-x-2 mb-4">
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
+        <CheckboxTable
+          headers={["이름", "가로 X 세로(px)", ""]}
+          data={resolutions}
+          dataKeys={[
+            {
+              content: (item) => item.name,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => item.width + "x" + item.height,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+          ]}
+          uniqueKey="resolutionId"
+          selectedItems={selectedPosts}
+          setSelectedItems={setSelectedPosts}
+          renderActions={(item) => (
+            <button
+              onClick={() => openUpdateModal(item.resolutionId)}
+              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                        hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+            >
+              수정
+            </button>
+          )}
+        />
+      </div>
+
+      <div className="flex justify-end space-x-2 my-10">
         <button
           type="button"
-          className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+          className="rounded-smd border border-[#FF9C00] bg-[#FF9C00] text-white px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] transition duration-200"
           onClick={openModal}
         >
           해상도 등록
@@ -173,68 +189,12 @@ const ResolutionList = () => {
         <button
           onClick={deleteResolution}
           type="button"
-          className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-               hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+          className="rounded-smd border border-[#444444] bg-[#444444] text-white px-3 py-2 text-sm font-semibold shadow-sm 
+            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
         >
           삭제
         </button>
       </div>
-
-      <table className="w-full table-fixed border-collapse mt-4">
-        <thead className="border-t border-b border-double border-[#FF9C00]">
-          <tr>
-            <th className="w-1/12 p-2 text-center text-gray-800">
-              <input
-                type="checkbox"
-                onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  setSelectedPosts(
-                    isChecked
-                      ? new Set(resolutions.map((post) => post.resolutionId))
-                      : new Set()
-                  );
-                }}
-              />
-            </th>
-            <th className="w-4/12 p-2 text-gray-800 text-center">이름</th>
-            <th className="w-4/12 p-2 text-gray-800 text-center">
-              가로 X 세로(px)
-            </th>
-            <th className="w-3/21 p-2 text-gray-800 text-center"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {resolutions.map((post) => (
-            <tr key={post.resolutionId}>
-              <td className="text-center p-2 border-b border-gray-300">
-                <input
-                  type="checkbox"
-                  checked={selectedPosts.has(post.resolutionId)}
-                  onChange={() => handleCheckboxChange(post.resolutionId)}
-                />
-              </td>
-
-              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                {post.name}
-              </td>
-
-              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                {post.width} x {post.height}
-              </td>
-
-              <td className="border-b border-gray-300 p-2 text-center">
-                <button
-                  onClick={() => openUpdateModal(post.resolutionId)}
-                  className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                >
-                  수정
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
 
       {selectUpdate && (
         <ResolutionUpdateModal
@@ -245,13 +205,13 @@ const ResolutionList = () => {
       )}
 
       {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
+      {totalPages > 0 && (
+        <Stack spacing={2} className="mt-10 items-center">
           <Pagination
+            shape="rounded"
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
-            color={"primary"}
           />
         </Stack>
       )}

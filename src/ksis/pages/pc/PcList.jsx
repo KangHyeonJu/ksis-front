@@ -9,13 +9,12 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import { ButtonGroup } from "@mui/material";
 import Loading from "../../components/Loading";
+import CheckboxTable from "../../components/CheckboxTable";
 
 const PcList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPosts, setSelectedPosts] = useState(new Set());
-  const [checkedRowId, setCheckedRowId] = useState([]);
   const userInfo = decodeJwt();
 
   const [searchCategory, setSearchCategory] = useState("deviceName");
@@ -68,30 +67,15 @@ const PcList = () => {
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
-  const handleCheckboxChange = (postId) => {
-    setSelectedPosts((prevSelectedPosts) => {
-      const newSelectedPosts = new Set(prevSelectedPosts);
-      if (newSelectedPosts.has(postId)) {
-        let newCheckedRowId = checkedRowId.filter((e) => e !== postId);
-        setCheckedRowId(newCheckedRowId);
-
-        newSelectedPosts.delete(postId);
-      } else {
-        setCheckedRowId([...checkedRowId, postId]);
-        newSelectedPosts.add(postId);
-      }
-      return newSelectedPosts;
-    });
-  };
-
   //pc 삭제
-  const deletePc = async (e) => {
+  const deletePc = async () => {
     try {
-      if (checkedRowId.length === 0) {
+      if (selectedPosts.size === 0) {
         alert("삭제할 PC를 선택해주세요.");
+        return;
       } else {
         if (window.confirm("삭제하시겠습니까?")) {
-          const queryString = checkedRowId.join(",");
+          const queryString = Array.from(selectedPosts).join(",");
 
           const response = await fetcher.delete(
             PC_DELETE + "?pcIds=" + queryString
@@ -99,8 +83,9 @@ const PcList = () => {
 
           console.log(response.data);
           setPosts((prevPcList) =>
-            prevPcList.filter((pc) => !checkedRowId.includes(pc.deviceId))
+            prevPcList.filter((pc) => !selectedPosts.has(pc.deviceId))
           );
+          setSelectedPosts(new Set()); // 선택된 항목 초기화
           alert("PC가 정상적으로 삭제되었습니다.");
         }
       }
@@ -146,62 +131,37 @@ const PcList = () => {
       </div>
 
       <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
-        <table className="w-full table-fixed">
-          <thead className="border-t-2 border-[#FF9C00] bg-[#FFF9F2]">
-            <tr>
-              <th className="w-1/12 p-2 text-center text-gray-800 border-b border-gray-300">
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    const isChecked = e.target.checked;
-                    setSelectedPosts(
-                      isChecked
-                        ? new Set(posts.map((post) => post.deviceId))
-                        : new Set()
-                    );
-                  }}
-                />
-              </th>
-              <th className="w-3/12 p-2 text-gray-800 text-center border-b border-gray-300">
-                PC명
-              </th>
-              <th className="w-3/12 p-2 text-gray-800 text-center border-b border-gray-300">
-                담당자(아이디)
-              </th>
-              <th className="w-3/12 p-2 text-gray-800 text-center border-b border-gray-300">
-                등록일
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((post) => (
-              <tr key={post.deviceId} className="hover:bg-gray-100">
-                <td className="text-center p-2 border-b border-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={selectedPosts.has(post.deviceId)}
-                    onChange={() => handleCheckboxChange(post.deviceId)}
-                  />
-                </td>
-
-                <td className="p-2 text-center border-b border-gray-300 text-[#444444] font-semibold hover:underline">
-                  <Link to={PC_UPDATE_FORM + `/${post.deviceId}`}>
-                    {post.deviceName}
-                  </Link>
-                </td>
-
-                <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                  {post.accountList
-                    .map((account) => `${account.name}(${account.accountId})`)
-                    .join(", ")}
-                </td>
-                <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                  {format(post.regDate, "yyyy-MM-dd")}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <CheckboxTable
+          headers={["PC명", "담당자(아이디)", "등록일"]}
+          data={posts}
+          dataKeys={[
+            {
+              content: (item) => (
+                <Link to={PC_UPDATE_FORM + `/${item.deviceId}`}>
+                  {item.deviceName}
+                </Link>
+              ),
+              className:
+                "p-2 text-center border-b border-gray-300 text-[#444444] font-semibold hover:underline",
+            },
+            {
+              content: (item) =>
+                item.accountList
+                  .map((acc) => `${acc.name}(${acc.accountId})`)
+                  .join(", "),
+              className:
+                "p-2 text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => format(item.regDate, "yyyy-MM-dd"),
+              className:
+                "p-2 text-gray-800 text-center border-b border-gray-300",
+            },
+          ]}
+          uniqueKey="deviceId"
+          selectedItems={selectedPosts}
+          setSelectedItems={setSelectedPosts}
+        />
       </div>
 
       {userInfo.roles === "ROLE_ADMIN" ? (
@@ -234,7 +194,6 @@ const PcList = () => {
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
-            color={""}
           />
         </Stack>
       )}
