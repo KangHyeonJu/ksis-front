@@ -28,7 +28,7 @@ const SignageList = () => {
   const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  const postsPerPage = 10; // 한 페이지 10개 데이터
+  const postsPerPage = 15;
 
   const loadPage = async () => {
     try {
@@ -128,16 +128,16 @@ const SignageList = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl p-6">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 mb-4">
         재생장치 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow border border-[#FF9C00]">
+      <div className="flex items-center relative flex-grow border-y border-gray-300 my-10">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-gray-600 font-bold"
+          className="p-2 bg-white text-[#444444] font-bold border-x border-gray-300"
         >
           <option value="deviceName">재생장치명</option>
 
@@ -151,91 +151,100 @@ const SignageList = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-            className="w-full p-2  pr-10"
+            className="w-full p-2"
           />
         </div>
-        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
+        <div className="bg-[#FF9C00] border-x border-[#FF9C00] text-white h-10 w-10 inline-flex items-center text-center">
+          <FaSearch className=" w-full" />
+        </div>
       </div>
       <div className="flex justify-between my-4">
         <div className="inline-flex items-center">
           <ToggleSwitch />
         </div>
-        {userInfo.roles === "ROLE_ADMIN" ? (
-          <div className=" inline-flex items-center">
-            <div className="flex justify-end space-x-2">
-              <Link to={SIGNAGE_FORM}>
-                <button
-                  type="button"
-                  className=" rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                >
-                  재생장치 등록
-                </button>
-              </Link>
-              <button
-                onClick={deleteSignage}
-                type="button"
-                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-              hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-        ) : null}
       </div>
-      <table className="w-full table-fixed border-collapse">
-        <thead className="border-t border-b border-double border-[#FF9C00]">
-          <tr>
-            <th className="w-1/12 p-2 text-center text-gray-800">
-              <input
-                type="checkbox"
-                onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  setSelectedPosts(
-                    isChecked
-                      ? new Set(signages.map((post) => post.deviceId))
-                      : new Set()
-                  );
-                }}
-              />
-            </th>
-            <th className="w-4/12 p-2 text-gray-800 text-center">재생장치명</th>
-            <th className="w-4/12 p-2 text-gray-800 text-center">
-              담당자(아이디)
-            </th>
-            <th className="w-3/12 p-2 text-gray-800 text-center">등록일</th>
-          </tr>
-        </thead>
-        <tbody>
-          {signages.map((signage) => (
-            <tr key={signage.deviceId}>
-              <td className="text-center p-2 border-b border-gray-300">
+
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
+        <table className="w-full table-fixed">
+          <thead className="border-t-2 border-[#FF9C00] bg-[#FFF9F2]">
+            <tr>
+              <th className="w-1/12 p-2 text-center text-gray-800 border-b border-gray-30">
                 <input
                   type="checkbox"
-                  checked={selectedPosts.has(signage.deviceId)}
-                  onChange={() => handleCheckboxChange(signage.deviceId)}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setSelectedPosts(
+                      isChecked
+                        ? new Set(signages.map((post) => post.deviceId))
+                        : new Set()
+                    );
+                  }}
                 />
-              </td>
-
-              <td className="p-2 text-gray-800 text-center hover:underline hover:text-[#FF9C00] border-b border-gray-300">
-                <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
-                  {signage.deviceName}
-                </Link>
-              </td>
-
-              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                {signage.accountList
-                  .map((account) => `${account.name}(${account.accountId})`)
-                  .join(", ")}
-              </td>
-              <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                {format(signage.regDate, "yyyy-MM-dd")}
-              </td>
+              </th>
+              <th className="w-4/12 p-2 text-gray-800 text-center border-b border-gray-300">
+                재생장치명
+              </th>
+              <th className="w-4/12 p-2 text-gray-800 text-center border-b border-gray-300">
+                담당자(아이디)
+              </th>
+              <th className="w-3/12 p-2 text-gray-800 text-center border-b border-gray-300">
+                등록일
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {signages.map((signage) => (
+              <tr key={signage.deviceId} className="hover:bg-gray-100">
+                <td className="text-center p-2 border-b border-gray-300">
+                  <input
+                    type="checkbox"
+                    checked={selectedPosts.has(signage.deviceId)}
+                    onChange={() => handleCheckboxChange(signage.deviceId)}
+                  />
+                </td>
+
+                <td className="p-2 text-center border-b border-gray-300 text-[#444444] font-semibold hover:underline">
+                  <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
+                    {signage.deviceName}
+                  </Link>
+                </td>
+
+                <td className="p-2 text-gray-800 text-center border-b border-gray-300">
+                  {signage.accountList
+                    .map((account) => `${account.name}(${account.accountId})`)
+                    .join(", ")}
+                </td>
+                <td className="p-2 text-gray-800 text-center border-b border-gray-300">
+                  {format(signage.regDate, "yyyy-MM-dd")}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {userInfo.roles === "ROLE_ADMIN" ? (
+        <div className="flex justify-end space-x-2 my-10">
+          <Link to={SIGNAGE_FORM}>
+            <button
+              type="button"
+              className="rounded-smd border border-[#FF9C00] bg-[#FF9C00] text-white px-3 py-2 text-sm font-semibold shadow-sm 
+              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] transition duration-200"
+            >
+              재생장치 등록
+            </button>
+          </Link>
+          <button
+            onClick={deleteSignage}
+            type="button"
+            className="rounded-smd border border-[#444444] bg-[#444444] text-white px-3 py-2 text-sm font-semibold shadow-sm 
+            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+          >
+            삭제
+          </button>
+        </div>
+      ) : null}
+
       {/* 페이지네이션 */}
       {totalPages > 1 && (
         <Stack spacing={2} className="mt-10">
