@@ -4,6 +4,7 @@ import { FILE_SIZE } from "../../../constants/api_constant";
 import { MAIN } from "../../../constants/page_constant";
 import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
+import Loading from "../../components/Loading";
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
@@ -37,7 +38,7 @@ const FileSizeBoard = () => {
     // 관리자 권한 체크
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자 계정만 접근 가능합니다.");
-      
+
       navigate(MAIN); // MAIN으로 이동
       return;
     }
@@ -49,12 +50,12 @@ const FileSizeBoard = () => {
   const handleSave = async () => {
     const fileSizeData = { imageMaxSize, videoMaxSize, fileSizeId: 1 };
 
-     // 사용자 확인 창 추가
-  const confirmMessage = "설정을 저장하시겠습니까?";
-  const isConfirmed = window.confirm(confirmMessage);
+    // 사용자 확인 창 추가
+    const confirmMessage = "설정을 저장하시겠습니까?";
+    const isConfirmed = window.confirm(confirmMessage);
 
-  if (!isConfirmed) {
-    return; // 사용자가 취소한 경우 함수 종료
+    if (!isConfirmed) {
+      return; // 사용자가 취소한 경우 함수 종료
     }
 
     try {
@@ -72,11 +73,11 @@ const FileSizeBoard = () => {
   };
 
   if (loading) {
-    return <div>데이터를 불러오는 중입니다...</div>;
+    return <Loading />;
   }
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           최대 용량 설정
@@ -127,9 +128,9 @@ const FileSizeBoard = () => {
         </tbody>
       </table>
       <div className="flex justify-end mt-6">
-        <button 
+        <button
           onClick={handleSave}
-         className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
         >
           저장

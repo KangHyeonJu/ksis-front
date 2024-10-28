@@ -15,6 +15,7 @@ import {
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const VideoFileBoard = () => {
   // 페이지네이션 관련 상태
@@ -26,6 +27,8 @@ const VideoFileBoard = () => {
   const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
   const [videos, setVideos] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
@@ -33,7 +36,7 @@ const VideoFileBoard = () => {
   const [selectedVideo, setSelectedVideo] = useState("");
 
   const navigate = useNavigate(); // Initialize useNavigate
-  const postsPerPage = 16; // 페이지당 게시물 수
+  const postsPerPage = 14; // 페이지당 게시물 수
 
   useEffect(() => {
     fetcher
@@ -49,6 +52,8 @@ const VideoFileBoard = () => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching videos:", error);
@@ -150,16 +155,20 @@ const VideoFileBoard = () => {
     setSelectedVideo("");
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-screen-2xl mx-auto">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           영상 인코딩 페이지
         </h1>
       </header>
 
-      {/* 검색바 입력창 */} 
- <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
+      {/* 검색바 입력창 */}
+      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
@@ -181,40 +190,40 @@ const VideoFileBoard = () => {
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-          {/* 탭버튼 */} 
-  <div className="flex justify-end mb-4">
-  <div className="w-auto flex space-x-2 ">
-    {/* 이미지 탭 */}
-    <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
+      {/* 탭버튼 */}
+      <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2 ">
+          {/* 이미지 탭 */}
+          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
             <button
               className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
                 window.location.pathname === IMAGE_FILE_BOARD
-          ? "text-black bg-white border-gray-300 border-b-0"
-          : "text-gray-500 bg-gray-100 border-transparent"
-      }`}
-      onClick={() => navigate(IMAGE_FILE_BOARD)}
-    >
-      이미지
-    </button>
-    </div>
-    <div className="border-b-2 border-[#FF9C00]">
-    {/* 영상 탭 */}
-    <button
-      className={`px-6 py-2 rounded-t-lg font-semibold border  ${
-        window.location.pathname === VIDEO_FILE_BOARD
-          ? "text-black bg-white border-gray-300 border-b-0"
-          : "text-gray-500 bg-gray-100 border-transparent "
-      }`}
-      onClick={() => navigate(VIDEO_FILE_BOARD)}
-    >
-      영상
-    </button>
-    </div>
-  </div>
-</div>
+                  ? "text-black bg-white border-gray-300 border-b-0"
+                  : "text-gray-500 bg-gray-100 border-transparent"
+              }`}
+              onClick={() => navigate(IMAGE_FILE_BOARD)}
+            >
+              이미지
+            </button>
+          </div>
+          <div className="border-b-2 border-[#FF9C00]">
+            {/* 영상 탭 */}
+            <button
+              className={`px-6 py-2 rounded-t-lg font-semibold border  ${
+                window.location.pathname === VIDEO_FILE_BOARD
+                  ? "text-black bg-white border-gray-300 border-b-0"
+                  : "text-gray-500 bg-gray-100 border-transparent "
+              }`}
+              onClick={() => navigate(VIDEO_FILE_BOARD)}
+            >
+              영상
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
         {videos.length > 0 ? (
           videos.map((post, index) => (
             <div key={index} className="grid p-1">
@@ -268,22 +277,21 @@ const VideoFileBoard = () => {
                           ? handleSaveClick(post.encodedResourceId)
                           : handleEditClick(index, post.fileTitle)
                       }
-                     className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
+                      className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
                     transform hover:scale-110 hover:text-gray-800 m-1 "
                     />
                   </div>
                 </div>
                 {/* 등록일 */}
                 <div className="mx-auto">
-                <p className="text-gray-500">{formatDate(post.regTime)}</p>
+                  <p className="text-gray-500">{formatDate(post.regTime)}</p>
                 </div>
-
                 {/* 삭제 버튼 */}
                 <div>
-                <div className="flex justify-center p-2">
+                  <div className="flex justify-center p-2">
                     <button
                       type="button"
-                       className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
                       onClick={() => handleDelete(post.encodedResourceId)}
                     >
@@ -291,7 +299,6 @@ const VideoFileBoard = () => {
                     </button>
                   </div>
                 </div>
-
               </div>
             </div>
           ))
@@ -302,18 +309,17 @@ const VideoFileBoard = () => {
         )}
       </div>
 
-     {/* 페이지네이션 */}
-{totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
-
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-2">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
 
       {/* 모달창 */}
       {isOpen && (

@@ -12,6 +12,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import Loading from "../../components/Loading";
 
 const ApiForm = () => {
   const [apiName, setApiName] = useState("");
@@ -108,7 +109,7 @@ const ApiForm = () => {
   };
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <Loading />;
   }
 
   if (error) {
@@ -236,16 +237,19 @@ const ApiForm = () => {
               </div>
             </div>
             <div className="flex justify-center space-x-4">
-              <button type="submit"
-              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              <button
+                type="submit"
+                className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                    >
+              >
                 {apiId ? "수정하기" : "등록하기"}
               </button>
-              <button type="button" 
-               className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              <button
+                type="button"
+                className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
                hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-                onClick={() => navigate(-1)}>
+                onClick={() => navigate(-1)}
+              >
                 뒤로가기
               </button>
             </div>

@@ -21,6 +21,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import Loading from "../../components/Loading";
 
 const SignageUpdateForm = () => {
   const userInfo = decodeJwt();
@@ -98,6 +99,8 @@ const SignageUpdateForm = () => {
       if (responseAccount.data && responseResolution.data) {
         setAccounts(responseAccount.data);
         setResolution(responseResolution.data);
+
+        setLoading(false);
       } else {
         console.error("No data property in response");
       }
@@ -266,6 +269,10 @@ const SignageUpdateForm = () => {
       return;
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="grid place-items-center min-h-[80vh]">

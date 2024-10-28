@@ -18,6 +18,9 @@ module.exports = {
         "1/12": "8.333333%",
         "11/12": "91.666667%",
       },
+      borderRadius: {
+        smd: "0.25rem",
+      },
       keyframes: {
         flow: {
           "0%": { transform: "translateX(100%)" },

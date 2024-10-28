@@ -22,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../css/table";
+import Loading from "../../components/Loading";
 
 const Notification = ({ onClose }) => {
   const [notifications, setNotifications] = useState([]); // 알림 데이터
@@ -29,6 +30,8 @@ const Notification = ({ onClose }) => {
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
   const [pageSize] = useState(10); // 페이지당 알림 개수
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
 
   // 데이터베이스에서 알림 데이터 요청
   useEffect(() => {
@@ -39,6 +42,8 @@ const Notification = ({ onClose }) => {
         );
         setNotifications(response.data.content); // 현재 페이지 알림 데이터
         setTotalPages(response.data.totalPages); // 전체 페이지 수 설정
+
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -88,6 +93,10 @@ const Notification = ({ onClose }) => {
   const handlePageChange = (event, value) => {
     setPage(value); // 선택된 페이지로 상태 업데이트
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div

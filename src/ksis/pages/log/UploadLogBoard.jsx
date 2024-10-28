@@ -14,6 +14,7 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const UploadLogBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -113,11 +114,11 @@ const UploadLogBoard = () => {
   };
 
   if (loading) {
-    return <div></div>;
+    return <Loading />;
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         업로드 로그
       </h1>
@@ -126,23 +127,15 @@ const UploadLogBoard = () => {
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
-           className="mr-1 p-2 text-gray-600 font-bold"
+          className="mr-1 p-2 text-gray-600 font-bold"
         >
           <option value="account">아이디</option>
           <option value="detail">내용</option>
         </select>
         <div className="flex items-center space-x-2 mx-2">
-          <input
-            type="date"
-            onChange={handleStartTime}
-            className="p-2 "
-          />
+          <input type="date" onChange={handleStartTime} className="p-2 " />
           <spna>~</spna>
-          <input
-            type="date"
-            onChange={handleEndTime}
-            className="p-2 "
-          />
+          <input type="date" onChange={handleEndTime} className="p-2 " />
         </div>
         <div className="relative flex-grow">
           <input
@@ -191,16 +184,16 @@ const UploadLogBoard = () => {
       </table>
 
       {/* 페이지네이션 */}
-{totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-10">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

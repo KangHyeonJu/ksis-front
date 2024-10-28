@@ -5,6 +5,7 @@ import { PC_LIST } from "../../../constants/api_constant";
 import { PC_UPDATE_FORM, PC_INVENTORY } from "../../../constants/page_constant";
 import LocationModal from "../../components/LocationModal";
 import { decodeJwt } from "../../../decodeJwt";
+import Loading from "../../components/Loading";
 
 const PcDtl = () => {
   //불러오기
@@ -63,7 +64,7 @@ const PcDtl = () => {
   const closeModal = () => setModalIsOpen(false);
 
   if (loading) {
-    return <div></div>;
+    return <Loading />;
   }
 
   return (

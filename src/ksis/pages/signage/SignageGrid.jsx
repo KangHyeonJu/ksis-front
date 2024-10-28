@@ -14,10 +14,12 @@ import { ToggleSwitch } from "../../css/switch";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const SignageGrid = () => {
   const userInfo = decodeJwt();
   const [signages, setSignages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [searchCategory, setSearchCategory] = useState("deviceName");
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,6 +42,8 @@ const SignageGrid = () => {
       if (response.data) {
         setSignages(response.data.content);
         setTotalPages(response.data.totalPages);
+
+        setLoading(false);
       } else {
         console.error("No data property in response");
       }
@@ -63,8 +67,12 @@ const SignageGrid = () => {
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl p-6">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         재생장치 관리
       </h1>
@@ -93,21 +101,23 @@ const SignageGrid = () => {
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-      <div className="flex justify-between">
-        <div>
+      <div className="flex justify-between my-4">
+        <div className="inline-flex items-center">
           <ToggleSwitch />
         </div>
         {userInfo.roles === "ROLE_ADMIN" ? (
-          <div className="flex justify-end space-x-2 mb-4">
-            <Link to={SIGNAGE_FORM}>
-              <button
-                type="button"
-                className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          <div className=" inline-flex items-center">
+            <div className="flex justify-end space-x-2">
+              <Link to={SIGNAGE_FORM}>
+                <button
+                  type="button"
+                  className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
           hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-         >
-                재생장치 등록
-              </button>
-            </Link>
+                >
+                  재생장치 등록
+                </button>
+              </Link>
+            </div>
           </div>
         ) : null}
       </div>
@@ -140,17 +150,17 @@ const SignageGrid = () => {
         ))}
       </div>
 
-        {/* 페이지네이션 */}
-    {totalPages > 1 && (
-  <Stack spacing={2} className="mt-2">
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={handlePageChange}
-      color={"primary"}
-    />
-  </Stack>
-)}
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-10">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color={"primary"}
+          />
+        </Stack>
+      )}
     </div>
   );
 };

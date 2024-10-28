@@ -12,6 +12,7 @@ import { format, parseISO } from "date-fns";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,7 +27,7 @@ const TrashNoticeBoard = () => {
   const [error, setError] = useState(null);
   const [selectedNotices, setSelectedNotices] = useState([]);
 
-  const postsPerPage = 20;
+  const postsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const TrashNoticeBoard = () => {
   };
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <Loading />;
   }
 
   if (error) {
@@ -127,7 +128,7 @@ const TrashNoticeBoard = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           비활성화 공지글 관리
@@ -151,7 +152,7 @@ const TrashNoticeBoard = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="검색어를 입력하세요"
-             className="w-full p-2  pr-10"
+            className="w-full p-2  pr-10"
           />
         </div>
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
@@ -174,9 +175,9 @@ const TrashNoticeBoard = () => {
           </p>
         ) : (
           <table className="w-full table-fixed border-collapse mt-4">
-                <thead className="border-t border-b border-double border-[#FF9C00]">
+            <thead className="border-t border-b border-double border-[#FF9C00]">
               <tr>
-              <th className="w-1/12 p-2 text-center text-gray-800">
+                <th className="w-1/12 p-2 text-center text-gray-800">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
@@ -191,7 +192,7 @@ const TrashNoticeBoard = () => {
             <tbody>
               {notices.map((notice) => (
                 <tr key={notice.noticeId}>
-                   <td className="text-center p-2 border-b border-gray-300">
+                  <td className="text-center p-2 border-b border-gray-300">
                     <input
                       type="checkbox"
                       checked={selectedNotices.includes(notice.noticeId)}
@@ -215,10 +216,10 @@ const TrashNoticeBoard = () => {
           </table>
         )}
       </div>
-      
-     {/* 페이지네이션 */}
-     {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
+
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <Stack spacing={2} className="mt-10">
           <Pagination
             count={totalPages}
             page={currentPage}

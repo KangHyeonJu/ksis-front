@@ -19,11 +19,14 @@ import fetcher from "../../../fetcher";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
+import Loading from "../../components/Loading";
+
 const VideoResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("fileTitle");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const [isOriginal, setIsOriginal] = useState(true);
   const [videos, setVideos] = useState([]);
@@ -31,7 +34,7 @@ const VideoResourceBoard = () => {
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
 
-  const postsPerPage = 16;
+  const postsPerPage = 14;
   const navigate = useNavigate();
 
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
@@ -52,6 +55,8 @@ const VideoResourceBoard = () => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content); // 영상 데이터를 설정
         setFilteredPosts(response.data);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching video:", error);
@@ -174,15 +179,19 @@ const VideoResourceBoard = () => {
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-screen-2xl mx-auto">
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           영상 원본 페이지
         </h1>
       </header>
 
-       {/* 검색바 입력창 */} 
+      {/* 검색바 입력창 */}
       <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
@@ -205,12 +214,11 @@ const VideoResourceBoard = () => {
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-
-        {/* 탭버튼 */} 
-          <div className="flex justify-end mb-4">
-          <div className="w-auto flex space-x-2 ">
-            {/* 이미지 탭 */}
-            <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
+      {/* 탭버튼 */}
+      <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2 ">
+          {/* 이미지 탭 */}
+          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
             <button
               className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
                 window.location.pathname === IMAGE_RESOURCE_BOARD
@@ -221,8 +229,8 @@ const VideoResourceBoard = () => {
             >
               이미지
             </button>
-            </div>
-            <div className="border-b-2 border-[#FF9C00]">
+          </div>
+          <div className="border-b-2 border-[#FF9C00]">
             {/* 영상 탭 */}
             <button
               className={`px-6 py-2 rounded-t-lg font-semibold border  ${
@@ -234,18 +242,17 @@ const VideoResourceBoard = () => {
             >
               영상
             </button>
-            </div>
           </div>
         </div>
+      </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
         {videos.length > 0 ? (
           videos.map((post, index) => (
             <div key={index} className="grid p-1">
               {/* 카드 */}
               <div className="flex flex-col  h-full overflow-hidden max-w-xs">
-
                 {/* 영상 */}
                 <div className="w-full h-auto md:h-60 lg:h-70">
                   <div className="relative w-full h-full mb-1 overflow-hidden ">
@@ -254,7 +261,6 @@ const VideoResourceBoard = () => {
                       //영상 파일 깨질시 영상 제목으로 설정
                       alt={post.fileTitle}
                       className="w-full h-full cursor-pointer object-cover object-center hover:scale-150"
-                     
                       //영상 클릭하면 모달 열림
                       onClick={() => openResourceModal(post.originalResourceId)}
                     />
@@ -282,8 +288,11 @@ const VideoResourceBoard = () => {
                       placeholder="제목을 입력해주세요."
                     />
                   ) : (
-                    <h2 className="text-xl font-bold truncate max-w-full mx-auto justify-start text-gray-800" title={post.fileTitle}>
-                    {post.fileTitle}
+                    <h2
+                      className="text-xl font-bold truncate max-w-full mx-auto justify-start text-gray-800"
+                      title={post.fileTitle}
+                    >
+                      {post.fileTitle}
                     </h2>
                   )}
                   <div>
@@ -293,7 +302,7 @@ const VideoResourceBoard = () => {
                           ? handleSaveClick(post.originalResourceId)
                           : handleEditClick(index, post.fileTitle)
                       }
-                       className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
+                      className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
                     transform hover:scale-110 hover:text-gray-800 m-1 "
                     />
                   </div>
@@ -301,16 +310,16 @@ const VideoResourceBoard = () => {
 
                 {/* 등록일 */}
                 <div className="mx-auto">
-                <p className="text-gray-500">{formatDate(post.regTime)}</p>
+                  <p className="text-gray-500">{formatDate(post.regTime)}</p>
                 </div>
 
                 {/* 인코딩, 삭제 버튼 */}
                 <div className="items-center text-center row mx-auto p-2">
                   <Link to={`${VIDEO_ENCODING}/${post.originalResourceId}`}>
                     <button
-                       className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                  >
+                    >
                       인코딩
                     </button>
                   </Link>
@@ -320,7 +329,7 @@ const VideoResourceBoard = () => {
                     onClick={() => handleDeactivate(post.originalResourceId)}
                     className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
                       hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-                >
+                  >
                     비활성화
                   </button>
                 </div>
@@ -345,7 +354,6 @@ const VideoResourceBoard = () => {
           />
         </Stack>
       )}
-
 
       {/* 모달 컴포넌트 호출 */}
       {selectedVideo && (
