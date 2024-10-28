@@ -14,6 +14,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import Loading from "../../components/Loading";
 
 const NoticeDetail = () => {
   const userInfo = decodeJwt();
@@ -60,7 +61,7 @@ const NoticeDetail = () => {
   }, [noticeId]);
 
   if (loading) {
-    return <p></p>;
+    return <Loading />;
   }
 
   if (error) {

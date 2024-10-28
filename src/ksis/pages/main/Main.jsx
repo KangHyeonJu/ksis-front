@@ -8,6 +8,7 @@ import {
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 import axios from "axios";
+import Loading from "../../components/Loading";
 
 const Main = () => {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -22,6 +23,8 @@ const Main = () => {
   const [visitCount, setVisitCount] = useState([]);
   const [devices, setDevices] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   const loadPage = async () => {
     try {
       const [responseFile, responseCount, responseVisit] = await Promise.all([
@@ -34,6 +37,8 @@ const Main = () => {
       setVisitCount(responseVisit.data);
 
       loadDevice();
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -541,6 +546,10 @@ const Main = () => {
       }
     }
   }, [visitCount, fileCount, fileSize]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="grid grid-cols-2 gap-4 rounded-sm border-2 border-[#FCA929] p-10 w-full h-full">

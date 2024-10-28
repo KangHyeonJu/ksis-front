@@ -16,6 +16,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import Loading from "../../components/Loading";
 
 const NoticeForm = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +29,7 @@ const NoticeForm = () => {
     role: "",
   });
 
+  const [loading, setLoading] = useState(true);
   const [deviceOptions, setDeviceOptions] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [role, setRole] = useState(""); // 역할 상태 추가
@@ -93,6 +95,8 @@ const NoticeForm = () => {
             endDate,
             deviceIds: selectedDeviceIds.length ? selectedDeviceIds : [""],
           });
+
+          setLoading(false);
         } catch (error) {
           showAlert("공지글을 불러오는 중 오류가 발생했습니다.");
         }
@@ -182,6 +186,10 @@ const NoticeForm = () => {
       return "Invalid date";
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="grid place-items-center min-h-[80vh]">
@@ -332,11 +340,11 @@ const NoticeForm = () => {
               </>
             )}
             <div className="flex justify-center space-x-4">
-              <button 
-              type="submit" 
-              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              <button
+                type="submit"
+                className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
               hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-             >
+              >
                 저장
               </button>
               <button

@@ -12,6 +12,7 @@ import { format, parseISO } from "date-fns";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,7 +73,7 @@ const TrashNoticeBoard = () => {
   };
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <Loading />;
   }
 
   if (error) {

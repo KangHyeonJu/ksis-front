@@ -9,6 +9,7 @@ import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
+import Loading from "../../components/Loading";
 
 const ImageEncoding = () => {
   const params = useParams();
@@ -139,13 +140,13 @@ const ImageEncoding = () => {
   };
 
   if (!image) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
     <div className="grid place-items-center min-h-[80vh]">
       <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg max-w-4xl w-full">
-      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           {image.fileTitle || "파일 제목"}
         </h1>
 

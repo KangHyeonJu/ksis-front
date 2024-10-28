@@ -15,6 +15,7 @@ import {
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Loading from "../../components/Loading";
 
 const VideoFileBoard = () => {
   // 페이지네이션 관련 상태
@@ -25,6 +26,8 @@ const VideoFileBoard = () => {
 
   const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
   const [videos, setVideos] = useState([]);
+
+  const [loading, setLoading] = useState(true);
 
   const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
@@ -49,6 +52,8 @@ const VideoFileBoard = () => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content);
         setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching videos:", error);
@@ -149,6 +154,10 @@ const VideoFileBoard = () => {
     setIsOpen(false);
     setSelectedVideo("");
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="p-6 max-w-screen-2xl mx-auto">
