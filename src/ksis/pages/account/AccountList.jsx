@@ -9,9 +9,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponent from "../../components/ButtonComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 import SearchBar from "../../components/SearchBar";
 import {
   Alert,
@@ -19,6 +20,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import CheckboxTable from "../../components/CheckboxTable";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
@@ -33,7 +35,8 @@ const AccountList = () => {
   const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
   const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
 
-  const postsPerPage = 10;
+  const postsPerPage = 15;
+  const checked = false;
 
   // 알림창 메서드
   const showAlert = (message, onConfirm = null) => {
@@ -44,11 +47,15 @@ const AccountList = () => {
 
   const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(
-        `${ACCOUNT_LIST}?page=${
-          page - 1
-        }&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`
-      );
+      const response = await fetcher.get(ACCOUNT_LIST, {
+        params: {
+          page: page - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
+      });
+
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -179,11 +186,65 @@ const AccountList = () => {
         }}
       />
 
-      <div className="flex justify-end space-x-2 mb-4">
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
+        <CheckboxTable
+          headers={[
+            "계정 아이디",
+            "이름",
+            "업무 전화번호",
+            "비활성화 여부",
+            "수정/비활성화",
+          ]}
+          data={posts}
+          dataKeys={[
+            {
+              content: (item) => item.accountId,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => item.name,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => item.businessTel,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => (item.isActive ? "O" : "X"),
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+          ]}
+          uniqueKey="accountId"
+          check={checked}
+          renderActions={(item) => (
+            <>
+              <ButtonComponent
+                to={`/account/${item.accountId}`}
+                defaultColor="blue-600"
+                shadowColor="blue-800"
+              >
+                수정
+              </ButtonComponent>
+
+              <ButtonComponent
+                onClick={() =>
+                  handleToggleActive(item.accountId, item.isActive)
+                }
+                defaultColor={item.isActive ? "green-600" : "red-600"}
+                hoverColor={item.isActive ? "green-800" : "red-800"}
+              >
+                {item.isActive ? "활성화" : "비활성화"}
+              </ButtonComponent>
+            </>
+          )}
+        />
+      </div>
+
+      <div className="flex justify-end space-x-2 my-10">
         <Link to={ACCOUNT_FORM}>
           <button
             type="button"
-            className="rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] py-1 px-2 text-sm font-semibold shadow-sm 
+            className="rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
             hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
           >
             계정 등록
@@ -191,69 +252,14 @@ const AccountList = () => {
         </Link>
       </div>
 
-      <table className="min-w-full mt-4 table-fixed">
-        <thead className="border-t border-b border-double border-[#FF9C00]">
-          <tr className="text-gray-800">
-            <th className="w-1/5 ">계정 아이디</th>
-            <th className="w-1/5 ">이름</th>
-            <th className="w-1/5 ">업무 전화번호</th>
-            <th className="w-1/5 ">비활성화 여부</th>
-            <th className="w-1/5 ">수정/비활성화</th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map((post) => (
-            <tr key={post.accountId}>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.accountId}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.name}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.businessTel}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.isActive ? "O" : "X"}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300 flex justify-center">
-                <Link
-                  to={`/account/${post.accountId}`}
-                  className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 py-1 px-2 text-sm font-semibold shadow-sm 
-            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                >
-                  수정
-                </Link>
-                <button
-                  className={`mr-2 w-24 ${
-                    post.isActive
-                      ? "text-green-600 border-green-600  hover:bg-green-600 hover:text-white  hover:shadow-green-800 focus-visible:outline-green-600 "
-                      : "text-red-600 border-red-600 hover:bg-red-600 hover:text-white hover:shadow-red-800 focus-visible:outline-red-600"
-                  }  font-bold py-1 px-2 rounded-md border text-sm shadow-sm hover:shadow-inner transition duration-200`}
-                  onClick={() =>
-                    handleToggleActive(post.accountId, post.isActive)
-                  }
-                >
-                  {post.isActive ? "활성화" : "비활성화"}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
       {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10 items-center">
-          <Pagination
-            shape="rounded"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={""}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

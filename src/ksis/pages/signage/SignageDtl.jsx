@@ -23,6 +23,7 @@ import { FaRegCopy } from "react-icons/fa";
 import { FaRegMap } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import Loading from "../../components/Loading";
+import ButtonComponent from "../../components/ButtonComponent";
 
 const SignageDtl = () => {
   const userInfo = decodeJwt();
@@ -509,14 +510,14 @@ const SignageDtl = () => {
               </table>
             </div>
             <div className="h-8 flex justify-end">
-              <button
+              <ButtonComponent
                 type="button"
                 onClick={openPlay}
-                className="inline-flex items-center rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
-              hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
+                defaultColor="[#FF9C00]"
+                shadowColor="[#FF9C00]"
               >
                 미리보기
-              </button>
+              </ButtonComponent>
               <SignagePlay
                 isOpen={playIsOpen}
                 onRequestClose={closePlay}
@@ -562,28 +563,27 @@ const SignageDtl = () => {
               </div>
             </div>
             <div className="h-8 items-center flex justify-end mt-2">
-              <button
-                type="button"
+              <ButtonComponent
                 onClick={openPlaylist}
-                className="inline-flex items-center mr-2 h-8 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
-                hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
+                defaultColor="[#FF9C00]"
+                shadowColor="[#FF9C00]"
               >
                 수정
-              </button>
+              </ButtonComponent>
+
               <PlaylistUpdateModal
                 isOpen={playlistUpdateIsOpen}
                 onRequestClose={handleUpdateMoalClose}
                 signageId={data.deviceId}
                 playlistId={playListId}
               />
-              <button
-                type="button"
+              <ButtonComponent
                 onClick={() => deletePlaylist(playListId)}
-                className="inline-flex items-center h-8 rounded-md border border-[#444444] bg-white text-[#444444] px-3 py-2 text-sm font-semibold shadow-sm 
-                hover:bg-[#444444] hover:text-white hover:shadow-inner hover:shadow-[#444444] focus-visible:outline-[#444444] transition duration-200"
+                defaultColor="[#444444]"
+                shadowColor="[#444444]"
               >
                 삭제
-              </button>
+              </ButtonComponent>
             </div>
           </div>
         </div>

@@ -6,8 +6,6 @@ import {
   NOTIFICATION_ISREAD,
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import {
   IMAGE_FILE_BOARD,
   IMAGE_RESOURCE_BOARD,
@@ -23,6 +21,7 @@ import {
   TableRow,
 } from "../../css/table";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const Notification = ({ onClose }) => {
   const [notifications, setNotifications] = useState([]); // 알림 데이터
@@ -169,14 +168,13 @@ const Notification = ({ onClose }) => {
           </Table>
         </div>
         <br />
-        <Stack spacing={2}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color={"primary"}
+        <div>
+          <PaginationComponent
+            totalPages={totalPages}
+            currentPage={page}
+            handlePageChange={handlePageChange}
           />
-        </Stack>
+        </div>
       </div>
     </div>
   );

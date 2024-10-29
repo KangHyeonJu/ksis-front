@@ -17,6 +17,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
   const [data, setData] = useState({});
@@ -165,12 +166,13 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
               </div>
             </DialogBody>
             <DialogActions>
-              <button type="submit" 
-              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-            >
+              <ButtonComponentB
+                type="submit"
+                defaultColor="blue-600"
+                shadowColor="blue-800"
+              >
                 수정
-              </button>
+              </ButtonComponentB>
             </DialogActions>
           </form>
         </div>

@@ -15,6 +15,7 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import Loading from "../../components/Loading";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const NoticeDetail = () => {
   const userInfo = decodeJwt();
@@ -201,35 +202,34 @@ const NoticeDetail = () => {
               {/* notice 작성자가 admin인 경우 숨기기 */}
               {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
                 <>
-                  <button
+                  <ButtonComponentB
                     type="button"
-                    color="blue"
-                    className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
                     onClick={handleEdit}
+                    defaultColor="blue-600"
+                    shadowColor="blue-800"
                   >
                     수정하기
-                  </button>
-                  <button
+                  </ButtonComponentB>
+
+                  <ButtonComponentB
                     type="button"
-                    color="red"
-                    className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
                     onClick={handleDeActive}
+                    defaultColor="red-600"
+                    shadowColor="red-800"
                   >
                     비활성화
-                  </button>
+                  </ButtonComponentB>
                 </>
               )}
-              <button
+
+              <ButtonComponentB
                 type="button"
-                color="zinc"
-                className=" rounded-md border border-gray-600 bg-white text-gray-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-gray-600 hover:text-white hover:shadow-inner hover:shadow-gray-800 focus-visible:outline-gray-600 transition duration-200"
                 onClick={handleCancel}
+                defaultColor="gray-600"
+                shadowColor="gray-800"
               >
                 뒤로가기
-              </button>
+              </ButtonComponentB>
             </div>
           </div>
         </form>
