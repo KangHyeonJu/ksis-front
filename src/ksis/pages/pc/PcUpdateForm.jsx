@@ -22,8 +22,6 @@ const PcUpdateForm = () => {
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [isReadOnly, setIsReadOnly] = useState(true);
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
   const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
@@ -177,9 +175,6 @@ const PcUpdateForm = () => {
 
   const handleSave = async () => {
     try {
-      setIsDisabled(false);
-      setIsReadOnly(false);
-
       const macRegex = /^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$/;
 
       if (macAddress === "" || !macRegex.test(macAddress)) {
@@ -215,8 +210,6 @@ const PcUpdateForm = () => {
 
       if (response.status === 200) {
         showAlert("PC가 정상적으로 수정되었습니다.", () => {
-          setIsDisabled(true);
-          setIsReadOnly(true);
           navigate(PC_INVENTORY);
         });
       } else if (response.status === 202) {

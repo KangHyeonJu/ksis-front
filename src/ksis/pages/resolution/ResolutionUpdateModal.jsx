@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,7 +10,6 @@ import { RESOLUTION } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
 import { Input } from "../../css/input";
 import { Button } from "../../css/button";
-import { Select } from "../../css/select";
 import {
   Alert,
   AlertActions,

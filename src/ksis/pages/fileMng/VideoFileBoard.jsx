@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
-import { FaSearch } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
+import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import {
   IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
@@ -31,7 +30,6 @@ const VideoFileBoard = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +51,6 @@ const VideoFileBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content);
-        setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
 
         setLoading(false);
       })
@@ -61,12 +58,6 @@ const VideoFileBoard = () => {
         console.error("Error fetching videos:", error);
       });
   }, [currentPage, searchTerm]);
-
-  const handleToggle = () => {
-    const newIsOriginal = !isOriginal;
-    setIsOriginal(newIsOriginal);
-    navigate(newIsOriginal ? VIDEO_FILE_BOARD : IMAGE_FILE_BOARD);
-  };
 
   const handleEditClick = (index, title) => {
     setEditingTitleIndex(index);
@@ -96,9 +87,6 @@ const VideoFileBoard = () => {
         );
         setVideos(updatedVideos);
 
-        // 변경된 videos를 기반으로 filteredPosts 상태도 업데이트
-        setFilteredPosts(updatedVideos);
-
         setEditingTitleIndex(null);
         setNewTitle("");
       } catch (error) {
@@ -111,12 +99,6 @@ const VideoFileBoard = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const handleDelete = async (id) => {

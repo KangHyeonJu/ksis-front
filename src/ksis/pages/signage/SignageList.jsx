@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
 import { SIGNAGE_DELETE, SIGNAGE_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
@@ -60,12 +59,6 @@ const SignageList = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   //signage 삭제

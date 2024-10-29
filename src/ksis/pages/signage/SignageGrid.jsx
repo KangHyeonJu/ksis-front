@@ -1,14 +1,9 @@
-import React, { useEffect, useState, useMemo } from "react";
-import ReactPaginate from "react-paginate";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
 import { SIGNAGE_LIST } from "../../../constants/api_constant";
 import { Link } from "react-router-dom";
-import {
-  SIGNAGE_DTL,
-  SIGNAGE_FORM,
-  SIGNAGE_INVENTORY,
-} from "../../../constants/page_constant";
+import { SIGNAGE_DTL, SIGNAGE_FORM } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 import { ToggleSwitch } from "../../css/switch";
 

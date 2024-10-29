@@ -1,11 +1,10 @@
 import React from "react";
 import { FaRegPlayCircle } from "react-icons/fa";
 import { format, parseISO } from "date-fns";
-
-
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const OriginCard = ({
-  file, 
+  file,
   handleActivation,
   showPlayIcon, // 영상 페이지에서만 아이콘을 보이게 하기 위한 prop
 }) => {
@@ -17,9 +16,7 @@ const OriginCard = ({
       console.error("Invalid date format:", dateString);
       return "Invalid date";
     }
-  
-};
-
+  };
 
   return (
     <div className="grid p-1">
@@ -31,23 +28,23 @@ const OriginCard = ({
               src={file.thumbFilePath}
               alt={file.fileTitle}
               className="w-full h-full object-cover object-center"
-            /> 
+            />
             {/* 아이콘 추가 */}
             {showPlayIcon && (
-              <FaRegPlayCircle
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl opacity-85"
-              />
+              <FaRegPlayCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl opacity-85" />
             )}
           </div>
         </div>
 
         {/* 제목 및 아이콘 래퍼 */}
         <div className="flex justify-between w-full">
-            <h2 className="pl-4 text-xl font-bold truncate max-w-full mx-auto justify-start
-             text-gray-800" 
-             title={file.fileTitle}>
-              {file.fileTitle}
-            </h2>
+          <h2
+            className="pl-4 text-xl font-bold truncate max-w-full mx-auto justify-start
+             text-gray-800"
+            title={file.fileTitle}
+          >
+            {file.fileTitle}
+          </h2>
         </div>
 
         {/* 등록일 */}
@@ -57,19 +54,16 @@ const OriginCard = ({
 
         {/* 삭제 버튼 */}
         <div className="flex justify-center p-2">
-          <button
-            type="button"
-            className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+          <ButtonComponentB
             onClick={() => handleActivation(file.originalResourceId)}
+            defaultColor="blue-600"
+            shadowColor="blue-800"
           >
             활성화
-          </button>
+          </ButtonComponentB>
         </div>
       </div>
-      
     </div>
-    
   );
 };
 
