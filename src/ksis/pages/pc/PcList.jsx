@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
 import { PC_DELETE, PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { PC_UPDATE_FORM, PC_FORM } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
-
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import { ButtonGroup } from "@mui/material";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 const PcList = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPosts, setSelectedPosts] = useState(new Set());
-  const [checkedRowId, setCheckedRowId] = useState([]);
-  const userInfo = decodeJwt();
-
-  const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 15;
-
-  const [loading, setLoading] = useState(true);
-
+  const [selectedPosts, setSelectedPosts] = useState(new Set());
+  const [checkedRowId, setCheckedRowId] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const userInfo = decodeJwt();
 
-  const loadPage = async () => {
+  const loadPage = async (searchTerm = "", searchCategory = "deviceName") => {
     try {
       const response = await fetcher.get(PC_LIST, {
         params: {
@@ -38,34 +31,33 @@ const PcList = () => {
           searchCategory,
         },
       });
-      console.log(response);
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
-
-        setLoading(false);
       } else {
         console.error("No data property in response");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
       alert(error.response?.data || "Unknown error occurred");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // 검색 이벤트 핸들러
+  const handleSearch = (searchTerm, searchCategory) => {
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    loadPage(searchTerm, searchCategory);
   };
 
   useEffect(() => {
     loadPage();
-  }, [currentPage, searchTerm]);
+  }, [currentPage]);
 
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const handleCheckboxChange = (postId) => {
@@ -119,31 +111,18 @@ const PcList = () => {
         일반 PC 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow border-y border-gray-300 my-10">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-[#444444] font-bold border-x border-gray-300"
-        >
-          <option value="deviceName">PC명</option>
-
-          {userInfo.roles === "ROLE_ADMIN" ? (
-            <option value="account">담당자</option>
-          ) : null}
-        </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2"
-          />
-        </div>
-        <div className="bg-[#FF9C00] border-x border-[#FF9C00] text-white h-10 w-10 inline-flex items-center text-center">
-          <FaSearch className=" w-full" />
-        </div>
-      </div>
+      {/* 검색 부분 */}
+      <SearchBar
+        onSearch={handleSearch} // 검색 이벤트 핸들러 전달
+        searchOptions={[
+          { value: "deviceName", label: "PC명" },
+          ...(userInfo.roles === "ROLE_ADMIN"
+            ? [{ value: "account", label: "담당자" }]
+            : []),
+        ]} // 검색 옵션 전달
+        defaultCategory="deviceName" // 기본 카테고리 설정
+      />
+      {/* 검색 부분 끝 */}
 
       <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
         <table className="w-full table-fixed">

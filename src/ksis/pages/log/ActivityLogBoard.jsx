@@ -15,6 +15,7 @@ import { decodeJwt } from "../../../decodeJwt";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 const ActivityLogBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -54,10 +55,10 @@ const ActivityLogBoard = () => {
       } else {
         console.error("No data property in response");
       }
-
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,31 +121,21 @@ const ActivityLogBoard = () => {
         활동 로그
       </h1>
 
-      <div className="mb-4 flex items-center border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 text-gray-600 font-bold"
-        >
-          <option value="account">아이디</option>
-          <option value="detail">내용</option>
-        </select>
-        <div className="flex items-center space-x-2 mx-2">
-          <input type="date" onChange={handleStartTime} className="p-2" />
-          <spna>~</spna>
-          <input type="date" onChange={handleEndTime} className="p-2" />
-        </div>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2 pr-10"
-          />
-          <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-        </div>
-      </div>
+      <SearchBar
+        onSearch={(term, category, start, end) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
+          setCurrentPage(1); // 검색 시 첫 페이지로 이동
+        }}
+        searchOptions={[
+          { value: "account", label: "아이디" },
+          { value: "detail", label: "내용" },
+        ]}
+        defaultCategory="account"
+        useDate={true} // 날짜 옵션 활성화
+      />
 
       <div className="flex justify-end space-x-2 mb-4">
         <select

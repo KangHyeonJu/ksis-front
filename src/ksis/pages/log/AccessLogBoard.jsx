@@ -14,6 +14,7 @@ import { decodeJwt } from "../../../decodeJwt";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 const AccessLogBoard = () => {
   const [logList, setLogList] = useState([]); // 현재 페이지 데이터
@@ -53,10 +54,10 @@ const AccessLogBoard = () => {
       } else {
         console.error("No data property in response");
       }
-
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,58 +120,43 @@ const AccessLogBoard = () => {
         접근 로그
       </h1>
 
-      <div className="mb-4 flex items-center border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="mr-1 p-2 text-gray-600 font-bold"
-        >
-          <option value="account">아이디</option>
-          <option value="detail">내용</option>
-        </select>
-        <div className="flex items-center space-x-2 mx-2">
-          <input type="date" onChange={handleStartTime} className="p-2" />
-          <spna>~</spna>
-          <input type="date" onChange={handleEndTime} className="p-2" />
-        </div>
-        {searchCategory === "account" ? (
-          <div className="relative flex-grow">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearch}
-              placeholder="검색어를 입력하세요"
-              className="w-full p-2 pr-10 "
-            />
-            <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-          </div>
-        ) : (
-          <div className="relative flex-grow">
-            <select
-              value={searchTerm}
-              onChange={handleSearch}
-              className="w-full max-w-xs p-2 border border-gray-300 rounded-md"
-            >
-              <option value="ACCOUNT_INFO">ACCOUNT_INFO</option>
-              <option value="NOTIFICATION">NOTIFICATION</option>
-              <option value="MAIN">MAIN</option>
-              <option value="ACCOUNT_LIST">ACCOUNT_LIST</option>
-              <option value="LOG">LOG</option>
-              <option value="IMAGE">IMAGE</option>
-              <option value="VIDEO">VIDEO</option>
-              <option value="NOTICE">NOTICE</option>
-              <option value="SIGNAGE">SIGNAGE</option>
-              <option value="PC">PC</option>
-              <option value="API">API</option>
-              <option value="FILE_SIZE">FILE_SIZE</option>
-              <option value="LOGIN">LOGIN</option>
-              <option value="LOGOUT">LOGOUT</option>
-              <option value="UPLOAD">UPLOAD</option>
-              <option value="UPLOAD_PROGRESS">UPLOAD_PROGRESS</option>
-            </select>
-          </div>
-        )}
-      </div>
+      {/* SearchBar 컴포넌트 사용 */}
+      <SearchBar
+        onSearch={(term, category, start, end) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
+          setCurrentPage(1); // 검색 시 첫 페이지로 이동
+        }}
+        searchOptions={[
+          { value: "account", label: "아이디" },
+          { value: "detail", label: "내용" },
+        ]}
+        defaultCategory="account"
+        useDate={true} // 날짜 옵션 활성화
+        selectOptions={{
+          detail: [
+            { value: "ACCOUNT_INFO", label: "ACCOUNT_INFO" },
+            { value: "NOTIFICATION", label: "NOTIFICATION" },
+            { value: "MAIN", label: "MAIN" },
+            { value: "ACCOUNT_LIST", label: "ACCOUNT_LIST" },
+            { value: "LOG", label: "LOG" },
+            { value: "IMAGE", label: "IMAGE" },
+            { value: "VIDEO", label: "VIDEO" },
+            { value: "NOTICE", label: "NOTICE" },
+            { value: "SIGNAGE", label: "SIGNAGE" },
+            { value: "PC", label: "PC" },
+            { value: "API", label: "API" },
+            { value: "FILE_SIZE", label: "FILE_SIZE" },
+            { value: "LOGIN", label: "LOGIN" },
+            { value: "LOGOUT", label: "LOGOUT" },
+            { value: "UPLOAD", label: "UPLOAD" },
+            { value: "UPLOAD_PROGRESS", label: "UPLOAD_PROGRESS" },
+          ],
+        }}
+      />
+
       <div className="flex justify-end space-x-2 mb-4">
         <select
           className="mr-1 p-2 text-gray-600"

@@ -8,6 +8,7 @@ import ResolutionUpdateModal from "./ResolutionUpdateModal";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 const ResolutionList = () => {
   const [resolutions, setResolutions] = useState([]);
@@ -50,13 +51,13 @@ const ResolutionList = () => {
       if (response.data.content) {
         setResolutions(response.data.content);
         setTotalPages(response.data.totalPages);
-
-        setLoading(false);
       } else {
         console.error("No data property in response");
       }
     } catch (e) {
       console.error("Error fetching data:", e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -135,27 +136,19 @@ const ResolutionList = () => {
         해상도 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-gray-600 font-bold"
-        >
-          <option value="name">이름</option>
-          <option value="width">가로</option>
-          <option value="height">세로</option>
-        </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2  pr-10"
-          />
-        </div>
-        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-      </div>
+      <SearchBar
+        onSearch={(term, category) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setCurrentPage(1);
+        }}
+        searchOptions={[
+          { value: "name", label: "이름" },
+          { value: "width", label: "가로" },
+          { value: "height", label: "세로" },
+        ]}
+        defaultCategory="name"
+      />
 
       <div className="flex justify-end space-x-2 mb-4">
         <button

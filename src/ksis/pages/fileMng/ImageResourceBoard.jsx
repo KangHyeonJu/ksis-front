@@ -21,6 +21,7 @@ import fetcher from "../../../fetcher";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const ImageResourceBoard = () => {
@@ -153,28 +154,19 @@ const ImageResourceBoard = () => {
         </h1>
       </header>
 
-      {/* 검색바 입력창 */}
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-gray-600 font-bold"
-        >
-          <option value="fileTitle">제목</option>
-          <option value="regTime">등록일</option>
-          <option value="resolution">해상도</option>
-        </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2  pr-10"
-          />
-        </div>
-        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-      </div>
+      <SearchBar
+        onSearch={(term, category) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setCurrentPage(1); // 검색 시 첫 페이지로 이동
+        }}
+        searchOptions={[
+          { value: "fileTitle", label: "제목" },
+          { value: "regTime", label: "등록일" },
+          { value: "resolution", label: "해상도" },
+        ]}
+        defaultCategory="fileTitle"
+      />
 
         {/* 탭버튼 */}
        <TabButtons 

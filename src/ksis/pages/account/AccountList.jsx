@@ -12,6 +12,7 @@ import { MAIN } from "../../../constants/page_constant";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
@@ -45,10 +46,6 @@ const AccountList = () => {
   };
 
   useEffect(() => {
-    setSearchTerm("");
-  }, [searchCategory]);
-
-  useEffect(() => {
     // 관리자가 아닌 경우 접근 차단
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자만 접근 가능합니다.");
@@ -60,7 +57,7 @@ const AccountList = () => {
 
   useEffect(() => {
     loadPage(currentPage);
-  }, [currentPage, searchTerm, searchCategory]);
+  }, [currentPage, searchTerm]);
 
   const handleToggleActive = async (accountId, isActive) => {
     try {
@@ -99,8 +96,9 @@ const AccountList = () => {
     setCurrentPage(page);
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value); // 검색어를 업데이트
+  const handleSearch = (term, category) => {
+    setSearchTerm(term);
+    setSearchCategory(category);
     setCurrentPage(1);
   };
 
@@ -114,41 +112,23 @@ const AccountList = () => {
         계정목록
       </h1>
 
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-gray-600 font-bold"
-        >
-          <option value="accountId">계정 아이디</option>
-          <option value="name">이름</option>
-          <option value="businessTel">업무 연락처</option>
-          <option value="isActive">비활성화 여부</option>
-        </select>
-
-        {searchCategory === "isActive" ? (
-          <select
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="ml-2 p-2 border border-gray-300 rounded-md"
-          >
-            <option value="">전체</option>
-            <option value="true">활성화</option>
-            <option value="false">비활성화</option>
-          </select>
-        ) : (
-          <div className="relative flex-grow">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="검색어를 입력하세요"
-              className="w-full p-2"
-            />
-            <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-          </div>
-        )}
-      </div>
+      <SearchBar
+        onSearch={handleSearch}
+        searchOptions={[
+          { value: "accountId", label: "계정 아이디" },
+          { value: "name", label: "이름" },
+          { value: "businessTel", label: "업무 연락처" },
+          { value: "isActive", label: "비활성화 여부" },
+        ]}
+        defaultCategory="accountId"
+        selectOptions={{
+          isActive: [
+            { value: "", label: "전체" },
+            { value: "true", label: "비활성화" },
+            { value: "false", label: "활성화" },
+          ],
+        }}
+      />
 
       <div className="flex justify-end space-x-2 mb-4">
         <Link to={ACCOUNT_FORM}>
@@ -215,12 +195,13 @@ const AccountList = () => {
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
+        <Stack spacing={2} className="mt-10 items-center">
           <Pagination
+            shape="rounded"
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
-            color={"primary"}
+            color={""}
           />
         </Stack>
       )}
