@@ -26,7 +26,7 @@ const TrashImageFileBoard = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const postsPerPage = 14;
+  const postsPerPage = 16;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -75,12 +75,10 @@ const TrashImageFileBoard = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-          비활성화 이미지 페이지
-        </h1>
-      </header>
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        비활성화 이미지 페이지
+      </h1>
 
       <SearchBar
         onSearch={(term, category) => {
@@ -115,7 +113,7 @@ const TrashImageFileBoard = () => {
       </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
         {images.length > 0 ? (
           images.map((file, index) => (
             <TrashCard
