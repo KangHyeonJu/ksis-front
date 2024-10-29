@@ -15,6 +15,7 @@ import { ToggleSwitch } from "../../css/switch";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 const SignageList = () => {
   const userInfo = decodeJwt();
@@ -45,14 +46,14 @@ const SignageList = () => {
       if (response.data) {
         setSignages(response.data.content);
         setTotalPages(response.data.totalPages);
-
-        setLoading(false);
       } else {
         console.error("No data property in response");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
       alert(error.response?.data || "Unknown error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,31 +134,21 @@ const SignageList = () => {
         재생장치 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow border-y border-gray-300 my-10">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-[#444444] font-bold border-x border-gray-300"
-        >
-          <option value="deviceName">재생장치명</option>
+      <SearchBar
+        onSearch={(term, category) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setCurrentPage(1);
+        }}
+        searchOptions={[
+          { value: "deviceName", label: "재생장치명" },
+          ...(userInfo.roles === "ROLE_ADMIN"
+            ? [{ value: "account", label: "담당자" }]
+            : []),
+        ]}
+        defaultCategory="deviceName"
+      />
 
-          {userInfo.roles === "ROLE_ADMIN" ? (
-            <option value="account">담당자</option>
-          ) : null}
-        </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2"
-          />
-        </div>
-        <div className="bg-[#FF9C00] border-x border-[#FF9C00] text-white h-10 w-10 inline-flex items-center text-center">
-          <FaSearch className=" w-full" />
-        </div>
-      </div>
       <div className="flex justify-between my-4">
         <div className="inline-flex items-center">
           <ToggleSwitch />

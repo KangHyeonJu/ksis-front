@@ -10,6 +10,7 @@ import { decodeJwt } from "../../../decodeJwt";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import SearchBar from "../../components/SearchBar";
 
 const ApiBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -147,7 +148,21 @@ const ApiBoard = () => {
         </h1>
       </header>
 
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
+      <SearchBar
+        onSearch={(term, category) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setCurrentPage(1);
+        }}
+        searchOptions={[
+          { value: "apiName", label: "이름" },
+          { value: "provider", label: "제공업체" },
+          { value: "expiryDate", label: "만료일" },
+        ]}
+        defaultCategory="apiName"
+      />
+
+      {/* <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
         <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
@@ -167,7 +182,7 @@ const ApiBoard = () => {
           />
         </div>
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-      </div>
+      </div> */}
 
       <div className="flex justify-end space-x-2 mb-4">
         <button
