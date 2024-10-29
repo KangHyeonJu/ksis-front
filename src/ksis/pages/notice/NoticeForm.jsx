@@ -61,6 +61,7 @@ const NoticeForm = () => {
             label: device.deviceName,
           }))
         );
+        setLoading(false);
       } catch (error) {
         showAlert("디바이스 목록을 불러오는 중 오류가 발생했습니다.", error);
       }
@@ -95,8 +96,6 @@ const NoticeForm = () => {
             endDate,
             deviceIds: selectedDeviceIds.length ? selectedDeviceIds : [""],
           });
-
-          setLoading(false);
         } catch (error) {
           showAlert("공지글을 불러오는 중 오류가 발생했습니다.");
         }

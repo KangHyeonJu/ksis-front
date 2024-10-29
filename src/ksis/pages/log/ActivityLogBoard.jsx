@@ -16,6 +16,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
 import SearchBar from "../../components/SearchBar";
+import CheckboxTable from "../../components/CheckboxTable";
 
 const ActivityLogBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,8 @@ const ActivityLogBoard = () => {
   const [searchCategory, setSearchCategory] = useState("account"); // 검색 카테고리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  const postsPerPage = 10; // 한 페이지 10개 데이터
+  const postsPerPage = 15; // 한 페이지 10개 데이터
+  const checked = false;
 
   const userInfo = decodeJwt();
   const navigate = useNavigate();
@@ -116,7 +118,7 @@ const ActivityLogBoard = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         활동 로그
       </h1>
@@ -149,37 +151,42 @@ const ActivityLogBoard = () => {
         </select>
       </div>
 
-      <table className="min-w-full mt-4 table-fixed">
-        <thead className=" border-t border-b  border-double border-[#FF9C00]">
-          <tr className="text-gray-800">
-            <th className="w-1/5">접근일시</th>
-            <th className="w-1/5">이름(아이디)</th>
-            <th className="w-3/5">내용</th>
-          </tr>
-        </thead>
-        <tbody>
-          {logList.map((log) => (
-            <tr key={log.logId}>
-              <td className="text-center p-2 border-b border-gray-300">
-                {format(new Date(log.dateTime), "yyyy-MM-dd HH:mm:ss")}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {log.account.name}({log.account.accountId})
-              </td>
-              <td className="p-2 border-b border-gray-300">{log.detail}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
+        <CheckboxTable
+          headers={["접근일시", "이름(아이디)", "내용"]}
+          data={logList}
+          dataKeys={[
+            {
+              content: (item) =>
+                format(new Date(item.dateTime), "yyyy-MM-dd HH:mm:ss"),
+              className:
+                "p-2 text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) =>
+                item.account.name + "(" + item.account.accountId + ")",
+              className:
+                "p-2 text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => item.detail,
+              className:
+                "p-2 text-gray-800 text-center border-b border-gray-300",
+            },
+          ]}
+          uniqueKey="logId"
+          check={checked}
+        />
+      </div>
 
       {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
+      {totalPages > 0 && (
+        <Stack spacing={2} className="mt-10 items-center">
           <Pagination
+            shape="rounded"
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
-            color={"primary"}
           />
         </Stack>
       )}

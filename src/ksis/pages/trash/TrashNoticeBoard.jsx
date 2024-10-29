@@ -8,12 +8,13 @@ import {
   NOTICE_DEACTIVE_ALL,
   ACTIVE_NOTICE,
 } from "../../../constants/api_constant";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
 import SearchBar from "../../components/SearchBar";
+import CheckboxTable from "../../components/CheckboxTable";
 
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,18 +22,15 @@ const TrashNoticeBoard = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [filteredPosts, setFilteredPosts] = useState([]);
-
   const [notices, setNotices] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedNotices, setSelectedNotices] = useState([]);
+  const [selectedNotices, setSelectedNotices] = useState(new Set());
 
-  const postsPerPage = 10;
-  const navigate = useNavigate();
+  const postsPerPage = 15;
+  const checked = true;
 
   useEffect(() => {
-    setLoading(true);
     fetcher
       .get(NOTICE_DEACTIVE_ALL, {
         params: {
@@ -45,15 +43,13 @@ const TrashNoticeBoard = () => {
       .then((response) => {
         setNotices(response.data.content);
         setTotalPages(response.data.totalPages);
-        setFilteredPosts(response.data);
+        setLoading(false);
       })
       .catch((err) => {
         setError("데이터를 가져오는 데 실패했습니다.");
         console.log(err);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => {});
   }, [currentPage, searchTerm]);
 
   const filteredNotices = useMemo(() => {
@@ -81,45 +77,17 @@ const TrashNoticeBoard = () => {
     return <p>오류 발생: {error}</p>;
   }
 
-  const formatDate = (dateString) => {
-    if (!dateString) {
-      return "날짜 없음";
-    }
-    try {
-      const date = parseISO(dateString);
-      return format(date, "yyyy-MM-dd");
-    } catch (error) {
-      console.error("Invalid date format:", dateString);
-      return "Invalid date";
-    }
-  };
-
-  const handleCheckboxChange = (id) => {
-    setSelectedNotices((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((noticeId) => noticeId !== id)
-        : [...prevSelected, id]
-    );
-  };
-
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedNotices(filteredNotices.map((notice) => notice.noticeId));
-    } else {
-      setSelectedNotices([]);
-    }
-  };
-
   const handleActivation = async () => {
     if (window.confirm("선택한 공지를 활성화하시겠습니까?")) {
       try {
-        await Promise.all(
-          selectedNotices.map((id) => fetcher.post(`${ACTIVE_NOTICE}/${id}`))
+        const deletePromises = [...selectedNotices].map((id) =>
+          fetcher.post(`${ACTIVE_NOTICE}/${id}`)
         );
+        await Promise.all(deletePromises);
         setNotices(
-          notices.filter((notice) => !selectedNotices.includes(notice.noticeId))
+          notices.filter((notice) => !selectedNotices.has(notice.noticeId))
         );
-        setSelectedNotices([]);
+        setSelectedNotices(new Set());
         window.alert("선택한 공지를 활성화하였습니다.");
       } catch (err) {
         console.error("공지 활성화 오류:", err);
@@ -129,12 +97,10 @@ const TrashNoticeBoard = () => {
   };
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-          비활성화 공지글 관리
-        </h1>
-      </header>
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        비활성화 공지글 관리
+      </h1>
 
       <SearchBar
         onSearch={(term, category) => {
@@ -161,63 +127,14 @@ const TrashNoticeBoard = () => {
         </button>
       </div>
 
-      <div>
-        {filteredNotices.length === 0 ? (
-          <p className="text-center text-gray-600 mt-10 w-full">
-            공지글이 없습니다.
-          </p>
-        ) : (
-          <table className="w-full table-fixed border-collapse mt-4">
-            <thead className="border-t border-b border-double border-[#FF9C00]">
-              <tr>
-                <th className="w-1/12 p-2 text-center text-gray-800">
-                  <input
-                    type="checkbox"
-                    onChange={handleSelectAll}
-                    checked={selectedNotices.length === filteredNotices.length}
-                  />
-                </th>
-                <th className="w-4/12 p-2">제목</th>
-                <th className="w-3/12 p-2">작성자(아이디)</th>
-                <th className="w-3/12 p-2">작성일</th>
-              </tr>
-            </thead>
-            <tbody>
-              {notices.map((notice) => (
-                <tr key={notice.noticeId}>
-                  <td className="text-center p-2 border-b border-gray-300">
-                    <input
-                      type="checkbox"
-                      checked={selectedNotices.includes(notice.noticeId)}
-                      onChange={() => handleCheckboxChange(notice.noticeId)}
-                    />
-                  </td>
-                  <td className="p-2 text-gray-800 text-left hover:underline hover:text-[#FF9C00] border-b border-gray-300">
-                    <Link to={`${DEACTIVE_NOTICE_DTL}/${notice.noticeId}`}>
-                      {notice.title}
-                    </Link>
-                  </td>
-                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                    {notice.name}({notice.accountId})
-                  </td>
-                  <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                    {formatDate(notice.regDate)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
       {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-10">
+      {totalPages > 0 && (
+        <Stack spacing={2} className="mt-10 items-center">
           <Pagination
+            shape="rounded"
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
-            color={"primary"}
           />
         </Stack>
       )}
