@@ -97,7 +97,7 @@ const OriginCard = ({
 
         {/* 인코딩, 삭제 버튼 */}
         <div className="items-center text-center row mx-auto p-2">
-          <Link to={`${VIDEO_ENCODING}/${file.originalResourceId}`}>
+          <Link to={`${encodingPath}/${file.originalResourceId}`}>
             <ButtonComponentB defaultColor="blue-600" shadowColor="blue-800">
               인코딩
             </ButtonComponentB>
