@@ -18,6 +18,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import { Button } from "../../css/button";
 import CheckboxTable from "../../components/CheckboxTable";
 
 const AccountList = () => {
@@ -145,19 +146,19 @@ const AccountList = () => {
         <AlertDescription>{alertMessage}</AlertDescription>
         <AlertActions>
           {confirmAction && (
-            <button
+            <Button
               onClick={() => {
                 setIsAlertOpen(false);
                 if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
               }}
             >
               확인
-            </button>
+            </Button>
           )}
           {alertMessage !== "비활성화 여부가 변경되었습니다." && (
-            <button plain onClick={() => setIsAlertOpen(false)}>
+            <Button plain onClick={() => setIsAlertOpen(false)}>
               취소
-            </button>
+            </Button>
           )}
         </AlertActions>
       </Alert>

@@ -10,6 +10,7 @@ import { ToggleSwitch } from "../../css/switch";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
+import SearchBar from "../../components/SearchBar";
 
 const SignageGrid = () => {
   const userInfo = decodeJwt();
@@ -37,13 +38,13 @@ const SignageGrid = () => {
       if (response.data) {
         setSignages(response.data.content);
         setTotalPages(response.data.totalPages);
-
-        setLoading(false);
       } else {
         console.error("No data property in response");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,29 +73,20 @@ const SignageGrid = () => {
         재생장치 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-gray-600 font-bold"
-        >
-          <option value="deviceName">재생장치명</option>
-
-          {userInfo.roles === "ROLE_ADMIN" ? (
-            <option value="account">담당자</option>
-          ) : null}
-        </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2 pr-10"
-          />
-        </div>
-        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-      </div>
+      <SearchBar
+        onSearch={(term, category) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setCurrentPage(1);
+        }}
+        searchOptions={[
+          { value: "deviceName", label: "재생장치명" },
+          ...(userInfo.roles === "ROLE_ADMIN"
+            ? [{ value: "account", label: "담당자" }]
+            : []),
+        ]}
+        defaultCategory="deviceName"
+      />
 
       <div className="flex justify-between my-4">
         <div className="inline-flex items-center">
