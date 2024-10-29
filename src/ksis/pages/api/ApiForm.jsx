@@ -13,6 +13,7 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import Loading from "../../components/Loading";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const ApiForm = () => {
   const [apiName, setApiName] = useState("");
@@ -237,21 +238,22 @@ const ApiForm = () => {
               </div>
             </div>
             <div className="flex justify-center space-x-4">
-              <button
-                type="submit"
-                className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+              <ButtonComponentB
+                  type="submit"
+                  defaultColor="blue-600"
+                  shadowColor="blue-800"
               >
                 {apiId ? "수정하기" : "등록하기"}
-              </button>
-              <button
-                type="button"
-                className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-               hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-                onClick={() => navigate(-1)}
+              </ButtonComponentB>
+
+              <ButtonComponentB
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  defaultColor="red-600"
+                  shadowColor="red-800"
               >
                 뒤로가기
-              </button>
+              </ButtonComponentB>
             </div>
           </div>
         </form>

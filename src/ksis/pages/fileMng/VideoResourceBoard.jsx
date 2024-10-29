@@ -19,6 +19,7 @@ import fetcher from "../../../fetcher";
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const VideoResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -315,30 +316,29 @@ const VideoResourceBoard = () => {
                 {/* 인코딩, 삭제 버튼 */}
                 <div className="items-center text-center row mx-auto p-2">
                   <Link to={`${VIDEO_ENCODING}/${post.originalResourceId}`}>
-                    <button
-                      className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+                    <ButtonComponentB
+                        defaultColor="blue-600"
+                        shadowColor="blue-800"
                     >
                       인코딩
-                    </button>
+                    </ButtonComponentB>
                   </Link>
 
-                  <button
-                    type="button"
-                    onClick={() => handleDeactivate(post.originalResourceId)}
-                    className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+                  <ButtonComponentB
+                      onClick={() => handleDeactivate(post.originalResourceId)}
+                      defaultColor="red-600"
+                      shadowColor="red-800"
                   >
                     비활성화
-                  </button>
+                  </ButtonComponentB>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="col-span-full text-center text-gray-500">
-            게시된 파일이 없습니다.
-          </div>
+            <div className="col-span-full text-center text-gray-500">
+              게시된 파일이 없습니다.
+            </div>
         )}
       </div>
 

@@ -7,6 +7,8 @@ import ResolutionUpdateModal from "./ResolutionUpdateModal";
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
+import ButtonComponent from "../../components/ButtonComponent";
 
 const ResolutionList = () => {
   const [resolutions, setResolutions] = useState([]);
@@ -157,26 +159,26 @@ const ResolutionList = () => {
       </div>
 
       <div className="flex justify-end space-x-2 mb-4">
-        <button
-          type="button"
-          className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-          onClick={openModal}
+        <ButtonComponentB
+            type="button"
+            defaultColor="blue-600"
+            shadowColor="blue-800"
+            onClick={openModal}
         >
           해상도 등록
           <ResolutionAddModal
-            isOpen={modalIsOpen}
-            onRequestClose={handleModalClose}
+              isOpen={modalIsOpen}
+              onRequestClose={handleModalClose}
           />
-        </button>
-        <button
-          onClick={deleteResolution}
-          type="button"
-          className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-               hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+        </ButtonComponentB>
+
+        <ButtonComponentB
+            onClick={deleteResolution}
+            defaultColor="red-600"
+            shadowColor="red-800"
         >
           삭제
-        </button>
+        </ButtonComponentB>
       </div>
 
       <table className="w-full table-fixed border-collapse mt-4">
@@ -222,13 +224,13 @@ const ResolutionList = () => {
               </td>
 
               <td className="border-b border-gray-300 p-2 text-center">
-                <button
-                  onClick={() => openUpdateModal(post.resolutionId)}
-                  className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+                <ButtonComponent
+                    onClick={() => openUpdateModal(post.resolutionId)}
+                    defaultColor="blue-600"
+                    shadowColor="blue-800"
                 >
                   수정
-                </button>
+                </ButtonComponent>
               </td>
             </tr>
           ))}

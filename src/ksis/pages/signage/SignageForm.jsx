@@ -19,6 +19,7 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import Loading from "../../components/Loading";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const SignageForm = () => {
   //가로세로크기
@@ -361,15 +362,13 @@ const SignageForm = () => {
                   readOnly
                   className="mr-3"
                 />
-                <button
-                  type="button"
-                  color="zinc"
-                  onClick={execDaumPostcode}
-                  className="whitespace-nowrap rounded-md border border-gray-600 bg-white text-gray-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-gray-600 hover:text-white hover:shadow-inner hover:shadow-gray-800 focus-visible:outline-gray-600 transition duration-200"
+                <ButtonComponentB
+                    onClick={execDaumPostcode}
+                    defaultColor="gray-600"
+                    shadowColor="gray-800"
                 >
                   주소검색
-                </button>
+                </ButtonComponentB>
                 {addressError && (
                   <p className="text-red-500 text-sm ml-2">{addressError}</p>
                 )}
@@ -464,21 +463,21 @@ const SignageForm = () => {
           <br />
 
           <div className="mt-6 flex justify-center gap-4">
-            <button
-              type="submit"
-              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+            <ButtonComponentB
+                type="submit"
+                defaultColor="blue-600"
+                shadowColor="blue-800"
             >
               등록하기
-            </button>
-            <button
-              type="button"
-              onClick={onCancel}
-              className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+            </ButtonComponentB>
+
+            <ButtonComponentB
+                onClick={onCancel}
+                defaultColor="red-600"
+                shadowColor="red-800"
             >
               뒤로가기
-            </button>
+            </ButtonComponentB>
           </div>
         </form>
       </div>

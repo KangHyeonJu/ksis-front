@@ -12,6 +12,7 @@ import { format, parseISO } from "date-fns";
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -157,14 +158,13 @@ const TrashNoticeBoard = () => {
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
       <div className="flex justify-end space-x-2 mb-4">
-        <button
-          onClick={handleActivation}
-          type="button"
-          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+        <ButtonComponentB
+            onClick={handleActivation}
+            defaultColor="blue-600"
+            shadowColor="blue-800"
         >
           활성화
-        </button>
+        </ButtonComponentB>
       </div>
 
       <div>

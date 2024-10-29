@@ -9,6 +9,7 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const PcList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -203,25 +204,23 @@ const PcList = () => {
       </div>
 
       {userInfo.roles === "ROLE_ADMIN" ? (
-        <div className="flex justify-end space-x-2 my-10">
-          <Link to={PC_FORM}>
-            <button
-              type="button"
-              className="rounded-smd border border-[#FF9C00] bg-[#FF9C00] text-white px-3 py-2 text-sm font-semibold shadow-sm 
-              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] transition duration-200"
+          <div className="flex justify-end space-x-2 my-10">
+            <Link to={PC_FORM}>
+              <ButtonComponentB
+                  defaultColor="blue-600"
+                  shadowColor="blue-800"
+              >
+                일반 PC 등록
+              </ButtonComponentB>
+            </Link>
+            <ButtonComponentB
+                onClick={deletePc}
+                defaultColor="red-600"
+                shadowColor="red-800"
             >
-              일반 PC 등록
-            </button>
-          </Link>
-          <button
-            onClick={deletePc}
-            type="button"
-            className="rounded-smd border border-[#444444] bg-[#444444] text-white px-3 py-2 text-sm font-semibold shadow-sm 
-            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-          >
-            삭제
-          </button>
-        </div>
+              삭제
+            </ButtonComponentB>
+          </div>
       ) : null}
 
       <div>

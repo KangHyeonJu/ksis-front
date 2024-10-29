@@ -15,6 +15,7 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import Loading from "../../components/Loading";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const TrashNoticeDtl = () => {
   const userInfo = decodeJwt();
@@ -125,15 +126,13 @@ const TrashNoticeDtl = () => {
 
             {/* 버튼들 */}
             <div className="flex justify-center space-x-4">
-              <button
-                type="button"
-                color="zinc"
-                className=" rounded-md border border-gray-600 bg-white text-gray-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-gray-600 hover:text-white hover:shadow-inner hover:shadow-gray-800 focus-visible:outline-gray-600 transition duration-200"
-                onClick={handleCancel}
+              <ButtonComponentB
+                  onClick={handleCancel}
+                  defaultColor="gray-600"
+                  shadowColor="gray-800"
               >
                 뒤로가기
-              </button>
+              </ButtonComponentB>
             </div>
           </div>
         </form>

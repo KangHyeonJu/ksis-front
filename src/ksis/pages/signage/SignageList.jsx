@@ -13,6 +13,7 @@ import { decodeJwt } from "../../../decodeJwt";
 import { ToggleSwitch } from "../../css/switch";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const SignageList = () => {
   const userInfo = decodeJwt();
@@ -159,27 +160,25 @@ const SignageList = () => {
           <ToggleSwitch />
         </div>
         {userInfo.roles === "ROLE_ADMIN" ? (
-          <div className=" inline-flex items-center">
-            <div className="flex justify-end space-x-2">
-              <Link to={SIGNAGE_FORM}>
-                <button
-                  type="button"
-                  className=" rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+            <div className="inline-flex items-center">
+              <div className="flex justify-end space-x-2">
+                <Link to={SIGNAGE_FORM}>
+                  <ButtonComponentB
+                      defaultColor="blue-600"
+                      shadowColor="blue-800"
+                  >
+                    재생장치 등록
+                  </ButtonComponentB>
+                </Link>
+                <ButtonComponentB
+                    onClick={deleteSignage}
+                    defaultColor="red-600"
+                    shadowColor="red-800"
                 >
-                  재생장치 등록
-                </button>
-              </Link>
-              <button
-                onClick={deleteSignage}
-                type="button"
-                className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-              hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-              >
-                삭제
-              </button>
+                  삭제
+                </ButtonComponentB>
+              </div>
             </div>
-          </div>
         ) : null}
       </div>
       <table className="w-full table-fixed border-collapse">

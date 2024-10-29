@@ -15,6 +15,7 @@ import {
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const VideoFileBoard = () => {
   // 페이지네이션 관련 상태
@@ -288,14 +289,13 @@ const VideoFileBoard = () => {
                 {/* 삭제 버튼 */}
                 <div>
                   <div className="flex justify-center p-2">
-                    <button
-                      type="button"
-                      className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-                      onClick={() => handleDelete(post.encodedResourceId)}
+                    <ButtonComponentB
+                        onClick={() => handleDelete(post.encodedResourceId)}
+                        defaultColor="red-600"
+                        shadowColor="red-800"
                     >
                       삭제
-                    </button>
+                    </ButtonComponentB>
                   </div>
                 </div>
               </div>

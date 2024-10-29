@@ -14,6 +14,7 @@ import {
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const TrashVideoFileBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -195,14 +196,13 @@ const TrashVideoFileBoard = () => {
                 {/* 활성화 버튼 */}
                 <div>
                   <div className="flex justify-center p-2">
-                    <button
-                      type="button"
-                      className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                      onClick={() => handleActivation(post.originalResourceId)}
+                    <ButtonComponentB
+                        onClick={() => handleActivation(post.originalResourceId)}
+                        defaultColor="blue-600"
+                        shadowColor="blue-800"
                     >
                       활성화
-                    </button>
+                    </ButtonComponentB>
                   </div>
                 </div>
               </div>

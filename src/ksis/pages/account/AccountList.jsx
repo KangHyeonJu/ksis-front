@@ -9,10 +9,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
 
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponent from "../../components/ButtonComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
@@ -156,9 +156,9 @@ const AccountList = () => {
       </div>
 
       <div className="flex justify-end space-x-2 mb-4">
-        <ButtonComponent to={ACCOUNT_FORM} defaultColor="[#FF9C00]" shadowColor="[#FF9C00]">
+        <ButtonComponentB to={ACCOUNT_FORM} defaultColor="[#FF9C00]" shadowColor="[#FF9C00]">
           계정 등록
-        </ButtonComponent>
+        </ButtonComponentB>
       </div>
 
       <table className="min-w-full mt-4 table-fixed">

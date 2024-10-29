@@ -9,6 +9,7 @@ import { decodeJwt } from "../../../decodeJwt";
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const ApiBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -169,20 +170,21 @@ const ApiBoard = () => {
         </div>
 
         <div className="flex justify-end space-x-2 mb-4">
-          <button
+          <ButtonComponentB
               onClick={() => navigate("/apiform")}
-              className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm
-          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+              defaultColor="blue-600"
+              shadowColor="blue-800"
           >
             API 등록
-          </button>
-          <button
+          </ButtonComponentB>
+
+          <ButtonComponentB
               onClick={handleDeletePosts}
-              className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm
-          hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+              defaultColor="red-600"
+              shadowColor="red-800"
           >
             삭제
-          </button>
+          </ButtonComponentB>
         </div>
 
         <div>
