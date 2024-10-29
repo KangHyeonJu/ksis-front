@@ -1,9 +1,10 @@
 import React from "react";
 import { FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { format, parseISO } from "date-fns";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const OriginCard = ({
-  file, 
+  file,
   onEditClick,
   editingTitleIndex,
   newTitle,
@@ -23,7 +24,6 @@ const OriginCard = ({
     }
   };
 
-
   return (
     <div className="grid p-1">
       <div className="flex flex-col h-full overflow-hidden max-w-xs">
@@ -36,8 +36,7 @@ const OriginCard = ({
               className="w-full h-full cursor-pointer object-cover object-center hover:scale-150"
               //이미지 클릭하면 모달 열림
               onClick={() => openResourceModal(file.filePath)}
-              
-            /> 
+            />
             {/* 아이콘 추가 */}
             {showPlayIcon && (
               <FaRegPlayCircle
@@ -57,21 +56,25 @@ const OriginCard = ({
               onChange={(e) => setNewTitle(e.target.value)}
               className="pl-4  w-full text-xl font-medium border-b border-dashed text-center border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600 max-w-full mx-auto justify-start"
               placeholder="제목을 입력해주세요."
-              onKeyDown={(e) => e.key === "Enter" && handleSaveClick(file.encodedResourceId)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && handleSaveClick(file.encodedResourceId)
+              }
               onBlur={() => handleSaveClick(file.encodedResourceId)} // 포커스 아웃 시 저장
             />
           ) : (
-            <h2 className="pl-4 text-xl font-bold truncate max-w-full mx-auto justify-start
-             text-gray-800" 
-             title={file.fileTitle}
-             onBlur={() => handleSaveClick(file.encodedResourceId)} // 포커스 아웃 시 저장
-             onClick={() => onEditClick(file.index, file.fileTitle)}>
+            <h2
+              className="pl-4 text-xl font-bold truncate max-w-full mx-auto justify-start
+             text-gray-800"
+              title={file.fileTitle}
+              onBlur={() => handleSaveClick(file.encodedResourceId)} // 포커스 아웃 시 저장
+              onClick={() => onEditClick(file.index, file.fileTitle)}
+            >
               {file.fileTitle}
             </h2>
           )}
           <div>
             <FaEdit
-               onClick={() =>
+              onClick={() =>
                 editingTitleIndex === file.index
                   ? handleSaveClick(file.encodedResourceId)
                   : onEditClick(file.index, file.fileTitle)
@@ -88,19 +91,16 @@ const OriginCard = ({
 
         {/* 삭제 버튼 */}
         <div className="flex justify-center p-2">
-          <button
-            type="button"
+          <ButtonComponentB
             onClick={() => handleDelete(file.encodedResourceId)}
-            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+            defaultColor="red-600"
+            shadowColor="red-800"
           >
             삭제
-          </button>
+          </ButtonComponentB>
         </div>
       </div>
-      
     </div>
-    
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   VIDEO_RESOURCE_BOARD,
@@ -33,7 +32,6 @@ const VideoResourceBoard = () => {
   const [loading, setLoading] = useState(true);
 
   const [videos, setVideos] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
 
@@ -58,7 +56,6 @@ const VideoResourceBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content); // 영상 데이터를 설정
-        setFilteredPosts(response.data);
 
         setLoading(false);
       })
@@ -87,8 +84,6 @@ const VideoResourceBoard = () => {
         );
       }
     }
-
-    setFilteredPosts(filtered);
   }, [videos, searchTerm, searchCategory]);
 
   const handleEditClick = (index, title) => {
@@ -118,9 +113,6 @@ const VideoResourceBoard = () => {
             : video
         );
         setVideos(updatedVideos);
-
-        // 변경된 videos를 기반으로 filteredPosts 상태도 업데이트
-        setFilteredPosts(updatedVideos);
 
         setEditingTitleIndex(null);
         setNewTitle("");
@@ -175,12 +167,6 @@ const VideoResourceBoard = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   if (loading) {

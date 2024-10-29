@@ -2,10 +2,14 @@ import React from "react";
 import { FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
-import { IMAGE_ENCODING, VIDEO_ENCODING } from "../../../constants/page_constant";
+import {
+  IMAGE_ENCODING,
+  VIDEO_ENCODING,
+} from "../../../constants/page_constant";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const OriginCard = ({
-  file, 
+  file,
   onEditClick,
   editingTitleIndex,
   newTitle,
@@ -26,7 +30,6 @@ const OriginCard = ({
     }
   };
 
-
   return (
     <div className="grid p-1">
       <div className="flex flex-col h-full overflow-hidden max-w-xs">
@@ -39,15 +42,14 @@ const OriginCard = ({
               className="w-full h-full cursor-pointer object-cover object-center hover:scale-150"
               //이미지 클릭하면 모달 열림
               onClick={() => openResourceModal(file.originalResourceId)}
-              
-            /> 
+            />
             {/* 아이콘 추가 */}
-    {showPlayIcon && (
-      <FaRegPlayCircle
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85"
-        onClick={() => openResourceModal(file.originalResourceId)}
-      />
-    )}
+            {showPlayIcon && (
+              <FaRegPlayCircle
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85"
+                onClick={() => openResourceModal(file.originalResourceId)}
+              />
+            )}
           </div>
         </div>
 
@@ -60,21 +62,25 @@ const OriginCard = ({
               onChange={(e) => setNewTitle(e.target.value)}
               className="pl-4 w-full text-xl font-medium border-b border-dashed text-center border-gray-400 outline-none transition-colors duration-200 focus:border-gray-600 max-w-full mx-auto justify-start"
               placeholder="제목을 입력해주세요."
-              onKeyDown={(e) => e.key === "Enter" && handleSaveClick(file.originalResourceId)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && handleSaveClick(file.originalResourceId)
+              }
               onBlur={() => handleSaveClick(file.originalResourceId)} // 포커스 아웃 시 저장
             />
           ) : (
-            <h2 className="pl-4 text-xl font-bold truncate max-w-full mx-auto justify-start
-             text-gray-800" 
-             title={file.fileTitle}
-             onBlur={() => handleSaveClick(file.originalResourceId)} // 포커스 아웃 시 저장
-             onClick={() => onEditClick(file.index, file.fileTitle)}>
+            <h2
+              className="pl-4 text-xl font-bold truncate max-w-full mx-auto justify-start
+             text-gray-800"
+              title={file.fileTitle}
+              onBlur={() => handleSaveClick(file.originalResourceId)} // 포커스 아웃 시 저장
+              onClick={() => onEditClick(file.index, file.fileTitle)}
+            >
               {file.fileTitle}
             </h2>
           )}
           <div>
             <FaEdit
-               onClick={() =>
+              onClick={() =>
                 editingTitleIndex === file.index
                   ? handleSaveClick(file.originalResourceId)
                   : onEditClick(file.index, file.fileTitle)
@@ -91,24 +97,22 @@ const OriginCard = ({
 
         {/* 인코딩, 삭제 버튼 */}
         <div className="items-center text-center row mx-auto p-2">
-          <Link to={`${encodingPath}/${file.originalResourceId}`}>
-            <button className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200">
+          <Link to={`${VIDEO_ENCODING}/${file.originalResourceId}`}>
+            <ButtonComponentB defaultColor="blue-600" shadowColor="blue-800">
               인코딩
-            </button>
+            </ButtonComponentB>
           </Link>
 
-          <button
-            type="button"
+          <ButtonComponentB
             onClick={() => handleDeactivate(file.originalResourceId)}
-            className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+            defaultColor="red-600"
+            shadowColor="red-800"
           >
             비활성화
-          </button>
+          </ButtonComponentB>
         </div>
       </div>
-      
     </div>
-    
   );
 };
 

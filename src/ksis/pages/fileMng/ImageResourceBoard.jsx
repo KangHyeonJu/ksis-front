@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaEdit } from "react-icons/fa";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   IMAGE_RESOURCE_BOARD,
   VIDEO_RESOURCE_BOARD,
@@ -30,7 +29,6 @@ const ImageResourceBoard = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [images, setImages] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
 
@@ -56,7 +54,6 @@ const ImageResourceBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
-        setFilteredPosts(response.data);
 
         setLoading(false);
       })
@@ -91,7 +88,6 @@ const ImageResourceBoard = () => {
             : image
         );
         setImages(updatedImages);
-        setFilteredPosts(updatedImages);
 
         setEditingTitleIndex(null);
         setNewTitle("");
@@ -123,12 +119,6 @@ const ImageResourceBoard = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const openResourceModal = (image) => {

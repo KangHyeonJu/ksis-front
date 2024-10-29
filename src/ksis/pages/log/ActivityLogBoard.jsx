@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { ACTIVITYLOG_LIST } from "../../../constants/api_constant";
-import { FaSearch } from "react-icons/fa";
 import {
   ACCESSLOG_INVENTORY,
   ACTIVITYLOG_INVENTORY,
@@ -70,24 +69,6 @@ const ActivityLogBoard = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
-  };
-
-  // 검색 시작기간 핸들러
-  const handleStartTime = (e) => {
-    setStartTime(e.target.value);
-    setCurrentPage(1);
-  };
-
-  // 검색 종료기간 핸들러
-  const handleEndTime = (e) => {
-    setEndTime(e.target.value);
-    setCurrentPage(1);
   };
 
   const handleSelectChange = (event) => {

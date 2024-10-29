@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { NOTICE_FORM, TRASH_NOTICE } from "../../../constants/page_constant";
-import { NOTICE_LIST, DEACTIVE_NOTICE } from "../../../constants/api_constant";
+import { TRASH_NOTICE } from "../../../constants/page_constant";
+import { NOTICE_LIST } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
 import { Input } from "../../css/input";
 import { Button } from "../../css/button";
 import { Textarea } from "../../css/textarea";
-import {
-  Alert,
-  AlertActions,
-  AlertDescription,
-  AlertTitle,
-} from "../../css/alert";
 import Loading from "../../components/Loading";
 import ButtonComponentB from "../../components/ButtonComponentB";
 
@@ -22,15 +16,11 @@ const TrashNoticeDtl = () => {
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
   const { noticeId } = useParams();
-  const [role, setRole] = useState(""); // 역할 상태 추가
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotice = async () => {
-      setRole(userInfo.roles); // 역할 상태 설정
-
       try {
         const response = await fetcher.get(NOTICE_LIST + `/${noticeId}`);
         setNotice(response.data);

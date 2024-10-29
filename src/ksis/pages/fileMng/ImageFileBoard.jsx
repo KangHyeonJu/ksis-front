@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
+import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import {
   VIDEO_FILE_BOARD,
   IMAGE_FILE_BOARD,
@@ -26,7 +25,6 @@ const ImageFileBoard = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [filteredPosts, setFilteredPosts] = useState([]);
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +47,6 @@ const ImageFileBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
-        setFilteredPosts(response.data);
 
         setLoading(false);
       })
@@ -76,7 +73,6 @@ const ImageFileBoard = () => {
             : image
         );
         setImages(updatedImages);
-        setFilteredPosts(updatedImages);
 
         setEditingTitleIndex(null);
         setNewTitle("");
@@ -123,12 +119,6 @@ const ImageFileBoard = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   if (loading) {

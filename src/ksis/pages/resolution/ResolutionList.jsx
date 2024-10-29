@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { RESOLUTION } from "../../../constants/api_constant";
-import { FaSearch } from "react-icons/fa";
 import ResolutionAddModal from "./ResolutionAddModal";
 import ResolutionUpdateModal from "./ResolutionUpdateModal";
 
@@ -73,12 +72,6 @@ const ResolutionList = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const deleteResolution = async (e) => {
@@ -160,7 +153,7 @@ const ResolutionList = () => {
           check={checked}
           renderActions={(item) => (
             <ButtonComponent
-              onClick={() => openUpdateModal(post.resolutionId)}
+              onClick={() => openUpdateModal(item.resolutionId)}
               defaultColor="blue-600"
               shadowColor="blue-800"
             >

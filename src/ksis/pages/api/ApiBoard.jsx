@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { API_BOARD, API_FORM, MAIN } from "../../../constants/page_constant"; // MAIN 상수 추가
 import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
@@ -62,12 +61,6 @@ const ApiBoard = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const handleDeletePosts = async () => {
