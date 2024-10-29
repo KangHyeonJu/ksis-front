@@ -36,7 +36,7 @@ const VideoFileBoard = () => {
   const [selectedVideo, setSelectedVideo] = useState("");
   const location = useLocation();
   const navigate = useNavigate(); // Initialize useNavigate
-  const postsPerPage = 14; // 페이지당 게시물 수
+  const postsPerPage = 16; // 페이지당 게시물 수
 
   useEffect(() => {
     fetcher
@@ -133,12 +133,10 @@ const VideoFileBoard = () => {
   }
 
   return (
-    <div className="p-6 max-w-screen-2xl mx-auto">
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-          영상 인코딩 페이지
-        </h1>
-      </header>
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        영상 인코딩 페이지
+      </h1>
 
       <SearchBar
         onSearch={(term, category) => {
@@ -173,7 +171,7 @@ const VideoFileBoard = () => {
       </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
         {videos.length > 0 ? (
           videos.map((file, index) => (
             <EncodedCard
