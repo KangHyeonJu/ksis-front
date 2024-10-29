@@ -21,6 +21,7 @@ const PcList = () => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 15;
+  const checked = true;
 
   const [loading, setLoading] = useState(true);
 
@@ -130,7 +131,7 @@ const PcList = () => {
         </div>
       </div>
 
-      <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
         <CheckboxTable
           headers={["PC명", "담당자(아이디)", "등록일"]}
           data={posts}
@@ -161,6 +162,7 @@ const PcList = () => {
           uniqueKey="deviceId"
           selectedItems={selectedPosts}
           setSelectedItems={setSelectedPosts}
+          check={checked}
         />
       </div>
 
@@ -169,8 +171,8 @@ const PcList = () => {
           <Link to={PC_FORM}>
             <button
               type="button"
-              className="rounded-smd border border-[#FF9C00] bg-[#FF9C00] text-white px-3 py-2 text-sm font-semibold shadow-sm 
-              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] transition duration-200"
+              className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
             >
               일반 PC 등록
             </button>
@@ -178,8 +180,8 @@ const PcList = () => {
           <button
             onClick={deletePc}
             type="button"
-            className="rounded-smd border border-[#444444] bg-[#444444] text-white px-3 py-2 text-sm font-semibold shadow-sm 
-            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
           >
             삭제
           </button>

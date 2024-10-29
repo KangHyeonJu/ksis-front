@@ -19,6 +19,8 @@ const ResolutionList = () => {
   const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [loading, setLoading] = useState(true);
 
+  const checked = true;
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
@@ -144,7 +146,7 @@ const ResolutionList = () => {
         </div>
       </div>
 
-      <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
         <CheckboxTable
           headers={["이름", "가로 X 세로(px)", ""]}
           data={resolutions}
@@ -161,10 +163,11 @@ const ResolutionList = () => {
           uniqueKey="resolutionId"
           selectedItems={selectedPosts}
           setSelectedItems={setSelectedPosts}
+          check={checked}
           renderActions={(item) => (
             <button
               onClick={() => openUpdateModal(item.resolutionId)}
-              className="rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+              className="rounded-md border border-blue-600 bg-white text-blue-600 py-1 px-2 text-sm font-semibold shadow-sm 
                         hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
             >
               수정
@@ -176,8 +179,8 @@ const ResolutionList = () => {
       <div className="flex justify-end space-x-2 my-10">
         <button
           type="button"
-          className="rounded-smd border border-[#FF9C00] bg-[#FF9C00] text-white px-3 py-2 text-sm font-semibold shadow-sm 
-              hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] transition duration-200"
+          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
+          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
           onClick={openModal}
         >
           해상도 등록
@@ -189,8 +192,8 @@ const ResolutionList = () => {
         <button
           onClick={deleteResolution}
           type="button"
-          className="rounded-smd border border-[#444444] bg-[#444444] text-white px-3 py-2 text-sm font-semibold shadow-sm 
-            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+          className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
+                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
         >
           삭제
         </button>

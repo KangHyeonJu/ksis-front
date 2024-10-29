@@ -24,6 +24,7 @@ const ApiBoard = () => {
   const [error, setError] = useState(null);
 
   const postsPerPage = 15;
+  const checked = true;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,26 +69,6 @@ const ApiBoard = () => {
     setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
-  const handleCheckboxChange = (postId, event) => {
-    event.stopPropagation();
-    setSelectedPosts((prevSelectedPosts) => {
-      const newSelectedPosts = new Set(prevSelectedPosts);
-      if (newSelectedPosts.has(postId)) {
-        newSelectedPosts.delete(postId);
-      } else {
-        newSelectedPosts.add(postId);
-      }
-      return newSelectedPosts;
-    });
-  };
-
-  const handleSelectAllChange = (e) => {
-    const isChecked = e.target.checked;
-    setSelectedPosts(
-      isChecked ? new Set(posts.map((post) => post.apiId)) : new Set()
-    );
-  };
-
   const handleDeletePosts = async () => {
     if (selectedPosts.size === 0) {
       alert("삭제할 게시글을 선택해주세요.");
@@ -120,18 +101,6 @@ const ApiBoard = () => {
       alert("게시글 삭제 중 오류가 발생했습니다.");
     }
   };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    return dateString.substring(0, 10);
-  };
-
-  const handleApiNameClick = (apiId) => {
-    navigate(`${API_FORM}/${apiId}`);
-  };
-
-  const isAllSelected =
-    posts.length > 0 && posts.every((post) => selectedPosts.has(post.apiId));
 
   if (loading) {
     return <Loading />;
@@ -171,7 +140,7 @@ const ApiBoard = () => {
         </div>
       </div>
 
-      <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
         {posts.length === 0 ? (
           <p className="text-center text-gray-600 mt-10 w-full">
             등록된 API가 없습니다.
@@ -202,6 +171,7 @@ const ApiBoard = () => {
             uniqueKey="apiId"
             selectedItems={selectedPosts}
             setSelectedItems={setSelectedPosts}
+            check={checked}
           />
         )}
       </div>
