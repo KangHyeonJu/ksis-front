@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import {
   ACCOUNT_FORM,
@@ -15,7 +15,6 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import { Button } from "../../css/button"; // Button 컴포넌트 추가
-import { Field } from "../../css/fieldset";
 import Loading from "../../components/Loading";
 import ButtonComponentB from "../../components/ButtonComponentB";
 

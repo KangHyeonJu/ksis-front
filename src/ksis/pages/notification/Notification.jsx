@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ReactDOM from "react-dom";
 import {
   NOTIFICATION_PAGE,
   NOTIFICATION_ISREAD,

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
-import { format, parseISO } from "date-fns";
-import { FaSearch, FaRegPlayCircle } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import {
   TRASH_IMAGE_FILE,
@@ -17,7 +15,6 @@ import TrashCard from "../../components/file/TrashCard";
 import SearchBar from "../../components/SearchBar";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
-import ButtonComponentB from "../../components/ButtonComponentB";
 import TabButton from "../../components/TapButton";
 
 const TrashVideoFileBoard = () => {
@@ -31,7 +28,6 @@ const TrashVideoFileBoard = () => {
 
   const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
   const [videos, setVideos] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물을 상태로 관리
 
   const postsPerPage = 14; // 페이지당 게시물 수
   const navigate = useNavigate();
@@ -50,7 +46,6 @@ const TrashVideoFileBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content);
-        setFilteredPosts(response.data); // 받아온 데이터를 필터링된 게시물 상태로 설정
 
         setLoading(false);
       })
@@ -58,12 +53,6 @@ const TrashVideoFileBoard = () => {
         console.error("Error fetching videos:", error);
       });
   }, [currentPage, searchTerm]);
-
-  const handleToggle = () => {
-    const newIsOriginal = !isOriginal;
-    setIsOriginal(newIsOriginal);
-    navigate(newIsOriginal ? TRASH_VIDEO_FILE : TRASH_IMAGE_FILE);
-  };
 
   const handleActivation = async (id) => {
     if (window.confirm("정말로 이 영상을 활성화하시겠습니까?")) {
@@ -82,16 +71,6 @@ const TrashVideoFileBoard = () => {
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
-  };
-
-  if (loading) {
-    return <Loading />;
-  }
 
   if (loading) {
     return <Loading />;

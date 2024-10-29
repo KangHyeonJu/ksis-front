@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   TRASH_IMAGE_FILE,
@@ -9,7 +8,6 @@ import {
   DEACTIVE_IMAGE_BOARD,
   FILE_ACTIVE,
 } from "../../../constants/api_constant";
-import { format, parseISO } from "date-fns";
 import fetcher from "../../../fetcher";
 
 import Loading from "../../components/Loading";
@@ -26,7 +24,6 @@ const TrashImageFileBoard = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [images, setImages] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const postsPerPage = 14;
@@ -46,7 +43,6 @@ const TrashImageFileBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
-        setFilteredPosts(response.data);
 
         setLoading(false);
       })
@@ -72,22 +68,6 @@ const TrashImageFileBoard = () => {
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
-  };
-
-  const formatDate = (dateString) => {
-    try {
-      const date = parseISO(dateString);
-      return format(date, "yyyy-MM-dd");
-    } catch (error) {
-      console.error("Invalid date format:", dateString);
-      return "Invalid date";
-    }
   };
 
   if (loading) {

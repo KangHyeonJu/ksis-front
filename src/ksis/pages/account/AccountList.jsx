@@ -4,7 +4,6 @@ import {
   ACCOUNT_FORM,
   ACCOUNT_LIST,
 } from "../../../constants/account_constant";
-import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
@@ -12,7 +11,6 @@ import { MAIN } from "../../../constants/page_constant";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponent from "../../components/ButtonComponent";
-import ButtonComponentB from "../../components/ButtonComponentB";
 import SearchBar from "../../components/SearchBar";
 import CheckboxTable from "../../components/CheckboxTable";
 

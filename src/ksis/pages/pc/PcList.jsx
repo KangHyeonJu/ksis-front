@@ -17,7 +17,6 @@ const PcList = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 15;
   const [selectedPosts, setSelectedPosts] = useState(new Set());
-  const [checkedRowId, setCheckedRowId] = useState([]);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const userInfo = decodeJwt();

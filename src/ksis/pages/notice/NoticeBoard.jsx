@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { NOTICE_FORM, NOTICE_DTL } from "../../../constants/page_constant";
@@ -72,11 +71,6 @@ const NoticeBoard = () => {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   const handleRegisterClick = () => {
