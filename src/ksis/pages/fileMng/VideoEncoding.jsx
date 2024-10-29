@@ -10,7 +10,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
 import Loading from "../../components/Loading";
-
+import ButtonComponentB from "../../components/ButtonComponentB";
 const VideoEncoding = () => {
   const params = useParams();
   const accountId = decodeJwt().accountId;
@@ -221,21 +221,21 @@ const VideoEncoding = () => {
         </div>
 
         <div className="items-center text-center row mx-auto mt-4">
-          <button
+          <ButtonComponentB
             onClick={handleEncoding}
-            className="mr-4 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-           hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+            defaultColor="blue-600"
+            shadowColor="blue-800"
           >
             인코딩
-          </button>
-          <button
-            type="button"
+          </ButtonComponentB>
+
+          <ButtonComponentB
             onClick={handleCancel}
-            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-            hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+            defaultColor="red-600"
+            shadowColor="red-800"
           >
             취소
-          </button>
+          </ButtonComponentB>
         </div>
       </div>
     </div>

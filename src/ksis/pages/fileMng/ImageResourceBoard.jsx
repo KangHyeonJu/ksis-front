@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
-import {  useNavigate, useLocation } from "react-router-dom";
+import { FaSearch, FaEdit } from "react-icons/fa";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   IMAGE_RESOURCE_BOARD,
   VIDEO_RESOURCE_BOARD,
@@ -8,7 +8,6 @@ import {
 } from "../../../constants/page_constant";
 
 import OriginCard from "../../components/file/OriginCard";
-import TabButtons from "../../components/file/FileTab"; // TabButtons 컴포넌트 임포트
 
 import {
   ACTIVE_RSIMAGE_BOARD,
@@ -18,9 +17,9 @@ import {
 import ImageResourceModal from "./ImageResourceModal";
 import fetcher from "../../../fetcher";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import TabButton from "../../components/TapButton";
 import SearchBar from "../../components/SearchBar";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
@@ -139,7 +138,7 @@ const ImageResourceBoard = () => {
 
   const closeResourceModal = () => {
     setSelectedImage(null); // 모달을 닫을 때 선택된 이미지를 초기화합니다.
-    setResourceModalIsOpen(false); 
+    setResourceModalIsOpen(false);
   };
 
   if (loading) {
@@ -168,49 +167,57 @@ const ImageResourceBoard = () => {
         defaultCategory="fileTitle"
       />
 
-        {/* 탭버튼 */}
-       <TabButtons 
-        currentPath={location.pathname} 
-        imageBoardPath={IMAGE_RESOURCE_BOARD} // 상수에서 경로 가져오기
-        videoBoardPath={VIDEO_RESOURCE_BOARD} // 상수에서 경로 가져오기
-      />
-
-       {/* 그리드 시작 */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-       {images.length > 0 ? (
-        images.map((file, index) => (
-          <OriginCard
-            key={file.originalResourceId}
-            file={{ ...file, index }} // index를 props로 전달
-            openResourceModal={openResourceModal} // 함수를 전달
-            onEditClick={handleEditClick}
-            handleSaveClick={handleSaveClick}
-            editingTitleIndex={editingTitleIndex}
-            newTitle={newTitle}
-            setNewTitle={setNewTitle}
-            handleDeactivate={handleDeactivate}
-            onclick = {openResourceModal}
-            showPlayIcon={false}
-            encodingPath={IMAGE_ENCODING}
+      {/* 탭버튼 */}
+      <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2">
+          <TabButton
+            label="이미지"
+            path={IMAGE_RESOURCE_BOARD}
+            isActive={location.pathname === IMAGE_RESOURCE_BOARD}
+            onClick={() => navigate(IMAGE_RESOURCE_BOARD)}
           />
-        ))):(
+          <TabButton
+            label="영상"
+            path={VIDEO_RESOURCE_BOARD}
+            isActive={location.pathname === VIDEO_RESOURCE_BOARD}
+            onClick={() => navigate(VIDEO_RESOURCE_BOARD)}
+          />
+        </div>
+      </div>
+
+      {/* 그리드 시작 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+        {images.length > 0 ? (
+          images.map((file, index) => (
+            <OriginCard
+              key={file.originalResourceId}
+              file={{ ...file, index }} // index를 props로 전달
+              openResourceModal={openResourceModal} // 함수를 전달
+              onEditClick={handleEditClick}
+              handleSaveClick={handleSaveClick}
+              editingTitleIndex={editingTitleIndex}
+              newTitle={newTitle}
+              setNewTitle={setNewTitle}
+              handleDeactivate={handleDeactivate}
+              onclick={openResourceModal}
+              showPlayIcon={false}
+              encodingPath={IMAGE_ENCODING}
+            />
+          ))
+        ) : (
           <div className="col-span-full text-center text-gray-500">
             게시된 파일이 없습니다.
           </div>
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
 
       {/* 모달 컴포넌트 호출 */}
       {selectedImage && (

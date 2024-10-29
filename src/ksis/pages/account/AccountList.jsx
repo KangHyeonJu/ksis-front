@@ -9,9 +9,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponent from "../../components/ButtonComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 import SearchBar from "../../components/SearchBar";
 import CheckboxTable from "../../components/CheckboxTable";
 
@@ -30,11 +31,15 @@ const AccountList = () => {
 
   const loadPage = async (page) => {
     try {
-      const response = await fetcher.get(
-        `${ACCOUNT_LIST}?page=${
-          page - 1
-        }&size=${postsPerPage}&searchTerm=${searchTerm}&searchCategory=${searchCategory}`
-      );
+      const response = await fetcher.get(ACCOUNT_LIST, {
+        params: {
+          page: page - 1,
+          size: postsPerPage,
+          searchTerm,
+          searchCategory,
+        },
+      });
+
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -164,25 +169,23 @@ const AccountList = () => {
           check={checked}
           renderActions={(item) => (
             <>
-              <Link
-                to={ACCOUNT_FORM + `/${item.accountId}`}
-                className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 py-1 px-2 text-sm font-semibold shadow-sm 
-            hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+              <ButtonComponent
+                to={`/account/${item.accountId}`}
+                defaultColor="blue-600"
+                shadowColor="blue-800"
               >
                 수정
-              </Link>
-              <button
-                className={`mr-2 w-24 ${
-                  item.isActive
-                    ? "text-green-600 border-green-600  hover:bg-green-600 hover:text-white  hover:shadow-green-800 focus-visible:outline-green-600 "
-                    : "text-red-600 border-red-600 hover:bg-red-600 hover:text-white hover:shadow-red-800 focus-visible:outline-red-600"
-                }  font-bold py-1 px-2 rounded-md border text-sm shadow-sm hover:shadow-inner transition duration-200`}
+              </ButtonComponent>
+
+              <ButtonComponent
                 onClick={() =>
                   handleToggleActive(item.accountId, item.isActive)
                 }
+                defaultColor={item.isActive ? "green-600" : "red-600"}
+                hoverColor={item.isActive ? "green-800" : "red-800"}
               >
                 {item.isActive ? "활성화" : "비활성화"}
-              </button>
+              </ButtonComponent>
             </>
           )}
         />
@@ -201,16 +204,13 @@ const AccountList = () => {
       </div>
 
       {/* 페이지네이션 */}
-      {totalPages > 0 && (
-        <Stack spacing={2} className="mt-10 items-center">
-          <Pagination
-            shape="rounded"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

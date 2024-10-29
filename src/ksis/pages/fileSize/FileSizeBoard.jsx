@@ -5,6 +5,7 @@ import { MAIN } from "../../../constants/page_constant";
 import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
 import Loading from "../../components/Loading";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const FileSizeBoard = () => {
   const [imageMaxSize, setImageMaxSize] = useState(10); // 기본값 설정
@@ -128,13 +129,13 @@ const FileSizeBoard = () => {
         </tbody>
       </table>
       <div className="flex justify-end mt-6">
-        <button
+        <ButtonComponentB
           onClick={handleSave}
-          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+          defaultColor="blue-600"
+          shadowColor="blue-800"
         >
           저장
-        </button>
+        </ButtonComponentB>
       </div>
     </div>
   );

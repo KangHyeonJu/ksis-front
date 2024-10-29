@@ -10,11 +10,11 @@ import {
 } from "../../../constants/api_constant";
 import { format } from "date-fns";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
-import SearchBar from "../../components/SearchBar";
+import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 import CheckboxTable from "../../components/CheckboxTable";
+import SearchBar from "../../components/SearchBar";
 
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -116,28 +116,61 @@ const TrashNoticeBoard = () => {
         defaultCategory="title"
       />
 
-      <div className="flex justify-end space-x-2 mb-4">
-        <button
-          onClick={handleActivation}
-          type="button"
-          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-        >
-          활성화
-        </button>
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
+        {filteredNotices.length === 0 ? (
+          <p className="text-center text-gray-600 mt-10 w-full">
+            공지글이 없습니다.
+          </p>
+        ) : (
+          <CheckboxTable
+            headers={["제목", "작성자(아이디)", "작성일"]}
+            data={filteredNotices}
+            dataKeys={[
+              {
+                content: (item) => (
+                  <Link to={DEACTIVE_NOTICE_DTL + `/${item.noticeId}`}>
+                    {item.title}
+                  </Link>
+                ),
+                className:
+                  "p-2 text-center border-b border-gray-300 text-[#444444] font-semibold hover:underline",
+              },
+              {
+                content: (item) => item.name + "(" + item.accountId + ")",
+                className:
+                  "p-2 text-gray-800 text-center border-b border-gray-300",
+              },
+              {
+                content: (item) => format(item.regDate, "yyyy-MM-dd"),
+                className:
+                  "p-2 text-gray-800 text-center border-b border-gray-300",
+              },
+            ]}
+            uniqueKey="noticeId"
+            selectedItems={selectedNotices}
+            setSelectedItems={setSelectedNotices}
+            check={checked}
+          />
+        )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 0 && (
-        <Stack spacing={2} className="mt-10 items-center">
-          <Pagination
-            shape="rounded"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </Stack>
-      )}
+      <div className="flex justify-end space-x-2 my-10">
+        <ButtonComponentB
+          onClick={handleActivation}
+          defaultColor="blue-600"
+          shadowColor="blue-800"
+        >
+          활성화
+        </ButtonComponentB>
+      </div>
+
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

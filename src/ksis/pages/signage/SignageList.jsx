@@ -7,10 +7,9 @@ import { Link } from "react-router-dom";
 import { SIGNAGE_DTL, SIGNAGE_FORM } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 import { ToggleSwitch } from "../../css/switch";
-
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 import CheckboxTable from "../../components/CheckboxTable";
 import SearchBar from "../../components/SearchBar";
 
@@ -166,36 +165,27 @@ const SignageList = () => {
       {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 my-10">
           <Link to={SIGNAGE_FORM}>
-            <button
-              type="button"
-              className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-            >
+            <ButtonComponentB defaultColor="blue-600" shadowColor="blue-800">
               재생장치 등록
-            </button>
+            </ButtonComponentB>
           </Link>
-          <button
+          <ButtonComponentB
             onClick={deleteSignage}
-            type="button"
-            className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+            defaultColor="red-600"
+            shadowColor="red-800"
           >
             삭제
-          </button>
+          </ButtonComponentB>
         </div>
       ) : null}
 
-      {/* 페이지네이션 */}
-      {totalPages > 0 && (
-        <Stack spacing={2} className="mt-10 items-center">
-          <Pagination
-            shape="rounded"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

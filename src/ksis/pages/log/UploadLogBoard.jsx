@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { UPLOADLOG_LIST } from "../../../constants/api_constant";
 import { FaSearch } from "react-icons/fa";
@@ -12,9 +12,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import { decodeJwt } from "../../../decodeJwt";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
 import SearchBar from "../../components/SearchBar";
 import CheckboxTable from "../../components/CheckboxTable";
 
@@ -181,17 +180,13 @@ const UploadLogBoard = () => {
           check={checked}
         />
       </div>
-      {/* 페이지네이션 */}
-      {totalPages > 0 && (
-        <Stack spacing={2} className="mt-10 items-center">
-          <Pagination
-            shape="rounded"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

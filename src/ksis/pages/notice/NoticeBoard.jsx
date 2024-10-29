@@ -8,9 +8,9 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { decodeJwt } from "../../../decodeJwt";
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
 import SearchBar from "../../components/SearchBar";
 import CheckboxTable from "../../components/CheckboxTable";
 
@@ -141,33 +141,6 @@ const NoticeBoard = () => {
         defaultCategory="title"
       />
 
-      {/* 검색바 입력창 */}
-      {/* <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-[#444444] font-bold border-x border-gray-300"
-        >
-          <option value="title">제목</option>
-
-          {authority === "ROLE_ADMIN" ? (
-            <option value="account">작성자</option>
-          ) : null}
-
-          <option value="regTime">등록일</option>
-        </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2"
-          />
-        </div>
-        <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-      </div> */}
-
       <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
         {filteredNotices.length === 0 ? (
           <p className="text-center text-gray-600 mt-10 w-full">
@@ -213,34 +186,31 @@ const NoticeBoard = () => {
       </div>
 
       <div className="flex justify-end space-x-2 my-10">
-        <button
+        <ButtonComponentB
           onClick={handleRegisterClick}
-          className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-          hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
+          defaultColor="blue-600"
+          shadowColor="blue-800"
         >
           공지글 등록
-        </button>
-        <button
+        </ButtonComponentB>
+
+        <ButtonComponentB
           onClick={handleDectivation}
           type="button"
-          className="rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
+          defaultColor="red-600"
+          shadowColor="red-800"
         >
           비활성화
-        </button>
+        </ButtonComponentB>
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 0 && (
-        <Stack spacing={2} className="mt-10 items-center">
-          <Pagination
-            shape="rounded"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

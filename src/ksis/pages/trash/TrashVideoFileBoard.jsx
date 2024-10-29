@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
-import { FaSearch} from "react-icons/fa";
+import { format, parseISO } from "date-fns";
+import { FaSearch, FaRegPlayCircle } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import {
   TRASH_IMAGE_FILE,
@@ -12,12 +13,12 @@ import {
 } from "../../../constants/api_constant";
 
 import TrashCard from "../../components/file/TrashCard";
-import TabButtons from "../../components/file/FileTab"; // TabButtons 컴포넌트 임포트
 
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import Loading from "../../components/Loading";
 import SearchBar from "../../components/SearchBar";
+import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import ButtonComponentB from "../../components/ButtonComponentB";
+import TabButton from "../../components/TapButton";
 
 const TrashVideoFileBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -92,6 +93,10 @@ const TrashVideoFileBoard = () => {
     return <Loading />;
   }
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
       <header className="mb-6">
@@ -114,41 +119,49 @@ const TrashVideoFileBoard = () => {
         defaultCategory="fileTitle"
       />
 
-       {/* 탭버튼 */}
-       <TabButtons 
-        currentPath={location.pathname} 
-        imageBoardPath={TRASH_IMAGE_FILE} // 상수에서 경로 가져오기
-        videoBoardPath={TRASH_VIDEO_FILE} // 상수에서 경로 가져오기
-      />
+      {/* 탭버튼 */}
+      <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2">
+          <TabButton
+            label="이미지"
+            path={TRASH_IMAGE_FILE}
+            isActive={location.pathname === TRASH_IMAGE_FILE}
+            onClick={() => navigate(TRASH_IMAGE_FILE)}
+          />
+          <TabButton
+            label="영상"
+            path={TRASH_VIDEO_FILE}
+            isActive={location.pathname === TRASH_VIDEO_FILE}
+            onClick={() => navigate(TRASH_VIDEO_FILE)}
+          />
+        </div>
+      </div>
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-      {videos.length > 0 ? (
-        videos.map((file, index) => (
+        {videos.length > 0 ? (
+          videos.map((file, index) => (
             <TrashCard
-            key={file.originalResourceId}
-            file={{ ...file, index }} // index를 props로 전달
-            handleActivation={handleActivation}
-            showPlayIcon={true}
-          />
-        ))):(
+              key={file.originalResourceId}
+              file={{ ...file, index }} // index를 props로 전달
+              handleActivation={handleActivation}
+              showPlayIcon={true}
+            />
+          ))
+        ) : (
           <div className="col-span-full text-center text-gray-500">
             게시된 파일이 없습니다.
           </div>
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

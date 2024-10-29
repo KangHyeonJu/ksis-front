@@ -16,6 +16,7 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import Loading from "../../components/Loading";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const initialFormData = {
   accountId: "",
@@ -394,17 +395,21 @@ const AccountRegForm = () => {
 
           <br />
 
-          <div className="mt-4 flex gap-8 justify-center">
-            <Button type="submit" color="blue" className="scale-110">
+          <div className="mt-10 flex gap-4 justify-center">
+            <ButtonComponentB
+              type="submit"
+              defaultColor="blue-600"
+              shadowColor="blue-800"
+            >
               등록
-            </Button>
-            <div>
-              <Link to={ACCOUNT_LIST_BOARD}>
-                <Button type="button" color="red" className="scale-110">
-                  취소
-                </Button>
-              </Link>
-            </div>
+            </ButtonComponentB>
+            <ButtonComponentB
+              to={ACCOUNT_LIST_BOARD}
+              defaultColor="red-600"
+              shadowColor="red-800"
+            >
+              취소
+            </ButtonComponentB>
           </div>
         </form>
       </div>

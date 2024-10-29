@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch} from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import { useNavigate, useLocation  } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import {
   VIDEO_FILE_BOARD,
   IMAGE_FILE_BOARD,
@@ -11,13 +11,10 @@ import {
   FILE_ENCODED_BASIC,
 } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
-
 import EncodedCard from "../../components/file/EncodedCard";
-import TabButtons from "../../components/file/FileTab"; // TabButtons 컴포넌트 임포트
-
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Loading from "../../components/Loading";
+import PaginationComponent from "../../components/PaginationComponent";
+import TabButton from "../../components/TapButton";
 import SearchBar from "../../components/SearchBar";
 
 const ImageFileBoard = () => {
@@ -160,48 +157,56 @@ const ImageFileBoard = () => {
         defaultCategory="fileTitle"
       />
 
-       {/* 탭버튼 */}
-       <TabButtons 
-        currentPath={location.pathname} 
-        imageBoardPath={IMAGE_FILE_BOARD} // 상수에서 경로 가져오기
-        videoBoardPath={VIDEO_FILE_BOARD} // 상수에서 경로 가져오기
-      />
+      {/* 탭버튼 */}
+      <div className="flex justify-end mb-4">
+        <div className="w-auto flex space-x-2">
+          <TabButton
+            label="이미지"
+            path={IMAGE_FILE_BOARD}
+            isActive={location.pathname === IMAGE_FILE_BOARD}
+            onClick={() => navigate(IMAGE_FILE_BOARD)}
+          />
+          <TabButton
+            label="영상"
+            path={VIDEO_FILE_BOARD}
+            isActive={location.pathname === VIDEO_FILE_BOARD}
+            onClick={() => navigate(VIDEO_FILE_BOARD)}
+          />
+        </div>
+      </div>
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-      {images.length > 0 ? (
-        images.map((file, index) => (
+        {images.length > 0 ? (
+          images.map((file, index) => (
             <EncodedCard
-            key={file.encodedResourceId}
-            file={{ ...file, index }} // index를 props로 전달
-            openResourceModal={openResourceModal} // 함수를 전달
-            onEditClick={handleEditClick}
-            handleSaveClick={handleSaveClick}
-            editingTitleIndex={editingTitleIndex}
-            newTitle={newTitle}
-            setNewTitle={setNewTitle}
-            handleDelete={handleDelete}
-            onclick = {openResourceModal}
-            showPlayIcon={false}
-          />
-        ))):(
+              key={file.encodedResourceId}
+              file={{ ...file, index }} // index를 props로 전달
+              openResourceModal={openResourceModal} // 함수를 전달
+              onEditClick={handleEditClick}
+              handleSaveClick={handleSaveClick}
+              editingTitleIndex={editingTitleIndex}
+              newTitle={newTitle}
+              setNewTitle={setNewTitle}
+              handleDelete={handleDelete}
+              onclick={openResourceModal}
+              showPlayIcon={false}
+            />
+          ))
+        ) : (
           <div className="col-span-full text-center text-gray-500">
             게시된 파일이 없습니다.
           </div>
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Stack spacing={2} className="mt-2">
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color={"primary"}
-          />
-        </Stack>
-      )}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
 
       {/* 모달창 */}
       {isOpen && (
