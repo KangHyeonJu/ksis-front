@@ -29,7 +29,7 @@ const NoticeForm = () => {
     role: "",
   });
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [deviceOptions, setDeviceOptions] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [role, setRole] = useState(""); // 역할 상태 추가

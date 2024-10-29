@@ -44,7 +44,7 @@ const NoticeDetail = () => {
         console.log(response.data);
         if (
           userInfo.roles !== "ROLE_ADMIN" &&
-          !response.data.accountId !== userInfo.accountId
+          response.data.accountId !== userInfo.accountId
         ) {
           alert("접근권한이 없습니다.");
           navigate(NOTICE_BOARD);

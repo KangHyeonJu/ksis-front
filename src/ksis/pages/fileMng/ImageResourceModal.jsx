@@ -87,7 +87,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                 )}
 
                 {currentItems.some(post => post.encodedResourceId !== null) ? (
-                  <table className="w-full table-fixed border-collapse mt-4">
+                  <table className="w-full table-fixed border-collapse mt-10">
                     <thead className="border-t border-b border-double border-[#FF9C00]">
                       <tr className="font-bold">
                         <th className="w-5/12 p-2">제목</th>

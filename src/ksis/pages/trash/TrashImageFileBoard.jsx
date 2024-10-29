@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   TRASH_IMAGE_FILE,
   TRASH_VIDEO_FILE,
@@ -11,6 +11,9 @@ import {
 } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
 import fetcher from "../../../fetcher";
+
+import TrashCard from "../../components/file/TrashCard";
+import TabButtons from "../../components/file/FileTab"; // TabButtons 컴포넌트 임포트
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -29,6 +32,7 @@ const TrashImageFileBoard = () => {
 
   const postsPerPage = 14;
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     fetcher
@@ -122,87 +126,24 @@ const TrashImageFileBoard = () => {
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-      {/* 탭버튼 */}
-      <div className="flex justify-end mb-4">
-        <div className="w-auto flex space-x-2">
-          {/* 이미지 탭 */}
-          <div className="border-b-2 border-[#FF9C00]">
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border ${
-                window.location.pathname === TRASH_IMAGE_FILE
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent"
-              }`}
-              onClick={() => navigate(TRASH_IMAGE_FILE)}
-            >
-              이미지
-            </button>
-          </div>
-          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
-            {/* 영상 탭 */}
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border hover:border-gray-300 hover:bg-white hover:text-black  ${
-                window.location.pathname === TRASH_VIDEO_FILE
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent "
-              }`}
-              onClick={() => navigate(TRASH_VIDEO_FILE)}
-            >
-              영상
-            </button>
-          </div>
-        </div>
-      </div>
+       {/* 탭버튼 */}
+       <TabButtons 
+        currentPath={location.pathname} 
+        imageBoardPath={TRASH_IMAGE_FILE} // 상수에서 경로 가져오기
+        videoBoardPath={TRASH_VIDEO_FILE} // 상수에서 경로 가져오기
+      />
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-        {images.length > 0 ? (
-          images.map((post, index) => (
-            <div key={index} className="grid p-1">
-              {/* 카드 */}
-              <div className="flex flex-col  h-full overflow-hidden max-w-xs">
-                {/* 이미지 */}
-                <div className="w-full h-auto md:h-60 lg:h-70">
-                  <div className="w-full h-full overflow-hidden">
-                    <img
-                      src={post.thumbFilePath}
-                      alt={post.fileTitle}
-                      className="w-full h-full object-cover object-center"
-                    />
-                  </div>
-                </div>
-
-                {/* 제목 */}
-                <div className="flex justify-between w-full">
-                  <h2
-                    className="text-xl font-bold truncate max-w-full mx-auto justify-start"
-                    title={post.fileTitle}
-                  >
-                    {post.fileTitle}
-                  </h2>
-                </div>
-
-                {/* 등록일 */}
-                <div className="mx-auto">
-                  <p className="text-gray-500">{formatDate(post.regTime)}</p>
-                </div>
-                {/* 활성화 버튼 */}
-                <div>
-                  <div className="flex justify-center p-2">
-                    <button
-                      type="button"
-                      className="mr-2 rounded-md border border-blue-600 bg-white text-blue-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-blue-600 hover:text-white hover:shadow-inner hover:shadow-blue-800 focus-visible:outline-blue-600 transition duration-200"
-                      onClick={() => handleActivation(post.originalResourceId)}
-                    >
-                      활성화
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
+      {images.length > 0 ? (
+          images.map((file, index) => (
+            <TrashCard
+            key={file.originalResourceId}
+            file={{ ...file, index }} // index를 props로 전달
+            handleActivation={handleActivation}
+            showPlayIcon={false}
+          />
+        ))):(
           <div className="col-span-full text-center text-gray-500">
             게시된 파일이 없습니다.
           </div>

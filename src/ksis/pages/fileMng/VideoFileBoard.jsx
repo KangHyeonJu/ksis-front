@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
-import { format, parseISO } from "date-fns";
-import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import {
   IMAGE_FILE_BOARD,
   VIDEO_FILE_BOARD,
@@ -12,6 +11,9 @@ import {
   ECVIDEO_BOARD,
   FILE_ENCODED_BASIC,
 } from "../../../constants/api_constant";
+
+import EncodedCard from "../../components/file/EncodedCard";
+import TabButtons from "../../components/file/FileTab"; // TabButtons 컴포넌트 임포트
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -34,7 +36,7 @@ const VideoFileBoard = () => {
   const [newTitle, setNewTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState("");
-
+  const location = useLocation();
   const navigate = useNavigate(); // Initialize useNavigate
   const postsPerPage = 14; // 페이지당 게시물 수
 
@@ -134,17 +136,6 @@ const VideoFileBoard = () => {
       }
     }
   };
-
-  const formatDate = (dateString) => {
-    try {
-      const date = parseISO(dateString);
-      return format(date, "yyyy-MM-dd");
-    } catch (error) {
-      console.error("Invalid date format:", dateString);
-      return "Invalid date";
-    }
-  };
-
   const openResourceModal = (src) => {
     setSelectedVideo(src);
     setIsOpen(true);
@@ -191,123 +182,35 @@ const VideoFileBoard = () => {
       </div>
 
       {/* 탭버튼 */}
-      <div className="flex justify-end mb-4">
-        <div className="w-auto flex space-x-2 ">
-          {/* 이미지 탭 */}
-          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
-                window.location.pathname === IMAGE_FILE_BOARD
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent"
-              }`}
-              onClick={() => navigate(IMAGE_FILE_BOARD)}
-            >
-              이미지
-            </button>
-          </div>
-          <div className="border-b-2 border-[#FF9C00]">
-            {/* 영상 탭 */}
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border  ${
-                window.location.pathname === VIDEO_FILE_BOARD
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent "
-              }`}
-              onClick={() => navigate(VIDEO_FILE_BOARD)}
-            >
-              영상
-            </button>
-          </div>
-        </div>
-      </div>
+          <TabButtons 
+              currentPath={location.pathname} 
+              imageBoardPath={IMAGE_FILE_BOARD} // 상수에서 경로 가져오기
+              videoBoardPath={VIDEO_FILE_BOARD} // 상수에서 경로 가져오기
+            />
 
-      {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-        {videos.length > 0 ? (
-          videos.map((post, index) => (
-            <div key={index} className="grid p-1">
-              {/* 카드 */}
-              <div className="flex flex-col  h-full overflow-hidden max-w-xs">
-                {" "}
-                {/* max-w-xs로 카드 너비 제한 */}
-                {/* 영상 */}
-                <div className="w-full h-auto md:h-60 lg:h-70">
-                  <div className="relative w-full h-full mb-1 overflow-hidden">
-                    <img
-                      src={post.thumbFilePath}
-                      alt={post.fileTitle}
-                      className="w-60 h-60 cursor-pointer object-cover object-center hover:scale-150"
-                      onClick={() => openResourceModal(post.filePath)}
-                    />
-                    {/* 아이콘 추가 */}
-                    <FaRegPlayCircle
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-8xl cursor-pointer opacity-85"
-                      onClick={() => openResourceModal(post.filePath)}
-                    />
-                  </div>
+            {/* 그리드 시작 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+            {videos.length > 0 ? (
+              videos.map((file, index) => (
+                  <EncodedCard
+                  key={file.encodedResourceId}
+                  file={{ ...file, index }} // index를 props로 전달
+                  openResourceModal={openResourceModal} // 함수를 전달
+                  onEditClick={handleEditClick}
+                  handleSaveClick={handleSaveClick}
+                  editingTitleIndex={editingTitleIndex}
+                  newTitle={newTitle}
+                  setNewTitle={setNewTitle}
+                  handleDelete={handleDelete}
+                  onclick = {openResourceModal}
+                  showPlayIcon={true}
+                />
+              ))):(
+                <div className="col-span-full text-center text-gray-500">
+                  게시된 파일이 없습니다.
                 </div>
-                {/* 제목 */}
-                <div className="flex justify-between w-full">
-                  {editingTitleIndex === index ? (
-                    <input
-                      type="text"
-                      value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
-                      onKeyDown={(e) =>
-                        handleKeyDown(e, post.encodedResourceId)
-                      } // 엔터 키 이벤트 추가
-                      className="w-full text-xl font-midium border-b text-center
-                      border-gray-400 outline-none transition-colors duration-200 
-                      focus:border-gray-600 max-w-full mx-auto justify-start"
-                      placeholder="제목을 입력해주세요."
-                    />
-                  ) : (
-                    <h2
-                      className="text-xl font-bold truncate max-w-full mx-auto justify-start"
-                      title={post.fileTitle}
-                    >
-                      {post.fileTitle}
-                    </h2>
-                  )}
-                  <div>
-                    <FaEdit
-                      onClick={() =>
-                        editingTitleIndex === index
-                          ? handleSaveClick(post.encodedResourceId)
-                          : handleEditClick(index, post.fileTitle)
-                      }
-                      className="justify-end text-xl cursor-pointer text-gray-600 transition-transform duration-200 
-                    transform hover:scale-110 hover:text-gray-800 m-1 "
-                    />
-                  </div>
-                </div>
-                {/* 등록일 */}
-                <div className="mx-auto">
-                  <p className="text-gray-500">{formatDate(post.regTime)}</p>
-                </div>
-                {/* 삭제 버튼 */}
-                <div>
-                  <div className="flex justify-center p-2">
-                    <button
-                      type="button"
-                      className="mr-2 rounded-md border border-red-600 bg-white text-red-600 px-3 py-2 text-sm font-semibold shadow-sm 
-                      hover:bg-red-600 hover:text-white hover:shadow-inner hover:shadow-red-800 focus-visible:outline-red-600 transition duration-200"
-                      onClick={() => handleDelete(post.encodedResourceId)}
-                    >
-                      삭제
-                    </button>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
-          ))
-        ) : (
-          <div className="col-span-full text-center text-gray-500">
-            게시된 파일이 없습니다.
-          </div>
-        )}
-      </div>
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
