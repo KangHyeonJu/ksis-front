@@ -3,23 +3,34 @@ import { Dialog } from "../../css/dialog";
 import { ImCross } from "react-icons/im";
 import { IMG_ORIGINAL_BASIC } from "../../../constants/api_constant";
 import { format, parseISO } from "date-fns";
+
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
 import fetcher from "../../../fetcher";
 
 const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
-  const [modals, setModal] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const postsPerPage = 5;
 
   const loadModal = useCallback(async () => {
     fetcher
-      .get(IMG_ORIGINAL_BASIC + `/${originalResourceId}`)
+      .get(IMG_ORIGINAL_BASIC + `/${originalResourceId}`, {
+        params: {
+          page: currentPage - 1,
+          size: postsPerPage,
+        },
+      })
       .then((response) => {
-        setModal(response.data);
+        setPosts(response.data.content);
+        setTotalPages(response.data.totalPages);
       })
       .catch((error) => {
         console.error("fetching Error :", error);
       });
-  }, [originalResourceId]);
+  }, [currentPage, originalResourceId]);
 
   useEffect(() => {
     if (isOpen && originalResourceId) {
@@ -37,21 +48,9 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
     }
   };
 
-  const lastIndex = currentPage * itemsPerPage;
-  const firstIndex = lastIndex - itemsPerPage;
-  const currentItems = modals.slice(firstIndex, lastIndex);
-  const totalPages = Math.ceil(modals.length / itemsPerPage);
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const goToPreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -74,19 +73,19 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
           >
             
 
-            {modals.length > 0 ? (
+            {posts.length > 0 ? (
               <div className="text-center items-center p-2 max-h-[70vh] overflow-y-auto">
-                {modals.length > 0 && (
+                {posts.length > 0 && (
                   <div className="w-full h-auto max-w-lg mx-auto my-2">
                     <img
-                      src={modals[0].filePath}
-                      alt={modals[0].fileTitle}
+                      src={posts[0].filePath}
+                      alt={posts[0].fileTitle}
                       className="w-full h-auto max-h-[40vh] object-contain"
                     />
                   </div>
                 )}
 
-                {currentItems.some(post => post.encodedResourceId !== null) ? (
+                {posts.some(post => post.encodedResourceId !== null) ? (
                   <table className="w-full table-fixed border-collapse mt-10">
                     <thead className="border-t border-b border-double border-[#FF9C00]">
                       <tr className="font-bold">
@@ -97,7 +96,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {currentItems.map((post, index) =>
+                      {posts.map((post, index) =>
                         post.fileTitle !== null ? (
                           <tr key={index}>
                             <td
@@ -127,38 +126,17 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                   </div>
                 )}
 
-                {modals.length > 5 && (
-                  <div className="flex justify-between mt-4">
-                    <button
-                      className={`px-4 py-2 rounded-full border-2 
-                      ${
-                        currentPage === 1
-                          ? "bg-gray-300 text-gray-500 border-gray-300"
-                          : "bg-[#ffb247] text-white border-[#ffb247] hover:bg-[#ff8812]"
-                      }
-                    `}
-                      onClick={goToPreviousPage}
-                      disabled={currentPage === 1}
-                    >
-                      이전
-                    </button>
-                    <span className="text-xl font-bold">
-                      {currentPage} / {totalPages}
-                    </span>
-                    <button
-                      className={`px-4 py-2 rounded-full border-2 
-                      ${
-                        currentPage === totalPages
-                          ? "bg-gray-300 text-gray-500 border-gray-300"
-                          : "bg-[#ffb247] text-white border-[#ffb247] hover:bg-[#ff8812]"
-                      }
-                    `}
-                      onClick={goToNextPage}
-                      disabled={currentPage === totalPages}
-                    >
-                      다음
-                    </button>
-                  </div>
+                {/* 페이지네이션 */}
+                {posts.some(post => post.fileTitle !== null) && (
+                  <Stack spacing={2} className="mt-10 items-center">
+                    <Pagination
+                      shape="rounded"
+                      count={totalPages}
+                      page={currentPage}
+                      onChange={handlePageChange}
+                      color={""}
+                    />
+                  </Stack>
                 )}
               </div>
             ) : (
