@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaEdit, FaRegPlayCircle } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import {
   VIDEO_RESOURCE_BOARD,
@@ -20,6 +20,7 @@ import fetcher from "../../../fetcher";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
+import TabButton from "../../components/TapButton";
 
 const VideoResourceBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +40,7 @@ const VideoResourceBoard = () => {
 
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null); // 선택한 영상의 정보를 관리하는 상태값 추가
+  const location = useLocation();
 
   // 영상 목록을 가져오는 부분
   useEffect(() => {
@@ -214,37 +216,23 @@ const VideoResourceBoard = () => {
         <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
       </div>
 
-      {/* 탭버튼 */}
-      <div className="flex justify-end mb-4">
-        <div className="w-auto flex space-x-2 ">
-          {/* 이미지 탭 */}
-          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
-                window.location.pathname === IMAGE_RESOURCE_BOARD
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent"
-              }`}
-              onClick={() => navigate(IMAGE_RESOURCE_BOARD)}
-            >
-              이미지
-            </button>
-          </div>
-          <div className="border-b-2 border-[#FF9C00]">
-            {/* 영상 탭 */}
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border  ${
-                window.location.pathname === VIDEO_RESOURCE_BOARD
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent "
-              }`}
-              onClick={() => navigate(VIDEO_RESOURCE_BOARD)}
-            >
-              영상
-            </button>
+        {/* 탭버튼 */}
+        <div className="flex justify-end mb-4">
+          <div className="w-auto flex space-x-2">
+            <TabButton
+                label="이미지"
+                path={IMAGE_RESOURCE_BOARD}
+                isActive={location.pathname === IMAGE_RESOURCE_BOARD}
+                onClick={() => navigate(IMAGE_RESOURCE_BOARD)}
+            />
+            <TabButton
+                label="영상"
+                path={VIDEO_RESOURCE_BOARD}
+                isActive={location.pathname === VIDEO_RESOURCE_BOARD}
+                onClick={() => navigate(VIDEO_RESOURCE_BOARD)}
+            />
           </div>
         </div>
-      </div>
 
       {/* 그리드 시작 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">

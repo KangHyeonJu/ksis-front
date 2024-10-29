@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import fetcher from "../../../fetcher";
 import { format, parseISO } from "date-fns";
 import { FaSearch, FaRegPlayCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import {
   TRASH_IMAGE_FILE,
   TRASH_VIDEO_FILE,
@@ -15,6 +15,7 @@ import {
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
+import TabButton from "../../components/TapButton";
 
 const TrashVideoFileBoard = () => {
   const [loading, setLoading] = useState(true);
@@ -31,6 +32,7 @@ const TrashVideoFileBoard = () => {
 
   const postsPerPage = 14; // 페이지당 게시물 수
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     fetcher
@@ -132,32 +134,18 @@ const TrashVideoFileBoard = () => {
       {/* 탭버튼 */}
       <div className="flex justify-end mb-4">
         <div className="w-auto flex space-x-2">
-          {/* 이미지 탭 */}
-          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border  hover:border-gray-300 hover:bg-white hover:text-black ${
-                window.location.pathname === TRASH_IMAGE_FILE
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent"
-              }`}
+          <TabButton
+              label="이미지"
+              path={TRASH_IMAGE_FILE}
+              isActive={location.pathname === TRASH_IMAGE_FILE}
               onClick={() => navigate(TRASH_IMAGE_FILE)}
-            >
-              이미지
-            </button>
-          </div>
-          <div className="border-b-2 border-[#FF9C00]">
-            {/* 영상 탭 */}
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border  ${
-                window.location.pathname === TRASH_VIDEO_FILE
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent "
-              }`}
+          />
+          <TabButton
+              label="영상"
+              path={TRASH_VIDEO_FILE}
+              isActive={location.pathname === TRASH_VIDEO_FILE}
               onClick={() => navigate(TRASH_VIDEO_FILE)}
-            >
-              영상
-            </button>
-          </div>
+          />
         </div>
       </div>
 

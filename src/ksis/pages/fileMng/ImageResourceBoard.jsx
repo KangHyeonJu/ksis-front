@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaEdit } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   IMAGE_RESOURCE_BOARD,
   IMAGE_ENCODING,
@@ -18,6 +18,7 @@ import fetcher from "../../../fetcher";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
+import TabButton from "../../components/TapButton";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const ImageResourceBoard = () => {
@@ -40,6 +41,7 @@ const ImageResourceBoard = () => {
 
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); // 선택한 이미지의 정보를 관리하는 상태값 추가
+  const location = useLocation();
 
   useEffect(() => {
     fetcher
@@ -188,32 +190,18 @@ const ImageResourceBoard = () => {
       {/* 탭버튼 */}
       <div className="flex justify-end mb-4">
         <div className="w-auto flex space-x-2">
-          {/* 이미지 탭 */}
-          <div className="border-b-2 border-[#FF9C00]">
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border ${
-                window.location.pathname === IMAGE_RESOURCE_BOARD
-                  ? "text-black bg-white border-border-[#FF9C00] border-b-0"
-                  : "text-gray-500 bg-gray-300 border-transparent"
-              }`}
+          <TabButton
+              label="이미지"
+              path={IMAGE_RESOURCE_BOARD}
+              isActive={location.pathname === IMAGE_RESOURCE_BOARD}
               onClick={() => navigate(IMAGE_RESOURCE_BOARD)}
-            >
-              이미지
-            </button>
-          </div>
-          <div className="border-b-2 border-gray-200  hover:border-b-2 hover:border-b-[#FF9C00] ">
-            {/* 영상 탭 */}
-            <button
-              className={`px-6 py-2 rounded-t-lg font-semibold border hover:border-gray-300 hover:bg-white hover:text-black ${
-                window.location.pathname === VIDEO_RESOURCE_BOARD
-                  ? "text-black bg-white border-gray-300 border-b-0"
-                  : "text-gray-500 bg-gray-100 border-transparent "
-              }`}
+          />
+          <TabButton
+              label="영상"
+              path={VIDEO_RESOURCE_BOARD}
+              isActive={location.pathname === VIDEO_RESOURCE_BOARD}
               onClick={() => navigate(VIDEO_RESOURCE_BOARD)}
-            >
-              영상
-            </button>
-          </div>
+          />
         </div>
       </div>
 
