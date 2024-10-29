@@ -2,10 +2,6 @@ import React from "react";
 import { FaEdit, FaRegPlayCircle } from "react-icons/fa";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
-import {
-  IMAGE_ENCODING,
-  VIDEO_ENCODING,
-} from "../../../constants/page_constant";
 import ButtonComponentB from "../../components/ButtonComponentB";
 
 const OriginCard = ({
@@ -97,11 +93,13 @@ const OriginCard = ({
 
         {/* 인코딩, 삭제 버튼 */}
         <div className="items-center text-center row mx-auto p-2">
-          <Link to={`${VIDEO_ENCODING}/${file.originalResourceId}`}>
-            <ButtonComponentB defaultColor="blue-600" shadowColor="blue-800">
-              인코딩
-            </ButtonComponentB>
-          </Link>
+          <ButtonComponentB
+            defaultColor="blue-600"
+            shadowColor="blue-800"
+            to={`${encodingPath}/${file.originalResourceId}`}
+          >
+            인코딩
+          </ButtonComponentB>
 
           <ButtonComponentB
             onClick={() => handleDeactivate(file.originalResourceId)}
