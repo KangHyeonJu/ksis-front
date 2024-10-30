@@ -572,17 +572,19 @@ const Sidebar = ({ onToggleSidebar }) => {
               <div className="item mt-3 relative">
                 <div
                     className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                    onClick={() => toggleMenu("account")}
-                    // onMouseEnter={() => toggleMenu("account")}
+                    // onClick={() => toggleMenu("account")}
+                    onMouseEnter={() => toggleMenu("account")}
                     // onMouseLeave={() => toggleMenu("")}
                 >
                   <MdManageAccounts className="mr-3"/>
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    계정관리
-                  </span>
+                  {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
+                  {/*  계정관리*/}
+                  {/*</span>*/}
                 </div>
                 {openMenu === "account" && (
-                    <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300">
+                    <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                        onMouseLeave={() => toggleMenu("")}
+                    >
                       <Link to={ACCOUNT_LIST_BOARD} onClick={() => handleMenuClick("ACCOUNT_LIST")}
                             className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "ACCOUNT_LIST" ? "bg-gray-200" : "hover:bg-gray-200"}`}>
                         <FaRegCircle size={10} className="mr-2"/>
@@ -601,15 +603,18 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative"> {/* relative 추가 */}
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                onClick={() => toggleMenu("media")}
+                // onClick={() => toggleMenu("media")}
+                onMouseEnter={() => toggleMenu("media")}
             >
               <MdOutlinePermMedia className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                미디어 관리
-              </span>
+              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
+              {/*  미디어 관리*/}
+              {/*</span>*/}
             </div>
             {openMenu === "media" && (
-                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300">
+                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                     onMouseLeave={() => toggleMenu("")}
+                >
                   <Link
                       to={IMAGE_RESOURCE_BOARD}
                       onClick={() => handleMenuClick("ORIGINAL")}
@@ -638,7 +643,8 @@ const Sidebar = ({ onToggleSidebar }) => {
             <Link
               to={NOTICE_BOARD}
               className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-              onClick={() => handleMenuClick("NOTICE")}
+              // onClick={() => handleMenuClick("NOTICE")}
+              onMouseEnter={() => toggleMenu("NOTICE")}
             >
               <MdChat className="mr-3" />
               <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
@@ -650,15 +656,18 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative">
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                onClick={() => toggleMenu("device")}
+                // onClick={() => toggleMenu("device")}
+                onMouseEnter={() => toggleMenu("device")}
             >
               <MdDevices className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                디바이스 관리
-              </span>
+              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
+              {/*  디바이스 관리*/}
+              {/*</span>*/}
             </div>
             {openMenu === "device" && (
-                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300">
+                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                     onMouseLeave={() => toggleMenu("")}
+                >
                   <Link to={SIGNAGE_INVENTORY} onClick={() => handleMenuClick("SIGNAGE")}
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "SIGNAGE" ? "bg-gray-200" : "hover:bg-gray-200"}`}>
                     <FaRegCircle size={10} className="mr-2"/>
@@ -676,15 +685,18 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative">
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                onClick={() => toggleMenu("settings")}
+                // onClick={() => toggleMenu("settings")}
+                onMouseEnter={() => toggleMenu("settings")}
             >
               <BiCog className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                기타 관리
-              </span>
+              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
+              {/*  기타 관리*/}
+              {/*</span>*/}
             </div>
             {openMenu === "settings" && (
-                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300">
+                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                  onMouseLeave={() => toggleMenu("")}
+                >
                   <Link to={RESOLUTION_LIST} onClick={() => handleMenuClick("RESOLUTION")}
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "RESOLUTION" ? "bg-gray-200" : "hover:bg-gray-200"}`}>
                     <FaRegCircle size={10} className="mr-2"/>
@@ -711,15 +723,18 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative">
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                onClick={() => toggleMenu("trash")}
+                // onClick={() => toggleMenu("trash")}
+                onMouseEnter={() => toggleMenu("trash")}
             >
               <BiTrash className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                휴지통
-              </span>
+              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
+              {/*  휴지통*/}
+              {/*</span>*/}
             </div>
             {openMenu === "trash" && (
-                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300">
+                <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                  onMouseLeave={() => toggleMenu("")}
+                >
                   <Link to={TRASH_IMAGE_FILE} onClick={() => handleMenuClick("TRASHFILE")}
                         className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${selectedMenu === "TRASHFILE" ? "bg-gray-200" : "hover:bg-gray-200"}`}>
                     <FaRegCircle size={10} className="mr-2"/>
@@ -737,6 +752,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
         <div className="mt-auto">
           <button
+            onMouseEnter={() => toggleMenu("")}
             onClick={() => {
               handleMenuClick("LOGOUT");
               handleLogout();
