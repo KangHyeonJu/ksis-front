@@ -211,7 +211,7 @@ const ImageFileBoard = () => {
             <img
               src={selectedImage}
               alt="파일이 없습니다."
-              className="w-full max-h-screen bg-white text-center text-gray-500"
+              className="w-full h-full max-h-[80vh] bg-white text-center text-gray-500"
             />
             {/* 닫기 버튼 */}
 
