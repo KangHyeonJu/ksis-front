@@ -163,16 +163,14 @@ const ApiBoard = () => {
       <div className="flex justify-end space-x-2 my-10">
         <ButtonComponentB
           onClick={() => navigate("/apiform")}
-          defaultColor="blue-600"
-          shadowColor="blue-800"
+          color="blue"
         >
           API 등록
         </ButtonComponentB>
 
         <ButtonComponentB
           onClick={handleDeletePosts}
-          defaultColor="red-600"
-          shadowColor="red-800"
+          color="red"
         >
           삭제
         </ButtonComponentB>

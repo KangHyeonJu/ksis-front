@@ -94,8 +94,7 @@ const OriginCard = ({
         {/* 인코딩, 삭제 버튼 */}
         <div className="items-center text-center row mx-auto p-2">
           <ButtonComponentB
-            defaultColor="blue-600"
-            shadowColor="blue-800"
+            color="blue"
             to={`${encodingPath}/${file.originalResourceId}`}
           >
             인코딩
@@ -103,8 +102,7 @@ const OriginCard = ({
 
           <ButtonComponentB
             onClick={() => handleDeactivate(file.originalResourceId)}
-            defaultColor="red-600"
-            shadowColor="red-800"
+            color="red"
           >
             비활성화
           </ButtonComponentB>

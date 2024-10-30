@@ -158,14 +158,13 @@ const SignageList = () => {
       {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 my-10">
           <Link to={SIGNAGE_FORM}>
-            <ButtonComponentB defaultColor="blue-600" shadowColor="blue-800">
+            <ButtonComponentB color="blue">
               재생장치 등록
             </ButtonComponentB>
           </Link>
           <ButtonComponentB
             onClick={deleteSignage}
-            defaultColor="red-600"
-            shadowColor="red-800"
+            color="red"
           >
             삭제
           </ButtonComponentB>

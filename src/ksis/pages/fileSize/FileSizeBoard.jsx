@@ -131,8 +131,7 @@ const FileSizeBoard = () => {
       <div className="flex justify-end mt-6">
         <ButtonComponentB
           onClick={handleSave}
-          defaultColor="blue-600"
-          shadowColor="blue-800"
+          color="blue"
         >
           저장
         </ButtonComponentB>

@@ -154,8 +154,7 @@ const ResolutionList = () => {
           renderActions={(item) => (
             <ButtonComponent
               onClick={() => openUpdateModal(item.resolutionId)}
-              defaultColor="blue-600"
-              shadowColor="blue-800"
+              color="blue"
             >
               수정
             </ButtonComponent>
@@ -165,9 +164,7 @@ const ResolutionList = () => {
 
       <div className="flex justify-end space-x-2 my-10">
         <ButtonComponentB
-          type="button"
-          defaultColor="blue-600"
-          shadowColor="blue-800"
+          color="blue"
           onClick={openModal}
         >
           해상도 등록
@@ -179,8 +176,7 @@ const ResolutionList = () => {
 
         <ButtonComponentB
           onClick={deleteResolution}
-          defaultColor="red-600"
-          shadowColor="red-800"
+          color="red"
         >
           삭제
         </ButtonComponentB>

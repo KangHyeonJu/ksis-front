@@ -118,8 +118,7 @@ const TrashNoticeDtl = () => {
             <div className="flex justify-center space-x-4">
               <ButtonComponentB
                 onClick={handleCancel}
-                defaultColor="gray-600"
-                shadowColor="gray-800"
+                color="gray"
               >
                 뒤로가기
               </ButtonComponentB>

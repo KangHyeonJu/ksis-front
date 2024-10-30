@@ -182,17 +182,14 @@ const NoticeBoard = () => {
       <div className="flex justify-end space-x-2 my-10">
         <ButtonComponentB
           onClick={handleRegisterClick}
-          defaultColor="blue-600"
-          shadowColor="blue-800"
+          color="blue"
         >
           공지글 등록
         </ButtonComponentB>
 
         <ButtonComponentB
           onClick={handleDectivation}
-          type="button"
-          defaultColor="red-600"
-          shadowColor="red-800"
+          color="red"
         >
           비활성화
         </ButtonComponentB>

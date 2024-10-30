@@ -56,8 +56,7 @@ const OriginCard = ({
         <div className="flex justify-center p-2">
           <ButtonComponentB
             onClick={() => handleActivation(file.originalResourceId)}
-            defaultColor="blue-600"
-            shadowColor="blue-800"
+            color="blue"
           >
             활성화
           </ButtonComponentB>

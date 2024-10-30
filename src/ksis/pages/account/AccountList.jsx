@@ -170,8 +170,9 @@ const AccountList = () => {
             <>
               <ButtonComponent
                 to={ACCOUNT_FORM + `/${item.accountId}`}
-                defaultColor="blue-600"
-                shadowColor="blue-800"
+                // defaultColor="blue-600"
+                // shadowColor="blue-800"
+                  color="blue"
               >
                 수정
               </ButtonComponent>
@@ -180,8 +181,9 @@ const AccountList = () => {
                 onClick={() =>
                   handleToggleActive(item.accountId, item.isActive)
                 }
-                defaultColor={item.isActive ? "green-600" : "red-600"}
-                shadowColor={item.isActive ? "green-800" : "red-800"}
+                // defaultColor={item.isActive ? "green-600" : "red-600"}
+                // shadowColor={item.isActive ? "green-800" : "red-800"}
+                  color="red"
               >
                 {item.isActive ? "활성화" : "비활성화"}
               </ButtonComponent>
@@ -193,8 +195,7 @@ const AccountList = () => {
       <div className="flex justify-end space-x-2 my-10">
         <ButtonComponentB
           to={ACCOUNT_FORM}
-          defaultColor="[#FF9C00]"
-          shadowColor="[#FF9C00]"
+          color="orange"
         >
           계정 등록
         </ButtonComponentB>

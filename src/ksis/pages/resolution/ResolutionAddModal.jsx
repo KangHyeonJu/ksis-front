@@ -169,10 +169,9 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
             <DialogActions>
               <ButtonComponentB
                 type="submit"
-                defaultColor="blue-600"
-                shadowColor="blue-800"
+                color="blue"
               >
-                수정
+                등록
               </ButtonComponentB>
             </DialogActions>
           </form>

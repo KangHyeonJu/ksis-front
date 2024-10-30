@@ -223,16 +223,14 @@ const VideoEncoding = () => {
         <div className="items-center text-center row mx-auto mt-4">
           <ButtonComponentB
             onClick={handleEncoding}
-            defaultColor="blue-600"
-            shadowColor="blue-800"
+            color="blue"
           >
             인코딩
           </ButtonComponentB>
 
           <ButtonComponentB
             onClick={handleCancel}
-            defaultColor="red-600"
-            shadowColor="red-800"
+            color="red"
           >
             취소
           </ButtonComponentB>

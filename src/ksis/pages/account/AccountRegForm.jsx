@@ -398,15 +398,13 @@ const AccountRegForm = () => {
           <div className="mt-10 flex gap-4 justify-center">
             <ButtonComponentB
               type="submit"
-              defaultColor="blue-600"
-              shadowColor="blue-800"
+              color="blue"
             >
               등록
             </ButtonComponentB>
             <ButtonComponentB
               to={ACCOUNT_LIST_BOARD}
-              defaultColor="red-600"
-              shadowColor="red-800"
+              color="red"
             >
               취소
             </ButtonComponentB>
