@@ -128,7 +128,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <div
           ref={modalRef}
-          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-8/12 sm:p-6"
+          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-7/12 md:w-7/12 sm:p-6"
         >
           <div className="flex h-160">
             <div className="w-4/6 pr-4">
@@ -188,7 +188,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                 <div className="mb-4 flex items-center">
                   <div className="w-full h-150 border border-gray-900 overflow-y-auto p-4 bg-white">
                     <div className="space-y-2">
-                      <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-2 md:gap-y-0 lg:gap-x-8">
+                      <div className="mt-2 grid grid-cols-1 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-2 md:gap-y-0 lg:gap-x-8">
                         {myResources.map((resource) => {
                           const isInResources = resources.some(
                             (res) =>
@@ -234,13 +234,13 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="flex flex-row-reverse">
                 <button
                   onClick={onRequestClose}
-                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="rounded-md whitespace-nowrap ml-2 inline-flex justify-center px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
                 >
                   닫기
                 </button>
                 <button
                   onClick={addResourceOnClick}
-                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="rounded-md whitespace-nowrap inline-flex justify-center px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
                 >
                   등록
                 </button>

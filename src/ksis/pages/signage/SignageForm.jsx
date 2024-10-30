@@ -388,6 +388,8 @@ const SignageForm = () => {
                   onChange={onChangeHandler}
                   name="detailAddress"
                   placeholder="상세주소 입력"
+                  minLength="2"
+                  maxLength="50"
                 />
               </div>
             </div>

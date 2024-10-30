@@ -148,6 +148,7 @@ const TrashNoticeBoard = () => {
             check={checked}
             authority={authority}
             trash="trash"
+            widthPercentage={12 / 4}
           />
         )}
       </div>

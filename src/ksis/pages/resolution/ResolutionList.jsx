@@ -151,6 +151,7 @@ const ResolutionList = () => {
           selectedItems={selectedPosts}
           setSelectedItems={setSelectedPosts}
           check={checked}
+          widthPercentage={12 / 4}
           renderActions={(item) => (
             <ButtonComponent
               onClick={() => openUpdateModal(item.resolutionId)}

@@ -156,6 +156,7 @@ const ApiBoard = () => {
             selectedItems={selectedPosts}
             setSelectedItems={setSelectedPosts}
             check={checked}
+            widthPercentage={12 / 4}
           />
         )}
       </div>

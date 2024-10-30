@@ -166,6 +166,7 @@ const AccountList = () => {
           ]}
           uniqueKey="accountId"
           check={checked}
+          widthPercentage={12 / 5}
           renderActions={(item) => (
             <>
               <ButtonComponent

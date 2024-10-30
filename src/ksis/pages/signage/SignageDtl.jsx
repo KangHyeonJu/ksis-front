@@ -340,11 +340,19 @@ const SignageDtl = () => {
               </label>
               <div className="border-r border-gray-300 h-10"></div>
 
-              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+              <div
+                className="block items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10 overflow-hidden text-ellipsis whitespace-nowrap"
+                title={
+                  data.accountList &&
+                  data.accountList
+                    .map((account) => `${account.name}(${account.accountId})`)
+                    .join(", ")
+                }
+              >
                 {data.accountList &&
                   data.accountList
                     .map((account) => `${account.name}(${account.accountId})`)
-                    .join(", ")}
+                    .join(", ")}{" "}
               </div>
             </div>
             <div className="border-r border-gray-300 h-10"></div>
@@ -565,8 +573,8 @@ const SignageDtl = () => {
             <div className="h-8 items-center flex justify-end mt-2">
               <ButtonComponent
                 onClick={openPlaylist}
-                defaultColor="[#FF9C00]"
-                shadowColor="[#FF9C00]"
+                defaultColor="blue-600"
+                shadowColor="blue-800"
               >
                 수정
               </ButtonComponent>
@@ -579,8 +587,8 @@ const SignageDtl = () => {
               />
               <ButtonComponent
                 onClick={() => deletePlaylist(playListId)}
-                defaultColor="[#444444]"
-                shadowColor="[#444444]"
+                defaultColor="red-600"
+                shadowColor="red-800"
               >
                 삭제
               </ButtonComponent>

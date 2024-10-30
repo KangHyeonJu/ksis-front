@@ -140,7 +140,7 @@ const SignageList = () => {
                   .map((acc) => `${acc.name}(${acc.accountId})`)
                   .join(", "),
               className:
-                "p-2 text-gray-800 text-center border-b border-gray-300 overflow-hidden text-ellipsis",
+                "p-2 text-gray-800 text-center border-b border-gray-300",
             },
             {
               content: (item) => format(item.regDate, "yyyy-MM-dd"),
@@ -152,6 +152,7 @@ const SignageList = () => {
           selectedItems={selectedPosts}
           setSelectedItems={setSelectedPosts}
           check={checked}
+          widthPercentage={12 / 4}
         />
       </div>
 

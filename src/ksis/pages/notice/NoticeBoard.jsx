@@ -178,6 +178,7 @@ const NoticeBoard = () => {
             setSelectedItems={setSelectedNotices}
             check={checked}
             authority={authority}
+            widthPercentage={12 / 4}
           />
         )}
       </div>

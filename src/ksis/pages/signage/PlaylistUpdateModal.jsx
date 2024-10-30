@@ -379,25 +379,31 @@ const PlaylistUpdateModal = ({
                 </DialogBody>
               </div>
             </div>
-            <div className="flex items-center justify-between mt-2">
-              <div className="flex">
-                <label className="h-10 w-20 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
-                  제목
-                </label>
-                <input
-                  className="h-10 w-60 pl-2 border-y border-r border-gray-200"
-                  type="text"
-                  value={data.fileTitle}
-                  name="fileTitle"
-                  onChange={onChangeHandler}
-                />
+            <div className="flex flex-col items-center sm:flex-row sm:items-start justify-between sm:space-x-4 w-full  mt-2">
+              <div className="flex w-full sm:w-2/3">
+                <div className="flex w-full">
+                  <label className="w-1/3 whitespace-nowrap overflow-hidden h-10 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
+                    제목
+                  </label>
+                  <input
+                    className="h-10 w-full pl-2 border-y border-r border-gray-200"
+                    type="text"
+                    value={data.fileTitle}
+                    name="fileTitle"
+                    onChange={onChangeHandler}
+                    maxLength="20"
+                  />
+                </div>
 
-                <div className="flex ml-2">
-                  <label className="h-10 w-24 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
+                <div className="flex w-full ml-2">
+                  <label
+                    title="Slide Time"
+                    className="text-ellipsis w-1/3 whitespace-nowrap overflow-hidden h-10 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900"
+                  >
                     Slide Time
                   </label>
                   <input
-                    className="h-10 w-20 pl-2 border-y border-gray-200"
+                    className="h-10 w-1/3 pl-2 border-y border-gray-200"
                     type="number"
                     value={data.slideTime}
                     name="slideTime"
@@ -408,18 +414,19 @@ const PlaylistUpdateModal = ({
                   </p>
                 </div>
               </div>
-              <div className="flex flex-row-reverse">
-                <button
-                  onClick={onRequestClose}
-                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
-                >
-                  닫기
-                </button>
+
+              <div className="flex flex-row justify-end">
                 <button
                   onClick={updatePlayList}
-                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="w-full sm:w-auto px-4 py-2 bg-[#FF9C00] text-sm text-white rounded-md hover:bg-gray-200 hover:text-[#444444] font-semibold"
                 >
                   수정
+                </button>
+                <button
+                  onClick={onRequestClose}
+                  className="ml-2 w-full sm:w-auto px-4 py-2 bg-[#444444] text-sm text-white rounded-md hover:bg-gray-200 hover:text-[#444444] font-semibold"
+                >
+                  취소
                 </button>
               </div>
             </div>
