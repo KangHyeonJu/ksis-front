@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import fetcher from "../../../fetcher";
 import { PC_DELETE, PC_LIST } from "../../../constants/api_constant";
 import { format } from "date-fns";
@@ -10,23 +9,20 @@ import { decodeJwt } from "../../../decodeJwt";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
+import SearchBar from "../../components/SearchBar";
+import CheckboxTable from "../../components/CheckboxTable";
 
 const PcList = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPosts, setSelectedPosts] = useState(new Set());
-  const [checkedRowId, setCheckedRowId] = useState([]);
-  const userInfo = decodeJwt();
-
-  const [searchCategory, setSearchCategory] = useState("deviceName");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  const postsPerPage = 10; // 한 페이지 10개 데이터
-
-  const [loading, setLoading] = useState(true);
-
+  const postsPerPage = 15;
+  const [selectedPosts, setSelectedPosts] = useState(new Set());
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const userInfo = decodeJwt();
+  const checked = true;
 
-  const loadPage = async () => {
+  const loadPage = async (searchTerm = "", searchCategory = "deviceName") => {
     try {
       const response = await fetcher.get(PC_LIST, {
         params: {
@@ -37,7 +33,6 @@ const PcList = () => {
           searchCategory,
         },
       });
-      console.log(response);
       if (response.data) {
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -49,48 +44,35 @@ const PcList = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
       alert(error.response?.data || "Unknown error occurred");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // 검색 이벤트 핸들러
+  const handleSearch = (searchTerm, searchCategory) => {
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    loadPage(searchTerm, searchCategory);
   };
 
   useEffect(() => {
     loadPage();
-  }, [currentPage, searchTerm]);
+  }, [currentPage]);
 
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
 
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
-  };
-
-  const handleCheckboxChange = (postId) => {
-    setSelectedPosts((prevSelectedPosts) => {
-      const newSelectedPosts = new Set(prevSelectedPosts);
-      if (newSelectedPosts.has(postId)) {
-        let newCheckedRowId = checkedRowId.filter((e) => e !== postId);
-        setCheckedRowId(newCheckedRowId);
-
-        newSelectedPosts.delete(postId);
-      } else {
-        setCheckedRowId([...checkedRowId, postId]);
-        newSelectedPosts.add(postId);
-      }
-      return newSelectedPosts;
-    });
-  };
-
   //pc 삭제
-  const deletePc = async (e) => {
+  const deletePc = async () => {
     try {
-      if (checkedRowId.length === 0) {
+      if (selectedPosts.size === 0) {
         alert("삭제할 PC를 선택해주세요.");
+        return;
       } else {
         if (window.confirm("삭제하시겠습니까?")) {
-          const queryString = checkedRowId.join(",");
+          const queryString = Array.from(selectedPosts).join(",");
 
           const response = await fetcher.delete(
             PC_DELETE + "?pcIds=" + queryString
@@ -98,8 +80,9 @@ const PcList = () => {
 
           console.log(response.data);
           setPosts((prevPcList) =>
-            prevPcList.filter((pc) => !checkedRowId.includes(pc.deviceId))
+            prevPcList.filter((pc) => !selectedPosts.has(pc.deviceId))
           );
+          setSelectedPosts(new Set()); // 선택된 항목 초기화
           alert("PC가 정상적으로 삭제되었습니다.");
         }
       }
@@ -118,116 +101,76 @@ const PcList = () => {
         일반 PC 관리
       </h1>
 
-      <div className="flex items-center relative flex-grow border-y border-gray-300 my-10">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-[#444444] font-bold border-x border-gray-300"
-        >
-          <option value="deviceName">PC명</option>
+      {/* 검색 부분 */}
+      <SearchBar
+        onSearch={handleSearch} // 검색 이벤트 핸들러 전달
+        searchOptions={[
+          { value: "deviceName", label: "PC명" },
+          ...(userInfo.roles === "ROLE_ADMIN"
+            ? [{ value: "account", label: "담당자" }]
+            : []),
+        ]} // 검색 옵션 전달
+        defaultCategory="deviceName" // 기본 카테고리 설정
+      />
+      {/* 검색 부분 끝 */}
 
-          {userInfo.roles === "ROLE_ADMIN" ? (
-            <option value="account">담당자</option>
-          ) : null}
-        </select>
-        <div className="relative flex-grow">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="검색어를 입력하세요"
-            className="w-full p-2"
-          />
-        </div>
-        <div className="bg-[#FF9C00] border-x border-[#FF9C00] text-white h-10 w-10 inline-flex items-center text-center">
-          <FaSearch className=" w-full" />
-        </div>
-      </div>
-
-      <div className="shadow-sm ring-1 ring-gray-900/5 text-center p-8 bg-white rounded-sm h-160">
-        <table className="w-full table-fixed">
-          <thead className="border-t-2 border-[#FF9C00] bg-[#FFF9F2]">
-            <tr>
-              <th className="w-1/12 p-2 text-center text-gray-800 border-b border-gray-300">
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    const isChecked = e.target.checked;
-                    setSelectedPosts(
-                      isChecked
-                        ? new Set(posts.map((post) => post.deviceId))
-                        : new Set()
-                    );
-                  }}
-                />
-              </th>
-              <th className="w-3/12 p-2 text-gray-800 text-center border-b border-gray-300">
-                PC명
-              </th>
-              <th className="w-3/12 p-2 text-gray-800 text-center border-b border-gray-300">
-                담당자(아이디)
-              </th>
-              <th className="w-3/12 p-2 text-gray-800 text-center border-b border-gray-300">
-                등록일
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((post) => (
-              <tr key={post.deviceId} className="hover:bg-gray-100">
-                <td className="text-center p-2 border-b border-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={selectedPosts.has(post.deviceId)}
-                    onChange={() => handleCheckboxChange(post.deviceId)}
-                  />
-                </td>
-
-                <td className="p-2 text-center border-b border-gray-300 text-[#444444] font-semibold hover:underline">
-                  <Link to={PC_UPDATE_FORM + `/${post.deviceId}`}>
-                    {post.deviceName}
-                  </Link>
-                </td>
-
-                <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                  {post.accountList
-                    .map((account) => `${account.name}(${account.accountId})`)
-                    .join(", ")}
-                </td>
-                <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                  {format(post.regDate, "yyyy-MM-dd")}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
+        <CheckboxTable
+          headers={["PC명", "담당자(아이디)", "등록일"]}
+          data={posts}
+          dataKeys={[
+            {
+              content: (item) => (
+                <Link to={PC_UPDATE_FORM + `/${item.deviceId}`}>
+                  {item.deviceName}
+                </Link>
+              ),
+              className:
+                "p-2 text-center border-b border-gray-300 text-[#444444] font-semibold hover:underline",
+            },
+            {
+              content: (item) =>
+                item.accountList
+                  .map((acc) => `${acc.name}(${acc.accountId})`)
+                  .join(", "),
+              className:
+                "p-2 text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => format(item.regDate, "yyyy-MM-dd"),
+              className:
+                "p-2 text-gray-800 text-center border-b border-gray-300",
+            },
+          ]}
+          uniqueKey="deviceId"
+          selectedItems={selectedPosts}
+          setSelectedItems={setSelectedPosts}
+          check={checked}
+        />
       </div>
 
       {userInfo.roles === "ROLE_ADMIN" ? (
-          <div className="flex justify-end space-x-2 my-10">
-            <Link to={PC_FORM}>
-              <ButtonComponentB
-                  defaultColor="blue-600"
-                  shadowColor="blue-800"
-              >
-                일반 PC 등록
-              </ButtonComponentB>
-            </Link>
-            <ButtonComponentB
-                onClick={deletePc}
-                defaultColor="red-600"
-                shadowColor="red-800"
-            >
-              삭제
+        <div className="flex justify-end space-x-2 my-10">
+          <Link to={PC_FORM}>
+            <ButtonComponentB defaultColor="blue-600" shadowColor="blue-800">
+              일반 PC 등록
             </ButtonComponentB>
-          </div>
+          </Link>
+          <ButtonComponentB
+            onClick={deletePc}
+            defaultColor="red-600"
+            shadowColor="red-800"
+          >
+            삭제
+          </ButtonComponentB>
+        </div>
       ) : null}
 
       <div>
         <PaginationComponent
-            totalPages={totalPages}
-            currentPage={currentPage}
-            handlePageChange={handlePageChange}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
         />
       </div>
     </div>

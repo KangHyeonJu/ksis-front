@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ReactDOM from "react-dom";
 import {
   NOTIFICATION_PAGE,
   NOTIFICATION_ISREAD,
@@ -103,8 +102,8 @@ const Notification = ({ onClose }) => {
       onClick={onClose} // 모달 바깥 클릭 시 모달 닫기
     >
       <div
-          className="bg-white p-6 rounded shadow-lg max-w-full w-[700px]"
-          onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫히지 않게
+        className="bg-white p-6 rounded shadow-lg max-w-full w-[700px]"
+        onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫히지 않게
       >
         <h2 className="text-xl font-semibold mb-4">알림</h2>
         <div className="overflow-auto">
@@ -118,61 +117,61 @@ const Notification = ({ onClose }) => {
             </TableHead>
             <TableBody>
               {notifications.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan="2" className="py-2 px-4 text-center">
-                      데이터가 없습니다
+                <TableRow>
+                  <TableCell colSpan="2" className="py-2 px-4 text-center">
+                    데이터가 없습니다
+                  </TableCell>
+                </TableRow>
+              ) : (
+                notifications.map((notification, index) => (
+                  <TableRow
+                    key={index}
+                    className={`${
+                      notification.isRead ? "bg-white" : "bg-orange-100"
+                    } hover:bg-gray-100 cursor-pointer`}
+                    onMouseEnter={() =>
+                      handleMouseOver(index, notification.notificationId)
+                    }
+                    onClick={() =>
+                      handleNavigate(
+                        notification.resourceType,
+                        notification.message
+                      )
+                    }
+                  >
+                    <TableCell
+                      className="font-bold"
+                      title={notification.message}
+                    >
+                      {notification.message.length > 30
+                        ? `${notification.message.slice(
+                            0,
+                            20
+                          )}...${notification.message.slice(-7)}`
+                        : notification.message}
+                    </TableCell>
+                    <TableCell className="font-bold">
+                      {new Date(notification.regTime).toLocaleString("ko-KR", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })}
                     </TableCell>
                   </TableRow>
-              ) : (
-                  notifications.map((notification, index) => (
-                      <TableRow
-                          key={index}
-                          className={`${
-                              notification.isRead ? "bg-white" : "bg-orange-100"
-                          } hover:bg-gray-100 cursor-pointer`}
-                          onMouseEnter={() =>
-                              handleMouseOver(index, notification.notificationId)
-                          }
-                          onClick={() =>
-                              handleNavigate(
-                                  notification.resourceType,
-                                  notification.message
-                              )
-                          }
-                      >
-                        <TableCell
-                            className="font-bold"
-                            title={notification.message}
-                        >
-                          {notification.message.length > 30
-                              ? `${notification.message.slice(
-                                  0,
-                                  20
-                              )}...${notification.message.slice(-7)}`
-                              : notification.message}
-                        </TableCell>
-                        <TableCell className="font-bold">
-                          {new Date(notification.regTime).toLocaleString("ko-KR", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                          })}
-                        </TableCell>
-                      </TableRow>
-                  ))
+                ))
               )}
             </TableBody>
           </Table>
         </div>
-        <br/>
+        <br />
         <div>
           <PaginationComponent
-              totalPages={totalPages}
-              currentPage={page}
-              handlePageChange={handlePageChange}
+            totalPages={totalPages}
+            currentPage={page}
+            handlePageChange={handlePageChange}
           />
         </div>
       </div>

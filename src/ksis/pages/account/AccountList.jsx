@@ -4,7 +4,6 @@ import {
   ACCOUNT_FORM,
   ACCOUNT_LIST,
 } from "../../../constants/account_constant";
-import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../../decodeJwt";
 import { MAIN } from "../../../constants/page_constant";
@@ -12,6 +11,8 @@ import { MAIN } from "../../../constants/page_constant";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponent from "../../components/ButtonComponent";
+import SearchBar from "../../components/SearchBar";
+import CheckboxTable from "../../components/CheckboxTable";
 import ButtonComponentB from "../../components/ButtonComponentB";
 
 const AccountList = () => {
@@ -24,7 +25,8 @@ const AccountList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("accountId");
 
-  const postsPerPage = 10;
+  const postsPerPage = 15;
+  const checked = false;
 
   const loadPage = async (page) => {
     try {
@@ -50,10 +52,6 @@ const AccountList = () => {
   };
 
   useEffect(() => {
-    setSearchTerm("");
-  }, [searchCategory]);
-
-  useEffect(() => {
     // 관리자가 아닌 경우 접근 차단
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
       alert("관리자만 접근 가능합니다.");
@@ -65,7 +63,7 @@ const AccountList = () => {
 
   useEffect(() => {
     loadPage(currentPage);
-  }, [currentPage, searchTerm, searchCategory]);
+  }, [currentPage, searchTerm]);
 
   const handleToggleActive = async (accountId, isActive) => {
     try {
@@ -104,8 +102,9 @@ const AccountList = () => {
     setCurrentPage(page);
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value); // 검색어를 업데이트
+  const handleSearch = (term, category) => {
+    setSearchTerm(term);
+    setSearchCategory(category);
     setCurrentPage(1);
   };
 
@@ -114,106 +113,100 @@ const AccountList = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         계정목록
       </h1>
 
-      <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
-        <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
-          className="p-2 bg-white text-gray-600 font-bold"
-        >
-          <option value="accountId">계정 아이디</option>
-          <option value="name">이름</option>
-          <option value="businessTel">업무 연락처</option>
-          <option value="isActive">비활성화 여부</option>
-        </select>
+      <SearchBar
+        onSearch={handleSearch}
+        searchOptions={[
+          { value: "accountId", label: "계정 아이디" },
+          { value: "name", label: "이름" },
+          { value: "businessTel", label: "업무 연락처" },
+          { value: "isActive", label: "비활성화 여부" },
+        ]}
+        defaultCategory="accountId"
+        selectOptions={{
+          isActive: [
+            { value: "", label: "전체" },
+            { value: "true", label: "비활성화" },
+            { value: "false", label: "활성화" },
+          ],
+        }}
+      />
 
-        {searchCategory === "isActive" ? (
-          <select
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="ml-2 p-2 border border-gray-300 rounded-md"
-          >
-            <option value="">전체</option>
-            <option value="true">활성화</option>
-            <option value="false">비활성화</option>
-          </select>
-        ) : (
-          <div className="relative flex-grow">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="검색어를 입력하세요"
-              className="w-full p-2"
-            />
-            <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]" />
-          </div>
-        )}
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
+        <CheckboxTable
+          headers={[
+            "계정 아이디",
+            "이름",
+            "업무 전화번호",
+            "비활성화 여부",
+            "수정/비활성화",
+          ]}
+          data={posts}
+          dataKeys={[
+            {
+              content: (item) => item.accountId,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => item.name,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => item.businessTel,
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+            {
+              content: (item) => (item.isActive ? "O" : "X"),
+              className: "text-gray-800 text-center border-b border-gray-300",
+            },
+          ]}
+          uniqueKey="accountId"
+          check={checked}
+          renderActions={(item) => (
+            <>
+              <ButtonComponent
+                to={ACCOUNT_FORM + `/${item.accountId}`}
+                defaultColor="blue-600"
+                shadowColor="blue-800"
+              >
+                수정
+              </ButtonComponent>
+
+              <ButtonComponent
+                onClick={() =>
+                  handleToggleActive(item.accountId, item.isActive)
+                }
+                defaultColor={item.isActive ? "green-600" : "red-600"}
+                shadowColor={item.isActive ? "green-800" : "red-800"}
+              >
+                {item.isActive ? "활성화" : "비활성화"}
+              </ButtonComponent>
+            </>
+          )}
+        />
       </div>
 
-      <div className="flex justify-end space-x-2 mb-4">
-        <ButtonComponentB to={ACCOUNT_FORM} defaultColor="[#FF9C00]" shadowColor="[#FF9C00]">
+      <div className="flex justify-end space-x-2 my-10">
+        <ButtonComponentB
+          to={ACCOUNT_FORM}
+          defaultColor="[#FF9C00]"
+          shadowColor="[#FF9C00]"
+        >
           계정 등록
         </ButtonComponentB>
       </div>
 
-      <table className="min-w-full mt-4 table-fixed">
-        <thead className="border-t border-b border-double border-[#FF9C00]">
-          <tr className="text-gray-800">
-            <th className="w-1/5 ">계정 아이디</th>
-            <th className="w-1/5 ">이름</th>
-            <th className="w-1/5 ">업무 전화번호</th>
-            <th className="w-1/5 ">비활성화 여부</th>
-            <th className="w-1/5 ">수정/비활성화</th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map((post) => (
-            <tr key={post.accountId}>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.accountId}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.name}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.businessTel}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300">
-                {post.isActive ? "O" : "X"}
-              </td>
-              <td className="text-center p-2 border-b border-gray-300 flex justify-center">
-                <ButtonComponent
-                    to={`/account/${post.accountId}`}
-                    defaultColor="blue-600"
-                    shadowColor="blue-800"
-                >
-                  수정
-                </ButtonComponent>
-
-                <ButtonComponent
-                    onClick={() => handleToggleActive(post.accountId, post.isActive)}
-                    defaultColor={post.isActive ? "green-600" : "red-600"}
-                    hoverColor={post.isActive ? "green-800" : "red-800"}
-                >
-                  {post.isActive ? "활성화" : "비활성화"}
-                </ButtonComponent>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
+      {/* 페이지네이션 */}
       <div>
         <PaginationComponent
-            totalPages={totalPages}
-            currentPage={currentPage}
-            handlePageChange={handlePageChange}
-          />
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   );

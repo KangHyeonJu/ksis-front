@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,7 +10,6 @@ import { RESOLUTION } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
 import { Input } from "../../css/input";
 import { Button } from "../../css/button";
-import { Select } from "../../css/select";
 import {
   Alert,
   AlertActions,
@@ -167,9 +166,9 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
             </DialogBody>
             <DialogActions>
               <ButtonComponentB
-                  type="submit"
-                  defaultColor="blue-600"
-                  shadowColor="blue-800"
+                type="submit"
+                defaultColor="blue-600"
+                shadowColor="blue-800"
               >
                 수정
               </ButtonComponentB>

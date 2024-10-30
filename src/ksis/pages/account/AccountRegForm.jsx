@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import {
   ACCOUNT_CREATE,
@@ -393,13 +393,21 @@ const AccountRegForm = () => {
             </div>
           </div>
 
-          <br/>
+          <br />
 
           <div className="mt-10 flex gap-4 justify-center">
-            <ButtonComponentB type="submit" defaultColor="blue-600" shadowColor="blue-800">
+            <ButtonComponentB
+              type="submit"
+              defaultColor="blue-600"
+              shadowColor="blue-800"
+            >
               등록
             </ButtonComponentB>
-            <ButtonComponentB to={ACCOUNT_LIST_BOARD} defaultColor="red-600" shadowColor="red-800">
+            <ButtonComponentB
+              to={ACCOUNT_LIST_BOARD}
+              defaultColor="red-600"
+              shadowColor="red-800"
+            >
               취소
             </ButtonComponentB>
           </div>

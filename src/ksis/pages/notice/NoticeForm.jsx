@@ -62,6 +62,7 @@ const NoticeForm = () => {
             label: device.deviceName,
           }))
         );
+        setLoading(false);
       } catch (error) {
         showAlert("디바이스 목록을 불러오는 중 오류가 발생했습니다.", error);
       }
@@ -96,8 +97,6 @@ const NoticeForm = () => {
             endDate,
             deviceIds: selectedDeviceIds.length ? selectedDeviceIds : [""],
           });
-
-          setLoading(false);
         } catch (error) {
           showAlert("공지글을 불러오는 중 오류가 발생했습니다.");
         }
@@ -188,7 +187,7 @@ const NoticeForm = () => {
     }
   };
 
-  if (!loading) {
+  if (loading) {
     return <Loading />;
   }
 
@@ -342,18 +341,18 @@ const NoticeForm = () => {
             )}
             <div className="flex justify-center space-x-4">
               <ButtonComponentB
-                  type="submit"
-                  defaultColor="blue-600"
-                  shadowColor="blue-800"
+                type="submit"
+                defaultColor="blue-600"
+                shadowColor="blue-800"
               >
                 저장
               </ButtonComponentB>
 
               <ButtonComponentB
-                  type="button"
-                  onClick={handleCancel}
-                  defaultColor="red-600"
-                  shadowColor="red-800"
+                type="button"
+                onClick={handleCancel}
+                defaultColor="red-600"
+                shadowColor="red-800"
               >
                 취소
               </ButtonComponentB>

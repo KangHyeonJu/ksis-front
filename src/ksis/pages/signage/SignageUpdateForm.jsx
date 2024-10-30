@@ -31,8 +31,6 @@ const SignageUpdateForm = () => {
   const [data, setData] = useState({});
   const params = useParams();
   const [responsibles, setResponsibles] = useState([{ id: 0, accountId: "" }]);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [isReadOnly, setIsReadOnly] = useState(true);
   const [accounts, setAccounts] = useState([]);
   const [resolutions, setResolution] = useState([]);
   const [error, setError] = useState("");
@@ -182,9 +180,6 @@ const SignageUpdateForm = () => {
 
   const handleSave = async () => {
     try {
-      setIsDisabled(false);
-      setIsReadOnly(false);
-
       const ipRegex =
         /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
@@ -223,9 +218,6 @@ const SignageUpdateForm = () => {
 
       if (response.status === 200) {
         showAlert("재생장치가 정상적으로 수정되었습니다.", () => {
-          setIsDisabled(true);
-          setIsReadOnly(true);
-
           navigate(SIGNAGE_DTL + `/${data.deviceId}`);
         });
       } else {

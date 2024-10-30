@@ -10,7 +10,6 @@ import { RESOLUTION } from "../../../constants/api_constant";
 import { ImCross } from "react-icons/im";
 import { Input } from "../../css/input";
 import { Button } from "../../css/button";
-import { Select } from "../../css/select";
 import {
   Alert,
   AlertActions,
@@ -56,6 +55,9 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
           setData({ name: "", width: "", height: "" });
           onRequestClose();
         });
+      } else if (response.status === 202) {
+        showAlert("이미 등록된 해상도입니다.");
+        return;
       } else {
         showAlert("해상도 등록 중 오류가 발생했습니다.");
       }
@@ -166,9 +168,9 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
             </DialogBody>
             <DialogActions>
               <ButtonComponentB
-                  type="submit"
-                  defaultColor="blue-600"
-                  shadowColor="blue-800"
+                type="submit"
+                defaultColor="blue-600"
+                shadowColor="blue-800"
               >
                 수정
               </ButtonComponentB>

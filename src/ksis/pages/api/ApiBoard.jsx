@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useMemo } from "react";
-import ReactPaginate from "react-paginate";
-import { FaSearch } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BOARD, API_FORM, MAIN } from "../../../constants/page_constant"; // MAIN 상수 추가
 import { API_LIST, API_NOTICE } from "../../../constants/api_constant";
 import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
+import SearchBar from "../../components/SearchBar";
+import CheckboxTable from "../../components/CheckboxTable";
 
 const ApiBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -21,7 +23,8 @@ const ApiBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const postsPerPage = 10;
+  const postsPerPage = 15;
+  const checked = true;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,32 +63,6 @@ const ApiBoard = () => {
     setCurrentPage(page);
   };
 
-  // 검색어 변경 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
-  };
-
-  const handleCheckboxChange = (postId, event) => {
-    event.stopPropagation();
-    setSelectedPosts((prevSelectedPosts) => {
-      const newSelectedPosts = new Set(prevSelectedPosts);
-      if (newSelectedPosts.has(postId)) {
-        newSelectedPosts.delete(postId);
-      } else {
-        newSelectedPosts.add(postId);
-      }
-      return newSelectedPosts;
-    });
-  };
-
-  const handleSelectAllChange = (e) => {
-    const isChecked = e.target.checked;
-    setSelectedPosts(
-      isChecked ? new Set(posts.map((post) => post.apiId)) : new Set()
-    );
-  };
-
   const handleDeletePosts = async () => {
     if (selectedPosts.size === 0) {
       alert("삭제할 게시글을 선택해주세요.");
@@ -119,18 +96,6 @@ const ApiBoard = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    return dateString.substring(0, 10);
-  };
-
-  const handleApiNameClick = (apiId) => {
-    navigate(`${API_FORM}/${apiId}`);
-  };
-
-  const isAllSelected =
-    posts.length > 0 && posts.every((post) => selectedPosts.has(post.apiId));
-
   if (loading) {
     return <Loading />;
   }
@@ -140,115 +105,88 @@ const ApiBoard = () => {
   }
 
   return (
-      <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
-        <header className="mb-6">
-          <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-            API 목록
-          </h1>
-        </header>
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        API 목록
+      </h1>
 
-        <div className="flex items-center relative flex-grow mb-4 border border-[#FF9C00]">
-          <select
-              value={searchCategory}
-              onChange={(e) => setSearchCategory(e.target.value)}
-              className="p-2 bg-white text-gray-600 font-bold"
-          >
-            <option value="apiName">이름</option>
-            <option value="provider">제공업체</option>
-            <option value="expiryDate">만료일</option>
-          </select>
-          <div className="relative flex-grow">
-            <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearch}
-                placeholder="검색..."
-                className="w-full p-2"
-            />
-          </div>
-          <FaSearch className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#FF9C00]"/>
-        </div>
+      <SearchBar
+        onSearch={(term, category) => {
+          setSearchTerm(term);
+          setSearchCategory(category);
+          setCurrentPage(1);
+        }}
+        searchOptions={[
+          { value: "apiName", label: "이름" },
+          { value: "provider", label: "제공업체" },
+          { value: "expiryDate", label: "만료일" },
+        ]}
+        defaultCategory="apiName"
+      />
 
-        <div className="flex justify-end space-x-2 mb-4">
-          <ButtonComponentB
-              onClick={() => navigate("/apiform")}
-              defaultColor="blue-600"
-              shadowColor="blue-800"
-          >
-            API 등록
-          </ButtonComponentB>
-
-          <ButtonComponentB
-              onClick={handleDeletePosts}
-              defaultColor="red-600"
-              shadowColor="red-800"
-          >
-            삭제
-          </ButtonComponentB>
-        </div>
-
-        <div>
-          {posts.length === 0 ? (
-              <p className="text-center text-gray-600 mt-10 w-full">
-                등록된 API가 없습니다.
-              </p>
-          ) : (
-              <table className="w-full table-fixed border-collapse mt-4">
-                <thead className="border-t border-b border-double border-[#FF9C00]">
-                <tr>
-                  <th className="w-1/12 p-2 text-center text-gray-800">
-                    <input
-                        type="checkbox"
-                        checked={isAllSelected}
-                        onChange={handleSelectAllChange}
-                    />
-                  </th>
-                  <th className="w-3/12 p-2 text-gray-800 text-center">
-                    API 이름
-                  </th>
-                  <th className="w-4/12 p-2 text-gray-800 text-center">만료일</th>
-                  <th className="w-4/12 p-2 text-gray-800 text-center">
-                    제공업체
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                {posts.map((post) => (
-                    <tr key={post.apiId}>
-                      <td className="text-center p-2 border-b border-gray-300">
-                        <input
-                            type="checkbox"
-                            checked={selectedPosts.has(post.apiId)}
-                            onChange={(e) => handleCheckboxChange(post.apiId, e)}
-                        />
-                      </td>
-                      <td
-                          className="p-2 text-gray-800 text-center border-b border-gray-300 hover:underline hover:text-[#FF9C00] cursor-pointer"
-                          onClick={() => handleApiNameClick(post.apiId)}
-                      >
-                        {post.apiName}
-                      </td>
-                      <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                        {formatDate(post.expiryDate)}
-                      </td>
-                      <td className="p-2 text-gray-800 text-center border-b border-gray-300">
-                        {post.provider}
-                      </td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
-          )}
-        </div>
-
-        <div>
-          <PaginationComponent
-              totalPages={totalPages}
-              currentPage={currentPage}
-              handlePageChange={handlePageChange}
+      <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
+        {posts.length === 0 ? (
+          <p className="text-center text-gray-600 mt-10 w-full">
+            등록된 API가 없습니다.
+          </p>
+        ) : (
+          <CheckboxTable
+            headers={["API 이름", "제공업체", "만료일"]}
+            data={posts}
+            dataKeys={[
+              {
+                content: (item) => (
+                  <Link to={API_FORM + `/${item.apiId}`}>{item.apiName}</Link>
+                ),
+                className:
+                  "p-2 text-center border-b border-gray-300 text-[#444444] font-semibold hover:underline",
+              },
+              {
+                content: (item) => item.provider,
+                className:
+                  "p-2 text-gray-800 text-center border-b border-gray-300",
+              },
+              {
+                content: (item) => format(item.expiryDate, "yyyy-MM-dd"),
+                className:
+                  "p-2 text-gray-800 text-center border-b border-gray-300",
+              },
+            ]}
+            uniqueKey="apiId"
+            selectedItems={selectedPosts}
+            setSelectedItems={setSelectedPosts}
+            check={checked}
           />
-        </div>
+        )}
       </div>
+
+      <div className="flex justify-end space-x-2 my-10">
+        <ButtonComponentB
+          onClick={() => navigate("/apiform")}
+          defaultColor="blue-600"
+          shadowColor="blue-800"
+        >
+          API 등록
+        </ButtonComponentB>
+
+        <ButtonComponentB
+          onClick={handleDeletePosts}
+          defaultColor="red-600"
+          shadowColor="red-800"
+        >
+          삭제
+        </ButtonComponentB>
+      </div>
+
+      {/* 페이지네이션 */}
+      <div>
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        />
+      </div>
+    </div>
   );
 };
 

@@ -201,32 +201,32 @@ const NoticeDetail = () => {
             <div className="flex justify-center space-x-4">
               {/* notice 작성자가 admin인 경우 숨기기 */}
               {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
-                  <>
-                    <ButtonComponentB
-                        type="button"
-                        onClick={handleEdit}
-                        defaultColor="blue-600"
-                        shadowColor="blue-800"
-                    >
-                      수정하기
-                    </ButtonComponentB>
+                <>
+                  <ButtonComponentB
+                    type="button"
+                    onClick={handleEdit}
+                    defaultColor="blue-600"
+                    shadowColor="blue-800"
+                  >
+                    수정하기
+                  </ButtonComponentB>
 
-                    <ButtonComponentB
-                        type="button"
-                        onClick={handleDeActive}
-                        defaultColor="red-600"
-                        shadowColor="red-800"
-                    >
-                      비활성화
-                    </ButtonComponentB>
-                  </>
+                  <ButtonComponentB
+                    type="button"
+                    onClick={handleDeActive}
+                    defaultColor="red-600"
+                    shadowColor="red-800"
+                  >
+                    비활성화
+                  </ButtonComponentB>
+                </>
               )}
 
               <ButtonComponentB
-                  type="button"
-                  onClick={handleCancel}
-                  defaultColor="gray-600"
-                  shadowColor="gray-800"
+                type="button"
+                onClick={handleCancel}
+                defaultColor="gray-600"
+                shadowColor="gray-800"
               >
                 뒤로가기
               </ButtonComponentB>

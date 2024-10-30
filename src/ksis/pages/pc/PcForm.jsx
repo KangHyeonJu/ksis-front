@@ -372,9 +372,9 @@ const PcForm = () => {
                   className="mr-3"
                 />
                 <ButtonComponentB
-                    onClick={execDaumPostcode}
-                    defaultColor="gray-600"
-                    shadowColor="gray-800"
+                  onClick={execDaumPostcode}
+                  defaultColor="gray-600"
+                  shadowColor="gray-800"
                 >
                   주소검색
                 </ButtonComponentB>
@@ -400,19 +400,19 @@ const PcForm = () => {
               </div>
             </div>
           </div>
-          <br/>
+          <br />
           <div className="mt-6 flex justify-center gap-4">
             <ButtonComponentB
-                type="submit"
-                defaultColor="blue-600"
-                shadowColor="blue-800"
+              type="submit"
+              defaultColor="blue-600"
+              shadowColor="blue-800"
             >
               등록하기
             </ButtonComponentB>
             <ButtonComponentB
-                onClick={onCancel}
-                defaultColor="red-600"
-                shadowColor="red-800"
+              onClick={onCancel}
+              defaultColor="red-600"
+              shadowColor="red-800"
             >
               뒤로가기
             </ButtonComponentB>

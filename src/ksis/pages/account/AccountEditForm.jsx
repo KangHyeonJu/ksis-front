@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import fetcher from "../../../fetcher";
 import {
   ACCOUNT_FORM,
@@ -15,7 +15,6 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import { Button } from "../../css/button"; // Button 컴포넌트 추가
-import { Field } from "../../css/fieldset";
 import Loading from "../../components/Loading";
 import ButtonComponentB from "../../components/ButtonComponentB";
 
@@ -423,17 +422,21 @@ const AccountEditForm = () => {
 
           <div className="mt-10 flex gap-4 justify-center">
             <ButtonComponentB
-                type="submit"
-                defaultColor="blue-600"
-                shadowColor="blue-800"
+              type="submit"
+              defaultColor="blue-600"
+              shadowColor="blue-800"
             >
               저장
             </ButtonComponentB>
 
             <ButtonComponentB
-                to={userInfo.roles.includes("ROLE_ADMIN") ? ACCOUNT_LIST_BOARD : MAIN}
-                defaultColor="red-600"
-                shadowColor="red-800"
+              to={
+                userInfo.roles.includes("ROLE_ADMIN")
+                  ? ACCOUNT_LIST_BOARD
+                  : MAIN
+              }
+              defaultColor="red-600"
+              shadowColor="red-800"
             >
               취소
             </ButtonComponentB>

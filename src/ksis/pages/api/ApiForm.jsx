@@ -239,18 +239,18 @@ const ApiForm = () => {
             </div>
             <div className="flex justify-center space-x-4">
               <ButtonComponentB
-                  type="submit"
-                  defaultColor="blue-600"
-                  shadowColor="blue-800"
+                type="submit"
+                defaultColor="blue-600"
+                shadowColor="blue-800"
               >
                 {apiId ? "수정하기" : "등록하기"}
               </ButtonComponentB>
 
               <ButtonComponentB
-                  type="button"
-                  onClick={() => navigate(-1)}
-                  defaultColor="red-600"
-                  shadowColor="red-800"
+                type="button"
+                onClick={() => navigate(-1)}
+                defaultColor="red-600"
+                shadowColor="red-800"
               >
                 뒤로가기
               </ButtonComponentB>
