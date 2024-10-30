@@ -13,6 +13,13 @@ import { FaSearch } from "react-icons/fa";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { BsPlusSquare } from "react-icons/bs";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   const [data, setData] = useState({
@@ -29,6 +36,17 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 8; // 한 페이지 10개 데이터
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   //이미지/영상 불러오기
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
@@ -149,23 +167,23 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
     try {
       console.log("resourceAdds", resourceAdds);
       if (data.fileTitle === null || data.fileTitle === "") {
-        alert("재생목록 제목을 입력하세요.");
+        showAlert("재생목록 제목을 입력하세요.", () => {});
         return;
       } else if (data.fileTitle.length > 50) {
-        alert("제목을 50자 이내로 작성하세요.");
+        showAlert("제목을 50자 이내로 작성하세요.", () => {});
         return;
       }
 
       if (data.slideTime === null || data.slideTime === "") {
-        alert("Slide Time을 입력하세요.");
+        showAlert("Slide Time을 입력하세요.", () => {});
         return;
       } else if (data.slideTime <= 0) {
-        alert("Slide Time은 0보다 커야합니다");
+        showAlert("Slide Time은 0보다 커야합니다", () => {});
         return;
       }
 
       if (resourceAdds.length === 0) {
-        alert("재생목록에 추가할 파일을 선택하세요.");
+        showAlert("재생목록에 추가할 파일을 선택하세요.", () => {});
         return;
       }
       const formData = new FormData();
@@ -180,7 +198,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
           type: "application/json",
         })
       );
-      if (window.confirm("등록하시겠습니까?")) {
+      showAlert("등록하시겠습니까?", async () => {
         const response = await fetcher.post(SIGNAGE_PLAYLIST, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -189,12 +207,13 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
 
         console.log(response.data);
 
-        alert("재생목록이 정상적으로 등록되었습니다.");
-        setData({ fileTitle: "", slideTime: "" });
-        setSearchCategory("");
-        setSearchTerm("");
-        onRequestClose();
-      }
+        showAlert("재생목록이 정상적으로 등록되었습니다.", () => {
+          setData({ fileTitle: "", slideTime: "" });
+          setSearchCategory("");
+          setSearchTerm("");
+          onRequestClose();
+        });
+      });
     } catch (error) {
       console.log(error.response.data);
     }
@@ -211,6 +230,47 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <Alert
+          open={isAlertOpen}
+          onClose={() => {
+            setIsAlertOpen(false);
+            if (
+              alertMessage === "재생목록이 정상적으로 등록되었습니다." &&
+              confirmAction
+            ) {
+              confirmAction();
+            }
+          }}
+          size="lg"
+        >
+          <AlertTitle>알림창</AlertTitle>
+          <AlertDescription>{alertMessage}</AlertDescription>
+          <AlertActions>
+            {confirmAction && (
+              <Button
+                onClick={() => {
+                  setIsAlertOpen(false);
+                  if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+                }}
+              >
+                확인
+              </Button>
+            )}
+            {!(
+              alertMessage === "재생목록 제목을 입력하세요." ||
+              alertMessage === "제목을 50자 이내로 작성하세요." ||
+              alertMessage === "Slide Time을 입력하세요." ||
+              alertMessage === "Slide Time은 0보다 커야합니다" ||
+              alertMessage === "재생목록에 추가할 파일을 선택하세요." ||
+              alertMessage === "재생목록이 정상적으로 등록되었습니다."
+            ) && (
+              <Button plain onClick={() => setIsAlertOpen(false)}>
+                취소
+              </Button>
+            )}
+          </AlertActions>
+        </Alert>
+
         <div className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160">
           <div className="h-full">
             <div className="flex items-center justify-center">
@@ -233,12 +293,6 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               >
                 파일 불러오기
               </button> */}
-
-                <SignageResourceModal
-                  isOpen={resourceModalIsOpen}
-                  onRequestClose={closeResourceModal}
-                  signageId={data.deviceId}
-                />
               </div>
             </div>
             <div className="flex items-center justify-center">
@@ -418,6 +472,11 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
           </div>
         </div>
       </div>
+      <SignageResourceModal
+        isOpen={resourceModalIsOpen}
+        onRequestClose={closeResourceModal}
+        signageId={data.deviceId}
+      />
     </Dialog>
   );
 };

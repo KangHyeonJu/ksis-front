@@ -15,7 +15,13 @@ import {
 } from "../../../constants/api_constant";
 import ImageResourceModal from "./ImageResourceModal";
 import fetcher from "../../../fetcher";
-
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import TabButton from "../../components/TapButton";
@@ -40,6 +46,16 @@ const ImageResourceBoard = () => {
 
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); // 선택한 이미지의 정보를 관리하는 상태값 추가
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   useEffect(() => {
     fetcher
@@ -54,11 +70,12 @@ const ImageResourceBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
-
-        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [currentPage, searchTerm]);
 
@@ -76,7 +93,7 @@ const ImageResourceBoard = () => {
 
   //제목 수정
   const handleSaveClick = async (id) => {
-    if (window.confirm("정말로 파일의 제목을 변경하시겠습니까?")) {
+    showAlert("정말로 파일의 제목을 변경하시겠습니까?", async () => {
       try {
         await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
           fileTitle: newTitle,
@@ -92,14 +109,14 @@ const ImageResourceBoard = () => {
         setEditingTitleIndex(null);
         setNewTitle("");
       } catch (error) {
-        window.confirm("수정에 실패했습니다.");
+        showAlert("수정에 실패했습니다.", () => {});
         console.error("제목 수정 중 오류 발생:", error);
       }
-    }
+    });
   };
 
   const handleDeactivate = async (id) => {
-    if (window.confirm("정말로 이 이미지를 비활성화하시겠습니까?")) {
+    showAlert("정말로 이 이미지를 비활성화하시겠습니까?", async () => {
       try {
         await fetcher.post(FILE_DEACTIVION + `/${id}`);
         const updatedImages = images.filter(
@@ -108,12 +125,12 @@ const ImageResourceBoard = () => {
         setImages(updatedImages);
         setTotalPages(Math.ceil(updatedImages.length / postsPerPage)); // 페이지 수 업데이트
 
-        window.alert("이미지를 비활성화하였습니다.");
+        showAlert("이미지를 비활성화하였습니다.", () => {});
       } catch (err) {
         console.error("이미지 비활성화 오류:", err);
-        window.alert("이미지 비활성화에 실패했습니다.");
+        showAlert("이미지 비활성화에 실패했습니다.", () => {});
       }
-    }
+    });
   };
 
   // 페이지 변경 핸들러
@@ -137,6 +154,38 @@ const ImageResourceBoard = () => {
 
   return (
     <div className="p-6 max-w-screen-2xl mx-auto">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "이미지를 비활성화하였습니다." ||
+            alertMessage === "수정에 실패했습니다." ||
+            alertMessage === "이미지 비활성화에 실패했습니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           이미지 원본 페이지
