@@ -14,6 +14,8 @@ import ButtonComponentB from "../../components/ButtonComponentB";
 import CheckboxTable from "../../components/CheckboxTable";
 import SearchBar from "../../components/SearchBar";
 
+import { decodeJwt } from "../../../decodeJwt";
+
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("fileTitle");
@@ -27,6 +29,8 @@ const TrashNoticeBoard = () => {
 
   const postsPerPage = 15;
   const checked = true;
+
+  const authority = decodeJwt().roles;
 
   useEffect(() => {
     fetcher
@@ -142,6 +146,8 @@ const TrashNoticeBoard = () => {
             selectedItems={selectedNotices}
             setSelectedItems={setSelectedNotices}
             check={checked}
+            authority={authority}
+            trash="trash"
           />
         )}
       </div>

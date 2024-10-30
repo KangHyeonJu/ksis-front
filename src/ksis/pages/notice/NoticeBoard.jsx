@@ -148,7 +148,9 @@ const NoticeBoard = () => {
               {
                 content: (item) => (
                   <Link to={NOTICE_DTL + `/${item.noticeId}`}>
-                    {item.role === "ADMIN" ? "📢 " : ""}
+                    {item.role === "ADMIN" && authority === "ROLE_ADMIN"
+                      ? "📢 "
+                      : ""}
                     {item.title}
                   </Link>
                 ),
@@ -175,6 +177,7 @@ const NoticeBoard = () => {
             selectedItems={selectedNotices}
             setSelectedItems={setSelectedNotices}
             check={checked}
+            authority={authority}
           />
         )}
       </div>

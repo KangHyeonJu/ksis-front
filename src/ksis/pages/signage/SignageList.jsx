@@ -140,7 +140,7 @@ const SignageList = () => {
                   .map((acc) => `${acc.name}(${acc.accountId})`)
                   .join(", "),
               className:
-                "p-2 text-gray-800 text-center border-b border-gray-300",
+                "p-2 text-gray-800 text-center border-b border-gray-300 overflow-hidden text-ellipsis",
             },
             {
               content: (item) => format(item.regDate, "yyyy-MM-dd"),
