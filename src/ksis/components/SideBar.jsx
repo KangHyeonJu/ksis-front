@@ -41,6 +41,8 @@ import {
   ACCOUNT_LIST_BOARD,
   LOG_OUT,
 } from "../../constants/account_constant";
+import { FiChevronLeft } from "react-icons/fi";
+import { FiAlignJustify } from "react-icons/fi";
 
 const Sidebar = ({ onToggleSidebar }) => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -242,10 +244,10 @@ const Sidebar = ({ onToggleSidebar }) => {
                   toggleExpand();
                 }
               }}
-              className="absolute top-0 right-0 p-1 hover:bg-gray-200 hover:opacity-50"
+              className="absolute top-6 right-2 p-1 hover:bg-gray-200 hover:opacity-50"
               aria-label="Toggle Sidebar"
             >
-              <BiArrowToLeft size={24} />
+              <FiChevronLeft size={24} color="#444444" />
             </button>
           </div>
           <div className="mb-4">
@@ -526,28 +528,27 @@ const Sidebar = ({ onToggleSidebar }) => {
         )}
 
         <div>
-          <div className="logo mb-8 mt-1">
+          <div className="logo mb-6 mt-1">
             <Link to={MAIN} className="text-2xl font-semibold">
               <img src={ksisLogo} alt="KSIS Logo" className="w-11 h-6" />
             </Link>
-
+          </div>
+          <div
+            className="flex flex-col space-y-5 mb-4"
+            onMouseEnter={() => toggleMenu("")}
+          >
             {windowWidth > 1024 && (
               <button
                 onClick={toggleExpand}
-                className="absolute top-0 right-0 p-1 hover:bg-gray-200 hover:opacity-50"
+                className=" p-2 hover:bg-gray-200 hover:opacity-50"
                 aria-label="Toggle Sidebar"
               >
-                <BiChevronRight size={20} />
+                <FiAlignJustify size={20} color="#444444" />
               </button>
             )}
-          </div>
-          <div
-            className="flex flex-col space-y-4 mb-4"
-            onMouseEnter={() => toggleMenu("")}
-          >
             <Link
               to={`/account/${userInfo.accountId}`}
-              className={`flex items-center p-2 rounded cursor-pointer relative group hover:bg-gray-200`}
+              className={`flex p-2 rounded cursor-pointer relative group hover:bg-gray-200`}
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
