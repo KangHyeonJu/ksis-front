@@ -136,6 +136,7 @@ const SearchBar = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="검색어를 입력하세요"
           className="w-full border-x border-gray-300 p-2 pr-10"
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
       </div>
       <button

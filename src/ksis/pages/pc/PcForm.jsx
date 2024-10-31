@@ -104,7 +104,7 @@ const PcForm = () => {
   const accountGet = async () => {
     try {
       if (userInfo.roles !== "ROLE_ADMIN") {
-        alert("접근권한이 없습니다.");
+        showAlert("접근권한이 없습니다.", () => {});
         navigate(PC_INVENTORY);
       }
 
@@ -119,7 +119,7 @@ const PcForm = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-      alert(error.response?.data || "Unknown error occurred");
+      showAlert(error.response?.data || "Unknown error occurred", () => {});
     }
   };
 
@@ -227,7 +227,7 @@ const PcForm = () => {
 
       setResponsibles(newResponsibles);
     } else {
-      alert("이미 존재하는 담당자입니다.");
+      showAlert("이미 존재하는 담당자입니다.", () => {});
       e.target.value = "";
       return;
     }
@@ -266,7 +266,10 @@ const PcForm = () => {
               확인
             </Button>
           )}
-          {alertMessage !== "PC가 정상적으로 등록되었습니다." && (
+          {!(
+            alertMessage === "PC가 정상적으로 등록되었습니다." ||
+            alertMessage === "이미 존재하는 담당자입니다."
+          ) && (
             <Button plain onClick={() => setIsAlertOpen(false)}>
               취소
             </Button>

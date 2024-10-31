@@ -12,6 +12,13 @@ import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
 import SearchBar from "../../components/SearchBar";
 import CheckboxTable from "../../components/CheckboxTable";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 const NoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,6 +35,17 @@ const NoticeBoard = () => {
   const navigate = useNavigate();
 
   const authority = decodeJwt().roles;
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   useEffect(() => {
     console.log(authority);
@@ -94,7 +112,12 @@ const NoticeBoard = () => {
   };
 
   const handleDectivation = async () => {
-    if (window.confirm("선택한 공지를 비활성화하시겠습니까?")) {
+    if (selectedNotices.size === 0) {
+      showAlert("선택한 공지가 없습니다.", () => {});
+      return;
+    }
+
+    showAlert("선택한 공지를 비활성화하시겠습니까?", async () => {
       try {
         const deletePromises = [...selectedNotices].map((id) =>
           fetcher.post(`${DEACTIVE_NOTICE}/${id}`)
@@ -105,16 +128,48 @@ const NoticeBoard = () => {
           notices.filter((notice) => !selectedNotices.has(notice.noticeId))
         );
         setSelectedNotices(new Set());
-        window.alert("선택한 공지를 비활성화하였습니다.");
+        showAlert("선택한 공지를 비활성화하였습니다.", () => {});
       } catch (err) {
         console.error("공지 비활성화 오류:", err);
-        window.alert("공지 비활성화에 실패했습니다.");
+        showAlert("공지 비활성화에 실패했습니다.", () => {});
       }
-    }
+    });
   };
 
   return (
     <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "선택한 공지를 비활성화하였습니다." ||
+            alertMessage === "공지 비활성화에 실패했습니다." ||
+            alertMessage === "선택한 공지가 없습니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         공지글 관리
       </h1>

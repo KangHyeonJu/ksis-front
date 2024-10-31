@@ -11,16 +11,33 @@ import fetcher from "../../../fetcher";
 import { decodeJwt } from "../../../decodeJwt";
 import Loading from "../../components/Loading";
 import ButtonComponentB from "../../components/ButtonComponentB";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
+
 const VideoEncoding = () => {
   const params = useParams();
-  const accountId = decodeJwt().accountId;
   const navigate = useNavigate();
   const [video, setVideo] = useState(null);
   const [resolutions, setResolution] = useState([]);
-
   const [encodingOptions, setEncodingOptions] = useState([
     { format: "mp4", resolution: "" },
   ]);
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+  const accountId = decodeJwt().accountId;
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   const fetchImageData = async (originalResourceId) => {
     try {
@@ -84,60 +101,51 @@ const VideoEncoding = () => {
   };
 
   const handleEncoding = async () => {
-    const confirmEncoding = window.confirm("정말 인코딩을 시작하겠습니까?");
+    showAlert("정말 인코딩을 시작하겠습니까?", async () => {
+      try {
+        let allSuccessful = true;
 
-    if (!confirmEncoding) {
-      return;
-    }
-    try {
-      let allSuccessful = true;
+        for (const option of encodingOptions) {
+          const resolutionToUse =
+            option.resolution ||
+            `${resolutions[0].width}x${resolutions[0].height}`;
 
-      for (const option of encodingOptions) {
-        const resolutionToUse =
-          option.resolution ||
-          `${resolutions[0].width}x${resolutions[0].height}`;
+          const requestData = {
+            accountId: accountId,
+            originalResourceId: video.originalResourceId,
+            fileTitle: video.fileTitle,
+            filePath: video.filePath,
+            fileRegTime: video.regTime,
+            format: option.format,
+            resolution: resolutionToUse,
+          };
+          const response = await fetcher.post(
+            `${ENCODED_VIDEO}/${params.originalResourceId}`,
+            requestData
+          );
+          navigate();
+          if (response.status !== 200) {
+            allSuccessful = false;
+          }
 
-        const requestData = {
-          accountId: accountId,
-          originalResourceId: video.originalResourceId,
-          fileTitle: video.fileTitle,
-          filePath: video.filePath,
-          fileRegTime: video.regTime,
-          format: option.format,
-          resolution: resolutionToUse,
-        };
-        const response = await fetcher.post(
-          `${ENCODED_VIDEO}/${params.originalResourceId}`,
-          requestData
-        );
-        navigate();
-        if (response.status !== 200) {
-          allSuccessful = false;
+          if (response.status === 202) {
+            showAlert("동일한 해상도와 포멧이 존재합니다.", () => {});
+            return;
+          }
         }
+        showAlert("인코딩을 시작했습니다.", () => {
+          navigate(-1);
+        });
 
-        if (response.status === 202) {
-          alert("동일한 해상도와 포멧이 존재합니다.");
-          return;
+        if (allSuccessful) {
+        } else {
+          showAlert("일부 인코딩 요청에 실패했습니다.");
         }
+      } catch (error) {
+        console.error("인코딩 요청 중 오류 발생:", error);
+        showAlert("인코딩 중 오류가 발생했습니다.");
       }
-      alert("인코딩을 시작했습니다.");
-      navigate(-1);
-
-      if (allSuccessful) {
-      } else {
-        alert("일부 인코딩 요청에 실패했습니다.");
-      }
-
-      if (allSuccessful) {
-        alert("인코딩을 시작했습니다.");
-        navigate(-1);
-      } else {
-        alert("일부 인코딩 요청에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("인코딩 요청 중 오류 발생:", error);
-      alert("인코딩 중 오류가 발생했습니다.");
-    }
+    });
   };
 
   if (!video) {
@@ -146,6 +154,39 @@ const VideoEncoding = () => {
 
   return (
     <div className="grid place-items-center min-h-[80vh]">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (alertMessage === "인코딩을 시작했습니다." && confirmAction) {
+            confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "인코딩을 시작했습니다." ||
+            alertMessage === "동일한 해상도와 포멧이 존재합니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
       <div className="shadow-sm ring-4 ring-gray-900/5 text-center p-6 bg-white rounded-lg max-w-4xl w-full">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4 ">
           {video.fileTitle || "파일 제목"}

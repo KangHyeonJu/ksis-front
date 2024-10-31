@@ -17,6 +17,13 @@ import VideoResourceModal from "./VideoResourceModal";
 import OriginCard from "../../components/file/OriginCard";
 
 import fetcher from "../../../fetcher";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
@@ -41,6 +48,16 @@ const VideoResourceBoard = () => {
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null); // 선택한 영상의 정보를 관리하는 상태값 추가
   const location = useLocation();
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   // 영상 목록을 가져오는 부분
   useEffect(() => {
@@ -100,7 +117,7 @@ const VideoResourceBoard = () => {
 
   // 제목 수정
   const handleSaveClick = async (id) => {
-    if (window.confirm("정말로 파일의 제목을 변경하시겠습니까?")) {
+    showAlert("정말로 파일의 제목을 변경하시겠습니까?", async () => {
       try {
         await fetcher.put(`${FILE_ORIGINAL_BASIC}/${id}`, {
           fileTitle: newTitle, // newTitle을 JSON 형태로 보냄
@@ -117,15 +134,15 @@ const VideoResourceBoard = () => {
         setEditingTitleIndex(null);
         setNewTitle("");
       } catch (error) {
-        window.confirm("수정에 실패했습니다.");
+        showAlert("수정에 실패했습니다.", () => {});
         console.error("제목 수정 중 오류 발생:", error);
       }
-    }
+    });
   };
 
   // 삭제 핸들러
   const handleDeactivate = async (id) => {
-    if (window.confirm("정말로 이 영상을 비활성화하시겠습니까?")) {
+    showAlert("정말로 이 영상을 비활성화하시겠습니까?", async () => {
       try {
         await fetcher.post(FILE_DEACTIVION + `/${id}`);
 
@@ -134,12 +151,12 @@ const VideoResourceBoard = () => {
         );
         setVideos(updatedVideos);
         setTotalPages(Math.ceil(updatedVideos.length / postsPerPage)); // 페이지 수 업데이트
-        window.alert("영상을 비활성화하였습니다.");
+        showAlert("영상을 비활성화하였습니다.", () => {});
       } catch (err) {
         console.error("영상 비활성화 오류:", err);
-        window.alert("영상 비활성화에 실패했습니다.");
+        showAlert("영상 비활성화에 실패했습니다.", () => {});
       }
-    }
+    });
   };
 
   // 유효한 날짜 포맷으로 변환
@@ -175,6 +192,37 @@ const VideoResourceBoard = () => {
 
   return (
     <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "수정에 실패했습니다." ||
+            alertMessage === "영상을 비활성화하였습니다." ||
+            alertMessage === "영상 비활성화에 실패했습니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         영상 원본 페이지
       </h1>
