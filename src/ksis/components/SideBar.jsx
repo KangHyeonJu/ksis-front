@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom"; // Link 컴포넌트 import
-import {BiUser, BiCog, BiTrash, BiWindowAlt, BiChevronLeft, BiChevronRight} from "react-icons/bi"; // 필요한 아이콘 import
+import {BiUser, BiCog, BiTrash, BiWindowAlt, BiArrowToLeft, BiChevronRight} from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FaRegCircle } from "react-icons/fa6";
@@ -37,7 +37,6 @@ import {
 
 const Sidebar = ({ onToggleSidebar }) => {
   const [openMenu, setOpenMenu] = useState(null);
-  const [overlayOpen, setOverlayOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
   const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
   const [selectedMenu, setSelectedMenu] = useState("");
@@ -239,7 +238,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                 className="absolute top-0 right-0 p-1 hover:bg-gray-200 hover:opacity-50"
                 aria-label="Toggle Sidebar"
             >
-              <BiChevronLeft size={24}/>
+              <BiArrowToLeft size={24}/>
             </button>
           </div>
           <div className="mb-4">
@@ -535,7 +534,8 @@ const Sidebar = ({ onToggleSidebar }) => {
                 </button>
             )}
           </div>
-          <div className="flex flex-col space-y-4 mb-4">
+          <div className="flex flex-col space-y-4 mb-4"
+               onMouseEnter={() => toggleMenu("")}>
             <Link
               to={`/account/${userInfo.accountId}`}
               className={`flex items-center p-2 rounded cursor-pointer relative group hover:bg-gray-200`}
