@@ -271,7 +271,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
           </AlertActions>
         </Alert>
 
-        <div className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160">
+        <div className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-170">
           <div className="h-full">
             <div className="flex items-center justify-center">
               <DialogTitle className="text-center flex-grow">
