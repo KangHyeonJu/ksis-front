@@ -274,8 +274,10 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
         <div className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160">
           <div className="h-full">
             <div className="flex items-center justify-center">
-              <DialogTitle className="leading-6 text-gray-900 text-center flex-grow">
-                <p className="text-xl">재생 목록 등록</p>
+              <DialogTitle className="text-center flex-grow">
+                <p className="text-xl text-gray-900 mb-1 mt-1">
+                  재생 목록 등록
+                </p>
               </DialogTitle>
 
               <div
@@ -292,7 +294,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="w-9/12 pr-4">
                 <DialogBody>
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-white">
+                    <div className="w-full h-145 border border-gray-900 overflow-y-auto p-4 bg-white">
                       <div className="mb-4 flex items-center">
                         <select
                           value={searchCategory}
@@ -316,14 +318,14 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-4">
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-4 mt-7">
                           {resources.map((resource) => (
                             <div
                               key={resource.encodedResourceId}
                               onClick={() => addList(resource)}
                               className="group relative border border-gray-900 cursor-pointer"
                             >
-                              <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40">
+                              <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-44">
                                 <img
                                   src={resource.thumbFilePath}
                                   alt={resource.fileTitle}
@@ -343,7 +345,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                                   ) + 1}
                                 </div>
                               )}
-                              <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
+                              <div className="relative group text-gray-700 text-center w-full p-1 h-9 bg-white">
                                 <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
                                   {resource.fileTitle}
                                 </p>
@@ -372,7 +374,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="w-3/12">
                 <DialogBody className="mt-2">
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-white">
+                    <div className="w-full h-145 border border-gray-900 overflow-y-auto p-4 bg-white">
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-1">
                           {(provided) => (
@@ -416,8 +418,8 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
               </div>
             </div>
 
-            <div className="flex flex-col items-center sm:flex-row sm:items-start justify-between sm:space-x-4 w-full  mt-2">
-              <div className="flex w-full sm:w-2/3">
+            <div className="flex flex-col items-center sm:flex-row sm:items-start justify-between sm:space-x-4 w-full">
+              <div className="flex w-full sm:w-2/3  mt-2">
                 <div className="flex w-full">
                   <label className="w-1/3 whitespace-nowrap overflow-hidden h-10 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
                     제목
@@ -432,7 +434,7 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                   />
                 </div>
 
-                <div className="flex w-full ml-2">
+                <div className="flex w-full ml-2 h-10">
                   <label
                     title="Slide Time"
                     className="text-ellipsis w-1/3 whitespace-nowrap overflow-hidden h-10 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900"
@@ -446,13 +448,13 @@ const SignagePlaylistModal = ({ isOpen, onRequestClose, signageId }) => {
                     name="slideTime"
                     onChange={onChangeHandler}
                   />
-                  <p className="bg-white inline-flex items-center pr-1 border-y border-r border-gray-200">
+                  <p className="h-10 bg-white inline-flex items-center pr-1 border-y border-r border-gray-200">
                     (s)
                   </p>
                 </div>
               </div>
 
-              <div className="flex flex-row justify-end">
+              <div className="flex flex-row justify-end mt-2">
                 <button
                   onClick={addPlayList}
                   className="w-full sm:w-auto px-4 py-2 bg-[#FF9C00] text-sm text-white rounded-md hover:bg-gray-200 hover:text-[#444444] font-semibold"
