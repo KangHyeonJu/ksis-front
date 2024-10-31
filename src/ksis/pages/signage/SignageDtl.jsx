@@ -317,6 +317,13 @@ const SignageDtl = () => {
         </AlertActions>
       </Alert>
 
+      <PlaylistUpdateModal
+        isOpen={playlistUpdateIsOpen}
+        onRequestClose={handleUpdateMoalClose}
+        signageId={data.deviceId}
+        playlistId={playListId}
+      />
+
       <div className="flex justify-between mb-4">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900">
           재생장치 설정
@@ -634,13 +641,6 @@ const SignageDtl = () => {
               >
                 수정
               </ButtonComponent>
-
-              <PlaylistUpdateModal
-                isOpen={playlistUpdateIsOpen}
-                onRequestClose={handleUpdateMoalClose}
-                signageId={data.deviceId}
-                playlistId={playListId}
-              />
               <ButtonComponent
                 onClick={() => deletePlaylist(playListId)}
                 defaultColor="red-600"

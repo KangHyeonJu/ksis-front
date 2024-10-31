@@ -93,7 +93,7 @@ const NoticeDetail = () => {
   };
 
   const handleCancel = () => {
-    navigate(NOTICE_BOARD);
+    navigate(-1);
   };
 
   // deviceList에서 deviceName을 추출하는 함수
