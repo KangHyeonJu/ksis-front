@@ -97,12 +97,16 @@ function App() {
   const noSidebarRoutes = ["/downloadApp", "/signageplay"];
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [marginClass, setMarginClass] = useState("ml-64");
+  const [paddingClass, setPaddingClass] = useState("p-4");
   const [isSidebarOpen, setIsSidebarOpen] = useState(windowWidth >= 1024);
   // 현재 경로가 사이드바를 숨기고 싶은 경로에 있는지 확인
   const isNoSidebarRoute = noSidebarRoutes.includes(location.pathname);
   const accessToken = localStorage.getItem("accessToken");
   const computedMarginClass =
     location.pathname === "/downloadApp" ? "" : marginClass;
+
+  const computedPaddingClass =
+    location.pathname === "/downloadApp" ? "" : paddingClass;
 
   const handleResize = () => {
     setWindowWidth(window.innerWidth);
@@ -165,7 +169,9 @@ function App() {
       {!isNoSidebarRoute && accessToken && (
         <Sidebar onToggleSidebar={handleSidebarToggle} />
       )}
-      <div className={`content flex-1 p-4 ${computedMarginClass}`}>
+      <div
+        className={`content flex-1 ${computedMarginClass} ${computedPaddingClass}`}
+      >
         <Routes>
           <Route path={TOKEN_CALLBACK} element={<TokenCallback />} />
           <Route path={"/downloadApp"} element={<DownloadApp />} />
@@ -251,7 +257,10 @@ function App() {
             <Route path={TRASH_IMAGE_FILE} element={<TrashImageFileBoard />} />
             <Route path={TRASH_VIDEO_FILE} element={<TrashVideoFileBoard />} />
             <Route path={TRASH_NOTICE} element={<TrashNoticeBoard />} />
-            <Route path={DEACTIVE_NOTICE_DTL+ "/:noticeId"} element={<TrashNoticeDtl />} />
+            <Route
+              path={DEACTIVE_NOTICE_DTL + "/:noticeId"}
+              element={<TrashNoticeDtl />}
+            />
           </Route>
 
           {/* 재생 */}

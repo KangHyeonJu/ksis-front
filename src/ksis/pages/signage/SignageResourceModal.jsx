@@ -234,13 +234,13 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="flex flex-row-reverse">
                 <button
                   onClick={onRequestClose}
-                  className="rounded-md whitespace-nowrap ml-2 inline-flex justify-center px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="rounded-md whitespace-nowrap ml-2 inline-flex justify-center px-4 py-2 bg-[#444444] text-sm text-white hover:bg-gray-200 hover:text-[#444444] font-semibold"
                 >
                   닫기
                 </button>
                 <button
                   onClick={addResourceOnClick}
-                  className="rounded-md whitespace-nowrap inline-flex justify-center px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="rounded-md whitespace-nowrap inline-flex justify-center px-4 py-2 bg-[#FF9C00] text-sm text-white hover:bg-gray-200 hover:text-[#444444] font-semibold"
                 >
                   등록
                 </button>

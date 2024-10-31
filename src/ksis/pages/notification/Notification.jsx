@@ -111,8 +111,8 @@ const Notification = ({ onClose }) => {
           <Table grid>
             <TableHead>
               <TableRow>
-                <TableHeader>메시지</TableHeader>
-                <TableHeader>시간</TableHeader>
+                <TableHeader className="w-2/3">메시지</TableHeader>
+                <TableHeader className="w-1/3">시간</TableHeader>
               </TableRow>
             </TableHead>
             <TableBody>
