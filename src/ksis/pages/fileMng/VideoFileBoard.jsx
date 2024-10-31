@@ -218,7 +218,7 @@ const VideoFileBoard = () => {
             <video
               src={selectedVideo}
               alt="파일이 없습니다."
-              className="w-full max-h-screen bg-white text-center text-gray-500"
+              className="w-full h-full max-h-[80vh] bg-white text-center text-gray-500"
               controls // 비디오 컨트롤러 추가
             />
             {/* 닫기 버튼 */}
