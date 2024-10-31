@@ -542,7 +542,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 정보
               </span>
             </Link>
@@ -551,8 +551,8 @@ const Sidebar = ({ onToggleSidebar }) => {
               className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-gray-200"
               onClick={() => setNotificationOpen(true)}
             >
-              <NotificationCountComponent />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+            <NotificationCountComponent/>
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 알림
               </span>
             </a>
@@ -561,8 +561,8 @@ const Sidebar = ({ onToggleSidebar }) => {
               className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-gray-200"
               onClick={handleOpenApp}
             >
-              <BiWindowAlt className="mr-1" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+              <BiWindowAlt className="mr-1"/>
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 앱
               </span>
             </a>
@@ -572,14 +572,12 @@ const Sidebar = ({ onToggleSidebar }) => {
               <div className="item mt-3 relative">
                 <div
                     className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                    // onClick={() => toggleMenu("account")}
                     onMouseEnter={() => toggleMenu("account")}
-                    // onMouseLeave={() => toggleMenu("")}
                 >
                   <MdManageAccounts className="mr-3"/>
-                  {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
-                  {/*  계정관리*/}
-                  {/*</span>*/}
+                  <span className="absolute top-full left-0 mt-1 hidden group-hover:block bg-black text-white p-1 text-[8px] rounded whitespace-nowrap">
+                    계정 관리
+                  </span>
                 </div>
                 {openMenu === "account" && (
                     <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
@@ -603,13 +601,12 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative"> {/* relative 추가 */}
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                // onClick={() => toggleMenu("media")}
                 onMouseEnter={() => toggleMenu("media")}
             >
-              <MdOutlinePermMedia className="mr-3" />
-              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
-              {/*  미디어 관리*/}
-              {/*</span>*/}
+              <MdOutlinePermMedia className="mr-3"/>
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[7px] rounded w-[43px] h-[18px] items-center justify-center">
+                미디어관리
+              </span>
             </div>
             {openMenu === "media" && (
                 <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
@@ -643,12 +640,11 @@ const Sidebar = ({ onToggleSidebar }) => {
             <Link
               to={NOTICE_BOARD}
               className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-              // onClick={() => handleMenuClick("NOTICE")}
               onMouseEnter={() => toggleMenu("NOTICE")}
             >
               <MdChat className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                공지글 관리
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[7px] rounded w-[43px] h-[18px] items-center justify-center">
+                공지글관리
               </span>
             </Link>
           </div>
@@ -656,13 +652,12 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative">
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                // onClick={() => toggleMenu("device")}
                 onMouseEnter={() => toggleMenu("device")}
             >
               <MdDevices className="mr-3" />
-              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
-              {/*  디바이스 관리*/}
-              {/*</span>*/}
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:block bg-black text-white p-1 text-[6px] rounded whitespace-nowrap">
+                    디바이스관리
+              </span>
             </div>
             {openMenu === "device" && (
                 <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
@@ -685,13 +680,12 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative">
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                // onClick={() => toggleMenu("settings")}
                 onMouseEnter={() => toggleMenu("settings")}
             >
               <BiCog className="mr-3" />
-              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
-              {/*  기타 관리*/}
-              {/*</span>*/}
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
+                기타 관리
+              </span>
             </div>
             {openMenu === "settings" && (
                 <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
@@ -723,13 +717,12 @@ const Sidebar = ({ onToggleSidebar }) => {
           <div className="item mt-3 relative">
             <div
                 className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
-                // onClick={() => toggleMenu("trash")}
                 onMouseEnter={() => toggleMenu("trash")}
             >
               <BiTrash className="mr-3" />
-              {/*<span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">*/}
-              {/*  휴지통*/}
-              {/*</span>*/}
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
+                휴지통
+              </span>
             </div>
             {openMenu === "trash" && (
                 <div className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
