@@ -70,13 +70,13 @@ const ImageResourceBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => {});
   }, [currentPage, searchTerm]);
 
   const handleEditClick = (index, title) => {

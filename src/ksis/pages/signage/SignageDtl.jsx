@@ -581,12 +581,7 @@ const SignageDtl = () => {
               </table>
             </div>
             <div className="h-8 flex justify-end">
-              <ButtonComponent
-                type="button"
-                onClick={openPlay}
-                defaultColor="[#FF9C00]"
-                shadowColor="[#FF9C00]"
-              >
+              <ButtonComponent onClick={openPlay} color="orange">
                 미리보기
               </ButtonComponent>
               <SignagePlay
@@ -634,17 +629,12 @@ const SignageDtl = () => {
               </div>
             </div>
             <div className="h-8 items-center flex justify-end mt-2">
-              <ButtonComponent
-                onClick={openPlaylist}
-                defaultColor="blue-600"
-                shadowColor="blue-800"
-              >
+              <ButtonComponent onClick={openPlaylist} color="blue">
                 수정
               </ButtonComponent>
               <ButtonComponent
                 onClick={() => deletePlaylist(playListId)}
-                defaultColor="red-600"
-                shadowColor="red-800"
+                color="red"
               >
                 삭제
               </ButtonComponent>

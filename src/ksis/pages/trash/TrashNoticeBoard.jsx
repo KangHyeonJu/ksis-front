@@ -208,11 +208,7 @@ const TrashNoticeBoard = () => {
       </div>
 
       <div className="flex justify-end space-x-2 my-10">
-        <ButtonComponentB
-          onClick={handleActivation}
-          defaultColor="blue-600"
-          shadowColor="blue-800"
-        >
+        <ButtonComponentB onClick={handleActivation} color="blue">
           활성화
         </ButtonComponentB>
       </div>

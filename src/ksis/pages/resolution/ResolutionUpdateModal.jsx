@@ -168,11 +168,7 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
               </div>
             </DialogBody>
             <DialogActions>
-              <ButtonComponentB
-                type="submit"
-                defaultColor="blue-600"
-                shadowColor="blue-800"
-              >
+              <ButtonComponentB type="submit" color="blue">
                 수정
               </ButtonComponentB>
             </DialogActions>

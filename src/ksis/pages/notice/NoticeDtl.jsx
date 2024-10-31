@@ -202,32 +202,17 @@ const NoticeDetail = () => {
               {/* notice 작성자가 admin인 경우 숨기기 */}
               {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
                 <>
-                  <ButtonComponentB
-                    type="button"
-                    onClick={handleEdit}
-                    defaultColor="blue-600"
-                    shadowColor="blue-800"
-                  >
+                  <ButtonComponentB onClick={handleEdit} color="blue">
                     수정하기
                   </ButtonComponentB>
 
-                  <ButtonComponentB
-                    type="button"
-                    onClick={handleDeActive}
-                    defaultColor="red-600"
-                    shadowColor="red-800"
-                  >
+                  <ButtonComponentB onClick={handleDeActive} color="red">
                     비활성화
                   </ButtonComponentB>
                 </>
               )}
 
-              <ButtonComponentB
-                type="button"
-                onClick={handleCancel}
-                defaultColor="gray-600"
-                shadowColor="gray-800"
-              >
+              <ButtonComponentB onClick={handleCancel} color="gray">
                 뒤로가기
               </ButtonComponentB>
             </div>

@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom"; // Link 컴포넌트 import
-import { BiUser, BiCog, BiTrash, BiWindowAlt } from "react-icons/bi"; // 필요한 아이콘 import
+import {
+  BiUser,
+  BiCog,
+  BiTrash,
+  BiWindowAlt,
+  BiArrowToLeft,
+  BiChevronRight,
+} from "react-icons/bi"; // 필요한 아이콘 import
 import { CiFaceSmile } from "react-icons/ci";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FaRegCircle } from "react-icons/fa6";
@@ -37,7 +44,6 @@ import {
 
 const Sidebar = ({ onToggleSidebar }) => {
   const [openMenu, setOpenMenu] = useState(null);
-  const [overlayOpen, setOverlayOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({ accountId: "", roles: [] });
   const [isNotificationOpen, setNotificationOpen] = useState(false); // 알림 모달 상태 추가
   const [selectedMenu, setSelectedMenu] = useState("");
@@ -160,7 +166,7 @@ const Sidebar = ({ onToggleSidebar }) => {
       case TRASH_NOTICE:
         setSelectedMenu("TRASHNOTICE");
         break;
-        // 필요한 경우 추가
+      // 필요한 경우 추가
       default:
         setSelectedMenu(null);
     }
@@ -215,15 +221,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
   if (isSidebarOpen) {
     return (
-      <div
-        className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col z-10"
-        onClick={(e) => {
-          if (e.target === e.currentTarget && windowWidth > 1024) {
-            // 사이드바의 빈 공간을 클릭했을 때만 작동
-            toggleExpand();
-          }
-        }}
-      >
+      <div className="bg-gray-100 text-black fixed top-0 left-0 h-full w-64 p-4 flex flex-col z-10 ">
         {/* 알림 모달 창 표시 */}
         {isNotificationOpen && (
           <Notification onClose={() => setNotificationOpen(false)} />
@@ -237,6 +235,18 @@ const Sidebar = ({ onToggleSidebar }) => {
             >
               <img src={ksisLogo} alt="KSIS Logo" className="w-28" />
             </Link>
+
+            <button
+              onClick={() => {
+                if (windowWidth > 1024) {
+                  toggleExpand();
+                }
+              }}
+              className="absolute top-0 right-0 p-1 hover:bg-gray-200 hover:opacity-50"
+              aria-label="Toggle Sidebar"
+            >
+              <BiArrowToLeft size={24} />
+            </button>
           </div>
           <div className="mb-4">
             <div className="flex items-center px-2 font-semibold text-black text-lg">
@@ -509,15 +519,7 @@ const Sidebar = ({ onToggleSidebar }) => {
     );
   } else {
     return (
-      <div
-        className="bg-gray-100 text-black fixed top-0 left-0 h-full p-4 flex flex-col z-10"
-        onClick={(e) => {
-          if (e.target === e.currentTarget && windowWidth > 1024) {
-            // 사이드바의 빈 공간을 클릭했을 때만 작동
-            toggleExpand();
-          }
-        }}
-      >
+      <div className="bg-gray-100 text-black fixed top-0 left-0 h-full p-4 flex flex-col z-10">
         {/* 알림 모달 창 표시 */}
         {isNotificationOpen && (
           <Notification onClose={() => setNotificationOpen(false)} />
@@ -528,15 +530,28 @@ const Sidebar = ({ onToggleSidebar }) => {
             <Link to={MAIN} className="text-2xl font-semibold">
               <img src={ksisLogo} alt="KSIS Logo" className="w-11 h-6" />
             </Link>
+
+            {windowWidth > 1024 && (
+              <button
+                onClick={toggleExpand}
+                className="absolute top-0 right-0 p-1 hover:bg-gray-200 hover:opacity-50"
+                aria-label="Toggle Sidebar"
+              >
+                <BiChevronRight size={20} />
+              </button>
+            )}
           </div>
-          <div className="flex flex-col space-y-4 mb-4">
+          <div
+            className="flex flex-col space-y-4 mb-4"
+            onMouseEnter={() => toggleMenu("")}
+          >
             <Link
               to={`/account/${userInfo.accountId}`}
               className={`flex items-center p-2 rounded cursor-pointer relative group hover:bg-gray-200`}
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 정보
               </span>
             </Link>
@@ -546,7 +561,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               onClick={() => setNotificationOpen(true)}
             >
               <NotificationCountComponent />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 알림
               </span>
             </a>
@@ -556,38 +571,39 @@ const Sidebar = ({ onToggleSidebar }) => {
               onClick={handleOpenApp}
             >
               <BiWindowAlt className="mr-1" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded">
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 앱
               </span>
             </a>
           </div>
           <hr className="border-black border-1 border-dashed" />
           {isAdmin && (
-            <div className="mt-3">
+            <div className="item mt-3 relative">
               <div
-                className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-                onClick={() => toggleMenu("account")}
+                className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
+                onMouseEnter={() => toggleMenu("account")}
               >
                 <MdManageAccounts className="mr-3" />
-                <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                  계정관리
+                <span className="absolute top-full left-0 mt-1 hidden group-hover:block bg-black text-white p-1 text-[8px] rounded whitespace-nowrap">
+                  계정 관리
                 </span>
               </div>
               {openMenu === "account" && (
-                <div className="submenu ml-8 mt-2">
+                <div
+                  className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                  onMouseLeave={() => toggleMenu("")}
+                >
                   <Link
                     to={ACCOUNT_LIST_BOARD}
+                    onClick={() => handleMenuClick("ACCOUNT_LIST")}
                     className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
                       selectedMenu === "ACCOUNT_LIST"
                         ? "bg-gray-200"
                         : "hover:bg-gray-200"
                     }`}
-                    onClick={() => handleMenuClick("ACCOUNT_LIST")}
                   >
                     <FaRegCircle size={10} className="mr-2" />
-                    <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                      계정목록 조회
-                    </span>
+                    <span className="text-sm">계정목록 조회</span>
                   </Link>
                   <Link
                     to={ACCESSLOG_INVENTORY}
@@ -599,27 +615,30 @@ const Sidebar = ({ onToggleSidebar }) => {
                     }`}
                   >
                     <FaRegCircle size={10} className="mr-2" />
-                    <span className="absolute left-full hidden group-hover:block mr-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                      로그 기록
-                    </span>
+                    <span className="text-sm">로그 기록</span>
                   </Link>
                 </div>
               )}
             </div>
           )}
 
-          <div className="item mt-3">
+          <div className="item mt-3 relative">
+            {" "}
+            {/* relative 추가 */}
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-              onClick={() => toggleMenu("media")}
+              className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
+              onMouseEnter={() => toggleMenu("media")}
             >
               <MdOutlinePermMedia className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                미디어 관리
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[7px] rounded w-[43px] h-[18px] items-center justify-center">
+                미디어관리
               </span>
             </div>
             {openMenu === "media" && (
-              <div className="submenu ml-8 mt-2">
+              <div
+                className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                onMouseLeave={() => toggleMenu("")}
+              >
                 <Link
                   to={IMAGE_RESOURCE_BOARD}
                   onClick={() => handleMenuClick("ORIGINAL")}
@@ -630,9 +649,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    원본 관리
-                  </span>
+                  <span className="text-sm">원본 관리</span>
                 </Link>
                 <Link
                   to={IMAGE_FILE_BOARD}
@@ -644,9 +661,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    인코딩 관리
-                  </span>
+                  <span className="text-sm">인코딩 관리</span>
                 </Link>
               </div>
             )}
@@ -656,27 +671,30 @@ const Sidebar = ({ onToggleSidebar }) => {
             <Link
               to={NOTICE_BOARD}
               className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-              onClick={() => handleMenuClick("NOTICE")}
+              onMouseEnter={() => toggleMenu("NOTICE")}
             >
               <MdChat className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                공지글 관리
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[7px] rounded w-[43px] h-[18px] items-center justify-center">
+                공지글관리
               </span>
             </Link>
           </div>
 
-          <div className="item mt-3">
+          <div className="item mt-3 relative">
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-              onClick={() => toggleMenu("device")}
+              className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
+              onMouseEnter={() => toggleMenu("device")}
             >
               <MdDevices className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                디바이스 관리
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:block bg-black text-white p-1 text-[6px] rounded whitespace-nowrap">
+                디바이스관리
               </span>
             </div>
             {openMenu === "device" && (
-              <div className="submenu ml-8 mt-2">
+              <div
+                className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                onMouseLeave={() => toggleMenu("")}
+              >
                 <Link
                   to={SIGNAGE_INVENTORY}
                   onClick={() => handleMenuClick("SIGNAGE")}
@@ -687,9 +705,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    재생장치 관리
-                  </span>
+                  <span className="text-sm">재생장치 관리</span>
                 </Link>
                 <Link
                   to={PC_INVENTORY}
@@ -699,26 +715,27 @@ const Sidebar = ({ onToggleSidebar }) => {
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    일반 PC 관리
-                  </span>
+                  <span className="text-sm">일반 PC 관리</span>
                 </Link>
               </div>
             )}
           </div>
 
-          <div className="item mt-3">
+          <div className="item mt-3 relative">
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-              onClick={() => toggleMenu("settings")}
+              className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
+              onMouseEnter={() => toggleMenu("settings")}
             >
               <BiCog className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 기타 관리
               </span>
             </div>
             {openMenu === "settings" && (
-              <div className="submenu ml-8 mt-2">
+              <div
+                className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                onMouseLeave={() => toggleMenu("")}
+              >
                 <Link
                   to={RESOLUTION_LIST}
                   onClick={() => handleMenuClick("RESOLUTION")}
@@ -729,9 +746,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    해상도 관리
-                  </span>
+                  <span className="text-sm">해상도 관리</span>
                 </Link>
                 {isAdmin && (
                   <>
@@ -745,11 +760,8 @@ const Sidebar = ({ onToggleSidebar }) => {
                       }`}
                     >
                       <FaRegCircle size={10} className="mr-2" />
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                        API 관리
-                      </span>
+                      <span className="text-sm">API 관리</span>
                     </Link>
-
                     <Link
                       to={FILESIZE_FORM}
                       onClick={() => handleMenuClick("FILE_SIZE")}
@@ -760,9 +772,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                       }`}
                     >
                       <FaRegCircle size={10} className="mr-2" />
-                      <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                        용량 관리
-                      </span>
+                      <span className="text-sm">용량 관리</span>
                     </Link>
                   </>
                 )}
@@ -770,18 +780,21 @@ const Sidebar = ({ onToggleSidebar }) => {
             )}
           </div>
 
-          <div className="item mt-3">
+          <div className="item mt-3 relative">
             <div
-              className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 relative group`}
-              onClick={() => toggleMenu("trash")}
+              className="flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 group"
+              onMouseEnter={() => toggleMenu("trash")}
             >
               <BiTrash className="mr-3" />
-              <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
+              <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 휴지통
               </span>
             </div>
             {openMenu === "trash" && (
-              <div className="submenu ml-8 mt-2">
+              <div
+                className="submenu absolute left-full top-0 ml-2 w-[200px] bg-white shadow-lg p-4 transform translate-x-0 transition-transform duration-300"
+                onMouseLeave={() => toggleMenu("")}
+              >
                 <Link
                   to={TRASH_IMAGE_FILE}
                   onClick={() => handleMenuClick("TRASHFILE")}
@@ -792,11 +805,8 @@ const Sidebar = ({ onToggleSidebar }) => {
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    이미지 및 영상
-                  </span>
+                  <span className="text-sm">이미지 및 영상</span>
                 </Link>
-
                 <Link
                   to={TRASH_NOTICE}
                   onClick={() => handleMenuClick("TRASHNOTICE")}
@@ -807,9 +817,7 @@ const Sidebar = ({ onToggleSidebar }) => {
                   }`}
                 >
                   <FaRegCircle size={10} className="mr-2" />
-                  <span className="absolute left-full hidden group-hover:block ml-2 bg-black text-white p-1 text-sm rounded whitespace-nowrap">
-                    공지글
-                  </span>
+                  <span className="text-sm">공지글</span>
                 </Link>
               </div>
             )}
@@ -818,6 +826,7 @@ const Sidebar = ({ onToggleSidebar }) => {
 
         <div className="mt-auto">
           <button
+            onMouseEnter={() => toggleMenu("")}
             onClick={() => {
               handleMenuClick("LOGOUT");
               handleLogout();
