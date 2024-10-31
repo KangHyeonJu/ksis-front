@@ -39,7 +39,7 @@ const ImageFileBoard = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const postsPerPage = 14;
+  const postsPerPage = 16;
 
   const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
   const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
@@ -144,7 +144,7 @@ const ImageFileBoard = () => {
   }
 
   return (
-    <div className="p-6 max-w-screen-2xl mx-auto">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <Alert
         open={isAlertOpen}
         onClose={() => {
@@ -176,12 +176,9 @@ const ImageFileBoard = () => {
           )}
         </AlertActions>
       </Alert>
-
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-          이미지 인코딩 페이지
-        </h1>
-      </header>
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        이미지 인코딩 페이지
+      </h1>
 
       <SearchBar
         onSearch={(term, category) => {
@@ -216,7 +213,7 @@ const ImageFileBoard = () => {
       </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
         {images.length > 0 ? (
           images.map((file, index) => (
             <EncodedCard
@@ -263,7 +260,7 @@ const ImageFileBoard = () => {
             <img
               src={selectedImage}
               alt="파일이 없습니다."
-              className="w-full max-h-screen bg-white text-center text-gray-500"
+              className="w-full h-full max-h-[80vh] bg-white text-center text-gray-500"
             />
             {/* 닫기 버튼 */}
 

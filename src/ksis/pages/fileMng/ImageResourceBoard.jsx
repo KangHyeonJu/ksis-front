@@ -40,7 +40,7 @@ const ImageResourceBoard = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const postsPerPage = 14;
+  const postsPerPage = 16;
 
   const [loading, setLoading] = useState(true);
 
@@ -74,6 +74,8 @@ const ImageResourceBoard = () => {
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setImages(response.data.content);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
@@ -157,7 +159,7 @@ const ImageResourceBoard = () => {
   }
 
   return (
-    <div className="p-6 max-w-screen-2xl mx-auto">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <Alert
         open={isAlertOpen}
         onClose={() => {
@@ -189,12 +191,9 @@ const ImageResourceBoard = () => {
           )}
         </AlertActions>
       </Alert>
-
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-          이미지 원본 페이지
-        </h1>
-      </header>
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        이미지 원본 페이지
+      </h1>
 
       <SearchBar
         onSearch={(term, category, start, end, noDate) => {
@@ -231,7 +230,7 @@ const ImageResourceBoard = () => {
       </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
         {images.length > 0 ? (
           images.map((file, index) => (
             <OriginCard

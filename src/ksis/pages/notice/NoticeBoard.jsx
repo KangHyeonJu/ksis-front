@@ -203,7 +203,9 @@ const NoticeBoard = () => {
               {
                 content: (item) => (
                   <Link to={NOTICE_DTL + `/${item.noticeId}`}>
-                    {item.role === "ADMIN" ? "📢 " : ""}
+                    {item.role === "ADMIN" && authority === "ROLE_ADMIN"
+                      ? "📢 "
+                      : ""}
                     {item.title}
                   </Link>
                 ),
@@ -230,25 +232,18 @@ const NoticeBoard = () => {
             selectedItems={selectedNotices}
             setSelectedItems={setSelectedNotices}
             check={checked}
+            authority={authority}
+            widthPercentage={12 / 4}
           />
         )}
       </div>
 
       <div className="flex justify-end space-x-2 my-10">
-        <ButtonComponentB
-          onClick={handleRegisterClick}
-          defaultColor="blue-600"
-          shadowColor="blue-800"
-        >
+        <ButtonComponentB onClick={handleRegisterClick} color="blue">
           공지글 등록
         </ButtonComponentB>
 
-        <ButtonComponentB
-          onClick={handleDectivation}
-          type="button"
-          defaultColor="red-600"
-          shadowColor="red-800"
-        >
+        <ButtonComponentB onClick={handleDectivation} color="red">
           비활성화
         </ButtonComponentB>
       </div>

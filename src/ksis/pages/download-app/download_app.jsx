@@ -23,17 +23,26 @@ function download_app() {
   };
 
   return (
-    <div className="App">
-      {/* <img src="/images/ksis-logo.png" alt="Ksis Logo"></img> */}
-      <h1>사이트 이용을 원하시면 애플리케이션을 설치해주세요.</h1>
-      <h3>이미 다운로드 하셨다면 앱을 실행해주세요.</h3>
-      <button onClick={handleDownload} className="download-button">
-        Download for Windows
-      </button>
-      <br></br>
-      <button onClick={handleOpenApp} className="open-app-button">
-        Open Installed App
-      </button>
+    <div className="app-download-page">
+      <div className="content-container">
+        <div className="text-section">
+          <h1>사이트 이용을 원하시면 앱을 설치해주세요.</h1>
+          <p>이미 다운로드하셨다면 앱을 실행해 주세요.</p>
+          <button onClick={handleDownload} className="download-button">
+            Windows용 다운로드
+          </button>
+          <button onClick={handleOpenApp} className="open-app-button">
+            설치된 앱 열기
+          </button>
+        </div>
+        <div className="image-section">
+          <img
+            src="/file/img/app.png"
+            alt="앱 미리보기"
+            className="app-preview"
+          />
+        </div>
+      </div>
     </div>
   );
 }

@@ -146,21 +146,16 @@ const PcList = () => {
           selectedItems={selectedPosts}
           setSelectedItems={setSelectedPosts}
           check={checked}
+          widthPercentage={12 / 4}
         />
       </div>
 
       {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 my-10">
           <Link to={PC_FORM}>
-            <ButtonComponentB defaultColor="blue-600" shadowColor="blue-800">
-              일반 PC 등록
-            </ButtonComponentB>
+            <ButtonComponentB color="blue">일반 PC 등록</ButtonComponentB>
           </Link>
-          <ButtonComponentB
-            onClick={deletePc}
-            defaultColor="red-600"
-            shadowColor="red-800"
-          >
+          <ButtonComponentB onClick={deletePc} color="red">
             삭제
           </ButtonComponentB>
         </div>

@@ -403,11 +403,19 @@ const SignageDtl = () => {
               </label>
               <div className="border-r border-gray-300 h-10"></div>
 
-              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+              <div
+                className="block items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10 overflow-hidden text-ellipsis whitespace-nowrap"
+                title={
+                  data.accountList &&
+                  data.accountList
+                    .map((account) => `${account.name}(${account.accountId})`)
+                    .join(", ")
+                }
+              >
                 {data.accountList &&
                   data.accountList
                     .map((account) => `${account.name}(${account.accountId})`)
-                    .join(", ")}
+                    .join(", ")}{" "}
               </div>
             </div>
             <div className="border-r border-gray-300 h-10"></div>
@@ -573,12 +581,7 @@ const SignageDtl = () => {
               </table>
             </div>
             <div className="h-8 flex justify-end">
-              <ButtonComponent
-                type="button"
-                onClick={openPlay}
-                defaultColor="[#FF9C00]"
-                shadowColor="[#FF9C00]"
-              >
+              <ButtonComponent onClick={openPlay} color="orange">
                 미리보기
               </ButtonComponent>
               <SignagePlay
@@ -626,17 +629,12 @@ const SignageDtl = () => {
               </div>
             </div>
             <div className="h-8 items-center flex justify-end mt-2">
-              <ButtonComponent
-                onClick={openPlaylist}
-                defaultColor="[#FF9C00]"
-                shadowColor="[#FF9C00]"
-              >
+              <ButtonComponent onClick={openPlaylist} color="blue">
                 수정
               </ButtonComponent>
               <ButtonComponent
                 onClick={() => deletePlaylist(playListId)}
-                defaultColor="[#444444]"
-                shadowColor="[#444444]"
+                color="red"
               >
                 삭제
               </ButtonComponent>

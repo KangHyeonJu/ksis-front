@@ -20,6 +20,7 @@ import {
 } from "../../css/alert";
 import { Button } from "../../css/button";
 import CheckboxTable from "../../components/CheckboxTable";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const AccountList = () => {
   const [posts, setPosts] = useState([]);
@@ -215,12 +216,14 @@ const AccountList = () => {
           ]}
           uniqueKey="accountId"
           check={checked}
+          widthPercentage={12 / 5}
           renderActions={(item) => (
             <>
               <ButtonComponent
-                to={`/account/${item.accountId}`}
-                defaultColor="blue-600"
-                shadowColor="blue-800"
+                to={ACCOUNT_FORM + `/${item.accountId}`}
+                // defaultColor="blue-600"
+                // shadowColor="blue-800"
+                color="blue"
               >
                 수정
               </ButtonComponent>
@@ -229,8 +232,9 @@ const AccountList = () => {
                 onClick={() =>
                   handleToggleActive(item.accountId, item.isActive)
                 }
-                defaultColor={item.isActive ? "green-600" : "red-600"}
-                hoverColor={item.isActive ? "green-800" : "red-800"}
+                // defaultColor={item.isActive ? "green-600" : "red-600"}
+                // shadowColor={item.isActive ? "green-800" : "red-800"}
+                color="red"
               >
                 {item.isActive ? "활성화" : "비활성화"}
               </ButtonComponent>
@@ -240,15 +244,9 @@ const AccountList = () => {
       </div>
 
       <div className="flex justify-end space-x-2 my-10">
-        <Link to={ACCOUNT_FORM}>
-          <button
-            type="button"
-            className="rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] px-3 py-2 text-sm font-semibold shadow-sm 
-            hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
-          >
-            계정 등록
-          </button>
-        </Link>
+        <ButtonComponentB to={ACCOUNT_FORM} color="orange">
+          계정 등록
+        </ButtonComponentB>
       </div>
 
       {/* 페이지네이션 */}

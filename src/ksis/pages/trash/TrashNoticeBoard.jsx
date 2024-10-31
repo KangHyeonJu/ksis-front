@@ -21,6 +21,8 @@ import {
 } from "../../css/alert";
 import { Button } from "../../css/button";
 
+import { decodeJwt } from "../../../decodeJwt";
+
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("fileTitle");
@@ -35,6 +37,7 @@ const TrashNoticeBoard = () => {
   const postsPerPage = 15;
   const checked = true;
 
+  const authority = decodeJwt().roles;
   const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
   const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
   const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
@@ -197,16 +200,15 @@ const TrashNoticeBoard = () => {
             selectedItems={selectedNotices}
             setSelectedItems={setSelectedNotices}
             check={checked}
+            authority={authority}
+            trash="trash"
+            widthPercentage={12 / 4}
           />
         )}
       </div>
 
       <div className="flex justify-end space-x-2 my-10">
-        <ButtonComponentB
-          onClick={handleActivation}
-          defaultColor="blue-600"
-          shadowColor="blue-800"
-        >
+        <ButtonComponentB onClick={handleActivation} color="blue">
           활성화
         </ButtonComponentB>
       </div>

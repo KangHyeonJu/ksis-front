@@ -270,19 +270,11 @@ const ImageEncoding = () => {
         </div>
 
         <div className="items-center text-center row mx-auto mt-4">
-          <ButtonComponentB
-            onClick={handleEncoding}
-            defaultColor="blue-600"
-            shadowColor="blue-800"
-          >
+          <ButtonComponentB onClick={handleEncoding} color="blue">
             인코딩
           </ButtonComponentB>
 
-          <ButtonComponentB
-            onClick={handleCancel}
-            defaultColor="red-600"
-            shadowColor="red-800"
-          >
+          <ButtonComponentB onClick={handleCancel} color="red">
             취소
           </ButtonComponentB>
         </div>

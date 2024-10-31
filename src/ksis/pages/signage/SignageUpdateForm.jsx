@@ -22,6 +22,7 @@ import {
   AlertTitle,
 } from "../../css/alert";
 import Loading from "../../components/Loading";
+import ButtonComponentB from "../../components/ButtonComponentB";
 
 const SignageUpdateForm = () => {
   const userInfo = decodeJwt();
@@ -322,6 +323,8 @@ const SignageUpdateForm = () => {
               <div className="flex-grow flex items-center space-x-2">
                 <Input
                   required
+                  minLength="2"
+                  maxLength="10"
                   value={data.deviceName}
                   onChange={onChangeHandler}
                   name="deviceName"
@@ -381,14 +384,12 @@ const SignageUpdateForm = () => {
                   readOnly
                   className="mr-3"
                 />
-                <Button
-                  type="button"
-                  color="zinc"
-                  onClick={execDaumPostcode}
-                  className="whitespace-nowrap"
+                <ButtonComponentB
+                    onClick={execDaumPostcode}
+                    color="gray"
                 >
                   주소검색
-                </Button>
+                </ButtonComponentB>
               </div>
             </div>
 
@@ -404,6 +405,8 @@ const SignageUpdateForm = () => {
                   onChange={onChangeHandler}
                   name="detailAddress"
                   placeholder="상세주소 입력"
+                  minLength="2"
+                  maxLength="50"
                 />
               </div>
             </div>
@@ -479,12 +482,15 @@ const SignageUpdateForm = () => {
           <br />
 
           <div className="mt-6 flex justify-center gap-4">
-            <Button type="submit" color="blue">
+            <ButtonComponentB type="submit" color="blue">
               수정하기
-            </Button>
-            <Button type="button" color="red" onClick={onCancel}>
+            </ButtonComponentB>
+            <ButtonComponentB
+                onClick={onCancel}
+                color="red"
+            >
               뒤로가기
-            </Button>
+            </ButtonComponentB>
           </div>
         </form>
       </div>

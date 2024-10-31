@@ -1,64 +1,87 @@
-.App {
+/* 전체 페이지 배경 스타일 */
+.app-download-page {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* 화면 높이의 100%를 사용하여 중앙에 배치 */
-  text-align: center; /* 텍스트 중앙 정렬 */
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffd580 0%, #fff4e0 100%);
+  background-size: cover;
 }
 
-img {
-  width: 150px; /* 원하는 너비로 설정 */
-  height: auto; /* 비율을 유지하면서 높이를 자동으로 조정 */
-  margin-bottom: 20px; /* 이미지와 다른 요소 사이에 여백을 추가 */
+/* 콘텐츠 섹션 스타일 */
+.content-container {
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-h3 {
-  color: rgb(0, 0, 0, 0.5);
+/* 텍스트 및 버튼 섹션 */
+.text-section {
+  flex: 1.3;
+  padding-right: 10px;
+  padding-left: 5px;
 }
 
-.download-button {
-  padding: 25px 35px;
-  font-size: large;
-  color: rgb(0, 0, 0);
-  background: linear-gradient(
-    60deg,
-    #ffea4a,
-    #ff9e01
-  ); /* 선형 그라데이션 적용 */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+h1 {
+  font-size: 1.8rem;
+  color: #333333;
+  margin-bottom: 15px;
 }
 
-.download-button:hover {
-  color: rgb(255, 255, 255);
-  background: linear-gradient(
-    60deg,
-    #ffea4a,
-    #ff9e01
-  ); /* 선형 그라데이션 적용 */
+p {
+  font-size: 1rem;
+  color: #555555;
+  margin-bottom: 20px;
 }
 
+.download-button,
 .open-app-button {
-  padding: 25px 35px;
-  font-size: large;
-  color: rgb(0, 0, 0);
-  background: linear-gradient(
-    60deg,
-    #00eaff,
-    #5197ff
-  ); /* 선형 그라데이션 적용 */
+  display: block;
+  padding: 15px 30px;
+  font-size: 1rem;
+  color: #ffffff;
+  background: linear-gradient(60deg, #ff9c00, #ffa71d);
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  margin: 10px 0;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
+.download-button:hover,
 .open-app-button:hover {
-  color: rgb(255, 255, 255);
-  background: linear-gradient(
-    60deg,
-    #00eaff,
-    #5197ff
-  ); /* 선형 그라데이션 적용 */
+  background: linear-gradient(60deg, #ffa71d, #fbb310);
+}
+
+/* 이미지 섹션 */
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-preview {
+  width: 100%;
+  max-width: 330px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .text-section {
+    padding-right: 0;
+  }
+  .image-section {
+    margin-top: 20px;
+  }
 }

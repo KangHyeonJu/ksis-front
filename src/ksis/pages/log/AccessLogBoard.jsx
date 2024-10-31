@@ -174,11 +174,12 @@ const AccessLogBoard = () => {
             {
               content: (item) => item.detail,
               className:
-                "p-2 text-gray-800 text-center border-b border-gray-300",
+                "p-2 text-gray-800 text-center border-b border-gray-300 overflow-hidden text-ellipsis",
             },
           ]}
           uniqueKey="logId"
           check={checked}
+          widthPercentage={12 / 3}
         />
       </div>
 

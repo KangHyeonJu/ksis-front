@@ -146,15 +146,9 @@ const PcDtl = () => {
       </div>
       <div className="mt-2 flex justify-end">
         <Link to={PC_UPDATE_FORM + `/${data.deviceId}`}>
-          <ButtonComponentB defaultColor="sky-400" shadowColor="blue-600">
-            수정하기
-          </ButtonComponentB>
+          <ButtonComponentB color="blue">수정하기</ButtonComponentB>
         </Link>
-        <ButtonComponentB
-          onClick={onCancel}
-          defaultColor="red-600"
-          shadowColor="red-600"
-        >
+        <ButtonComponentB onClick={onCancel} color="red">
           뒤로가기
         </ButtonComponentB>
       </div>

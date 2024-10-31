@@ -340,19 +340,14 @@ const NoticeForm = () => {
               </>
             )}
             <div className="flex justify-center space-x-4">
-              <ButtonComponentB
-                type="submit"
-                defaultColor="blue-600"
-                shadowColor="blue-800"
-              >
+              <ButtonComponentB type="submit" color="blue">
                 저장
               </ButtonComponentB>
 
               <ButtonComponentB
                 type="button"
                 onClick={handleCancel}
-                defaultColor="red-600"
-                shadowColor="red-800"
+                color="red"
               >
                 취소
               </ButtonComponentB>

@@ -33,10 +33,9 @@ const TrashVideoFileBoard = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [isOriginal, setIsOriginal] = useState(true); // 토글 상태 관리
   const [videos, setVideos] = useState([]);
 
-  const postsPerPage = 14; // 페이지당 게시물 수
+  const postsPerPage = 16; // 페이지당 게시물 수
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -95,7 +94,7 @@ const TrashVideoFileBoard = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <Alert
         open={isAlertOpen}
         onClose={() => {
@@ -129,12 +128,9 @@ const TrashVideoFileBoard = () => {
           )}
         </AlertActions>
       </Alert>
-
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
-          비활성화 영상 페이지
-        </h1>
-      </header>
+      <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
+        비활성화 영상 페이지
+      </h1>
 
       <SearchBar
         onSearch={(term, category) => {
@@ -169,7 +165,7 @@ const TrashVideoFileBoard = () => {
       </div>
 
       {/* 그리드 시작 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
         {videos.length > 0 ? (
           videos.map((file, index) => (
             <TrashCard

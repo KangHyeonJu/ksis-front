@@ -96,12 +96,7 @@ const SignageGrid = () => {
           <div className=" inline-flex items-center">
             <div className="flex justify-end space-x-2">
               <Link to={SIGNAGE_FORM}>
-                <ButtonComponentB
-                  defaultColor="blue-600"
-                  shadowColor="blue-800"
-                >
-                  재생장치 등록
-                </ButtonComponentB>
+                <ButtonComponentB color="blue">재생장치 등록</ButtonComponentB>
               </Link>
             </div>
           </div>
