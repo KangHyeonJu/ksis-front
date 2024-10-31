@@ -12,6 +12,13 @@ import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
 import SearchBar from "../../components/SearchBar";
 import CheckboxTable from "../../components/CheckboxTable";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 const ApiBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -27,12 +34,24 @@ const ApiBoard = () => {
   const checked = true;
   const navigate = useNavigate();
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
+
   useEffect(() => {
     const userInfo = decodeJwt();
 
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
-      alert("관리자 계정만 접근 가능합니다.");
-      navigate(MAIN); // MAIN으로 이동
+      showAlert("관리자 계정만 접근 가능합니다.", () => {
+        navigate(MAIN); // MAIN으로 이동
+      });
       return;
     }
 
@@ -65,35 +84,32 @@ const ApiBoard = () => {
 
   const handleDeletePosts = async () => {
     if (selectedPosts.size === 0) {
-      alert("삭제할 게시글을 선택해주세요.");
+      showAlert("삭제할 게시글을 선택해주세요.", () => {});
       return;
     }
     // 삭제 확인 창 추가
-    const confirmMessage = "선택한 게시글을 삭제하시겠습니까?";
-    const isConfirmed = window.confirm(confirmMessage);
+    showAlert("선택한 게시글을 삭제하시겠습니까?", async () => {
+      try {
+        const deletePromises = [...selectedPosts].map((id) =>
+          fetcher(API_NOTICE + `/${id}`, {
+            method: "DELETE",
+          })
+        );
+        await Promise.all(deletePromises);
 
-    if (!isConfirmed) {
-      return; // 사용자가 취소한 경우 함수 종료
-    }
-    try {
-      const deletePromises = [...selectedPosts].map((id) =>
-        fetcher(API_NOTICE + `/${id}`, {
-          method: "DELETE",
-        })
-      );
-      await Promise.all(deletePromises);
-
-      setPosts((prevPosts) =>
-        prevPosts.filter((post) => !selectedPosts.has(post.apiId))
-      );
-      setSelectedPosts(new Set());
-      alert("선택된 게시글이 삭제되었습니다.");
-      navigate(API_BOARD); // navigate 수정
-    } catch (err) {
-      console.error("Error deleting posts:", err);
-      setError("게시글 삭제 중 오류가 발생했습니다.");
-      alert("게시글 삭제 중 오류가 발생했습니다.");
-    }
+        setPosts((prevPosts) =>
+          prevPosts.filter((post) => !selectedPosts.has(post.apiId))
+        );
+        setSelectedPosts(new Set());
+        showAlert("선택된 게시글이 삭제되었습니다.", () => {
+          navigate(API_BOARD); // navigate 수정
+        });
+      } catch (err) {
+        console.error("Error deleting posts:", err);
+        setError("게시글 삭제 중 오류가 발생했습니다.");
+        showAlert("게시글 삭제 중 오류가 발생했습니다.", () => {});
+      }
+    });
   };
 
   if (loading) {
@@ -106,6 +122,46 @@ const ApiBoard = () => {
 
   return (
     <div className="mx-auto whitespace-nowrap py-6 px-10">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (
+            (alertMessage === "관리자 계정만 접근 가능합니다." ||
+              alertMessage === "선택된 게시글이 삭제되었습니다.") &&
+            confirmAction
+          ) {
+            confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "삭제할 게시글을 선택해주세요." ||
+            alertMessage === "관리자 계정만 접근 가능합니다." ||
+            alertMessage === "게시글 삭제 중 오류가 발생했습니다." ||
+            alertMessage === "선택된 게시글이 삭제되었습니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         API 목록
       </h1>

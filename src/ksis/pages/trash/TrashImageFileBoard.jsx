@@ -15,6 +15,13 @@ import PaginationComponent from "../../components/PaginationComponent";
 import TabButton from "../../components/TapButton";
 import SearchBar from "../../components/SearchBar";
 import TrashCard from "../../components/file/TrashCard";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const TrashImageFileBoard = () => {
@@ -29,6 +36,17 @@ const TrashImageFileBoard = () => {
   const postsPerPage = 14;
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   useEffect(() => {
     fetcher
@@ -52,17 +70,17 @@ const TrashImageFileBoard = () => {
   }, [currentPage, searchTerm]);
 
   const handleActivation = async (id) => {
-    if (window.confirm("정말로 이 이미지를 활성화하시겠습니까?")) {
+    showAlert("정말로 이 이미지를 활성화하시겠습니까?", async () => {
       try {
         await fetcher.post(`${FILE_ACTIVE}/${id}`);
         setImages(images.filter((image) => image.originalResourceId !== id));
 
-        window.alert("이미지를 활성화하였습니다.");
+        showAlert("이미지를 활성화하였습니다.", () => {});
       } catch (err) {
         console.error("이미지 활성화 오류:", err);
-        window.alert("이미지 활성화에 실패했습니다.");
+        showAlert("이미지 활성화에 실패했습니다.", () => {});
       }
-    }
+    });
   };
 
   // 페이지 변경 핸들러
@@ -76,6 +94,40 @@ const TrashImageFileBoard = () => {
 
   return (
     <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (alertMessage === "" && confirmAction) {
+            confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "이미지를 활성화하였습니다." ||
+            alertMessage === "이미지 활성화에 실패했습니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
       <header className="mb-6">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
           비활성화 이미지 페이지

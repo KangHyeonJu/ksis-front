@@ -6,7 +6,6 @@ import { PC_ADD, PC_ACCOUNT } from "../../../constants/api_constant";
 import { PC_INVENTORY } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 import { Input } from "../../css/input";
-import { Button } from "../../css/button";
 import { Select } from "../../css/select";
 import {
   Alert,
@@ -14,6 +13,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import { Button } from "../../css/button";
 import Loading from "../../components/Loading";
 import ButtonComponentB from "../../components/ButtonComponentB";
 
@@ -31,14 +31,15 @@ const PcForm = () => {
   const navigate = useNavigate();
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
-  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
-  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
-  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
 
   //mac 주소 검증
   const [macAddress, setMacAddress] = useState("");
   const [error, setError] = useState("");
   const [addressError, setAddressError] = useState("");
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
 
   // 알림창 메서드
   const showAlert = (message, onConfirm = null) => {
