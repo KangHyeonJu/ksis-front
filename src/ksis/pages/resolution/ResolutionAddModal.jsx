@@ -167,10 +167,7 @@ const ResolutionAddModal = ({ isOpen, onRequestClose }) => {
               </div>
             </DialogBody>
             <DialogActions>
-              <ButtonComponentB
-                type="submit"
-                color="blue"
-              >
+              <ButtonComponentB type="submit" color="blue">
                 등록
               </ButtonComponentB>
             </DialogActions>

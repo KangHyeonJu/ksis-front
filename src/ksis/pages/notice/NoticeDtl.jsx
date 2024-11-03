@@ -93,7 +93,7 @@ const NoticeDetail = () => {
   };
 
   const handleCancel = () => {
-    navigate(NOTICE_BOARD);
+    navigate(-1);
   };
 
   // deviceList에서 deviceName을 추출하는 함수
@@ -202,26 +202,17 @@ const NoticeDetail = () => {
               {/* notice 작성자가 admin인 경우 숨기기 */}
               {notice.role === "ADMIN" && role === "ROLE_USER" ? null : (
                 <>
-                  <ButtonComponentB
-                    onClick={handleEdit}
-                    color="blue"
-                  >
+                  <ButtonComponentB onClick={handleEdit} color="blue">
                     수정하기
                   </ButtonComponentB>
 
-                  <ButtonComponentB
-                    onClick={handleDeActive}
-                    color="red"
-                  >
+                  <ButtonComponentB onClick={handleDeActive} color="red">
                     비활성화
                   </ButtonComponentB>
                 </>
               )}
 
-              <ButtonComponentB
-                onClick={handleCancel}
-                color="gray"
-              >
+              <ButtonComponentB onClick={handleCancel} color="gray">
                 뒤로가기
               </ButtonComponentB>
             </div>

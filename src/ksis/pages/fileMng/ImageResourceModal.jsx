@@ -95,7 +95,7 @@ const FileBoardModal = ({ isOpen, onRequestClose, originalResourceId }) => {
                           post.fileTitle !== null ? (
                             <tr key={index}>
                               <td
-                                className="text-left p-2 border-b border-gray-300 bg-white overflow-hidden text-ellipsis whitespace-nowrap"
+                                className="text-center p-2 border-b border-gray-300 bg-white overflow-hidden text-ellipsis whitespace-nowrap"
                                 title={post.fileTitle}
                                 style={{ maxWidth: "150px" }}
                               >

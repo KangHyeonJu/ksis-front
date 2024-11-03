@@ -326,7 +326,7 @@ const SignagePlayKeyPage = () => {
   };
 
   if (loading) {
-    return <Loading />;
+    return <></>;
   }
 
   return (

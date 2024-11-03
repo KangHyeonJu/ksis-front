@@ -11,6 +11,13 @@ import { FaSearch } from "react-icons/fa";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 const PlaylistUpdateModal = ({
   isOpen,
@@ -31,7 +38,19 @@ const PlaylistUpdateModal = ({
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 8; // 한 페이지 10개 데이터
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
+
   const handleClickOutside = (e) => {
+    if (isAlertOpen) return; // 알림창이 열려 있을 때는 실행하지 않음
     if (modalRef.current && !modalRef.current.contains(e.target)) {
       onRequestClose();
     }
@@ -47,7 +66,7 @@ const PlaylistUpdateModal = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, isAlertOpen]);
 
   const loadModal = async () => {
     try {
@@ -174,23 +193,23 @@ const PlaylistUpdateModal = ({
     try {
       console.log("resourceAdds", resourceAdds);
       if (data.fileTitle === null || data.fileTitle === "") {
-        alert("재생목록 제목을 입력하세요.");
+        showAlert("재생목록 제목을 입력하세요.", () => {});
         return;
       } else if (data.fileTitle.length > 50) {
-        alert("제목을 50자 이내로 작성하세요.");
+        showAlert("제목을 50자 이내로 작성하세요.", () => {});
         return;
       }
 
       if (data.slideTime === null || data.slideTime === "") {
-        alert("Slide Time을 입력하세요.");
+        showAlert("Slide Time을 입력하세요.", () => {});
         return;
       } else if (data.slideTime <= 0) {
-        alert("Slide Time은 0보다 커야합니다");
+        showAlert("Slide Time은 0보다 커야합니다", () => {});
         return;
       }
 
       if (resourceAdds.length === 0) {
-        alert("재생목록에 추가할 파일을 선택하세요.");
+        showAlert("재생목록에 추가할 파일을 선택하세요.", () => {});
         return;
       }
 
@@ -208,7 +227,7 @@ const PlaylistUpdateModal = ({
         })
       );
 
-      if (window.confirm("수정하시겠습니까?")) {
+      showAlert("수정하시겠습니까?", async () => {
         const response = await fetcher.put(
           SIGNAGE_PLAYLIST_DTL + `/${playlistId}`,
           formData,
@@ -221,12 +240,13 @@ const PlaylistUpdateModal = ({
 
         console.log(response.data);
 
-        alert("재생목록이 정상적으로 수정되었습니다.");
-        onRequestClose();
-        setSearchCategory("");
-        setSearchTerm("");
-        onRequestClose();
-      }
+        showAlert("재생목록이 정상적으로 수정되었습니다.", () => {
+          onRequestClose();
+          setSearchCategory("");
+          setSearchTerm("");
+          onRequestClose();
+        });
+      });
     } catch (error) {
       console.log(error.response.data);
     }
@@ -235,21 +255,70 @@ const PlaylistUpdateModal = ({
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        {/* Alert 컴포넌트 추가 */}
+        <Alert
+          open={isAlertOpen}
+          onClose={() => {
+            setIsAlertOpen(false);
+            if (
+              (alertMessage === "재생목록이 정상적으로 수정되었습니다." ||
+                alertMessage === "재생목록 제목을 입력하세요." ||
+                alertMessage === "제목을 50자 이내로 작성하세요." ||
+                alertMessage === "Slide Time을 입력하세요." ||
+                alertMessage === "Slide Time은 0보다 커야합니다" ||
+                alertMessage === "재생목록에 추가할 파일을 선택하세요.") &&
+              confirmAction
+            ) {
+              confirmAction();
+            }
+          }}
+          size="lg"
+        >
+          <AlertTitle>알림창</AlertTitle>
+          <AlertDescription>{alertMessage}</AlertDescription>
+          <AlertActions>
+            {confirmAction && (
+              <Button
+                onClick={() => {
+                  setIsAlertOpen(false);
+                  if (confirmAction) confirmAction();
+                }}
+              >
+                확인
+              </Button>
+            )}
+            {!(
+              alertMessage === "재생목록이 정상적으로 수정되었습니다." ||
+              alertMessage === "재생목록 제목을 입력하세요." ||
+              alertMessage === "제목을 50자 이내로 작성하세요." ||
+              alertMessage === "Slide Time을 입력하세요." ||
+              alertMessage === "Slide Time은 0보다 커야합니다" ||
+              alertMessage === "재생목록에 추가할 파일을 선택하세요."
+            ) && (
+              <Button plain onClick={() => setIsAlertOpen(false)}>
+                취소
+              </Button>
+            )}
+          </AlertActions>
+        </Alert>
+
         <div
           ref={modalRef}
-          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-160"
+          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:w-6/12 sm:p-6 h-170"
         >
           <div className="h-full">
             <div className="items-center justify-center">
-              <DialogTitle className="leading-6 text-gray-900 text-center">
-                <p className="text-xl">재생 목록 수정</p>
+              <DialogTitle className="text-center flex-grow">
+                <p className="text-xl text-gray-900 mb-1 mt-1">
+                  재생 목록 수정
+                </p>
               </DialogTitle>
             </div>
             <div className="flex items-center justify-center">
               <div className="w-9/12 pr-4">
                 <DialogBody>
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-white">
+                    <div className="w-full h-145 border border-gray-900 overflow-y-auto p-4 bg-white">
                       <div className="mb-4 flex items-center">
                         <select
                           value={searchCategory}
@@ -273,7 +342,7 @@ const PlaylistUpdateModal = ({
                       </div>
 
                       <div className="space-y-2">
-                        <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-4">
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-4 mt-7">
                           {resources &&
                             resources.map((resource) => (
                               <div
@@ -281,7 +350,7 @@ const PlaylistUpdateModal = ({
                                 onClick={() => addList(resource)}
                                 className="group relative border border-gray-900 cursor-pointer"
                               >
-                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-40">
+                                <div className="w-full h-full overflow-hidden bg-gray-200 lg:h-44">
                                   <img
                                     src={resource.thumbFilePath}
                                     alt={resource.fileTitle}
@@ -302,7 +371,7 @@ const PlaylistUpdateModal = ({
                                       ) + 1}
                                     </div>
                                   )}
-                                <div className="relative group text-gray-700 text-center w-full p-1 bg-white">
+                                <div className="relative group h-9 text-gray-700 text-center w-full p-1 bg-white">
                                   <p className="truncate whitespace-nowrap overflow-hidden text-ellipsis">
                                     {resource.fileTitle}
                                   </p>
@@ -331,7 +400,7 @@ const PlaylistUpdateModal = ({
               <div className="w-3/12">
                 <DialogBody className="mt-2">
                   <div className="mb-4 flex items-center">
-                    <div className="w-full h-140 border border-gray-900 overflow-y-auto p-4 bg-white">
+                    <div className="w-full h-145 border border-gray-900 overflow-y-auto p-4 bg-white">
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-1">
                           {(provided) => (
@@ -379,47 +448,54 @@ const PlaylistUpdateModal = ({
                 </DialogBody>
               </div>
             </div>
-            <div className="flex items-center justify-between mt-2">
-              <div className="flex">
-                <label className="h-10 w-20 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
-                  제목
-                </label>
-                <input
-                  className="h-10 w-60 pl-2 border-y border-r border-gray-200"
-                  type="text"
-                  value={data.fileTitle}
-                  name="fileTitle"
-                  onChange={onChangeHandler}
-                />
+            <div className="flex flex-col items-center sm:flex-row sm:items-start justify-between sm:space-x-4 w-full">
+              <div className="flex w-full sm:w-2/3 mt-2">
+                <div className="flex w-full">
+                  <label className="w-1/3 whitespace-nowrap overflow-hidden h-10 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
+                    제목
+                  </label>
+                  <input
+                    className="h-10 w-full pl-2 border-y border-r border-gray-200"
+                    type="text"
+                    value={data.fileTitle}
+                    name="fileTitle"
+                    onChange={onChangeHandler}
+                    maxLength="20"
+                  />
+                </div>
 
-                <div className="flex ml-2">
-                  <label className="h-10 w-24 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900">
+                <div className="flex w-full ml-2 h-10">
+                  <label
+                    title="Slide Time"
+                    className="text-ellipsis w-1/3 whitespace-nowrap overflow-hidden h-10 block text-center text-sm pt-1.5 font-semibold border border-gray-200 leading-6 text-gray-900"
+                  >
                     Slide Time
                   </label>
                   <input
-                    className="h-10 w-20 pl-2 border-y border-gray-200"
+                    className="h-10 w-1/3 pl-2 border-y border-gray-200"
                     type="number"
                     value={data.slideTime}
                     name="slideTime"
                     onChange={onChangeHandler}
                   />
-                  <p className="bg-white inline-flex items-center pr-1 border-y border-r border-gray-200">
+                  <p className="h-10 bg-white inline-flex items-center pr-1 border-y border-r border-gray-200">
                     (s)
                   </p>
                 </div>
               </div>
-              <div className="flex flex-row-reverse">
-                <button
-                  onClick={onRequestClose}
-                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
-                >
-                  닫기
-                </button>
+
+              <div className="flex flex-row justify-end mt-2">
                 <button
                   onClick={updatePlayList}
-                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="w-full sm:w-auto px-4 py-2 bg-[#FF9C00] text-sm text-white rounded-md hover:bg-gray-200 hover:text-[#444444] font-semibold"
                 >
                   수정
+                </button>
+                <button
+                  onClick={onRequestClose}
+                  className="ml-2 w-full sm:w-auto px-4 py-2 bg-[#444444] text-sm text-white rounded-md hover:bg-gray-200 hover:text-[#444444] font-semibold"
+                >
+                  취소
                 </button>
               </div>
             </div>

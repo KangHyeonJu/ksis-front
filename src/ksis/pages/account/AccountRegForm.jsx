@@ -396,16 +396,10 @@ const AccountRegForm = () => {
           <br />
 
           <div className="mt-10 flex gap-4 justify-center">
-            <ButtonComponentB
-              type="submit"
-              color="blue"
-            >
+            <ButtonComponentB type="submit" color="blue">
               등록
             </ButtonComponentB>
-            <ButtonComponentB
-              to={ACCOUNT_LIST_BOARD}
-              color="red"
-            >
+            <ButtonComponentB to={ACCOUNT_LIST_BOARD} color="red">
               취소
             </ButtonComponentB>
           </div>

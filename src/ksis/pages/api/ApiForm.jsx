@@ -238,10 +238,7 @@ const ApiForm = () => {
               </div>
             </div>
             <div className="flex justify-center space-x-4">
-              <ButtonComponentB
-                type="submit"
-                color="blue"
-              >
+              <ButtonComponentB type="submit" color="blue">
                 {apiId ? "수정하기" : "등록하기"}
               </ButtonComponentB>
 

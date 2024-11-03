@@ -323,6 +323,8 @@ const SignageUpdateForm = () => {
               <div className="flex-grow flex items-center space-x-2">
                 <Input
                   required
+                  minLength="2"
+                  maxLength="10"
                   value={data.deviceName}
                   onChange={onChangeHandler}
                   name="deviceName"
@@ -403,6 +405,8 @@ const SignageUpdateForm = () => {
                   onChange={onChangeHandler}
                   name="detailAddress"
                   placeholder="상세주소 입력"
+                  minLength="2"
+                  maxLength="50"
                 />
               </div>
             </div>

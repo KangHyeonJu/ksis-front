@@ -340,10 +340,7 @@ const NoticeForm = () => {
               </>
             )}
             <div className="flex justify-center space-x-4">
-              <ButtonComponentB
-                type="submit"
-                color="blue"
-              >
+              <ButtonComponentB type="submit" color="blue">
                 저장
               </ButtonComponentB>
 

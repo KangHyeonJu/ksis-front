@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableCell,
 } from "../css/table";
+import clsx from "clsx";
 
 export default function CheckboxTable({
   headers,
@@ -16,6 +17,9 @@ export default function CheckboxTable({
   setSelectedItems,
   renderActions,
   check,
+  authority,
+  trash,
+  widthPercentage,
 }) {
   const handleCheckboxChange = (itemId) => {
     setSelectedItems((prevSelected) => {
@@ -41,7 +45,13 @@ export default function CheckboxTable({
                   const isChecked = e.target.checked;
                   setSelectedItems(
                     isChecked
-                      ? new Set(data.map((item) => item[uniqueKey]))
+                      ? authority !== "ROLE_ADMIN"
+                        ? new Set(
+                            data
+                              .filter((item) => item.role !== "ADMIN")
+                              .map((item) => item[uniqueKey])
+                          )
+                        : new Set(data.map((item) => item[uniqueKey]))
                       : new Set()
                   );
                 }}
@@ -51,7 +61,10 @@ export default function CheckboxTable({
           {headers.map((header, index) => (
             <TableHeader
               key={index}
-              className="w-auto text-gray-800 text-center text-base font-extrabold"
+              // className="w-auto text-gray-800 text-center text-base font-extrabold"
+              className={clsx(
+                `w-${widthPercentage}/12 text-gray-800 text-center text-base font-extrabold`
+              )}
             >
               {header}
             </TableHeader>
@@ -63,16 +76,22 @@ export default function CheckboxTable({
           <TableRow
             key={item[uniqueKey]}
             className={`${
-              item.role === "ADMIN" ? "font-bold bg-gray-50" : ""
+              item.role === "ADMIN" && trash !== "trash"
+                ? "font-bold bg-gray-50"
+                : ""
             } hover:bg-gray-100 text-base`}
           >
             {check ? (
               <TableCell className="text-center">
-                <input
-                  type="checkbox"
-                  checked={selectedItems.has(item[uniqueKey])}
-                  onChange={() => handleCheckboxChange(item[uniqueKey])}
-                />
+                {item.role === "ADMIN" && authority === "ROLE_USER" ? (
+                  "📢"
+                ) : (
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.has(item[uniqueKey])}
+                    onChange={() => handleCheckboxChange(item[uniqueKey])}
+                  />
+                )}
               </TableCell>
             ) : null}
             {dataKeys.map((key, index) => (

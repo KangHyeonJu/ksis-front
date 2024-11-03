@@ -61,6 +61,9 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
         showAlert("해상도가 수정되었습니다.", () => {
           onRequestClose();
         });
+      } else if (response.status === 202) {
+        showAlert("이미 등록된 해상도입니다.");
+        return;
       } else {
         showAlert("해상도 수정 중 오류가 발생했습니다.");
       }
@@ -165,10 +168,7 @@ const ResolutionUpdateModal = ({ isOpen, onRequestClose, resolutionId }) => {
               </div>
             </DialogBody>
             <DialogActions>
-              <ButtonComponentB
-                type="submit"
-                color="blue"
-              >
+              <ButtonComponentB type="submit" color="blue">
                 수정
               </ButtonComponentB>
             </DialogActions>

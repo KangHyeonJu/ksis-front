@@ -24,6 +24,13 @@ import { FaRegMap } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import Loading from "../../components/Loading";
 import ButtonComponent from "../../components/ButtonComponent";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 const SignageDtl = () => {
   const userInfo = decodeJwt();
@@ -73,6 +80,17 @@ const SignageDtl = () => {
   // 이전 페이지로 이동
   const navigate = useNavigate();
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
+
   const onCancel = () => {
     navigate(-1);
   };
@@ -89,7 +107,7 @@ const SignageDtl = () => {
           (i) => i.accountId === userInfo.accountId
         )
       ) {
-        alert("접근권한이 없습니다.");
+        showAlert("접근권한이 없습니다.", () => {});
         navigate(SIGNAGE_INVENTORY);
       }
 
@@ -130,7 +148,7 @@ const SignageDtl = () => {
 
   // Switch 상태 변경 핸들러
   const handleToggle = async () => {
-    if (window.confirm("공지 표시 여부를 변경하시겠습니까?")) {
+    showAlert("공지 표시 여부를 변경하시겠습니까?", async () => {
       const newEnabled = !enabled;
       setEnabled(newEnabled);
 
@@ -142,7 +160,7 @@ const SignageDtl = () => {
       } catch (error) {
         console.error("DB 상태 업데이트 실패", error);
       }
-    }
+    });
   };
 
   const formattedDate = data.regTime
@@ -151,7 +169,7 @@ const SignageDtl = () => {
 
   //재생목록 선택
   const onChangeRadio = async (e) => {
-    if (window.confirm("재생목록을 변경하시겠습니까?")) {
+    showAlert("재생목록을 변경하시겠습니까?", async () => {
       const selectedRadiobox = Number(e.target.value);
       setRadiobox(selectedRadiobox);
 
@@ -163,7 +181,7 @@ const SignageDtl = () => {
       } catch (error) {
         console.error("DB 상태 업데이트 실패", error);
       }
-    }
+    });
   };
 
   //재생목록 조회
@@ -188,7 +206,7 @@ const SignageDtl = () => {
   //재생목록 수정
   const openPlaylist = () => {
     if (playListId == null) {
-      alert("수정할 재생목록을 선택하세요.");
+      showAlert("수정할 재생목록을 선택하세요.", () => {});
     } else {
       openPlaylistUpdate();
     }
@@ -198,11 +216,14 @@ const SignageDtl = () => {
   const deletePlaylist = async (playlistId) => {
     try {
       if (playlistId == null) {
-        alert("삭제할 재생목록을 선택하세요.");
+        showAlert("삭제할 재생목록을 선택하세요.", () => {});
       } else if (radiobox === playlistId) {
-        alert("현재 기본으로 선택된 재생목록입니다. 변경 후 삭제해주세요.");
+        showAlert(
+          "현재 기본으로 선택된 재생목록입니다. 변경 후 삭제해주세요.",
+          () => {}
+        );
       } else {
-        if (window.confirm("삭제하시겠습니까?")) {
+        showAlert("삭제하시겠습니까?", async () => {
           const response = await fetcher.delete(SIGNAGE_PLAYLIST, {
             params: { playlistId: playlistId },
           });
@@ -215,12 +236,12 @@ const SignageDtl = () => {
             )
           );
 
-          alert("삭제되었습니다.");
+          showAlert("삭제되었습니다.", () => {});
 
           setPlaylistDtl([]);
           setSlideTime(null);
           setPlaylistTitle("");
-        }
+        });
       }
     } catch (error) {
       console.log(error.response.data);
@@ -261,6 +282,48 @@ const SignageDtl = () => {
 
   return (
     <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 mt-10">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "삭제되었습니다." ||
+            alertMessage ===
+              "현재 기본으로 선택된 재생목록입니다. 변경 후 삭제해주세요." ||
+            alertMessage === "삭제할 재생목록을 선택하세요." ||
+            alertMessage === "수정할 재생목록을 선택하세요." ||
+            alertMessage === "접근권한이 없습니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
+      <PlaylistUpdateModal
+        isOpen={playlistUpdateIsOpen}
+        onRequestClose={handleUpdateMoalClose}
+        signageId={data.deviceId}
+        playlistId={playListId}
+      />
+
       <div className="flex justify-between mb-4">
         <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900">
           재생장치 설정
@@ -340,11 +403,19 @@ const SignageDtl = () => {
               </label>
               <div className="border-r border-gray-300 h-10"></div>
 
-              <div className="inline-flex items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10">
+              <div
+                className="block items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10 overflow-hidden text-ellipsis whitespace-nowrap"
+                title={
+                  data.accountList &&
+                  data.accountList
+                    .map((account) => `${account.name}(${account.accountId})`)
+                    .join(", ")
+                }
+              >
                 {data.accountList &&
                   data.accountList
                     .map((account) => `${account.name}(${account.accountId})`)
-                    .join(", ")}
+                    .join(", ")}{" "}
               </div>
             </div>
             <div className="border-r border-gray-300 h-10"></div>
@@ -510,10 +581,7 @@ const SignageDtl = () => {
               </table>
             </div>
             <div className="h-8 flex justify-end">
-              <ButtonComponent
-                onClick={openPlay}
-                color="orange"
-              >
+              <ButtonComponent onClick={openPlay} color="orange">
                 미리보기
               </ButtonComponent>
               <SignagePlay
@@ -561,19 +629,9 @@ const SignageDtl = () => {
               </div>
             </div>
             <div className="h-8 items-center flex justify-end mt-2">
-              <ButtonComponent
-                onClick={openPlaylist}
-                color="blue"
-              >
+              <ButtonComponent onClick={openPlaylist} color="blue">
                 수정
               </ButtonComponent>
-
-              <PlaylistUpdateModal
-                isOpen={playlistUpdateIsOpen}
-                onRequestClose={handleUpdateMoalClose}
-                signageId={data.deviceId}
-                playlistId={playListId}
-              />
               <ButtonComponent
                 onClick={() => deletePlaylist(playListId)}
                 color="red"

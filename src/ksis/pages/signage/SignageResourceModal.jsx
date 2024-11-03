@@ -9,6 +9,13 @@ import {
 import { ImCross } from "react-icons/im";
 import { RxCrossCircled } from "react-icons/rx";
 import { BsXCircleFill } from "react-icons/bs";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
   const modalRef = useRef(null);
@@ -18,7 +25,19 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
   const [myResources, setMyResources] = useState([]);
   const [addResources, setAddResources] = useState([]);
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
+
   const handleClickOutside = (e) => {
+    if (isAlertOpen) return; // 알림창이 열려 있을 때는 실행하지 않음
     if (modalRef.current && !modalRef.current.contains(e.target)) {
       onRequestClose();
     }
@@ -34,9 +53,9 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, isAlertOpen]);
 
-  const loadModal = useCallback(async () => {
+  const loadModal = async () => {
     try {
       const [responseResource, responseMyResource] = await Promise.all([
         fetcher.get(SIGNAGE_RESOURCE + `/${signageId}`),
@@ -48,18 +67,18 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [signageId]);
+  };
 
   useEffect(() => {
     if (isOpen && signageId) {
       loadModal();
     }
-  }, [isOpen, signageId, loadModal]);
+  }, [isOpen, signageId]);
 
   //삭제
   const deleteResource = async (encodedResourceId) => {
     try {
-      if (window.confirm("삭제하시겠습니까?")) {
+      showAlert("삭제하시겠습니까?", async () => {
         const response = await fetcher.delete(
           SIGNAGE_RESOURCE + `/${signageId}/` + encodedResourceId
         );
@@ -75,7 +94,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
         setAddResources((prevResources) =>
           prevResources.filter((id) => id !== encodedResourceId)
         );
-      }
+      });
     } catch (error) {
       console.log(error.response.data);
     }
@@ -100,7 +119,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
 
   const addResourceOnClick = async () => {
     try {
-      if (window.confirm("저장하시겠습니까?")) {
+      showAlert("저장하시겠습니까?", async () => {
         const formData = new FormData();
 
         formData.append(
@@ -115,9 +134,10 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
 
         console.log(postData);
 
-        alert("이미지/영상이 추가되었습니다.");
-        onRequestClose();
-      }
+        showAlert("이미지/영상이 추가되었습니다.", () => {
+          onRequestClose();
+        });
+      });
     } catch (error) {
       console.log(error.postData);
     }
@@ -126,9 +146,43 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
   return (
     <Dialog open={isOpen} onClose={onRequestClose}>
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <Alert
+          open={isAlertOpen}
+          onClose={() => {
+            setIsAlertOpen(false);
+            if (
+              alertMessage === "이미지/영상이 추가되었습니다." &&
+              confirmAction
+            ) {
+              confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+            }
+          }}
+          size="lg"
+        >
+          <AlertTitle>알림창</AlertTitle>
+          <AlertDescription>{alertMessage}</AlertDescription>
+          <AlertActions>
+            {confirmAction && (
+              <Button
+                onClick={() => {
+                  setIsAlertOpen(false);
+                  if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+                }}
+              >
+                확인
+              </Button>
+            )}
+            {alertMessage !== "이미지/영상이 추가되었습니다." && (
+              <Button plain onClick={() => setIsAlertOpen(false)}>
+                취소
+              </Button>
+            )}
+          </AlertActions>
+        </Alert>
+
         <div
           ref={modalRef}
-          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-8/12 sm:p-6"
+          className="inline-block align-bottom bg-gray-100 px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-7/12 md:w-7/12 sm:p-6"
         >
           <div className="flex h-160">
             <div className="w-4/6 pr-4">
@@ -188,7 +242,7 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
                 <div className="mb-4 flex items-center">
                   <div className="w-full h-150 border border-gray-900 overflow-y-auto p-4 bg-white">
                     <div className="space-y-2">
-                      <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-2 md:gap-y-0 lg:gap-x-8">
+                      <div className="mt-2 grid grid-cols-1 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-2 md:gap-y-0 lg:gap-x-8">
                         {myResources.map((resource) => {
                           const isInResources = resources.some(
                             (res) =>
@@ -234,13 +288,13 @@ const SignageResourceModal = ({ isOpen, onRequestClose, signageId }) => {
               <div className="flex flex-row-reverse">
                 <button
                   onClick={onRequestClose}
-                  className="ml-2 inline-flex justify-center rounded-sm px-4 py-2 bg-[#444444] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="rounded-md whitespace-nowrap ml-2 inline-flex justify-center px-4 py-2 bg-[#444444] text-sm text-white hover:bg-gray-200 hover:text-[#444444] font-semibold"
                 >
                   닫기
                 </button>
                 <button
                   onClick={addResourceOnClick}
-                  className="inline-flex justify-center rounded-sm px-4 py-2 bg-[#FF9C00] text-sm font-medium text-white hover:bg-gray-200 hover:text-[#444444] hover:font-semibold"
+                  className="rounded-md whitespace-nowrap inline-flex justify-center px-4 py-2 bg-[#FF9C00] text-sm text-white hover:bg-gray-200 hover:text-[#444444] font-semibold"
                 >
                   등록
                 </button>

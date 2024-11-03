@@ -11,6 +11,13 @@ import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponentB from "../../components/ButtonComponentB";
 import CheckboxTable from "../../components/CheckboxTable";
 import SearchBar from "../../components/SearchBar";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 
 const SignageList = () => {
   const userInfo = decodeJwt();
@@ -25,6 +32,17 @@ const SignageList = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const postsPerPage = 15;
   const checked = true;
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   const loadPage = async () => {
     try {
@@ -48,7 +66,7 @@ const SignageList = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      alert(error.response?.data || "Unknown error occurred");
+      showAlert(error.response?.data || "Unknown error occurred", () => {});
     }
   };
 
@@ -65,10 +83,10 @@ const SignageList = () => {
   const deleteSignage = async (e) => {
     try {
       if (selectedPosts.size === 0) {
-        alert("삭제할 재생장치를 선택해주세요.");
+        showAlert("삭제할 재생장치를 선택해주세요.", () => {});
         return;
       } else {
-        if (window.confirm("삭제하시겠습니까?")) {
+        showAlert("삭제하시겠습니까?", async () => {
           const queryString = Array.from(selectedPosts).join(",");
 
           const response = await fetcher.delete(
@@ -82,8 +100,8 @@ const SignageList = () => {
             )
           );
           setSelectedPosts(new Set());
-          alert("재생장치가 정상적으로 삭제되었습니다.");
-        }
+          showAlert("재생장치가 정상적으로 삭제되었습니다.", () => {});
+        });
       }
     } catch (error) {
       console.log(error.response.data);
@@ -96,6 +114,44 @@ const SignageList = () => {
 
   return (
     <div className="mx-auto whitespace-nowrap py-6 px-10">
+      {/* Alert 컴포넌트 추가 */}
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (
+            alertMessage === "삭제할 재생장치를 선택해주세요." &&
+            confirmAction
+          ) {
+            confirmAction();
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction();
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {!(
+            alertMessage === "삭제할 재생장치를 선택해주세요." ||
+            alertMessage === "재생장치가 정상적으로 삭제되었습니다."
+          ) && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 mb-4">
         재생장치 관리
       </h1>
@@ -152,20 +208,16 @@ const SignageList = () => {
           selectedItems={selectedPosts}
           setSelectedItems={setSelectedPosts}
           check={checked}
+          widthPercentage={12 / 4}
         />
       </div>
 
       {userInfo.roles === "ROLE_ADMIN" ? (
         <div className="flex justify-end space-x-2 my-10">
           <Link to={SIGNAGE_FORM}>
-            <ButtonComponentB color="blue">
-              재생장치 등록
-            </ButtonComponentB>
+            <ButtonComponentB color="blue">재생장치 등록</ButtonComponentB>
           </Link>
-          <ButtonComponentB
-            onClick={deleteSignage}
-            color="red"
-          >
+          <ButtonComponentB onClick={deleteSignage} color="red">
             삭제
           </ButtonComponentB>
         </div>

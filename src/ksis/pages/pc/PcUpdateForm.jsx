@@ -394,10 +394,7 @@ const PcUpdateForm = () => {
                   readOnly
                   className="mr-3"
                 />
-                <ButtonComponentB
-                  onClick={execDaumPostcode}
-                  color="gray"
-                >
+                <ButtonComponentB onClick={execDaumPostcode} color="gray">
                   주소검색
                 </ButtonComponentB>
               </div>
@@ -415,22 +412,18 @@ const PcUpdateForm = () => {
                   onChange={onChangeHandler}
                   name="detailAddress"
                   placeholder="상세주소 입력"
+                  minLength="2"
+                  maxLength="50"
                 />
               </div>
             </div>
           </div>
           <br />
           <div className="mt-6 flex justify-center gap-4">
-            <ButtonComponentB
-              type="submit"
-              color="blue"
-            >
+            <ButtonComponentB type="submit" color="blue">
               수정하기
             </ButtonComponentB>
-            <ButtonComponentB
-              onClick={onCancel}
-              color="red"
-            >
+            <ButtonComponentB onClick={onCancel} color="red">
               뒤로가기
             </ButtonComponentB>
           </div>

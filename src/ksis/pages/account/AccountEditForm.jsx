@@ -421,10 +421,7 @@ const AccountEditForm = () => {
           <br />
 
           <div className="mt-10 flex gap-4 justify-center">
-            <ButtonComponentB
-              type="submit"
-              color="blue"
-            >
+            <ButtonComponentB type="submit" color="blue">
               저장
             </ButtonComponentB>
 

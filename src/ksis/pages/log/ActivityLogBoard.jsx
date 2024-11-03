@@ -112,11 +112,10 @@ const ActivityLogBoard = () => {
           setCurrentPage(1); // 검색 시 첫 페이지로 이동
         }}
         searchOptions={[
-          { value: "account", label: "아이디" },
-          { value: "detail", label: "내용" },
+          { value: "account", label: "아이디", useDate: true },
+          { value: "detail", label: "내용", useDate: true },
         ]}
         defaultCategory="account"
-        useDate={true} // 날짜 옵션 활성화
       />
 
       <div className="flex justify-end space-x-2 mb-4">
@@ -151,11 +150,12 @@ const ActivityLogBoard = () => {
             {
               content: (item) => item.detail,
               className:
-                "p-2 text-gray-800 text-center border-b border-gray-300",
+                "p-2 text-gray-800 text-center border-b border-gray-300 overflow-hidden text-ellipsis",
             },
           ]}
           uniqueKey="logId"
           check={checked}
+          widthPercentage={12 / 3}
         />
       </div>
 

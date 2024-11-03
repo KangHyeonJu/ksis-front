@@ -6,7 +6,6 @@ import { PC_ADD, PC_ACCOUNT } from "../../../constants/api_constant";
 import { PC_INVENTORY } from "../../../constants/page_constant";
 import { decodeJwt } from "../../../decodeJwt";
 import { Input } from "../../css/input";
-import { Button } from "../../css/button";
 import { Select } from "../../css/select";
 import {
   Alert,
@@ -14,6 +13,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "../../css/alert";
+import { Button } from "../../css/button";
 import Loading from "../../components/Loading";
 import ButtonComponentB from "../../components/ButtonComponentB";
 
@@ -31,14 +31,15 @@ const PcForm = () => {
   const navigate = useNavigate();
   const userInfo = decodeJwt();
   const [loading, setLoading] = useState(true);
-  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
-  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
-  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
 
   //mac 주소 검증
   const [macAddress, setMacAddress] = useState("");
   const [error, setError] = useState("");
   const [addressError, setAddressError] = useState("");
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
 
   // 알림창 메서드
   const showAlert = (message, onConfirm = null) => {
@@ -104,7 +105,7 @@ const PcForm = () => {
   const accountGet = async () => {
     try {
       if (userInfo.roles !== "ROLE_ADMIN") {
-        alert("접근권한이 없습니다.");
+        showAlert("접근권한이 없습니다.", () => {});
         navigate(PC_INVENTORY);
       }
 
@@ -119,7 +120,7 @@ const PcForm = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-      alert(error.response?.data || "Unknown error occurred");
+      showAlert(error.response?.data || "Unknown error occurred", () => {});
     }
   };
 
@@ -227,7 +228,7 @@ const PcForm = () => {
 
       setResponsibles(newResponsibles);
     } else {
-      alert("이미 존재하는 담당자입니다.");
+      showAlert("이미 존재하는 담당자입니다.", () => {});
       e.target.value = "";
       return;
     }
@@ -266,7 +267,10 @@ const PcForm = () => {
               확인
             </Button>
           )}
-          {alertMessage !== "PC가 정상적으로 등록되었습니다." && (
+          {!(
+            alertMessage === "PC가 정상적으로 등록되었습니다." ||
+            alertMessage === "이미 존재하는 담당자입니다."
+          ) && (
             <Button plain onClick={() => setIsAlertOpen(false)}>
               취소
             </Button>
@@ -371,10 +375,7 @@ const PcForm = () => {
                   readOnly
                   className="mr-3"
                 />
-                <ButtonComponentB
-                  onClick={execDaumPostcode}
-                  color="gray"
-                >
+                <ButtonComponentB onClick={execDaumPostcode} color="gray">
                   주소검색
                 </ButtonComponentB>
                 {addressError && (
@@ -395,22 +396,18 @@ const PcForm = () => {
                   onChange={onChangeHandler}
                   name="detailAddress"
                   placeholder="상세주소 입력"
+                  minLength="2"
+                  maxLength="50"
                 />
               </div>
             </div>
           </div>
           <br />
           <div className="mt-6 flex justify-center gap-4">
-            <ButtonComponentB
-              type="submit"
-              color="blue"
-            >
+            <ButtonComponentB type="submit" color="blue">
               등록하기
             </ButtonComponentB>
-            <ButtonComponentB
-              onClick={onCancel}
-              color="red"
-            >
+            <ButtonComponentB onClick={onCancel} color="red">
               뒤로가기
             </ButtonComponentB>
           </div>

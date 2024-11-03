@@ -12,6 +12,13 @@ import Loading from "../../components/Loading";
 import PaginationComponent from "../../components/PaginationComponent";
 import ButtonComponent from "../../components/ButtonComponent";
 import SearchBar from "../../components/SearchBar";
+import {
+  Alert,
+  AlertActions,
+  AlertDescription,
+  AlertTitle,
+} from "../../css/alert";
+import { Button } from "../../css/button";
 import CheckboxTable from "../../components/CheckboxTable";
 import ButtonComponentB from "../../components/ButtonComponentB";
 
@@ -24,9 +31,19 @@ const AccountList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("accountId");
+  const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
+  const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
 
   const postsPerPage = 15;
   const checked = false;
+
+  // 알림창 메서드
+  const showAlert = (message, onConfirm = null) => {
+    setAlertMessage(message);
+    setIsAlertOpen(true);
+    setConfirmAction(() => onConfirm); // 확인 버튼을 눌렀을 때 실행할 액션
+  };
 
   const loadPage = async (page) => {
     try {
@@ -54,7 +71,7 @@ const AccountList = () => {
   useEffect(() => {
     // 관리자가 아닌 경우 접근 차단
     if (!userInfo.roles.includes("ROLE_ADMIN")) {
-      alert("관리자만 접근 가능합니다.");
+      showAlert("관리자만 접근 가능합니다.");
       navigate(MAIN);
     } else {
       loadPage(currentPage);
@@ -66,36 +83,35 @@ const AccountList = () => {
   }, [currentPage, searchTerm]);
 
   const handleToggleActive = async (accountId, isActive) => {
-    try {
-      const action = isActive ? "활성화" : "비활성화";
-      const confirmation = window.confirm(`계정을 ${action}하시겠습니까?`);
+    const action = isActive ? "활성화" : "비활성화";
+    showAlert(`계정을 ${action}하시겠습니까?`, async () => {
+      try {
+        const response = await fetcher.put(
+          `${ACCOUNT_FORM}/${accountId}/active`,
+          JSON.stringify({
+            isActive: isActive,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      if (!confirmation) {
-        return;
-      }
-
-      const response = await fetcher.put(
-        `${ACCOUNT_FORM}/${accountId}/active`,
-        JSON.stringify({
-          isActive: isActive,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+        if (response.status === 200) {
+          // 로컬 상태 업데이트
+          showAlert("비활성화 여부가 변경되었습니다.", () => {});
+          await loadPage(currentPage);
+        } else {
+          console.error(
+            "Failed to update account status:",
+            response.statusText
+          );
         }
-      );
-
-      if (response.status === 200) {
-        // 로컬 상태 업데이트
-        alert("비활성화 여부가 변경되었습니다.");
-        await loadPage(currentPage);
-      } else {
-        console.error("Failed to update account status:", response.statusText);
+      } catch (error) {
+        console.error("Error:", error);
       }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    });
   };
 
   const handlePageChange = (event, page) => {
@@ -113,7 +129,41 @@ const AccountList = () => {
   }
 
   return (
-    <div className="mx-auto whitespace-nowrap py-6 px-10">
+    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+      <Alert
+        open={isAlertOpen}
+        onClose={() => {
+          setIsAlertOpen(false);
+          if (
+            alertMessage === "비활성화 여부가 변경되었습니다." &&
+            confirmAction
+          ) {
+            confirmAction(); // 알림창 밖을 클릭해도 확인 액션 수행
+          }
+        }}
+        size="lg"
+      >
+        <AlertTitle>알림창</AlertTitle>
+        <AlertDescription>{alertMessage}</AlertDescription>
+        <AlertActions>
+          {confirmAction && (
+            <Button
+              onClick={() => {
+                setIsAlertOpen(false);
+                if (confirmAction) confirmAction(); // 확인 버튼 클릭 시 지정된 액션 수행
+              }}
+            >
+              확인
+            </Button>
+          )}
+          {alertMessage !== "비활성화 여부가 변경되었습니다." && (
+            <Button plain onClick={() => setIsAlertOpen(false)}>
+              취소
+            </Button>
+          )}
+        </AlertActions>
+      </Alert>
+
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         계정목록
       </h1>
@@ -166,13 +216,14 @@ const AccountList = () => {
           ]}
           uniqueKey="accountId"
           check={checked}
+          widthPercentage={12 / 5}
           renderActions={(item) => (
             <>
               <ButtonComponent
                 to={ACCOUNT_FORM + `/${item.accountId}`}
                 // defaultColor="blue-600"
                 // shadowColor="blue-800"
-                  color="blue"
+                color="blue"
               >
                 수정
               </ButtonComponent>
@@ -183,7 +234,7 @@ const AccountList = () => {
                 }
                 // defaultColor={item.isActive ? "green-600" : "red-600"}
                 // shadowColor={item.isActive ? "green-800" : "red-800"}
-                  color="red"
+                color="red"
               >
                 {item.isActive ? "활성화" : "비활성화"}
               </ButtonComponent>
@@ -193,10 +244,7 @@ const AccountList = () => {
       </div>
 
       <div className="flex justify-end space-x-2 my-10">
-        <ButtonComponentB
-          to={ACCOUNT_FORM}
-          color="orange"
-        >
+        <ButtonComponentB to={ACCOUNT_FORM} color="orange">
           계정 등록
         </ButtonComponentB>
       </div>
