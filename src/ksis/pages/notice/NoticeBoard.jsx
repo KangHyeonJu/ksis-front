@@ -48,7 +48,6 @@ const NoticeBoard = () => {
   };
 
   useEffect(() => {
-    console.log(authority);
     const fetchNotices = async () => {
       try {
         const response = await fetcher.get(NOTICE_ALL, {
@@ -60,6 +59,7 @@ const NoticeBoard = () => {
           },
         });
         setNotices(response.data.content);
+        console.log(response.data.content);
         setTotalPages(response.data.totalPages);
         setLoading(false);
       } catch (err) {
@@ -181,6 +181,7 @@ const NoticeBoard = () => {
             ? [{ value: "account", label: "작성자" }]
             : []),
           { value: "regTime", label: "등록일" },
+          { value: "device", label: "재생장치" },
         ]}
         defaultCategory="title"
       />
