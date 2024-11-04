@@ -23,6 +23,8 @@ import { Button } from "../../css/button";
 const ApiBoard = () => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
   const [searchCategory, setSearchCategory] = useState("apiName");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,6 +65,8 @@ const ApiBoard = () => {
             size: postsPerPage,
             searchTerm,
             searchCategory,
+            startTime,
+            endTime,
           },
         });
         setTotalPages(response.data.totalPages);
@@ -75,7 +79,7 @@ const ApiBoard = () => {
     };
 
     fetchPosts();
-  }, [currentPage, searchTerm]); // navigate와 accountId를 의존성으로 추가
+  }, [currentPage, searchTerm, startTime, endTime]); // navigate와 accountId를 의존성으로 추가
 
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
@@ -167,9 +171,11 @@ const ApiBoard = () => {
       </h1>
 
       <SearchBar
-        onSearch={(term, category) => {
+        onSearch={(term, category, start, end) => {
           setSearchTerm(term);
           setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
           setCurrentPage(1);
         }}
         searchOptions={[
