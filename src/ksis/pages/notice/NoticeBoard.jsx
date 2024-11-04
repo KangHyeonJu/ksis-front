@@ -59,7 +59,6 @@ const NoticeBoard = () => {
           },
         });
         setNotices(response.data.content);
-        console.log(response.data.content);
         setTotalPages(response.data.totalPages);
         setLoading(false);
       } catch (err) {
