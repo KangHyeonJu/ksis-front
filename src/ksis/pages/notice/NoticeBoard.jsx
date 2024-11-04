@@ -80,11 +80,6 @@ const NoticeBoard = () => {
       .filter((notice) =>
         notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
       )
-      .sort((a, b) => {
-        if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
-        if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
-        return 0;
-      });
   }, [notices, searchTerm, searchCategory]);
 
   const handlePageChange = (event, page) => {
