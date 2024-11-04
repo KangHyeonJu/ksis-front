@@ -22,7 +22,7 @@ import { Button } from "../../css/button";
 
 const NoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("title"); // "fileTitle" 대신 "title"로 수정
+  const [searchCategory, setSearchCategory] = useState("title");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
   const [notices, setNotices] = useState([]);
