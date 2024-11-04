@@ -78,7 +78,7 @@ const NoticeBoard = () => {
 
     return validNotices
       .filter((notice) =>
-        notice[searchCategory]?.toLowerCase().startsWith(searchTerm.toLowerCase())
+        notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
       )
   }, [notices, searchTerm, searchCategory]);*/
 
