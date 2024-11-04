@@ -175,7 +175,7 @@ const ApiBoard = () => {
         searchOptions={[
           { value: "apiName", label: "이름" },
           { value: "provider", label: "제공업체" },
-          { value: "expiryDate", label: "만료일" },
+          { value: "expiryDate", label: "만료일", onlyDate: true },
         ]}
         defaultCategory="apiName"
       />
