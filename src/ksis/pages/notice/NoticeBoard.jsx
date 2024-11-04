@@ -72,19 +72,19 @@ const NoticeBoard = () => {
     fetchNotices();
   }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
 
-  const filteredNotices = useMemo(() => {
+ /*  const filteredNotices = useMemo(() => {
     // notices가 undefined일 경우 빈 배열로 초기화
     const validNotices = notices || [];
 
     return validNotices
       .filter((notice) =>
-        notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
+        notice[searchCategory]?.toLowerCase().startsWith(searchTerm.toLowerCase())
       )
-  }, [notices, searchTerm, searchCategory]);
+  }, [notices, searchTerm, searchCategory]);*/
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  };
+  }; 
 
   const handleRegisterClick = () => {
     navigate(NOTICE_FORM); // 공지글 등록 페이지로 이동
@@ -187,14 +187,14 @@ const NoticeBoard = () => {
       />
 
       <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
-        {filteredNotices.length === 0 ? (
+        {notices.length === 0 ? (
           <p className="text-center text-gray-600 mt-10 w-full">
             공지글이 없습니다.
           </p>
         ) : (
           <CheckboxTable
             headers={["제목", "작성자(아이디)", "작성일", "재생장치"]}
-            data={filteredNotices}
+            data={notices}
             dataKeys={[
               {
                 content: (item) => (
