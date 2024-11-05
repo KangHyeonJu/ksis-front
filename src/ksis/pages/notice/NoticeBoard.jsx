@@ -71,16 +71,6 @@ const NoticeBoard = () => {
     fetchNotices();
   }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
 
- /*  const filteredNotices = useMemo(() => {
-    // notices가 undefined일 경우 빈 배열로 초기화
-    const validNotices = notices || [];
-
-    return validNotices
-      .filter((notice) =>
-        notice[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-  }, [notices, searchTerm, searchCategory]);*/
-
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   }; 

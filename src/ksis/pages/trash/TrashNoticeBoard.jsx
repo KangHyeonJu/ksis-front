@@ -71,12 +71,6 @@ const TrashNoticeBoard = () => {
       .finally(() => {});
   }, [currentPage, searchTerm]);
 
-/*   const filteredNotices = useMemo(() => {
-    return notices.filter((notice) =>
-      notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [notices, searchTerm]); */
-
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
