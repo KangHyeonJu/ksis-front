@@ -260,8 +260,6 @@ const NoticeForm = () => {
               required
             />
 
-            {role !== "ROLE_ADMIN" && (
-              <>
                 <div>
                   {formData.deviceIds.map((device, index) => (
                     <div key={index} className="flex items-center mb-2">
@@ -337,8 +335,8 @@ const NoticeForm = () => {
                     </div>
                   </div>
                 </div>
-              </>
-            )}
+
+
             <div className="flex justify-center space-x-4">
               <ButtonComponentB type="submit" color="blue">
                 저장
