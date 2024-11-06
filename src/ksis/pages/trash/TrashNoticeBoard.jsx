@@ -71,12 +71,6 @@ const TrashNoticeBoard = () => {
       .finally(() => {});
   }, [currentPage, searchTerm]);
 
-  const filteredNotices = useMemo(() => {
-    return notices.filter((notice) =>
-      notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [notices, searchTerm]);
-
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
@@ -160,21 +154,23 @@ const TrashNoticeBoard = () => {
         }}
         searchOptions={[
           { value: "title", label: "제목" },
-          { value: "account", label: "작성자" },
+          ...(authority === "ROLE_ADMIN"
+            ? [{ value: "account", label: "작성자" }]
+            : []),
           { value: "regTime", label: "등록일" },
         ]}
         defaultCategory="title"
       />
 
       <div className="shadow-sm ring-1 ring-gray-900/5 text-center px-8 py-10 bg-white rounded-sm h-170">
-        {filteredNotices.length === 0 ? (
+        {notices.length === 0 ? (
           <p className="text-center text-gray-600 mt-10 w-full">
             공지글이 없습니다.
           </p>
         ) : (
           <CheckboxTable
             headers={["제목", "작성자(아이디)", "작성일"]}
-            data={filteredNotices}
+            data={notices}
             dataKeys={[
               {
                 content: (item) => (

@@ -29,6 +29,8 @@ const VideoFileBoard = () => {
   // 페이지네이션 관련 상태
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState("fileTitle");
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -64,18 +66,21 @@ const VideoFileBoard = () => {
           size: postsPerPage,
           searchTerm,
           searchCategory, // 카테고리 검색에 필요한 필드
+          startTime,
+          endTime,
         },
       })
       .then((response) => {
         setTotalPages(response.data.totalPages);
         setVideos(response.data.content);
-
-        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching videos:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, startTime, endTime]);
 
   const handleEditClick = (index, title) => {
     setEditingTitleIndex(index);
@@ -188,14 +193,16 @@ const VideoFileBoard = () => {
       </h1>
 
       <SearchBar
-        onSearch={(term, category) => {
+        onSearch={(term, category, start, end) => {
           setSearchTerm(term);
           setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
           setCurrentPage(1); // 검색 시 첫 페이지로 이동
         }}
         searchOptions={[
           { value: "fileTitle", label: "제목" },
-          { value: "regTime", label: "등록일" },
+          { value: "regTime", label: "등록일", onlyDate: true },
           { value: "resolution", label: "해상도" },
         ]}
         defaultCategory="fileTitle"
