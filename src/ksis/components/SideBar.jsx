@@ -278,7 +278,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               <span>알림</span>
             </div>
             <div
-              className="relative flex items-center p-2 hover:bg-gray-200rounded w-24 whitespace-nowrap cursor-pointer"
+              className="relative flex items-center p-2 hover:bg-gray-200 rounded w-24 whitespace-nowrap cursor-pointer"
               onClick={handleOpenApp}
             >
               <BiWindowAlt className="mr-1" />

@@ -234,7 +234,7 @@ const AccountList = () => {
                 }
                 // defaultColor={item.isActive ? "green-600" : "red-600"}
                 // shadowColor={item.isActive ? "green-800" : "red-800"}
-                color="red"
+                color={item.isActive ? "green" : "red"}
               >
                 {item.isActive ? "활성화" : "비활성화"}
               </ButtonComponent>
