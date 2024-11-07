@@ -26,8 +26,10 @@ function download_app() {
     <div className="app-download-page">
       <div className="content-container">
         <div className="text-section">
-          <h1>사이트 이용을 원하시면 앱을 설치해주세요.</h1>
-          <p>이미 다운로드하셨다면 앱을 실행해 주세요.</p>
+          <div className="download">
+            사이트 이용을 원하시면 앱을 설치해주세요.
+          </div>
+          <div className="open">이미 다운로드하셨다면 앱을 실행해 주세요.</div>
           <button onClick={handleDownload} className="download-button">
             Windows용 다운로드
           </button>

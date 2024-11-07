@@ -404,7 +404,7 @@ const SignageDtl = () => {
               <div className="border-r border-gray-300 h-10"></div>
 
               <div
-                className="block items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10 overflow-hidden text-ellipsis whitespace-nowrap"
+                className="block items-center bg-white w-full px-4 py-1.5 text-gray-900 h-10 overflow-hidden text-ellipsis whitespace-nowrap text-left"
                 title={
                   data.accountList &&
                   data.accountList

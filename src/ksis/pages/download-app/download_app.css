@@ -25,14 +25,14 @@
   padding-right: 20px;
 }
 
-h1 {
+.download {
   font-size: 1.8rem;
   color: #333333;
   margin-bottom: 15px;
   text-align: center;
 }
 
-p {
+.open {
   font-size: 1rem;
   color: #555555;
   margin-bottom: 20px;
