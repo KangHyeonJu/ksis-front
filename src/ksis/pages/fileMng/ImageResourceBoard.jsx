@@ -46,6 +46,8 @@ const ImageResourceBoard = () => {
 
   const [resourceModalIsOpen, setResourceModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); // 선택한 이미지의 정보를 관리하는 상태값 추가
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
   const [isAlertOpen, setIsAlertOpen] = useState(false); // 알림창 상태 추가
   const [alertMessage, setAlertMessage] = useState(""); // 알림창 메시지 상태 추가
   const [confirmAction, setConfirmAction] = useState(null); // 확인 버튼을 눌렀을 때 실행할 함수
@@ -65,6 +67,8 @@ const ImageResourceBoard = () => {
           size: postsPerPage,
           searchTerm,
           searchCategory, // 카테고리 검색에 필요한 필드
+          startTime,
+          endTime,
         },
       })
       .then((response) => {
@@ -76,8 +80,10 @@ const ImageResourceBoard = () => {
       .catch((error) => {
         console.error("Error fetching images:", error);
       })
-      .finally(() => {});
-  }, [currentPage, searchTerm]);
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [currentPage, searchTerm, startTime, endTime]);
 
   const handleEditClick = (index, title) => {
     setEditingTitleIndex(index);
@@ -190,14 +196,16 @@ const ImageResourceBoard = () => {
       </h1>
 
       <SearchBar
-        onSearch={(term, category) => {
+        onSearch={(term, category, start, end, noDate) => {
           setSearchTerm(term);
           setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
           setCurrentPage(1); // 검색 시 첫 페이지로 이동
         }}
         searchOptions={[
           { value: "fileTitle", label: "제목" },
-          { value: "regTime", label: "등록일" },
+          { value: "regTime", label: "등록일", onlyDate: true },
           { value: "resolution", label: "해상도" },
         ]}
         defaultCategory="fileTitle"

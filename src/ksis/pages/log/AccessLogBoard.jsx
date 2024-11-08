@@ -112,25 +112,28 @@ const AccessLogBoard = () => {
           setCurrentPage(1); // 검색 시 첫 페이지로 이동
         }}
         searchOptions={[
-          { value: "account", label: "아이디" },
-          { value: "detail", label: "내용" },
+          { value: "account", label: "아이디", useDate: true },
+          { value: "detail", label: "내용", useDate: true },
         ]}
         defaultCategory="account"
-        useDate={true} // 날짜 옵션 활성화
         selectOptions={{
           detail: [
+            { value: "", label: "ALL" },
             { value: "ACCOUNT_INFO", label: "ACCOUNT_INFO" },
             { value: "NOTIFICATION", label: "NOTIFICATION" },
             { value: "MAIN", label: "MAIN" },
             { value: "ACCOUNT_LIST", label: "ACCOUNT_LIST" },
             { value: "LOG", label: "LOG" },
-            { value: "IMAGE", label: "IMAGE" },
-            { value: "VIDEO", label: "VIDEO" },
+            { value: "ORIGINAL", label: "ORIGINAL" },
+            { value: "ENCODED", label: "ENCODED" },
             { value: "NOTICE", label: "NOTICE" },
             { value: "SIGNAGE", label: "SIGNAGE" },
             { value: "PC", label: "PC" },
+            { value: "RESOLUTION", label: "RESOLUTION" },
             { value: "API", label: "API" },
             { value: "FILE_SIZE", label: "FILE_SIZE" },
+            { value: "TRASHFILE", label: "TRASHFILE" },
+            { value: "TRASHNOTICE", label: "TRASHNOTICE" },
             { value: "LOGIN", label: "LOGIN" },
             { value: "LOGOUT", label: "LOGOUT" },
             { value: "UPLOAD", label: "UPLOAD" },

@@ -93,7 +93,7 @@ const Notification = ({ onClose }) => {
   };
 
   if (loading) {
-    return <Loading />;
+    return <></>;
   }
 
   return (
