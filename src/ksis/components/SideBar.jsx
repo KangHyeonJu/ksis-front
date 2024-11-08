@@ -41,6 +41,9 @@ import {
   ACCOUNT_LIST_BOARD,
   LOG_OUT,
 } from "../../constants/account_constant";
+import { FiChevronLeft } from "react-icons/fi";
+import { FiAlignJustify } from "react-icons/fi";
+import { AiOutlineHome } from "react-icons/ai";
 
 const Sidebar = ({ onToggleSidebar }) => {
   const [openMenu, setOpenMenu] = useState(null);
@@ -227,26 +230,30 @@ const Sidebar = ({ onToggleSidebar }) => {
           <Notification onClose={() => setNotificationOpen(false)} />
         )}
         <div>
-          <div className="logo mb-8">
-            <Link
-              to={MAIN}
-              className="text-2xl font-semibold"
-              onClick={() => handleMenuClick("MAIN")}
-            >
-              <img src={ksisLogo} alt="KSIS Logo" className="w-28" />
-            </Link>
+          <div className="logo mb-8 flex justify-between">
+            <div>
+              <Link
+                to={MAIN}
+                className="text-2xl font-semibold"
+                onClick={() => handleMenuClick("MAIN")}
+              >
+                <img src={ksisLogo} alt="KSIS Logo" className="w-28" />
+              </Link>
+            </div>
 
-            <button
-              onClick={() => {
-                if (windowWidth > 1024) {
-                  toggleExpand();
-                }
-              }}
-              className="absolute top-0 right-0 p-1 hover:bg-gray-200 hover:opacity-50"
-              aria-label="Toggle Sidebar"
-            >
-              <BiArrowToLeft size={24} />
-            </button>
+            <div className="items-center inline-flex">
+              <button
+                onClick={() => {
+                  if (windowWidth > 1024) {
+                    toggleExpand();
+                  }
+                }}
+                className="p-1 hover:bg-gray-200 hover:opacity-50"
+                aria-label="Toggle Sidebar"
+              >
+                <FiChevronLeft size={24} color="#444444" />
+              </button>
+            </div>
           </div>
           <div className="mb-4">
             <div className="flex items-center px-2 font-semibold text-black text-lg">
@@ -526,28 +533,30 @@ const Sidebar = ({ onToggleSidebar }) => {
         )}
 
         <div>
-          <div className="logo mb-8 mt-1">
-            <Link to={MAIN} className="text-2xl font-semibold">
-              <img src={ksisLogo} alt="KSIS Logo" className="w-11 h-6" />
-            </Link>
-
+          {/* <div className="logo mb-6 mt-1">
+            
+          </div> */}
+          <div
+            className="flex flex-col space-y-5 mb-4"
+            onMouseEnter={() => toggleMenu("")}
+          >
             {windowWidth > 1024 && (
               <button
                 onClick={toggleExpand}
-                className="absolute top-0 right-0 p-1 hover:bg-gray-200 hover:opacity-50"
+                className=" p-2 hover:bg-gray-200 hover:opacity-50"
                 aria-label="Toggle Sidebar"
               >
-                <BiChevronRight size={20} />
+                <FiAlignJustify size={20} color="#444444" />
               </button>
             )}
-          </div>
-          <div
-            className="flex flex-col space-y-4 mb-4"
-            onMouseEnter={() => toggleMenu("")}
-          >
+            <Link to={MAIN} className="text-2xl font-semibold p-2">
+              <AiOutlineHome size={18} />
+              {/* <img src={ksisLogo} alt="KSIS Logo" className="w-11 h-6" /> */}
+            </Link>
+
             <Link
               to={`/account/${userInfo.accountId}`}
-              className={`flex items-center p-2 rounded cursor-pointer relative group hover:bg-gray-200`}
+              className={`flex p-2 rounded cursor-pointer relative group hover:bg-gray-200`}
               onClick={() => handleMenuClick("ACCOUNT_INFO")}
             >
               <BiUser className="mr-1" />
@@ -556,7 +565,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               </span>
             </Link>
 
-            <a
+            <div
               className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-gray-200"
               onClick={() => setNotificationOpen(true)}
             >
@@ -564,9 +573,9 @@ const Sidebar = ({ onToggleSidebar }) => {
               <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 알림
               </span>
-            </a>
+            </div>
 
-            <a
+            <div
               className="relative flex items-center p-2 rounded cursor-pointer group hover:bg-gray-200"
               onClick={handleOpenApp}
             >
@@ -574,7 +583,7 @@ const Sidebar = ({ onToggleSidebar }) => {
               <span className="absolute top-full left-0 mt-1 hidden group-hover:flex bg-black text-white p-1 text-[8px] rounded w-[43px] h-[18px] items-center justify-center">
                 앱
               </span>
-            </a>
+            </div>
           </div>
           <hr className="border-black border-1 border-dashed" />
           {isAdmin && (

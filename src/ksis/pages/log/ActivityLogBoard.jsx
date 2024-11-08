@@ -112,11 +112,10 @@ const ActivityLogBoard = () => {
           setCurrentPage(1); // 검색 시 첫 페이지로 이동
         }}
         searchOptions={[
-          { value: "account", label: "아이디" },
-          { value: "detail", label: "내용" },
+          { value: "account", label: "아이디", useDate: true },
+          { value: "detail", label: "내용", useDate: true },
         ]}
         defaultCategory="account"
-        useDate={true} // 날짜 옵션 활성화
       />
 
       <div className="flex justify-end space-x-2 mb-4">
