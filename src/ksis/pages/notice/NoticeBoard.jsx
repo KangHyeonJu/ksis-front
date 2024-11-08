@@ -22,6 +22,8 @@ import { Button } from "../../css/button";
 
 const NoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
   const [searchCategory, setSearchCategory] = useState("title");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,22 +58,24 @@ const NoticeBoard = () => {
             size: postsPerPage,
             searchTerm,
             searchCategory,
+            startTime,
+            endTime,
           },
         });
         setNotices(response.data.content);
         setTotalPages(response.data.totalPages);
-        setLoading(false);
       } catch (err) {
         setError("데이터를 가져오는 데 실패했습니다.");
         console.log(err);
       } finally {
+        setLoading(false);
       }
     };
 
     fetchNotices();
-  }, [currentPage, searchTerm, searchCategory]); // searchCategory 추가
+  }, [currentPage, searchTerm, searchCategory, startTime, endTime]); // searchCategory 추가
 
- /*  const filteredNotices = useMemo(() => {
+  /*  const filteredNotices = useMemo(() => {
     // notices가 undefined일 경우 빈 배열로 초기화
     const validNotices = notices || [];
 
@@ -83,7 +87,7 @@ const NoticeBoard = () => {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-  }; 
+  };
 
   const handleRegisterClick = () => {
     navigate(NOTICE_FORM); // 공지글 등록 페이지로 이동
@@ -169,17 +173,19 @@ const NoticeBoard = () => {
       </h1>
 
       <SearchBar
-        onSearch={(term, category) => {
+        onSearch={(term, category, start, end) => {
           setSearchTerm(term);
           setSearchCategory(category);
-          setCurrentPage(1);
+          setStartTime(start);
+          setEndTime(end);
+          setCurrentPage(1); // 검색 시 첫 페이지로 이동
         }}
         searchOptions={[
           { value: "title", label: "제목" },
           ...(authority === "ROLE_ADMIN"
             ? [{ value: "account", label: "작성자" }]
             : []),
-          { value: "regTime", label: "등록일" },
+          { value: "regTime", label: "등록일", onlyDate: true },
           { value: "device", label: "재생장치" },
         ]}
         defaultCategory="title"
