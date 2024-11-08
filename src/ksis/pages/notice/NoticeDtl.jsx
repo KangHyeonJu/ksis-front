@@ -149,8 +149,7 @@ const NoticeDetail = () => {
             {/* 내용 */}
             <Textarea id="content" value={notice.content} readOnly rows="15" />
 
-            {notice.role !== "ADMIN" && (
-              <>
+           
                 {/* 재생장치 */}
                 <div className="flex items-center mb-2">
                   <Input
@@ -194,8 +193,7 @@ const NoticeDetail = () => {
                     </div>
                   </div>
                 </div>
-              </>
-            )}
+
 
             {/* 버튼들 */}
             <div className="flex justify-center space-x-4">
