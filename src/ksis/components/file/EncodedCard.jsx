@@ -93,8 +93,7 @@ const OriginCard = ({
         <div className="flex justify-center p-2">
           <ButtonComponentB
             onClick={() => handleDelete(file.encodedResourceId)}
-            defaultColor="red-600"
-            shadowColor="red-800"
+            color='red'
           >
             삭제
           </ButtonComponentB>
