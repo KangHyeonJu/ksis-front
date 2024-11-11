@@ -21,7 +21,7 @@ const SignageGrid = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  const postsPerPage = 8; // 한 페이지 8개 데이터
+  const postsPerPage = 16; // 한 페이지 8개 데이터
 
   const loadPage = async () => {
     try {
@@ -68,7 +68,7 @@ const SignageGrid = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl p-6">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 my-4">
         재생장치 관리
       </h1>
@@ -92,44 +92,48 @@ const SignageGrid = () => {
         <div className="inline-flex items-center">
           <ToggleSwitch />
         </div>
-        {userInfo.roles === "ROLE_ADMIN" ? (
-          <div className=" inline-flex items-center">
-            <div className="flex justify-end space-x-2">
-              <Link to={SIGNAGE_FORM}>
-                <ButtonComponentB color="blue">재생장치 등록</ButtonComponentB>
+      </div>
+      <div className="text-center px-8 py-10 bg-white h-170">
+        <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-8 md:gap-y-0 lg:gap-x-8">
+          {signages.map((signage) => (
+            <div
+              key={signage.deviceId}
+              className="group relative border border-[#FF9C00] p-3"
+            >
+              <div className="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
+                <img
+                  alt={signage.deviceName}
+                  src={signage.thumbNail}
+                  className="h-full w-full object-cover object-center"
+                />
+              </div>
+              <div
+                className="mt-2 text-gray-700 text-center w-full border border-[#FF9C00] rounded-md p-1 overflow-hidden"
+                title={signage.deviceName}
+              >
+                재생장치 : {signage.deviceName}
+              </div>
+              <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
+                <button
+                  type="button"
+                  className="mt-2 w-full p-1 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] text-sm font-semibold
+                shadow-sm hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
+                >
+                  상세보기
+                </button>
               </Link>
             </div>
-          </div>
-        ) : null}
+          ))}
+        </div>
       </div>
-      <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
-        {signages.map((signage) => (
-          <div
-            key={signage.deviceId}
-            className="group relative border border-[#FF9C00] p-3"
-          >
-            <div className="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
-              <img
-                alt={signage.deviceName}
-                src={signage.thumbNail}
-                className="h-full w-full object-cover object-center"
-              />
-            </div>
-            <div className="mt-2 text-gray-700 text-center w-full border border-[#FF9C00] rounded-md p-1">
-              재생장치 : {signage.deviceName}
-            </div>
-            <Link to={SIGNAGE_DTL + `/${signage.deviceId}`}>
-              <button
-                type="button"
-                className="mt-2 w-full p-1 rounded-md border border-[#FF9C00] bg-white text-[#FF9C00] text-sm font-semibold
-                shadow-sm hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] focus-visible:outline-[#FF9C00] transition duration-200"
-              >
-                상세보기
-              </button>
-            </Link>
-          </div>
-        ))}
-      </div>
+
+      {userInfo.roles === "ROLE_ADMIN" ? (
+        <div className="flex justify-end space-x-2 my-10">
+          <Link to={SIGNAGE_FORM}>
+            <ButtonComponentB color="blue">재생장치 등록</ButtonComponentB>
+          </Link>
+        </div>
+      ) : null}
 
       <div>
         <PaginationComponent

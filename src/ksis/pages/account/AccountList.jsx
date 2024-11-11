@@ -129,7 +129,7 @@ const AccountList = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl whitespace-nowrap p-6">
+    <div className="mx-auto whitespace-nowrap py-6 px-10">
       <Alert
         open={isAlertOpen}
         onClose={() => {
