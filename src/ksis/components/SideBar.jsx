@@ -389,18 +389,6 @@ const Sidebar = ({ onToggleSidebar }) => {
               {openMenu === "device" && (
                 <div className="submenu ml-8 mt-2">
                   <Link
-                    to={SIGNAGE_INVENTORY}
-                    onClick={() => handleMenuClick("SIGNAGE")}
-                    className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
-                      selectedMenu === "SIGNAGE"
-                        ? "bg-gray-200"
-                        : "hover:bg-gray-200"
-                    }`}
-                  >
-                    <FaRegCircle size={10} className="mr-2" />
-                    <span>재생장치 관리</span>
-                  </Link>
-                  <Link
                     to={PC_INVENTORY}
                     onClick={() => handleMenuClick("PC")}
                     className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
@@ -411,6 +399,18 @@ const Sidebar = ({ onToggleSidebar }) => {
                   >
                     <FaRegCircle size={10} className="mr-2" />
                     <span>일반 PC 관리</span>
+                  </Link>
+                  <Link
+                    to={SIGNAGE_INVENTORY}
+                    onClick={() => handleMenuClick("SIGNAGE")}
+                    className={`flex items-center py-1 mt-3 rounded cursor-pointer ${
+                      selectedMenu === "SIGNAGE"
+                        ? "bg-gray-200"
+                        : "hover:bg-gray-200"
+                    }`}
+                  >
+                    <FaRegCircle size={10} className="mr-2" />
+                    <span>재생장치 관리</span>
                   </Link>
                 </div>
               )}
@@ -705,6 +705,16 @@ const Sidebar = ({ onToggleSidebar }) => {
                 onMouseLeave={() => toggleMenu("")}
               >
                 <Link
+                  to={PC_INVENTORY}
+                  onClick={() => handleMenuClick("PC")}
+                  className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
+                    selectedMenu === "PC" ? "bg-gray-200" : "hover:bg-gray-200"
+                  }`}
+                >
+                  <FaRegCircle size={10} className="mr-2" />
+                  <span className="text-sm">일반 PC 관리</span>
+                </Link>
+                <Link
                   to={SIGNAGE_INVENTORY}
                   onClick={() => handleMenuClick("SIGNAGE")}
                   className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
@@ -715,16 +725,6 @@ const Sidebar = ({ onToggleSidebar }) => {
                 >
                   <FaRegCircle size={10} className="mr-2" />
                   <span className="text-sm">재생장치 관리</span>
-                </Link>
-                <Link
-                  to={PC_INVENTORY}
-                  onClick={() => handleMenuClick("PC")}
-                  className={`group flex items-center py-1 mt-3 rounded cursor-pointer ${
-                    selectedMenu === "PC" ? "bg-gray-200" : "hover:bg-gray-200"
-                  }`}
-                >
-                  <FaRegCircle size={10} className="mr-2" />
-                  <span className="text-sm">일반 PC 관리</span>
                 </Link>
               </div>
             )}

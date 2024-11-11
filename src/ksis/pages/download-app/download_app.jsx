@@ -39,7 +39,7 @@ function download_app() {
         </div>
         <div className="image-section">
           <img
-            src="/file/img/app.png"
+            src="/file/img/ksis-logo.png"
             alt="앱 미리보기"
             className="app-preview"
           />
