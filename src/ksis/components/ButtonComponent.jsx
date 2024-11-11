@@ -25,12 +25,19 @@ const ButtonComponent = ({
     hover:bg-[#FF9C00] hover:text-white hover:shadow-inner hover:shadow-[#FF9C00] 
     focus-visible:outline-[#FF9C00] transition duration-200 whitespace-nowrap`;
 
+  const greenButtonClass = `mr-2 rounded-md border border-green-600
+    bg-white text-green-600 py-1 px-2 text-sm font-semibold shadow-sm 
+    hover:bg-green-600 hover:text-white hover:shadow-inner hover:shadow-green-800
+    focus-visible:outline-green-600 transition duration-200 whitespace-nowrap`;
+
   // color에 따라 올바른 클래스 선택
   const buttonClass =
     color === "blue"
       ? blueButtonClass
       : color === "orange"
       ? orangeButtonClass
+      : color === "green"
+      ? greenButtonClass
       : redButtonClass;
 
   return to ? (
