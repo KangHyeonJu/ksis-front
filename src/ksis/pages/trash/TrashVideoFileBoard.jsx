@@ -29,6 +29,8 @@ const TrashVideoFileBoard = () => {
 
   // 페이지네이션 관련 상태
   const [searchTerm, setSearchTerm] = useState("");
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
   const [searchCategory, setSearchCategory] = useState("fileTitle");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,6 +60,8 @@ const TrashVideoFileBoard = () => {
           size: postsPerPage,
           searchTerm,
           searchCategory, // 카테고리 검색에 필요한 필드
+          startTime,
+          endTime,
         },
       })
       .then((response) => {
@@ -69,7 +73,7 @@ const TrashVideoFileBoard = () => {
       .catch((error) => {
         console.error("Error fetching videos:", error);
       });
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, searchCategory, startTime, endTime]);
 
   const handleActivation = async (id) => {
     showAlert("정말로 이 영상을 활성화하시겠습니까?", async () => {
@@ -133,14 +137,16 @@ const TrashVideoFileBoard = () => {
       </h1>
 
       <SearchBar
-        onSearch={(term, category) => {
+        onSearch={(term, category, start, end) => {
           setSearchTerm(term);
           setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
           setCurrentPage(1);
         }}
         searchOptions={[
           { value: "fileTitle", label: "제목" },
-          { value: "regTime", label: "등록일" },
+          { value: "regTime", label: "등록일", onlyDate: true },
           { value: "resolution", label: "해상도" },
         ]}
         defaultCategory="fileTitle"

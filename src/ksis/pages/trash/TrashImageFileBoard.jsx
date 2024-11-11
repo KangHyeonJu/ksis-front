@@ -26,6 +26,8 @@ import { Button } from "../../css/button";
 // ImageResourceBoard 컴포넌트를 정의합니다.
 const TrashImageFileBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
   const [searchCategory, setSearchCategory] = useState("fileTitle");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,6 +58,8 @@ const TrashImageFileBoard = () => {
           size: postsPerPage,
           searchTerm,
           searchCategory, // 카테고리 검색에 필요한 필드
+          startTime,
+          endTime,
         },
       })
       .then((response) => {
@@ -67,7 +71,7 @@ const TrashImageFileBoard = () => {
       .catch((error) => {
         console.error("Error fetching images:", error);
       });
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, searchCategory, startTime, endTime]);
 
   const handleActivation = async (id) => {
     showAlert("정말로 이 이미지를 활성화하시겠습니까?", async () => {
@@ -132,14 +136,16 @@ const TrashImageFileBoard = () => {
       </h1>
 
       <SearchBar
-        onSearch={(term, category) => {
+        onSearch={(term, category, start, end) => {
           setSearchTerm(term);
           setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
           setCurrentPage(1);
         }}
         searchOptions={[
           { value: "fileTitle", label: "제목" },
-          { value: "regTime", label: "등록일" },
+          { value: "regTime", label: "등록일", onlyDate: true },
           { value: "resolution", label: "해상도" },
         ]}
         defaultCategory="fileTitle"

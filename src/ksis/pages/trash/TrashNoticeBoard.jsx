@@ -25,6 +25,8 @@ import { decodeJwt } from "../../../decodeJwt";
 
 const TrashNoticeBoard = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [startTime, setStartTime] = useState(); // 검색 시작기간
+  const [endTime, setEndTime] = useState(); // 검색 시작기간
   const [searchCategory, setSearchCategory] = useState("fileTitle");
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,19 +59,22 @@ const TrashNoticeBoard = () => {
           size: postsPerPage,
           searchTerm,
           searchCategory, // 카테고리 검색에 필요한 필드
+          startTime,
+          endTime,
         },
       })
       .then((response) => {
         setNotices(response.data.content);
         setTotalPages(response.data.totalPages);
-        setLoading(false);
       })
       .catch((err) => {
         setError("데이터를 가져오는 데 실패했습니다.");
         console.log(err);
       })
-      .finally(() => {});
-  }, [currentPage, searchTerm]);
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [currentPage, searchTerm, searchCategory, startTime, endTime]);
 
   // 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
@@ -147,9 +152,11 @@ const TrashNoticeBoard = () => {
       </h1>
 
       <SearchBar
-        onSearch={(term, category) => {
+        onSearch={(term, category, start, end) => {
           setSearchTerm(term);
           setSearchCategory(category);
+          setStartTime(start);
+          setEndTime(end);
           setCurrentPage(1);
         }}
         searchOptions={[
@@ -157,7 +164,7 @@ const TrashNoticeBoard = () => {
           ...(authority === "ROLE_ADMIN"
             ? [{ value: "account", label: "작성자" }]
             : []),
-          { value: "regTime", label: "등록일" },
+          { value: "regTime", label: "등록일", onlyDate: true },
         ]}
         defaultCategory="title"
       />
