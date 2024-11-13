@@ -280,20 +280,16 @@ const SignagePlayKeyPage = () => {
 
     return () => {
       clearInterval(timeId);
-
-      // 날짜 비교
-      if (
-        date.getDate() !== newDate.getDate() ||
-        date.getMonth() !== newDate.getMonth() ||
-        date.getFullYear() !== newDate.getFullYear()
-      ) {
-        loadNotice(deviceIdRef.current);
-      }
     };
   });
 
   const tick = () => {
     const newDate = new Date();
+
+    // 날짜 비교
+    if (date.getDate() !== newDate.getDate()) {
+      loadNotice(deviceIdRef.current);
+    }
 
     setDate(newDate);
   };
