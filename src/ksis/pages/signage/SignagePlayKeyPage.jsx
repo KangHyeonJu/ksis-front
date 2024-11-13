@@ -3,10 +3,17 @@ import {
   SIGNAGE_PLAY,
   SIGNAGE_PLAY_NOTICE,
 } from "../../../constants/api_constant";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
 import axios from "axios";
 import "../../css/animation.css";
 import Loading from "../../components/Loading";
+
+// TimeDisplay 컴포넌트를 분리하고 memo로 감쌉니다.
+const TimeDisplay = memo(({ date }) => (
+  <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
+    {date.toLocaleTimeString()}
+  </div>
+));
 
 const SignagePlayKeyPage = () => {
   const [searchParam, setSearchParam] = useSearchParams();
@@ -363,9 +370,8 @@ const SignagePlayKeyPage = () => {
               </div>
             </div>
 
-            <div className="flex-auto text-center w-1/12 text-3xl font-bold text-black">
-              {date.toLocaleTimeString()}
-            </div>
+            {/* 시간 표시 부분만 업데이트 */}
+            <TimeDisplay date={date} />
           </div>
         </div>
       ) : (
