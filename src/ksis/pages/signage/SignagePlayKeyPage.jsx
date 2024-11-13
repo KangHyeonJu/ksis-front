@@ -285,6 +285,8 @@ const SignagePlayKeyPage = () => {
   const tick = () => {
     const newDate = new Date();
 
+    setDate(newDate);
+
     // 날짜 비교
     if (
       date.getDate() !== newDate.getDate() ||
@@ -293,8 +295,6 @@ const SignagePlayKeyPage = () => {
     ) {
       loadNotice(deviceIdRef.current);
     }
-
-    setDate(newDate);
   };
 
   const getWeather = async (lat, lon) => {
