@@ -281,7 +281,7 @@ const SignagePlayKeyPage = () => {
     return () => {
       clearInterval(timeId);
     };
-  });
+  }, []);
 
   const tick = () => {
     const newDate = new Date();
