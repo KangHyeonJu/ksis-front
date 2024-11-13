@@ -277,8 +277,18 @@ const SignagePlayKeyPage = () => {
   //현재 시간 표시
   useEffect(() => {
     const timeId = setInterval(() => tick(), 1000);
+
     return () => {
       clearInterval(timeId);
+
+      // 날짜 비교
+      if (
+        date.getDate() !== newDate.getDate() ||
+        date.getMonth() !== newDate.getMonth() ||
+        date.getFullYear() !== newDate.getFullYear()
+      ) {
+        loadNotice(deviceIdRef.current);
+      }
     };
   });
 
@@ -286,15 +296,6 @@ const SignagePlayKeyPage = () => {
     const newDate = new Date();
 
     setDate(newDate);
-
-    // 날짜 비교
-    if (
-      date.getDate() !== newDate.getDate() ||
-      date.getMonth() !== newDate.getMonth() ||
-      date.getFullYear() !== newDate.getFullYear()
-    ) {
-      loadNotice(deviceIdRef.current);
-    }
   };
 
   const getWeather = async (lat, lon) => {
